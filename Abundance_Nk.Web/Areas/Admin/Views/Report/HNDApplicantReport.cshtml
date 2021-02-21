@@ -1,0 +1,30 @@
+﻿@{
+    ViewBag.Title = "HNDApplicantReport";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery.min.js"></script>
+<script src="~/Scripts/responsive-tabs.js"></script>
+
+<script type="text/javascript">
+    function resizeIframe(obj) {
+        obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+    }
+</script>
+
+<div style="color:black">
+    <h3>
+        HND Applicant Details
+    </h3>
+</div>
+
+<div class="alert alert-dismissible alert-success">
+    <p>
+        <b> HND Applicant Report</b> displays HND applicants result details.
+    </p>
+</div>
+
+<iframe src="~/Reports/Presenter/Result/HNDApplicantDetails.aspx" style="width:100%; " frameborder="0" scrolling="no" id="iframe" onload='javascript:resizeIframe(this);'></iframe>
+
+<br />
+

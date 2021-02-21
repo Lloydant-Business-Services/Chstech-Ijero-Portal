@@ -1,0 +1,53 @@
+﻿@model Abundance_Nk.Web.Areas.Student.ViewModels.HostelViewModel
+@{
+    ViewBag.Title = "StudentHostelAllocation";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+        
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>   
+
+        <div class="panel panel-default">
+            <div class="panel-heading panel-dark-head">
+                <h4>Student Hostel Allocation</h4>
+            </div> 
+            <div class="panel-body">
+               
+                @using (Html.BeginForm("StudentHostelAllocation", "Hostel", FormMethod.Post))
+                {
+                    <div class="col-md-12">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Student.MatricNumber, new { @class = "control-label custom-text-black" })
+                                    @Html.TextBoxFor(model => model.Student.MatricNumber, new { @class = "form-control", @required = "required" })
+                                    @Html.ValidationMessageFor(model => model.Student.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    <input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="Submit" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div> 
+    </div>
+    <div class="col-md-1"></div>
+</div>
+

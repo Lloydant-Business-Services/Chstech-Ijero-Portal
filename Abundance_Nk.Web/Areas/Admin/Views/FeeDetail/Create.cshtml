@@ -1,0 +1,127 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.FeeDetailViewModel
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<script type="text/javascript">
+    var jqXHRData;
+    $(document).ready(function () {
+
+        $("#Programme_Id").change(function () {
+
+            $("#Department_Id").empty();
+            var selectedProgramme = $("#Programme_Id").val();
+            var programme = $("#Programme_Id").val();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartmentByProgrammeId")', // we are calling json method
+                dataType: 'json',
+                data: { id: programme },
+                success: function (departments) {
+                    $("#Department_Id").append('<option value="' + 0 + '"> -- Select -- </option>');
+
+                    $.each(departments, function (i, department) {
+                        $("#Department_Id").append('<option value="' + department.Value + '">' + department.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+        });
+
+
+
+})
+</script>
+
+
+
+<div class="alert alert-success fade in nomargin">
+    <h3>@ViewBag.Title</h3>
+</div>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true)
+
+        @if (TempData["Message"] != null)
+        {
+            @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+        }
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CurrentSession.Id, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.CurrentSession.Id, (IEnumerable<SelectListItem>)ViewBag.SessionId, new { @class = "form-control", @placeholder = "Select Session" })
+                @Html.ValidationMessageFor(model => model.CurrentSession.Id)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.feeType.Id, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.feeType.Id, (IEnumerable<SelectListItem>)ViewBag.FeeTypeId, new { @class = "form-control", @placeholder = "Select Fee Type" })
+                @Html.ValidationMessageFor(model => model.feeType.Id)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.level.Id, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.level.Id, (IEnumerable<SelectListItem>)ViewBag.LevelId, new { @class = "form-control", @placeholder = "Select Level" })
+                @Html.ValidationMessageFor(model => model.level.Id)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PaymentMode.Id, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.PaymentMode.Id, (IEnumerable<SelectListItem>)ViewBag.PaymentModeId, new { @class = "form-control", @placeholder = "Select Payment Mode" })
+                @Html.ValidationMessageFor(model => model.PaymentMode.Id)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Programme.Id, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.ProgrammeId, new { @class = "form-control", @placeholder = "Select Programme" })
+                @Html.ValidationMessageFor(model => model.Programme.Id)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Department.Id, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Department.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentId, new { @class = "form-control", @placeholder = "Select Department" })
+                @Html.ValidationMessageFor(model => model.Department.Id)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.fee.Id, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.fee.Id, (IEnumerable<SelectListItem>)ViewBag.feeId, new { @class = "form-control", @placeholder = "Select Fee" })
+                @Html.ValidationMessageFor(model => model.fee.Id)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Add" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+<hr />

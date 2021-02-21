@@ -1,0 +1,28 @@
+﻿@model int?
+
+@if (ViewBag.IsIndex != null && ViewBag.IsIndex == true)
+{ 
+    @*<h3>@ViewBag.Title</h3>*@
+    @*<br />*@
+    
+
+    
+    <div>
+        <div class="row">
+            <div class="col-md-12">
+                @Html.ActionLink("Create New", "Create")
+
+                <div class="pull-right record-count-label">
+                    <span class="caption">Record Count</span><span class="badge">@Model</span>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{ 
+    @*<br />
+    <h3>@ViewBag.Title</h3>*@
+}
+
+<hr class="no-top-padding" />

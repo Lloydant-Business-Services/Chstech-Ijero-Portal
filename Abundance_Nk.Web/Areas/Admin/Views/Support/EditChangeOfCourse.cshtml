@@ -1,0 +1,80 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.SupportViewModel
+@{
+    ViewBag.Title = "EditChangeOfCourse";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading panel-dark-head">
+                <h4>Edit ChangeOfCourse</h4>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+
+                    @using (Html.BeginForm("EditChangeOfCourse", "Support", FormMethod.Post))
+                    {
+                            @Html.HiddenFor(model => model.ChangeOfCourse.Id)
+
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.ChangeOfCourse.JambRegistrationNumber, new {@class = "control-label custom-text-black"})
+                                    @Html.TextBoxFor(model => model.ChangeOfCourse.JambRegistrationNumber, new {@class = "form-control", @required = "required"})
+                                    @Html.ValidationMessageFor(model => model.ChangeOfCourse.JambRegistrationNumber, null, new {@class = "text-danger"})
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.ChangeOfCourse.ApplicationForm.Number, new {@class = "control-label custom-text-black"})
+                                    @Html.TextBoxFor(model => model.ChangeOfCourse.ApplicationForm.Number, new {@class = "form-control"})
+                                    @Html.ValidationMessageFor(model => model.ChangeOfCourse.ApplicationForm.Number, null, new {@class = "text-danger"})
+                                </div>
+                            </div>
+                        </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.ChangeOfCourse.NewPerson.Id, "NewPersonId", new { @class = "control-label custom-text-black" })
+                @Html.TextBoxFor(model => model.ChangeOfCourse.NewPerson.Id, new { @class = "form-control"})
+                @Html.ValidationMessageFor(model => model.ChangeOfCourse.NewPerson.Id, null, new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.ChangeOfCourse.OldPerson.Id, "OldPersonId", new { @class = "control-label custom-text-black" })
+                @Html.TextBoxFor(model => model.ChangeOfCourse.OldPerson.Id, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ChangeOfCourse.OldPerson.Id, null, new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    <input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="Update" /> 
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-1"></div>
+</div>

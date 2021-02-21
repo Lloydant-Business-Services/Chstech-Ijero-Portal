@@ -1,0 +1,39 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.RemitaPaymentViewModel
+
+@{
+                /**/
+
+                Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="alert alert-success alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+    @if (Model.remitaResponse.Status == "01" || Model.remitaResponse.Status == "00")
+    {
+        <h2>Transaction Successful</h2>
+        <p><b>Remita Retrieval Reference: </b> @Model.remitaResponse.RRR</p>
+        <p><b>Invoice / Reference: </b> @Model.remitaResponse.orderId </p>
+    }
+    else if (Model.remitaResponse.Status == "021")
+    {
+        <h2>RRR Generated Successfully</h2>
+        <p><b>Remita Retrieval Reference: </b>@Model.remitaResponse.RRR</p>
+    }
+    else
+    {
+        <h2>Your Transaction was not Successful</h2>
+        if (Model.remitaResponse.RRR != null)
+        {
+            <p>Your Remita Retrieval Reference is <span><b>@Model.remitaResponse.RRR</b></span><br /></p>
+            <p><b>Invoice / Reference: </b> @Model.remitaResponse.orderId </p>
+            @*<p><b>Reason: </b> @Model.remitaResponse.Message</p>*@
+        }
+        else
+        {
+            <p><b>Reason: </b> @Model.remitaResponse.Message</p>
+        }
+    }
+
+</div>

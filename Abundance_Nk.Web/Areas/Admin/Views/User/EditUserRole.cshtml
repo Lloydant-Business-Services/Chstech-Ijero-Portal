@@ -1,0 +1,85 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.UserViewModel
+@{
+    ViewBag.Title = "EditUserRole";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+
+        @if (TempData["Message"] != null)
+        {
+            @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+        }
+
+        @using (Html.BeginForm("EditUserRole", "User", FormMethod.Post))
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4><i class="fa fa-edit"> Edit Role</i></h4>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h4>Select User-Role Category to Edit</h4>
+                            <hr />
+                        </div> 
+                    </div>  
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.User.Role.Name,"Role", new { @class = "control-label " })
+                                @Html.DropDownListFor(model => model.User.Role.Id, (IEnumerable<SelectListItem>)ViewBag.Role, new { @class = "form-control", @required = "required" })
+                                @Html.ValidationMessageFor(model => model.User.Role.Name)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <input class="btn btn-success btn-sm mr5" type="submit" name="submit" id="submit" value="Submit" />
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                </div>
+                    }
+                      
+        @if (Model.Users != null && Model.Users.Count > 0)
+        {
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <table class="table table-bordered table-striped table-responsive table-hover">
+                            <tr>
+                                <th>Username</th>
+                                <th>Role</th>
+                                <th>Edit</th>
+                            </tr>
+
+                            @for (int i = 0; i < Model.Users.Count; i++)
+                            {
+                                <tr>
+                                    <td>@Model.Users[i].Username</td>
+                                    <td>@Model.Users[i].Role.Name</td>
+                                    <td><i class="fa fa-edit"></i> @Html.ActionLink("Edit", "EditRole", new { controller = "User", area = "Admin", @id = @Model.Users[i].Id }, new { @class = "btn btn-success btn-sm" })</td>
+
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                    
+
+                </div>
+            </div>
+        }
+
+    </div>
+                <div class="col-md-1"></div>
+            </div>
+

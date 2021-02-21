@@ -1,0 +1,201 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.StaffCourseAllocationViewModel
+@{
+    ViewBag.Title = "StaffCourseAllocation";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@if (TempData["Message"] != null)
+{
+    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        //Session Drop down Selected change event
+        $("#Session").change(function () {
+
+            $("#Semester").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetSemester", "StaffCourseAllocation")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#Session").val() },
+                // Get Selected Country ID.
+                success: function (semesters) {
+                    $("#Semester").append('<option value="' + 0 + '">' +
+                           '-- Select Semester --' + '</option>');
+                    $.each(semesters, function (i, semester) {
+                        $("#Semester").append('<option value="' + semester.Value + '">' +
+                             semester.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve semesters.' + ex);
+                }
+            });
+            return false;
+        })
+
+    });
+
+    function RemoveAllocation(Id) {
+        $("#loading").show();
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("RemoveAllocation", "StaffCourseAllocation")', // Calling json method
+            dataType: 'json',
+            data: { id: Id },
+            success: function (response) {
+                if (response != null && response.success) {
+                    alert(response.responseText);
+                    window.location.reload(true);
+                }
+                else {
+                    alert(response.responseText);
+                }
+            },
+            error: function (ex) {
+                alert('Operation failed!.' + ex);
+            }
+        });
+        return false;
+    }
+
+
+</script>
+
+@using (Html.BeginForm("AllocatedCourses", "StaffCourseAllocation", new { area = "Admin" }, FormMethod.Post))
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><i class="fa fa-fw fa-eye"></i>View Allocated Courses</h3>
+        </div>
+        <div class="panel-body">
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.CourseAllocation.Session.Name, "Session", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.DropDownListFor(model => model.CourseAllocation.Session.Id, (IEnumerable<SelectListItem>)ViewBag.Session, new { @class = "form-control", @id = "Session", @required = "required" })
+                    @Html.ValidationMessageFor(model => model.CourseAllocation.Session.Id, null, new { @class = "text-danger" })
+                </div>
+
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.CourseAllocation.Semester.Name, "Semester", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.DropDownListFor(model => model.CourseAllocation.Semester.Id, (IEnumerable<SelectListItem>)ViewBag.Semester, new { @class = "form-control", @id = "Semester", @required = "required" })
+                    @Html.ValidationMessageFor(model => model.CourseAllocation.Semester.Id, null, new { @class = "text-danger" })
+                </div>
+
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Programme.Name, "Programme", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.DropDownListFor(model => model.CourseAllocation.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.Programme, new { @class = "form-control", @id = "Programme", @required = "required" })
+                    @Html.ValidationMessageFor(model => model.CourseAllocation.Programme.Id, null, new { @class = "text-danger" })
+                </div>
+
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Level.Name, "Level", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.DropDownListFor(model => model.CourseAllocation.Level.Id, (IEnumerable<SelectListItem>)ViewBag.Level, new { @class = "form-control", @id = "Level", @required = "required" })
+                    @Html.ValidationMessageFor(model => model.CourseAllocation.Level.Id, null, new { @class = "text-danger" })
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-10">
+                    <input class="btn btn-success mr5 " type="submit" name="submit" id="submit" value="View" />
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    To Allocate Course, click @Html.ActionLink("Allocate Course", "AllocateCourse", new { Controller = "StaffCourseAllocation" }, new { @class = "btn btn-default" })
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+}
+
+<br />
+
+@if (Model.CourseAllocationList != null && Model.CourseAllocationList.Count() > 0)
+{
+    <div class="panel panel-danger">
+        <div class="panel-body">
+            <table class="table-bordered table-hover table-striped table-responsive table">
+                <tr>
+                    <th>
+                        Staff Name
+                    </th>
+                    <th>
+                        Course
+                    </th>
+                    <th>
+                        Course Status
+                    </th>
+                    <th>
+                        Department
+                    </th>
+                    <th>
+                        Department Option
+                    </th>
+                    <th>
+                        Remove
+                    </th>
+                </tr>
+
+                @for (int i = 0; i < Model.CourseAllocationList.Count(); i++)
+                {
+                    <tr>
+                        <td>
+                            @Model.CourseAllocationList[i].User.Username
+                        </td>
+                        <td>
+                            @Model.CourseAllocationList[i].Course.Name &nbsp; @Model.CourseAllocationList[i].Course.Code
+                        </td>
+                        @if (Model.CourseAllocationList[i].Course.Activated == true)
+                        {
+                            <td>
+                                Activated
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                Not Activated
+                            </td>
+                        }
+                        <td>
+                            @Model.CourseAllocationList[i].Department.Name
+                        </td>
+                        @if (Model.CourseAllocationList[i].Course.DepartmentOption != null)
+                        {
+                            <td>
+                                @Model.CourseAllocationList[i].Course.DepartmentOption.Name
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                NO Option
+                            </td>
+                        }
+                        <td>
+                            <button class="btn btn-success mr5" onclick="RemoveAllocation(@Model.CourseAllocationList[i].Id)">Remove</button>
+                        </td>
+                    </tr>
+                }
+
+            </table>
+
+        </div>
+    </div>
+}

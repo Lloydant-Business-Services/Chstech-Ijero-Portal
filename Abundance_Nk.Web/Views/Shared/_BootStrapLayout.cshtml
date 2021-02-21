@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>@ViewBag.Title - The Federal Polytechnic Ilaro</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+
+</head>
+<body>
+
+    <div class="container " style="color: #449D44">
+        <div>
+            <table style="margin-bottom:7px">
+                <tr>
+                    <td style="padding-right:7px"><img src="/Content/Images/school_logo.jpg" alt="" /></td>
+                    <td><h3><strong>The Federal Polytechnic Ilaro</strong></h3></td>
+                </tr>
+            </table>
+
+        </div>
+
+    </div>
+
+
+
+
+    <div class="container ">
+        @RenderBody()
+
+        <hr />
+
+        <footer>
+            <p>&copy; @DateTime.Now.Year - The Federal Polytechnic Ilaro</p>
+        </footer>
+    </div>
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

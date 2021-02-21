@@ -1,0 +1,118 @@
+﻿@model Abundance_Nk.Web.Areas.Applicant.ViewModels.AdmissionViewModel
+@{
+   
+    Layout = "~/Views/Shared/_NewThemeLayout.cshtml";
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+
+    <script type="text/javascript" src="~/Scripts/file-upload/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/file-upload/jquery-ui-1.9.2.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/file-upload/jquery.fileupload-ui.js"></script>
+    <script type="text/javascript" src="~/Scripts/file-upload/jquery.fileupload.js"></script>
+    <script type="text/javascript" src="~/Scripts/file-upload/jquery.iframe-transport.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.print.js"></script>
+    }
+    <div class="row"> 
+
+        @if (Model.remita != null)
+        {
+
+        <div class="panel panel-primary-head">
+            <div class="panel-heading">
+                <h3 class="panel-title text-center text-uppercase">Online Payment</h3>
+            </div>
+            <div class="panel-body">
+
+                <div class="row">
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @action = "http://www.remitademo.net/remita/ecomm/finalize.reg" }))
+                 {
+
+                    <div class="well well-lg">
+                        <p class="text-center">
+                            Kindly select a method of payment then click on the Pay button to proceed.
+                        </p>
+               
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+                     
+                    @Html.HiddenFor(model => model.remitaResponse.RRR, new { @Name = "rrr", id = "rrr" })
+                    @Html.HiddenFor(model => model.remita.hash, new { @Name = "hash", id = "hash" })
+                    @Html.HiddenFor(model => model.remita.merchantId, new { @Name = "merchantId", id = "merchantId" })
+                    @Html.HiddenFor(model => model.remita.responseurl, new { @Name = "responseurl", id = "responseurl" })
+
+
+                        <p>
+                         <b>Customer Name:</b>  @Model.remita.payerName.ToString()
+                        </p>
+                        <p>
+                            <b>Customer Phone:</b>   @Model.remita.payerPhone
+                        </p>
+                        <p>
+                            <b>Total Amount:</b>   N @Model.remita.totalAmount
+                        </p>
+                        <p>
+                            <b>Remita Retrieval Reference(RRR):</b>   @Model.remitaResponse.RRR
+                        </p>
+                        <p>
+                            <b>Invoice Number:</b>  @Model.remita.orderId
+
+
+                        </p>
+                  <cite>For Bank payments, kindly copy the Remita Retrieval Reference(RRR) and proceed to the bank to make payment. Tell the teller that you want to make payment using Remita then hand them the RRR number</cite>   
+                  
+                    </div>
+                        <div class="col-md-12">
+                            <div class="col-md-3">
+                                <p class="text-bold">Select Payment Option</p>
+                            </div>
+                            <div class="col-md-6 ">
+
+
+                                <div class="form-group">
+                                    <select class="form-control" name="paymenttype">
+                                       <option value="Interswitch"> Verve Card</option>
+                                        <option value="UPL"> Visa</option>
+                                        <option value="UPL"> MasterCard</option>
+                                        <option value="PocketMoni"> PocketMoni</option>
+                                        
+                                    </select>
+                                </div>
+
+                               
+                            </div>
+                        
+                            <div class="col-md-3">
+                                <div class="form-inline">
+                                    <div class="form-group">
+                                        <input class="btn btn-primary btn-lg mr5" type="submit" name="submit" id="submit" value="PAY" />
+                                     </div>
+                                </div>
+                            </div>
+                        
+                        </div>
+                  
+                }
+                </div>
+             
+                <div class="row">
+                    <img src="~/Content/Images/remita-payment-logo-horizonal.png" />
+                </div>
+            
+                <div class="row">
+                    @Html.ActionLink("Back", "Index", new { Id = @Model.ApplicationForm.Id }, new { @class = "" })
+                </div>
+            </div>
+        </div>
+
+        }
+        else
+        {
+            <div class="alert alert-danger" role="alert">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error: </span>
+                Communication Could not be established with the Server
+            </div>
+        }
+     </div>

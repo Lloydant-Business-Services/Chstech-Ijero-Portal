@@ -1,0 +1,109 @@
+﻿@model Abundance_Nk.Model.Model.PreviousEducation
+
+@{
+    //Layout = null;
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div style="font-size:x-large">Tertiary Education</div>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group margin-bottom-3">
+                    <div class="col-md-5">
+                        @Html.LabelFor(model => model.SchoolName, new { @class = "control-label text-bold " })
+                    </div>
+                    <div class="col-md-7 ">
+                        @Html.DisplayFor(model => model.SchoolName)
+                    </div>
+                </div>                
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group margin-bottom-3">
+                    <div class="col-md-5">
+                        @Html.LabelFor(model => model.Course, new { @class = "control-label text-bold " })
+                    </div>
+                    <div class="col-md-7 ">
+                        @Html.DisplayFor(model => model.Course)
+                    </div>
+                </div> 
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group margin-bottom-3">
+                    <div class="col-md-5">
+                        @Html.LabelFor(model => model.StartDate, new { @class = "control-label text-bold " })
+                    </div>
+                    <div class="col-md-7 ">
+                        @Html.DisplayFor(model => model.StartDate, "{0:dd/MM/yyyy}")
+                    </div>
+                </div> 
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group margin-bottom-3">
+                    <div class="col-md-5">
+                        @Html.LabelFor(model => model.EndDate, new { @class = "control-label text-bold " })
+                    </div>
+                    <div class="col-md-7 ">
+                        @Html.DisplayFor(model => model.EndDate, "{0:dd/MM/yyyy}")
+                    </div>
+                </div> 
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group margin-bottom-3">
+                    <div class="col-md-5">
+                        @Html.LabelFor(model => model.Qualification.Id, new { @class = "control-label text-bold " })
+                    </div>
+                    <div class="col-md-7 ">
+                        @Html.DisplayFor(model => model.Qualification.ShortName)
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group margin-bottom-3">
+                    <div class="col-md-5">
+                        @Html.LabelFor(model => model.ResultGrade.Id, new { @class = "control-label text-bold " })
+                    </div>
+                    <div class="col-md-7 ">
+                        @Html.DisplayFor(model => model.ResultGrade.Name)
+                    </div>
+                </div> 
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group margin-bottom-3">
+                    <div class="col-md-5">
+                        @Html.LabelFor(model => model.ITDuration.Id, new { @class = "control-label text-bold " })
+                    </div>
+                    <div class="col-md-7 ">
+                        @Html.DisplayFor(model => model.ITDuration.Name)
+                    </div>
+                </div> 
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group margin-bottom-3">
+                   
+                </div> 
+            </div>
+        </div>
+
+       
+
+
+    </div>
+</div>
+
+

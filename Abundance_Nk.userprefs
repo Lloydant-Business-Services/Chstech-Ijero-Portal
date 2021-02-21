@@ -1,0 +1,14 @@
+﻿<Properties StartupConfiguration="{1E153CB5-22A8-4B87-BAB1-435F7A727763}|">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Abundance_Nk.Web/Areas/Admin/Controllers/DownloadFileAction.cs">
+    <Files>
+      <File FileName="Abundance_Nk.Web/Areas/Admin/Controllers/CoursesController.cs" Line="934" Column="39" />
+      <File FileName="Abundance_Nk.Web/Areas/Admin/Controllers/DownloadFileAction.cs" Line="13" Column="5" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+</Properties>

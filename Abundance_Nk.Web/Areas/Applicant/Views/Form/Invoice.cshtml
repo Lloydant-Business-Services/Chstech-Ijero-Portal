@@ -1,0 +1,202 @@
+﻿@model Abundance_Nk.Web.Areas.Applicant.ViewModels.PostJAMBFormPaymentViewModel
+
+@{
+    ViewBag.Title = "Invoice";
+    //Layout = null;
+    Layout = "~/Views/Shared/_NewThemeLayout.cshtml";
+}
+
+
+@*<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<link href="~/Content/style.default.css" rel="stylesheet" />
+<link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />*@
+
+
+
+@section Scripts {
+    
+<script src="~/Scripts/jquery.print.js"></script>
+    <script type="text/javascript">
+        $("#aPrint").on('click', function () {
+            $(".printable").print();
+            return false;
+        });
+    </script>
+}
+
+
+<div id="printable" class="printable">
+    <div class="row justify-content-center">
+        <h4> <img src="@Url.Content("~/Content/Images/chst.jpg")" width="100px" height="100px" alt="" /><span class="custom-text-black"><strong> COLLEGE OF HEALTH AND SCIENCE TECHNOLOGY, IJERO-EKITI</strong></span></h4>
+
+    </div>
+       
+            <div class="card-body p-4">
+                <div class="row">
+                    @if (TempData["Message"] != null)
+                    {
+                        @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+                    }
+
+                    @if (Model == null || Model.Person == null || Model.Payment == null) { return; }
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+
+                        <h5 class="lg-title mb10">From</h5>
+                        <div>
+                            <p class="custom-text-black"><strong>@Model.Person.FullName</strong><br></p>
+                            <h5>
+                                <p class="custom-text-black">
+                                    Email:
+                                    @Model.Person.Email
+                                    <br>
+                                </p>
+                            </h5>
+                            <p class="custom-text-black">
+                                Phone: @Model.Person.MobilePhone
+                                <br />
+                            </p>
+                            <p class="custom-text-black">
+                                Department: @Model.Department.Name
+                                <br />
+                            </p>
+                            @if (Model.DepartmentOption != null)
+                            {
+                                <p class="custom-text-black">
+                                    Option: @Model.DepartmentOption.Name
+                                    <br />
+                                </p>
+                            }
+                            <p class="custom-text-black">
+                                Programme: @Model.ApplicationProgrammeFee.Programme.Name
+                                <br />
+                            </p>
+                            <br />
+                            @if (Model != null && Model.PaymentEtranzactType != null)
+                            {
+
+                                <span><b class="custom-text-black">Payment Type:</b>: @Model.PaymentEtranzactType.Name</span>
+
+                            }
+
+                        </div>
+
+                    </div><!-- col-sm-6 -->
+
+                    <div class="col-md-6 text-right">
+                        <h5 class="subtitle mb10"><span class="custom-text-black">Invoice No.</span></h5>
+                        <h4 class="text-primary custom-text-black">@Model.Payment.InvoiceNumber</h4>
+                        <h5 class="subtitle mb10"><p class="custom-text-black">RRR No.</p></h5>
+                        @if (Model.remitaPayment != null)
+    {
+                    <h4 class="text-primary custom-text-black">@Model.remitaPayment.RRR</h4>
+}
+
+
+                        <h5 class="subtitle mb10 custom-text-black">To</h5>
+
+
+                        <div>
+                            <p class="custom-text-black">
+                                <strong>The College of Health and Science Technology, Ijero-Ekiti</strong><br>
+                                P.M.B 7788 Ijero, Ekiti State, Nigeria.<br>
+                            </p>
+                        </div>
+
+                        <br />
+                        <p class="custom-text-black"><strong>Invoice Date:</strong> @DateTime.Now.ToLongDateString()</p>
+
+                    </div>
+                </div><!-- row -->
+
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Quantity</th>
+                                <th>Unit Price (₦)</th>
+                                <th>Total Price (₦)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <h5><p class="custom-text-black">@Model.ApplicationProgrammeFee.FeeType.Name</p></h5>
+                                </td>
+                                <td><p class="custom-text-black">1</p></td>
+
+
+                                <td><p class="custom-text-black">@Model.Payment.FeeDetails.Sum(p => p.Fee.Amount).ToString("n")</p></td>
+                                <td><p class="custom-text-black">@Model.Payment.FeeDetails.Sum(p => p.Fee.Amount).ToString("n")</p></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h5><a href=""></a></h5>
+                                    <p></p>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h5><a href=""></a></h5>
+                                    <p> </p>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h5><a href=""></a></h5>
+                                    <p></p>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div><!-- table-responsive -->
+
+                <table class="table table-total">
+                    <tbody>
+                    <tr>
+                        <td class="custom-text-black">Sub Total:</td>
+                        <td class="custom-text-black">@Model.Payment.FeeDetails.Sum(p => p.Fee.Amount).ToString("n")</td>
+                        @*<td>@Model.ApplicationProgrammeFee.Fee.Amount</td>*@
+                    </tr>
+                    <tr>
+                        <td class="custom-text-black">VAT:</td>
+                        <td class="custom-text-black">0.00</td>
+                    </tr>
+                    <tr>
+                        <td class="custom-text-black">TOTAL:</td>
+                        <td class="custom-text-black">@Model.Payment.FeeDetails.Sum(p => p.Fee.Amount).ToString("n")</td>
+
+                    </tr>
+                    </tbody>
+                </table>
+                <div>
+                    <i style="color: red">Kindly ensure you note down your <b>RRR number</b> on your invoice as you will need it to proceed and fill your application form after payment.</i>
+                </div>
+                <div>
+                    @*<a type="buttton" href="#" class="btn btn-danger  btn-lg mr5">PAY WITH CARD</a>*@
+                    @Html.ActionLink("PAY WITH CARD", "CardPayment", new {controller = "Form", area = "Applicant"}, new {@class = "btn btn-danger  btn-lg mr5"})
+
+                </div>
+
+            </div><!-- panel-body -->
+            <div class="well nomargin custom-text-black" style="margin:20px">
+                Thank you for choosing our institution.
+            </div>
+
+        <!-- panel -->
+   
+    <button id="aPrint" class="print btn btn-white btn-lg "><i class="fa fa-print mr5"></i> Print Slip</button>
+    <a class="btn btn-white btn-lg " href="http://www.fedpolyado.edu.ng/"><i class="fa fa-home mr5"></i>Back to Home</a>
+
+</div>

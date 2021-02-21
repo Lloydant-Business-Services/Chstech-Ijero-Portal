@@ -1,0 +1,123 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.FeeDetailViewModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <div class="row">
+                <div>
+                    @if (TempData["Message"] != null)
+                    {
+                        @Html.Partial("_Message", TempData["Message"])
+                    }
+                </div>
+            </div>
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <h3>View Departmental Fees</h3>
+                    <hr style="margin-top: 0" />
+                    <div class="col-md-12">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.feeDetail.Programme.Id, "Programme", new {@class = "control-label "})
+                                    @Html.DropDownListFor(model => model.feeDetail.Programme.Id, (IEnumerable<SelectListItem>) ViewBag.Programmes, new {@class = "form-control"})
+                                    @Html.ValidationMessageFor(model => model.feeDetail.Programme.Id, null, new {@class = "text-danger"})
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.feeDetail.Department.Id, "Course", new {@class = "control-label "})
+                                    @Html.DropDownListFor(model => model.feeDetail.Department.Id, (IEnumerable<SelectListItem>) ViewBag.Departments, new {@class = "form-control"})
+                                    @Html.ValidationMessageFor(model => model.feeDetail.Department.Id, null, new {@class = "text-danger"})
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.feeDetail.FeeType.Id, "Fee Type", new {@class = "control-label"})
+                                    @Html.DropDownListFor(model => model.feeDetail.FeeType.Id, (IEnumerable<SelectListItem>) ViewBag.FeeTypes, new {@class = "form-control"})
+                                    @Html.ValidationMessageFor(model => model.feeDetail.FeeType.Id, null, new {@class = "text-danger"})
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.feeDetail.Session.Id, "Session", new {@class = "control-label"})
+                                    @Html.DropDownListFor(model => model.feeDetail.Session.Id, (IEnumerable<SelectListItem>) ViewBag.Sessions, new {@class = "form-control"})
+                                    @Html.ValidationMessageFor(model => model.feeDetail.Session.Id, null, new {@class = "text-danger"})
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-8 col-md-10">
+                                <input type="submit" value="View" class="btn btn-default" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            <br />
+
+            @if (Model.feeDetails != null)
+            {
+                using (Html.BeginForm("SaveFeeDetailChanges", "FeeDetail", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+
+                    <div class="row">
+                        <h4>Fee Details</h4>
+
+                        <!-- Table -->
+                        <table class="table table table-bordered table-hover table-striped">
+
+                            <thead>
+                                <tr>
+                                    <th>Fee Amount</th>
+                                    <th>Payment Mode</th>
+                                    <th>Fee Type</th>
+                                    <th>Level</th>
+                                </tr>
+                            </thead>
+                            <tbody style="color: black;">
+                                @for (int i = 0; i < Model.feeDetails.Count; i++)
+                                {
+                                    <tr>
+                                        <td>@Html.DropDownListFor(model => model.feeDetails[i].Fee.Id, (IEnumerable<SelectListItem>) ViewData["FeeIdViewData" + i], new {@class = "form-control olevel"})</td>
+                                        <td>@Html.DropDownListFor(model => model.feeDetails[i].PaymentMode.Id, (IEnumerable<SelectListItem>) ViewData["PaymentModeIdViewData" + i], new {@class = "form-control olevel"})</td>
+                                        <td>@Html.DisplayTextFor(model => model.feeDetails[i].FeeType.Name)</td>
+                                        <td>@Html.DropDownListFor(model => model.feeDetails[i].Level.Id, (IEnumerable<SelectListItem>) ViewData["LevelIdViewData" + i], new {@class = "form-control olevel"})</td>
+                                        @Html.HiddenFor(model => model.feeDetails[i].Session.Id)
+                                        @Html.HiddenFor(model => model.feeDetails[i].Department.Id)
+                                        @Html.HiddenFor(model => model.feeDetails[i].Programme.Id)
+                                        @Html.HiddenFor(model => model.feeDetails[i].FeeType.Id)
+                                        @Html.HiddenFor(model => model.feeDetails[i].Id)
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-8 col-md-10">
+                            <input type="submit" value="Save Changes" class="btn btn-default" />
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+    <div class="col-md-1"></div>
+</div>

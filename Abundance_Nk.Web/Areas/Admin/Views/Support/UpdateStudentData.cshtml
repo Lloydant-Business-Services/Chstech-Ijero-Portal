@@ -1,0 +1,78 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.SupportViewModel
+@{
+    ViewBag.Title = "Reset Student Data";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var selectedProgramme = $("#studentLevel_Programme_Id").val();
+       
+
+        $("#studentLevel_Programme_Id").change(function () {
+
+            var programme = $("#studentLevel_Programme_Id").val();
+           
+            $("#studentLevel_Department_Id").empty();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartmentByProgrammeId")', // we are calling json method
+                dataType: 'json',
+                data: { id: programme },
+                success: function (departments) {
+                    $("#studentLevel_Department_Id").append('<option value="' + 0 + '"> -- Select -- </option>');
+
+                    $.each(departments, function (i, department) {
+                        $("#studentLevel_Department_Id").append('<option value="' + department.Value + '">' + department.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+        })
+
+    })
+</script>
+
+
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="col-md-12">
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+        <h3>Update Student Data</h3>
+        <hr />
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ApplicationForm.Number, new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(model => model.ApplicationForm.Number, new { @class = "form-control", @placeholder = "Enter Application Number" })
+                    @Html.ValidationMessageFor(model => model.ApplicationForm.Number, null, new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-10">
+                    <input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="Reset Student" />
+
+                </div>
+            </div>
+        }
+    </div>
+
+</div>
+

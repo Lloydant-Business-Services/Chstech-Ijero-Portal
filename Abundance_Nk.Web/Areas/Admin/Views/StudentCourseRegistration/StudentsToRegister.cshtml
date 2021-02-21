@@ -1,0 +1,256 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.StudentCourseRegistrationViewModel
+@{
+    ViewBag.Title = "StudentsToRegister";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#payments').hide();
+        $("#loading").hide();
+
+        //Programme Drop down Selected-change event
+        $("#Programme").change(function () {
+
+            $("#Department").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartments", "StudentCourseRegistration")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#Programme").val() },
+                // Get Selected Country ID.
+                success: function (departments) {
+                    $("#Department").append('<option value="' + 0 + '">' +
+                        '-- Select Department --' + '</option>');
+                    $.each(departments, function (i, department) {
+                        $("#Department").append('<option value="' + department.Value + '">' +
+                            department.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+            return false;
+        });
+
+        $("#Department").change(function () {
+
+            $("#Option").show();
+            $("#DepartmentOption").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartmentOptions", "StudentCourseRegistration")', // Calling json method
+                dataType: 'json',
+                data: { ProgId: $("#Programme").val(), DeptId: $("#Department").val() },
+                // Get Selected Country ID.
+                success: function (departmentOptions) {
+                    $("#DepartmentOption").append('<option value="' + 0 + '">' +
+                        '-- Select Department Option --' + '</option>');
+                    $.each(departmentOptions, function (i, departmentOption) {
+                        $("#DepartmentOption").append('<option value="' + departmentOption.Value + '">' +
+                            departmentOption.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve department options.' + ex);
+                }
+            });
+            return false;
+        });
+
+    });
+
+    function ViewPayment(personId) {
+        $("#loading").show();
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetPayments", "StudentCourseRegistration")', // Calling json method
+            data: { id: personId },
+            success: function (result) {
+                $("#loading").hide();
+
+                $('#viewP').html(result);
+                $('#payments').modal("show");
+            },
+            error: function (ex) {
+                $("#loading").hide();
+                alert('Failed to retrieve payments.' + ex);
+
+            }
+        });
+        return false;
+    };
+
+    function Register(personId) {
+        $("#loading").show();
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("RegisteStudent", "StudentCourseRegistration")', // Calling json method
+            dataType: 'json',
+            data: { id: personId },
+            success: function (result) {
+                $("#loading").hide();
+                if (result === "Success") {
+                    alert('Registration Successful for the selected Session');
+                }
+            },
+            error: function (ex) {
+                $("#loading").hide();
+                alert('Registration Failed.' + ex);
+            }
+        });
+        return false;
+    }
+
+
+</script>
+
+
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading panel-dark-head">
+                <h4>Unregistered Students</h4>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+
+                    @using (Html.BeginForm("StudentsToRegister", "StudentCourseRegistration", new { area = "Admin" }, FormMethod.Post))
+                    {
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Session.Name, "Session", new { @class = "col-sm-2 control-label " })
+                            <div class="col-sm-10">
+                                @Html.DropDownListFor(model => model.Session.Id, (IEnumerable<SelectListItem>)ViewBag.Session, new { @class = "form-control", @id = "Session" })
+                                @Html.ValidationMessageFor(model => model.Session.Id, null, new { @class = "text-danger" })
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Programme.Name, "Programme", new { @class = "col-sm-2 control-label " })
+                            <div class="col-sm-10">
+                                @Html.DropDownListFor(model => model.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.Programme, new { @class = "form-control", @id = "Programme" })
+                                @Html.ValidationMessageFor(model => model.Programme.Id, null, new { @class = "text-danger" })
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Department.Name, "Department", new { @class = "col-sm-2 control-label " })
+                            <div class="col-sm-10">
+                                @Html.DropDownListFor(model => model.Department.Id, (IEnumerable<SelectListItem>)ViewBag.Department, new { @class = "form-control", @id = "Department" })
+                                @Html.ValidationMessageFor(model => model.Department.Id, null, new { @class = "text-danger" })
+                            </div>
+
+                        </div>
+                        <div style="display: none" id="Option">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.DepartmentOption.Name, "Department Option", new { @class = "col-sm-2 control-label " })
+                                <div class="col-sm-10">
+                                    @Html.DropDownListFor(model => model.DepartmentOption.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentOptions, new { @class = "form-control", @id = "DepartmentOption" })
+                                    @Html.ValidationMessageFor(model => model.DepartmentOption.Id, null, new { @class = "text-danger" })
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Level.Name, "Level", new { @class = "col-sm-2 control-label " })
+                            <div class="col-sm-10">
+                                @Html.DropDownListFor(model => model.Level.Id, (IEnumerable<SelectListItem>)ViewBag.Level, new { @class = "form-control", @id = "Level" })
+                                @Html.ValidationMessageFor(model => model.Level.Id, null, new { @class = "text-danger" })
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-10">
+                                <input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="View" />
+
+                            </div>
+                        </div>
+
+                    }
+
+
+                    <br />
+                    <div class="col-md-12">
+                        @if (Model.StudentLevelList != null && Model.StudentLevelList.Count > 0)
+                        {
+                            <div class="panel panel-danger">
+                                <div class="panel-body">
+                                    <div id="loading" style="display: none">
+                                        <img src="@Url.Content("~/Content/Images/bx_loader.gif")" />
+                                        <span>Loading ...</span>
+                                    </div>
+                                    <table id="location" class="table-bordered table-hover table-striped table-responsive table">
+                                        <tr>
+                                            <th>
+                                                Name
+                                            </th>
+                                            <th>
+                                                Matric Number
+                                            </th>
+                                            <th>
+                                                Payment/Registration
+                                            </th>
+                                        </tr>
+
+                                        @for (int i = 0; i < Model.StudentLevelList.Count(); i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Model.StudentLevelList[i].Student.FullName
+                                                </td>
+                                                <td>
+                                                    @Model.StudentLevelList[i].Student.MatricNumber
+                                                </td>
+                                                <td>
+                                                    <button class="btn-success btn mr5" onclick="ViewPayment(@Model.StudentLevelList[i].Student.Id)">View Payment</button> |
+                                                    <button href="#" class="btn-success btn mr5" onclick="Register(@Model.StudentLevelList[i].Student.Id)">Register Student</button>
+
+                                                </td>
+                                            </tr>
+                                        }
+
+                                    </table>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div id="payments" class="modal" role="dialog">
+
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Confirmed Payments</h4>
+                                </div>
+                                <div id="viewP"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-1"></div>
+</div>
+

@@ -1,0 +1,53 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.SupportViewModel
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+@*<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<link href="~/Content/style.default.css" rel="stylesheet" />
+<link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />*@
+
+<div class="panel panel-default">
+    <div class="panel-body">
+
+        <table class="table table-bordered table-hover table-striped">
+
+            <thead>
+                <tr>
+                    <th>@Html.ActionLink("Date", "ViewAuditReport", new { sortOrder = ViewBag.Department, currentFilter = ViewBag.CurrentFilter })</th>
+                    <th>@Html.ActionLink("Action", "ViewAuditReport", new { sortOrder = ViewBag.Programme, currentFilter = ViewBag.CurrentFilter })</th>
+                    <th>@Html.ActionLink("Student Name", "ViewAuditReport", new { sortOrder = ViewBag.Minimum, currentFilter = ViewBag.CurrentFilter })</th>
+                    <th>@Html.ActionLink("User ", "ViewAuditReport", new { sortOrder = ViewBag.Date, currentFilter = ViewBag.CurrentFilter })</th>
+                    <th>@Html.ActionLink("Client ", "ViewAuditReport", new { sortOrder = ViewBag.Date, currentFilter = ViewBag.CurrentFilter })</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody style="color:black;">
+                @for (var itemIndex = 0; itemIndex < Model.personAudit.Count; itemIndex++)
+                {
+                    <tr>
+                        <td>@Model.personAudit[itemIndex].Time.ToString()</td>
+                        <td>@Model.personAudit[itemIndex].Action</td>
+                        <td>@Model.personAudit[itemIndex].FullName</td>
+                        <td>@Model.personAudit[itemIndex].User.Username</td>
+                        <td>@Model.personAudit[itemIndex].Client</td>
+                        <td><i class="fa fa-edit"> @Html.ActionLink("View Details", "ViewAuditReportDetails", "Support", new { Area = "Admin", Id = @Model.personAudit[itemIndex].Id }, null)</i></td>
+                    </tr>
+
+
+
+
+                }
+
+            </tbody>
+
+
+        </table>
+
+
+
+
+    </div>
+</div>

@@ -1,0 +1,157 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.SupportViewModel
+
+@{
+    ViewBag.Title = "Name Correction";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script>
+
+
+    //Session Drop down Selected change event
+    function GetDeptOption() {
+        $("#DeptOption").empty();
+        $("#deptOption").hide();
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetDepartmentOptions", "Support")', // Calling json method
+            dataType: 'json',
+            data: { ProgId: $("#Programme").val(), DeptId: $("#Department").val() },
+            // Get Selected Country ID.
+            success: function(departmentOptions) {
+              
+                //$("#DeptOption").append('<option value="' + 0 + '">' +
+                //    '-- Select Department Option --' + '</option>');
+                $.each(departmentOptions, function(i, departmentoption) {
+                    $("#DeptOption").append('<option value="' + departmentoption.Value + '">' + departmentoption.Text + '</option>');
+                    $("#deptOption").show();
+                });
+            },
+            error: function(ex) {
+                alert('Failed to retrieve options.' + ex);
+                $("#deptOption").hide();
+            }
+        });
+        $("#deptOption").hide();
+        //return false;
+    }
+
+
+</script>
+
+@if (TempData["Message"] != null)
+{
+    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div style="font-size:x-large">Name Correction</div>
+            </div>
+            <div class="panel-body">
+
+
+
+                @using (Html.BeginForm("Correction", "Support", new { area = "Admin" }, FormMethod.Post))
+                {
+                    <div class="row">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.studentModel.MatricNumber, "Matriculation Number", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-6">
+                                @Html.TextBoxFor(model => model.studentModel.MatricNumber, new { @class = "form-control", @placeholder = "Enter Matric Number", @required = "required" })
+                                @Html.ValidationMessageFor(model => model.studentModel.MatricNumber, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Submit" class="btn btn-success mr5" />
+                            </div>
+                        </div>
+                    </div>
+                }
+
+
+
+            </div>
+
+        </div>
+
+        @if (Model.studentModel == null) { return; }
+        @if (Model.studentModel != null && Model.studentModel.LastName != null || Model.studentModel.FirstName != null || Model.studentModel.OtherName != null)
+        {
+            Html.HiddenFor(model => model.Level.Id);
+            using (Html.BeginForm("SaveName", "Support", new { area = "Admin" }, FormMethod.Post))
+            {
+                <div class="row">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.studentModel.LastName, "Last Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.studentModel.LastName, new { @class = "form-control", @placeholder = "Enter Last Name" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.studentModel.FirstName, "First Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.studentModel.FirstName, new { @class = "form-control", @placeholder = "Enter First Name" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.studentModel.OtherName, "Other Name", htmlAttributes: new {@class = "control-label col-md-2"})
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.studentModel.OtherName, new {@class = "form-control", @placeholder = "Enter Other Name"})
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.studentModel.MatricNumber, "Matric Number", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.studentModel.MatricNumber, new { @class = "form-control", @placeholder = "Enter Matric Number" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Programme.Name, "Programme", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-6">
+                            @Html.DropDownListFor(model => model.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.Programme, new { @class = "form-control", @id = "Programme", @onchange = "GetDeptOption()" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Level.Name, "Department", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-6">
+                            @Html.DropDownListFor(model => model.Department.Id, (IEnumerable<SelectListItem>)ViewBag.Department, new { @class = "form-control", @id = "Department", @onchange = "GetDeptOption()" })
+                        </div>
+                    </div>
+                    <div class="form-group" id="deptOption" style="display: none">
+                        @Html.LabelFor(model => model.Level.Name, "Department Option", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-6">
+                            @Html.DropDownListFor(model => model.DepartmentOption.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentOption, new { @class = "form-control",@id = "DeptOption" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Level.Name, "Level", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-6">
+                            @Html.DropDownListFor(model => model.Level.Id, (IEnumerable<SelectListItem>)ViewBag.Level, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Save" class="btn btn-success mr5" />
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+

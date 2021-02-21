@@ -1,0 +1,290 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.CourseViewModel
+@{
+    ViewBag.Title = "AddAndUpdateCourses";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+ 
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#loading").hide();
+
+        $("#Programme").change(function () {
+
+            $("#Department").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartments", "Support")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#Programme").val() },
+
+                success: function (departments) {
+                    $("#Department").append('<option value="' + 0 + '">' +
+                        '-- Select Department --' + '</option>');
+                    $.each(departments, function (i, department) {
+                        $("#Department").append('<option value="' + department.Value + '">' +
+                            department.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+
+            $("#Level").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetLevels", "Courses")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#Programme").val() },
+                // Get Selected Country ID.
+                success: function (levels) {
+                    $("#Level").append('<option value="' + 0 + '">' +
+                        '-- Select Level --' + '</option>');
+                    $.each(levels, function (i, level) {
+                        $("#Level").append('<option value="' + level.Value + '">' +
+                            level.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve levels.' + ex);
+                }
+            });
+
+            var programme = $("#Programme").val();
+            var department = $("#Department").val();
+            var level = $("#Level").val();
+
+            if (programme == undefined || department == undefined || level == undefined) {
+                $("#Option").hide();
+                return;
+            }
+
+            $("#DepartmentOption").empty();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartmentOptionByDepartment", "Courses")', // we are calling json method
+                dataType: 'json',
+                data: { id: department, programmeid: programme, levelId: level },
+                success: function (departmentOptions) {
+
+                    if (departmentOptions == "" || departmentOptions == null || departmentOptions == undefined || departmentOptions.Lenght <= 0) {
+                        $("#Option").hide();
+                    } else {
+                        $("#DepartmentOption").append('<option value="' + 0 + '"> -- Select -- </option>');
+                        $.each(departmentOptions, function (i, Option) {
+                            $("#DepartmentOption").append('<option value="' + Option.Value + '">' + Option.Text + '</option>');
+                        });
+                        if (programme > 2) {
+                            $("#Option").show();
+                        }
+
+                    }
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve department Options.' + ex);
+                }
+            });
+
+            return false;
+        });
+
+        //Department Drop down Selected-change event
+        $("#Department").change(function () {
+
+            $("#DepartmentOption").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartmentOptions", "Support")', // Calling json method
+                dataType: 'json',
+                data: { progId: 3, DeptId: $("#Department").val() },
+
+                success: function (departmentOptions) {
+
+                    $("#DepartmentOption").append('<option value="' + 0 + '">' +
+                        '-- Select Department Option --' + '</option>');
+                    $.each(departmentOptions, function (i, departmentOption) {
+                        $("#DepartmentOption").append('<option value="' + departmentOption.Value + '">' +
+                            departmentOption.Text + '</option>');
+
+                    });
+                    if ($("#Programme").val() > 2) {
+                        $("#Option").show();
+                    }
+
+                    if (departmentOptions == "" || departmentOptions == null || departmentOptions == undefined || departmentOptions.Lenght <= 0) {
+                        $("#Option").hide();
+                    }
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve department options.' + ex);
+                }
+            });
+            return false;
+        });
+
+    });
+
+    function ButtonClick() {
+        $("#loading").hide();
+    }
+
+
+</script>
+
+
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading panel-dark-head">
+                <h4>Add And Update Courses</h4>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+
+                    @using (Html.BeginForm("AddAndUpdateCourses", "Courses", new { area = "Admin" }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                                                
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.programme.Name, "Programme", new { @class = "col-sm-2 control-label " })
+                            <div class="col-sm-10">
+                                @Html.DropDownListFor(model => model.programme.Id, (IEnumerable<SelectListItem>)ViewBag.Programme, new { @class = "form-control", @id = "Programme", @required = "required" })
+                                @Html.ValidationMessageFor(model => model.programme.Id, null, new { @class = "text-danger" })
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Department.Name, "Department", new {@class = "col-sm-2 control-label "})
+                            <div class="col-sm-10">
+                                @Html.DropDownListFor(model => model.Department.Id, (IEnumerable<SelectListItem>) ViewBag.Department, new {@class = "form-control", @id = "Department", @required = "required"})
+                                @Html.ValidationMessageFor(model => model.Department.Id, null, new {@class = "text-danger"})
+                            </div>
+
+                        </div>      
+                        
+                        <div style="display: none" id="Option">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.DepartmentOption.Name, "Department Option", new { @class = "col-sm-2 control-label " })
+                                <div class="col-sm-10">
+                                    @Html.DropDownListFor(model => model.DepartmentOption.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentOption, new { @class = "form-control", @id = "DepartmentOption"})
+                                    @Html.ValidationMessageFor(model => model.DepartmentOption.Id, null, new { @class = "text-danger" })
+                                </div>
+
+                            </div> 
+                        </div>
+                        
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.level.Name, "Level", new { @class = "col-sm-2 control-label " })
+                            <div class="col-sm-10">
+                                @Html.DropDownListFor(model => model.level.Id, (IEnumerable<SelectListItem>)ViewBag.Level, new { @class = "form-control", @id = "Level", @required = "required" })
+                                @Html.ValidationMessageFor(model => model.level.Id, null, new { @class = "text-danger" })
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label("File", new { @class = "col-sm-2 control-label " })
+                            <div class="col-md-10">
+                                <input type="file" title="Upload File" name="file" class="form-control"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-10">
+                                <input class="btn btn-success mr5" onclick="ButtonClick()" type="submit" name="submit" id="submit" value="Add"/>&nbsp;&nbsp;
+                                <a class="btn btn-primary" href="@Url.Action("SampleSheet", "Courses")" type="button">Sample Sheet</a>
+                                <div id="loading" style="display: none">
+                                    <img src="@Url.Content("~/Content/Images/bx_loader.gif")" />
+                                    <span>Loading ...</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                    <br/>
+                    @if (Model.Courses != null && Model.Courses.Count > 0)
+                    {
+                        
+                            <div class="panel panel-danger">
+                                <div class="panel-body">
+                                    <table class="table-bordered table-hover table-striped table-responsive table">
+                                        <tr>
+                                            <th>
+                                                Course Code
+                                            </th>
+                                            <th>
+                                                Course Title
+                                            </th>
+                                            <th>
+                                                Unit
+                                            </th>
+                                            <th>
+                                                Semester
+                                            </th>
+                                        </tr>
+
+                                        @for (int i = 0; i < Model.Courses.Count; i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Model.Courses[i].Code
+                                                </td>
+                                                <td>
+                                                    @Model.Courses[i].Name
+                                                </td>
+                                                <td>
+                                                    @Model.Courses[i].Unit
+                                                </td>
+                                                @if (Model.Courses[i].Semester != null)
+                                                {
+                                                    <td>
+                                                        @Model.Courses[i].Semester.Name
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td>
+                                                        
+                                                    </td>
+                                                }
+                                            </tr>
+
+                                        }
+
+                                    </table>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-2"></div>
+                                        <div class="col-sm-10">
+                                            @Html.ActionLink("Save", "SaveAddedCourses", "Courses", new { @class = "btn btn-success mr5" })
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-1"></div>
+</div>
+
+
+

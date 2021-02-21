@@ -1,0 +1,193 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.CourseViewModel
+@using GridMvc.Html
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="~/Scripts/file-upload/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="~/Scripts/file-upload/jquery-ui-1.9.2.min.js"></script>
+<script type="text/javascript" src="~/Scripts/file-upload/jquery.fileupload-ui.js"></script>
+<script type="text/javascript" src="~/Scripts/file-upload/jquery.fileupload.js"></script>
+<script type="text/javascript" src="~/Scripts/file-upload/jquery.iframe-transport.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.print.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#divDepartmentOption").hide();
+
+        var level = $("#course_Level_Id").val();
+        var DepartmentOption = $("#course_DepartmentOption_Id").val();
+
+        if (level > 2 && DepartmentOption > 0) {
+            $("#divDepartmentOption").show();
+        }
+
+
+        //Hide Department Option on Department change
+        $("#course_Department_Id").change(function () {
+
+            $("#divDepartmentOption").hide();
+
+        })
+
+
+
+        //Load Department Option
+        $("#course_Level_Id").change(function () {
+
+            var department = $("#course_Department_Id").val();
+            var level = $("#course_Level_Id").val();
+            var programme = "3";
+            if (level > 2) {
+
+                $("#course_DepartmentOption_Id").empty();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetDepartmentOptionByDepartment")', // we are calling json method
+                    dataType: 'json',
+                    data: { id: department, programmeid: programme },
+                    success: function (departmentOptions) {
+
+                        if (departmentOptions == "" || departmentOptions == null || departmentOptions == undefined) {
+                            $("#divDepartmentOption").hide();
+                        }
+                        else {
+                            $("#course_DepartmentOption_Id").append('<option value="' + 0 + '"> -- Select -- </option>');
+                            $.each(departmentOptions, function (i, Option) {
+                                $("#course_DepartmentOption_Id").append('<option value="' + Option.Value + '">' + Option.Text + '</option>');
+                            });
+                            if (programme > 2) {
+                                $("#divDepartmentOption").show();
+                            }
+
+                        }
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve department Options.' + ex);
+                    }
+                });
+            }
+        })
+    })
+</script>
+
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <div class="row">
+                <div>
+                    @if (TempData["Message"] != null)
+                    {
+                        @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+                    }
+                </div>
+            </div>
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <h3>View Departmental Courses</h3>
+                    <hr style="margin-top:0" />
+                    <div class="col-md-12">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.course.Department.Id, "Course", new { @class = "control-label " })
+                                    @Html.DropDownListFor(model => model.course.Department.Id, (IEnumerable<SelectListItem>)ViewBag.Departments, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.course.Department.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.course.Level.Id, "Level", new { @class = "control-label" })
+                                    @Html.DropDownListFor(model => model.course.Level.Id, (IEnumerable<SelectListItem>)ViewBag.levels, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.course.Level.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div id="divDepartmentOption" class="form-group">
+                                    @Html.LabelFor(model => model.course.DepartmentOption.Id, "Course", new { @class = "control-label " })
+                                    @Html.DropDownListFor(model => model.course.DepartmentOption.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentOptionId, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.course.DepartmentOption.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <div class="col-md-offset-8 col-md-10">
+                                <input type="submit" value="View" class="btn btn-default" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            }
+            <br />
+
+            @if (Model != null)
+            {
+
+                <div class="row">
+                    <h4>First Semester</h4>
+                    @if (Model.firstSemesterCourses != null)
+                {
+                        @Html.Grid(Model.firstSemesterCourses).Columns(columns =>
+                    {
+                        
+                        columns.Add(f => f.Code).Titled("Code");
+                        columns.Add(f => f.Name).Titled("Course").Sortable(true);
+                        columns.Add(f => f.Type.Name).Titled("Course Type").Sortable(true);
+                        columns.Add(f => f.Unit).Titled("Unit").Sortable(true);
+                        columns.Add(f => f.Department.Name).Titled("Department").Sortable(true);
+                        columns.Add(f => f.Level.Name).Titled("Level").Sortable(true);
+                    }).WithPaging(15).Filterable(true)
+
+                    }
+                </div>
+
+                <div class="row">
+                    <h4>Second Semester</h4>
+                    @if (Model.secondSemesterCourses != null)
+                {
+                        @Html.Grid(Model.secondSemesterCourses).Columns(columns =>
+                    {
+                       
+                        columns.Add(f => f.Code).Titled("Code");
+                        columns.Add(f => f.Name).Titled("Course").Sortable(true);
+                        columns.Add(f => f.Type.Name).Titled("Course Type").Sortable(true);
+                        columns.Add(f => f.Unit).Titled("Unit").Sortable(true);
+                        columns.Add(f => f.Department.Name).Titled("Department").Sortable(true);
+                        columns.Add(f => f.Level.Name).Titled("Level").Sortable(true);
+                    }).WithPaging(15).Filterable(true)
+
+                    }
+                </div>
+
+
+            }
+
+
+        
+         </div>
+
+    </div>
+
+    <div class="col-md-1"></div>
+    </div>
+

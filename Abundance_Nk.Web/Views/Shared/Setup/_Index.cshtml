@@ -1,0 +1,59 @@
+﻿@model IEnumerable<Abundance_Nk.Model.Model.Setup>
+@using GridMvc.Html
+
+<div class="alert alert-success fade in nomargin">
+    <h3>@ViewBag.Title</h3>
+</div>
+
+
+@if (TempData["Message"] != null)
+{
+    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+}
+
+@if (@Model == null)
+{
+    return;
+}
+
+@Html.Partial("_IndexSetupHeader", @Model.Count())
+
+<div class="panel panel-default">
+    <div class="panel-body">
+
+
+
+
+
+        @Html.Grid(Model).Columns(columns =>
+{
+    columns.Add()
+        .Encoded(false)
+        .Sanitized(false)
+        .RenderValueAs(d =>
+            @<div style="width:41px">
+                <a href="@Url.Action("Edit", new { id = d.Id })" title="Edit">
+                    <img src="@Url.Content("~/Content/Images/edit_icon.png")" alt="Edit" />
+                </a>
+
+                @*<a href="@Url.Action("Details", new { id = d.Id })" title="Details">
+                        <img src="@Url.Content("~/Content/Images/list_icon3.png")" alt="Details" />
+                    </a>*@
+
+                <a href="@Url.Action("Delete", new { id = d.Id })" title="Delete">
+                    <img src="@Url.Content("~/Content/Images/delete_icon.png")" alt="Delete" />
+                </a>
+            </div>);
+
+    columns.Add(f => f.Name).Titled("Name");
+
+}).WithPaging(15)
+    </div>
+
+</div>
+
+
+<br />
+@*<hr />*@
+
+

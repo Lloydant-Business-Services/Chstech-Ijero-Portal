@@ -1,0 +1,100 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.UserViewModel
+
+@{
+    ViewBag.Title = "Staff Details";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+@*<link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/style.default.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />*@
+
+
+@if (TempData["Message"] != null)
+{
+    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-fw fa-user"></i>Staff Detail</h3>
+    </div>
+    <div class="panel-body">
+
+
+        @using (Html.BeginForm("Index", "User", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+
+            <div class="panel panel-default custom-text-black">
+                <div class="panel-body ">
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.User.Username, "Staff Name", new { @class = "col-sm-2 control-label " })
+                        <div class="col-sm-10">
+                            @Html.DisplayFor(model => model.User.Username, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.User.Password, new { @class = "col-sm-2 control-label " })
+                        <div class="col-sm-10">
+                            @Html.DisplayFor(model => model.User.Password, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.User.Email, "Email", new { @class = "col-sm-2 control-label " })
+                        <div class="col-sm-10">
+                            @Html.DisplayFor(model => model.User.Email, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.User.Role.Id, "Role", new { @class = "col-sm-2 control-label " })
+                        <div class="col-sm-4">
+                            @Html.DisplayFor(model => model.User.Role.Name, new { @class = "form-control" })
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.User.SecurityQuestion.Id,"Security Question", new { @class = "col-sm-2 control-label " })
+                        <div class="col-sm-4">
+                            @Html.DisplayFor(model => model.User.SecurityQuestion.Name, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.User.SecurityAnswer, "Security Answer", new { @class = "col-sm-2 control-label " })
+                        <div class="col-sm-4">
+                            @Html.DisplayFor(model => model.User.SecurityAnswer, new { @class = "form-control" })
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.User.LastLoginDate, "Last Login", new { @class = "col-sm-2 control-label " })
+                        <div class="col-sm-4">
+                            @Html.DisplayFor(model => model.User.LastLoginDate, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-10">
+                            
+                            @Html.ActionLink("Edit", "EditUser", "User", new {Area = "Admin", @id = @Model.User.Id}, new {@class = "btn btn-success mr5"}) |
+                            @Html.ActionLink("Back", "Index", "User", new {Area = "Admin"}, new {@class = "btn btn-success mr5"})
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        }
+
+    </div>
+</div>

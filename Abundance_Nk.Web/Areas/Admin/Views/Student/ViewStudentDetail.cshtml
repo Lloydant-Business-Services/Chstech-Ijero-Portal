@@ -1,0 +1,214 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.StudentCourseRegistrationViewModel
+@{
+    ViewBag.Title = "View Student Detail";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    label, h5{
+        font-size: 20px;
+    }
+
+    .column {
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="row">
+    <div class="col-xs-12 col-md-10 col-md-offset-1">
+        <div class="panel panel-default">
+            <div class="panel-body" style="padding-top:0 !important;">
+                <div class="row">
+                    <div>
+                        @if (TempData["Message"] != null)
+                        {
+                            @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+                        }
+                        @if (TempData["Action"] != null)
+                        {
+                            <div class="alert alert-dismissible alert-warning">
+                                <button type="button" class="close" data-dismiss="alert">×</button>
+                                <p>@TempData["Action"].ToString()</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                @if (Model.UpdateRegistration != null)
+                {
+                    <div class="row">
+                        <div class="col-xs-12" style="background: #990066">
+                            <h3 style="color:#fff;" class="text-center">STUDENT'S LIBRARY REGISTRATION FORM</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h4>BIO DATA</h4>
+                            <hr />
+                        </div>
+                        @if (!string.IsNullOrEmpty(Model.UpdateRegistration.ImageFile))
+                        {
+                            <div class="col-xs-12">
+                                <div style="width:150px;height:150px;margin-bottom:20px;">
+                                    <img src="@Url.Content(Model.UpdateRegistration.ImageFile)" style="width:100%;height:100%;" />
+                                </div>
+                            </div>
+                        }
+
+                        <div class="col-xs-12 col-md-6 column">
+                            <label>Name</label>
+                            <h5>@string.Format("{0} {1} {2}", Model.UpdateRegistration.FirstName, Model.UpdateRegistration.LastName, Model.UpdateRegistration.OtherName)</h5>
+                        </div>
+                        <div class="col-xs-12 col-md-6 column">
+                            <label>Date Of Birth</label>
+                            <h5>@Model.UpdateRegistration.DateOfBirth.ToString("dd/MM/yyyy")</h5>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.UpdateRegistration.PhoneNumber))
+                        {
+                            <div class="col-xs-12 col-md-6 column">
+                                <label>Phone Number</label>
+                                <h5>@Model.UpdateRegistration.PhoneNumber</h5>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(Model.UpdateRegistration.SexName))
+                        {
+                            <div class="col-xs-12 col-md-6 column">
+                                <label>Sex</label>
+                                <h5>@Model.UpdateRegistration.SexName</h5>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(Model.UpdateRegistration.EmailAddress))
+                        {
+                            <div class="col-xs-12 col-md-6 column">
+                                <label>Email</label>
+                                <h5>@Model.UpdateRegistration.EmailAddress</h5>
+                            </div>
+                        }
+
+                        <div class="col-xs-12">
+                            <h4>PERSONAL INFORMATION</h4>
+                            <hr />
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.UpdateRegistration.NationalityName))
+                        {
+                            <div class="col-xs-12 col-md-6 column">
+                                <label>Nationality</label>
+                                <h5>@Model.UpdateRegistration.NationalityName</h5>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(Model.UpdateRegistration.HomeAddress))
+                        {
+                            <div class="col-xs-12 col-md-6 column">
+                                <label>Contact Address</label>
+                                <h5>@Model.UpdateRegistration.HomeAddress</h5>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(Model.UpdateRegistration.StateName))
+                        {
+                            <div class="col-xs-12 col-md-6 column">
+                                <label>State Of Origin</label>
+                                <h5>@Model.UpdateRegistration.StateName</h5>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(Model.UpdateRegistration.ParentGuardian))
+                        {
+                            <div class="col-xs-12 col-md-6 column">
+                                <label>Parent/Guardian</label>
+                                <h5>@Model.UpdateRegistration.ParentGuardian</h5>
+                            </div>
+                        }
+
+                        <div class="col-xs-12">
+                            <h4>DEPARTMENTAL INFORMATION</h4>
+                            <hr />
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.UpdateRegistration.SchoolName))
+                        {
+                            <div class="col-xs-12 col-md-6 column">
+                                <label>School Name</label>
+                                <h5>@Model.UpdateRegistration.SchoolName</h5>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(Model.UpdateRegistration.HODName))
+                        {
+                            <div class="col-xs-12 col-md-6 column">
+                                <label>Head Of Department</label>
+                                <h5>@Model.UpdateRegistration.HODName</h5>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(Model.UpdateRegistration.DepartmentName))
+                        {
+                            <div class="col-xs-12 col-md-6 column">
+                                <label>Department</label>
+                                <h5>@Model.UpdateRegistration.DepartmentName</h5>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(Model.UpdateRegistration.LevelName))
+                        {
+                            <div class="col-xs-12 col-md-6 column">
+                                <label>Level</label>
+                                <h5>@Model.UpdateRegistration.LevelName</h5>
+                            </div>
+                        }
+
+                        @*@if (!string.IsNullOrEmpty(Model.UpdateRegistration.SessionName))
+                        {
+                            <div class="col-xs-12 col-md-6 column">
+                                <label>Session</label>
+                                <h5>@Model.UpdateRegistration.SessionName</h5>
+                            </div>
+                        }*@
+
+                        @if (!string.IsNullOrEmpty(Model.UpdateRegistration.DepartmentName))
+                        {
+                            <div class="col-xs-12 col-md-6 column">
+                                <label>Course Of Study</label>
+                                <h5>@Model.UpdateRegistration.DepartmentName</h5>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(Model.UpdateRegistration.DepartmentName))
+                        {
+                            <div class="col-xs-12 col-md-6 column">
+                                <label>Department</label>
+                                <h5>@Model.UpdateRegistration.DepartmentName</h5>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(Model.UpdateRegistration.MatricNumber))
+                        {
+                            <div class="col-xs-12 col-md-6 column">
+                                <label>Matric Number</label>
+                                <h5>@Model.UpdateRegistration.MatricNumber</h5>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="col-xs-12" style="border-top: 1px solid #ddd;padding:10px">
+                        <button class="btn btn-primary hide-away pull-right" id="print-btn"><i class="fa fa-print"></i> Print</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+        document.querySelector("#print-btn").addEventListener("click", () => {
+            $(".hide-away").css("display", "none");
+            window.print();
+        });
+
+        window.addEventListener("click", () => $(".hide-away").css("display", "block"));
+</script>

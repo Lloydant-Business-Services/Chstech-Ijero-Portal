@@ -1,0 +1,230 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.StudentViewModel
+@{
+    ViewBag.Title = "Update Student Level";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Scripts {
+    <link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+    <link href="~/Scripts/DataTables-1.10.15/select.dataTables.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-table.css" rel="stylesheet" />
+    @Scripts.Render("~/bundles/jquery")
+
+    <link href="~/Scripts/DataTables-1.10.15/media/css/jquery.dataTables.css" rel="stylesheet" />
+    <script src="~/Scripts/DataTables-1.10.15/media/js/jquery.dataTables.js"></script>
+    <link href="~/Scripts/DataTables-1.10.15/extensions/Buttons/css/buttons.dataTables.css" rel="stylesheet" />
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Buttons/js/dataTables.buttons.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Buttons/js/buttons.colVis.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Responsive/js/dataTables.responsive.js"></script>
+
+    <script src="~/Scripts/DataTables-1.10.15/buttons.flash.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/buttons.html5.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/buttons.print.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/jszip.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/pdfmake.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/vfs_fonts.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $("#search").on('click', function () {
+
+                $("#ldGetStudents").show();
+                $("#search").hide();
+            });
+
+                $('#studentTable').DataTable({
+                    dom: 'Bfrtip',
+                    ordering: true,
+                    buttons: [
+                        {
+                            extend: 'copy',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'csv',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'excel',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'pdf',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'print',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        }, , 'colvis'
+                    ]
+                });
+            });
+
+            function activateAll() {
+                if ($('#activateAllId').is(':checked')) {
+                    $('.activate').prop('checked', true);
+                } else {
+                    $('.activate').prop('checked', false);
+                }
+            }
+
+    </script>
+}
+
+<div>
+    @if (TempData["Message"] != null)
+    {
+        @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+    }
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">Update Student Level</h4>
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm("UpdateStudentLevel", "Student", new { area = "Admin" }, FormMethod.Post))
+        {
+        <div class="col-md-12">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Session.Id, "Session:", new { @class = "control-label" })
+                @Html.DropDownListFor(model => model.Session.Id, (IEnumerable<SelectListItem>)ViewBag.Session, new { @class = "form-control col-md-4", required = "required" })
+                @Html.ValidationMessageFor(model => model.Session.Id)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Programme.Id, "Programme:", new { @class = "control-label" })
+                @Html.DropDownListFor(model => model.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.Programme, new { @class = "form-control col-md-4", required = "required" })
+                @Html.ValidationMessageFor(model => model.Programme.Id)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Level.Id, "Level:", new { @class = "control-label" })
+                @Html.DropDownListFor(model => model.Level.Id, (IEnumerable<SelectListItem>)ViewBag.Level, new { @class = "form-control col-md-4", required = "required" })
+                @Html.ValidationMessageFor(model => model.Level.Id)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.MatricNumberWildCard, "Matric Number Format:", new { @class = "control-label" })
+                @Html.TextBoxFor(model => model.MatricNumberWildCard, new { @class = "form-control col-md-4" })
+                @Html.ValidationMessageFor(model => model.MatricNumberWildCard)
+            </div>
+            <br />
+            <br />
+            <br />
+            <br />
+            <div class="col-md-12">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.NewLevel.Id, "New Level:", new { @class = "control-label" })
+                    @Html.DropDownListFor(model => model.NewLevel.Id, (IEnumerable<SelectListItem>)ViewBag.Level, new { @class = "form-control", required = "required" })
+                    @Html.ValidationMessageFor(model => model.NewLevel.Id)
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.NewSession.Id, "New Session:", new { @class = "control-label" })
+                    @Html.DropDownListFor(model => model.NewSession.Id, (IEnumerable<SelectListItem>)ViewBag.Session, new { @class = "form-control" , required = "required"})
+                    @Html.ValidationMessageFor(model => model.NewSession.Id)
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success" id="search">Save</button>
+                        <span style="display: none" id="ldGetStudents"><img src="~/Content/Images/bx_loader.gif" /></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+</div>
+
+@*@if (Model.StudentLevelList != null && Model.StudentLevelList.Count > 0)
+{
+    <div id="divStudentList" class="panel panel-default">
+        <div class="panel-body">
+            @using (Html.BeginForm("SaveStudentLevel", "Student", new { Area = "Admin" }, FormMethod.Post))
+            {
+                @Html.HiddenFor(model => model.Session.Id);
+                @Html.HiddenFor(model => model.Programme.Id);
+                @Html.HiddenFor(model => model.Level.Id);
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.NewLevel.Id, "New Level:", new { @class = "control-label" })
+                        @Html.DropDownListFor(model => model.NewLevel.Id, (IEnumerable<SelectListItem>)ViewBag.Level, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.NewLevel.Id)
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table-bordered table-hover table-striped table" id="studentTable">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        SN
+                                    </th>
+                                    <th>
+                                        Name
+                                    </th>
+                                    <th>
+                                        Phone Number
+                                    </th>
+                                    <th>
+                                        Matric Number
+                                    </th>
+                                    <th>
+                                        Department
+                                    </th>
+                                    <th>
+                                        <input type="checkbox" id="activateAllId" onclick="activateAll()" /> Select
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.StudentLevelList.Count; i++)
+                                {
+                                    @Html.HiddenFor(model => model.StudentLevelList[i].Id)
+
+                                    var sn = i + 1;
+                                    <tr>
+                                        <td>@sn</td>
+                                        <td>@Model.StudentLevelList[i].Student.Name</td>
+                                        <td>@Model.StudentLevelList[i].Student.MobilePhone</td>
+                                        <td>@Model.StudentLevelList[i].Student.MatricNumber</td>
+                                        <td>@Model.StudentLevelList[i].Department.Name</td>
+                                        <td>
+                                            @Html.CheckBoxFor(m => m.StudentLevelList[i].Student.Activated.Value, new { @type = "checkbox", @class = "activate" })
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <br />
+                    <div class="form-group">
+                        <div class=" col-md-10">
+                            <input type="submit" value="Save" class="btn btn-success" />
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}*@

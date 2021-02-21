@@ -1,0 +1,43 @@
+﻿@{
+    //Layout = null;
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+}
+
+@*@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+   
+}*@
+<script src="~/Scripts/jquery.min.js"></script>
+<script src="~/Scripts/responsive-tabs.js"></script>
+
+<script type="text/javascript">
+    //(function ($) {
+    //    fakewaffle.responsiveTabs(['xs', 'sm']);
+    //})(jQuery);
+
+    //$('#myTab a').click(function (e) {
+    //    e.preventDefault();
+    //    $(this).tab('show');
+    //});
+
+    function resizeIframe(obj) {
+        obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+    }
+</script>
+
+<div style="color:black">
+    <h3>
+        List of Application
+    </h3>
+    </div>
+
+    <div class="alert alert-dismissible alert-success">
+        <p>
+            List of Applicants can be viewed by the selecting Session and Programme, from the drop dowms below, then click the Display Report button to display an exportable and printable report.
+        </p>
+    </div>
+
+    <iframe src="~/Reports/Presenter/PostJambApplicant.aspx" style="width:100%; " frameborder="0" scrolling="no" id="iframe" onload='javascript:resizeIframe(this);'></iframe>
+    <br />

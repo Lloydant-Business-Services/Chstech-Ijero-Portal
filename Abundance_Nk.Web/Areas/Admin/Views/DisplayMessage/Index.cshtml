@@ -1,0 +1,52 @@
+﻿@model IEnumerable<Abundance_Nk.Model.Model.DisplayMessage>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    @if (TempData["Message"] != null)
+    {
+        @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message) TempData["Message"])
+    }
+</div>
+
+<p>
+    @Html.ActionLink("Create New", "Create", new {Area = "Admin"}, new {@class = "btn btn-success"})
+</p>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="glyphicon glyphicon-info-sign">Display Messages</i></h3>
+    </div>
+    <div class="panel-body">
+        <table class="table table-responsive table-bordered table-striped table-hover">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Message)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Activated)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Message)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Activated)
+            </td>
+            <td>
+                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+
+                <span class="glyphicon glyphicon-delete" aria-hidden="true"></span> @Html.ActionLink("Delete", "Delete", new { id=item.Id})
+            </td>
+        </tr>
+}
+
+        </table>
+    </div>
+</div>

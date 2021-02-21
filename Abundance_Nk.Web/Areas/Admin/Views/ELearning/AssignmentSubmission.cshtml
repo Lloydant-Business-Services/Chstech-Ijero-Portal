@@ -1,0 +1,386 @@
+﻿@using Abundance_Nk.Web.Models
+@model Abundance_Nk.Web.Areas.Admin.ViewModels.ELearningViewModel
+@{
+                /**/
+
+                /**/
+
+                ViewBag.Title = "E-Learning";
+                Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@if (TempData["Message"] != null)
+{
+    @Html.Partial("_Message", TempData["Message"])
+}
+@section Scripts {
+    <link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+    <link href="~/Content/sweetalert.css" rel="stylesheet" />
+
+    @Scripts.Render("~/bundles/jquery")
+
+
+
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/file-upload/jquery-ui-1.9.2.min.js"></script>
+
+    <script type="text/javascript">
+    var eAssignmentSubmissionId = 0;
+        $(document).ready(function () {
+            //$('#showPdf').modal({
+            //    show: false,
+            //    backdrop: 'static'
+            //});
+        $('.modal').on('hidden.bs.modal', function (e) {
+            $(this).removeData();
+        })
+        $('#btnCreate').on('click', function () {
+
+            $('.Load').show();
+            var score = $('#score').val();
+            var remarks = $('#remark').val();
+            if (score > 0 && eAssignmentSubmissionId > 0) {
+                 $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ScoreAssignment", "Elearning")', // Calling json method
+                dataType: 'json',
+                     data: { eAssignmentSubmissionId, score, remarks },
+
+                success: function (result) {
+
+                    if (!result.iSError && result.Message != null) {
+                        alert(result.Message);
+                        window.location.reload(true);
+                    }
+                    $('#editeModal').modal('hide');
+                    $('.Load').hide();
+                },
+                error: function (ex) {
+                    $('#editeModal').modal('hide');
+                    $('.Load').hide();
+                    alert('Failed to Create Topic.' + ex);
+                }
+            });
+            }
+
+            return false;
+        });
+            $('#showPdfPreview').on('click', function () {
+            $('#showPdf').modal({
+                show: false,
+                backdrop: 'static'
+
+            });
+            $('#iframeMessage').show();
+            $('#hidePdfPreview').show();
+            $('#showPdfPreview').hide();
+
+        })
+            $('#hidePdfPreview').on('click', function () {
+            $('#showPdf').modal({
+                show: false,
+                backdrop: 'static'
+            });
+            $('#iframeMessage').hide();
+            $('#showPdfPreview').show();
+            $('#hidePdfPreview').hide();
+
+        })
+
+    });
+    function showModal(e) {
+        eAssignmentSubmissionId = e;
+        $('#editeModal').modal('show');
+        $('#editeModal').appendTo("body")
+
+
+        }
+        function previewPdf(url, e,name,matricNo,text) {
+            $('#iframeMessage').html("");
+            var pdfLink = url;
+            eAssignmentSubmissionId = e;
+            var iframe = '<object type="application/pdf" data="' + pdfLink + '" width="100%" height="500"></object>'
+            $('#iframeMessage').append(iframe);
+            $('#matricNo').text(matricNo);
+            $('#fullName').text(name);
+            if (text != "" && text != null) {
+                $('#textSubmission').text(text);
+            }
+            else {
+                $('#textSubmission').text("No Text Submission Check PDF");
+            }
+            $('#showPdf').modal('show');
+            return false;
+        }
+
+                //publish EAssigmnet Result
+        function publishResult(id,status) {
+            var response=false;
+            if (status) {
+
+                response = confirm("Are you sure You want to Publish this Assignment Results?");
+            }
+            else {
+
+                response = confirm("Are you sure You want to Withhold this Assignment Results?");
+            }
+
+            if (response) {
+                if (status) {
+                    $('.publish').text("...Publishing");
+                    $('.publish').attr('disabled', true);
+                }
+                else {
+                    $('.publish').text("...Withholding");
+                    $('.publish').attr('disabled', true);
+                }
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("PublishEAssignmentResult", "Elearning")', // Calling json method
+                traditional: true,
+                data: { id, status },
+                success: function (result) {
+                    if (!result.isError && result.Message) {
+                        alert(result.Message);
+                        location.reload(true);
+                    }
+                },
+                error: function(ex) {
+                    alert('Failed to retrieve courses.' + ex);
+                }
+            });
+        }
+        else {
+            return false;
+        }
+        }
+    </script>
+}
+<style>
+    textarea {
+        resize: none;
+    }
+</style>
+<div class="container">
+    <div class="card-header">
+        <h3 class="card-title"><i class="fa fa-fw fa-download"></i>Assignment Submissions</h3>
+    </div>
+    <div class="card-body">
+
+        @Html.HiddenFor(model => model.eAssignment.Course.Id)
+        @Html.HiddenFor(model => model.CourseAllocation.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.eAssignment.Assignment, new { @class = "col-sm-2 control-label " })
+            <div class="col-sm-10">
+                @Html.DisplayFor(model => model.eAssignment.Assignment, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.eAssignment.Assignment, null, new { @class = "text-danger" })
+            </div>
+        </div>
+        &nbsp;
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.eAssignment.Instructions, new { @class = "col-sm-2 control-label " })
+            <div class="col-sm-10">
+                @Html.DisplayFor(model => model.eAssignment.Instructions, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.eAssignment.Instructions, null, new { @class = "text-danger" })
+            </div>
+        </div>
+        &nbsp;
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.eAssignment.DueDate, new { @class = "col-sm-2 control-label " })
+            <div class="col-sm-10">
+                @Html.DisplayFor(model => model.eAssignment.DueDate, new { @class = "form-control", type = "date" })
+                @Html.ValidationMessageFor(model => model.eAssignment.DueDate, null, new { @class = "text-danger" })
+            </div>
+        </div>
+        &nbsp;
+        <div class="form-group">
+            @Html.LabelFor(model => model.eAssignment.MaxScore, "Max Score", new { @class = "col-sm-2 control-label " })
+            <div class="col-sm-10">
+                @Html.DisplayFor(model => model.eAssignment.MaxScore, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.eAssignment.MaxScore, null, new { @class = "text-danger" })
+            </div>
+        </div>
+        &nbsp;
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.eAssignment.URL, new { @class = "col-sm-2 control-label " })
+            <div class="col-sm-10">
+
+                @if (Model.eAssignment.URL != null)
+                {
+                    <a href="@Url.Content(Model.eAssignment.URL)" class="btn btn-primary-alt" target="_blank">View</a>
+                }
+            </div>
+        </div>
+        &nbsp;
+
+
+
+
+        <div class="form-group">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-10">
+                <input class="btn btn-primary mr5 " type="submit" name="submit" id="submit" value="Add Content" />
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    @if (Model.EAssignmentSubmissionList != null && Model.EAssignmentSubmissionList.Count() > 0)
+    {
+    <div class=" ">
+        <div class="card-header">
+            @if (Model.EAssignmentSubmissionList.FirstOrDefault().EAssignment.Publish)
+            {
+                <button class="pull-right btn btn-info publish font-weight-bold" onclick="publishResult(@Model.EAssignmentSubmissionList.FirstOrDefault().EAssignment.Id,false)">Withhold Result</button>
+            }
+            else
+            {
+                <button class="pull-right btn btn-success publish font-weight-bold" onclick="publishResult(@Model.EAssignmentSubmissionList.FirstOrDefault().EAssignment.Id,true)">Publish Result</button>
+            }
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table-bordered table-hover table-striped table">
+                    <tr>
+                        <th>
+                            Fullname
+                        </th>
+                        <th>
+                            Matric Number
+                        </th>
+                        <th>
+                            Assignment
+                        </th>
+                        <th>
+                            Date Submitted
+
+                        </th>
+                        <th>
+                            Score
+                        </th>
+                        <th>
+                            Remarks
+                        </th>
+
+
+                    </tr>
+
+                    @for (int i = 0; i < Model.EAssignmentSubmissionList.Count(); i++)
+                    {
+                        var score = "";
+                        if (Model.EAssignmentSubmissionList[i].Score != null)
+                        {
+                            score = Decimal.Truncate((decimal)(Model.EAssignmentSubmissionList[i].Score)).ToString() + "/" + Model.eAssignment.MaxScore.ToString();
+                        }
+                        else
+                        {
+                            score = "" + "/" + Model.eAssignment.MaxScore.ToString();
+                        }
+                        <tr>
+                            <td>
+                                @Model.EAssignmentSubmissionList[i].Student.FullName
+                            </td>
+                            <td>
+                                @Model.EAssignmentSubmissionList[i].Student.MatricNumber
+                            </td>
+                            <td>
+                                @*@if (Model.EAssignmentSubmissionList[i].AssignmentContent != null)
+                                {
+                                    <a href="@Url.Content(Model.EAssignmentSubmissionList[i].AssignmentContent)" class="btn btn-primary-alt" target="_blank">View</a>
+                                }*@
+                                @if (Model.EAssignmentSubmissionList[i].AssignmentContent != null)
+                                {
+                                    <button class="btn btn-primary mr5 " onclick="previewPdf('@Url.Content(Model.EAssignmentSubmissionList[i].AssignmentContent)',@Model.EAssignmentSubmissionList[i].Id,'@Model.EAssignmentSubmissionList[i].Student.FullName','@Model.EAssignmentSubmissionList[i].Student.MatricNumber',`@Model.EAssignmentSubmissionList[i].TextSubmission`)">View</button>
+                                }
+                            </td>
+                            <td>
+                                @Model.EAssignmentSubmissionList[i].DateSubmitted
+                            </td>
+                            <td>
+                                @score
+                            </td>
+                            <td>
+                                @Model.EAssignmentSubmissionList[i].Remarks
+                            </td>
+                            @*<td>
+                                <button class="btn btn-primary mr5 " type="button" name="submit" onclick="showModal(@Model.EAssignmentSubmissionList[i].Id)">Grade</button>
+                            </td>*@
+
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+
+        
+    }
+
+</div>
+<div class="modal fade" role="dialog" id="showPdf" data-backdrop="false" width:100%" data-keyboard="false">
+
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" style="float:right">&times;</button>
+                <h4 class="modal-title">Submitted Assignment</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <div class="form-group">
+                        <label class="form-control" id="fullName"></label>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="form-control" id="matricNo"></label>
+
+                    </div>
+                </div>
+                <div>
+                    <textarea id="textSubmission" cols="105" rows="20" readonly></textarea>
+                </div>
+                <hr />
+                <button id="showPdfPreview" class="btn btn-invoice">Show PDF</button>
+                <button id="hidePdfPreview" style="display:none" class="btn btn-info">Hide PDF</button>
+                <div id="iframeMessage" style="display:none">
+
+                </div>
+                <hr />
+                <div>
+                    <div class="form-group">
+                        <label class="form-control">Score</label>
+
+                    </div>
+                    <div class="form-group">
+                        @Html.DropDownList("Text", new SelectList(ViewBag.MaxGrade, "Value", "Text"), new { id = "score", @class = "form-control" });
+
+                    </div>
+                    <div class="form-group">
+                        <label class="form-control">Remarks</label>
+
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="remark" />
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer form-group">
+                <span style="display: none" class="Load"><img src="~/Content/Images/bx_loader.gif" /></span>
+                <button type="button" id="btnCreate" class="btn btn-success">Save Score</button>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+

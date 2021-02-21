@@ -1,0 +1,360 @@
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Web.Tests.dll.config
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Web.Tests.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Web.Tests.pdb
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Web.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Web.Infrastructure.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Newtonsoft.Json.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Helpers.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Razor.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.WebPages.Deployment.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.WebPages.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.WebPages.Razor.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Optimization.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Mvc.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Owin.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Model.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Business.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\EntityFramework.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.ReportViewer.WebForms.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Ionic.Zip.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\zxing.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.AspNet.Identity.Owin.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\BarcodeLib.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Security.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Security.Cookies.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Host.SystemWeb.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Data.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\EPPlus.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Security.OAuth.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Web.pdb
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Web.dll.config
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Newtonsoft.Json.xml
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Helpers.xml
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Razor.xml
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.WebPages.xml
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.WebPages.Deployment.xml
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.WebPages.Razor.xml
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.xml
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Optimization.xml
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Mvc.xml
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Model.pdb
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Model.dll.config
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Business.pdb
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Business.dll.config
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\EntityFramework.xml
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.AspNet.Identity.Owin.xml
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Security.xml
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Security.Cookies.xml
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Host.SystemWeb.xml
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Data.pdb
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Security.OAuth.xml
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\de\Microsoft.ReportViewer.WebForms.resources.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\es\Microsoft.ReportViewer.WebForms.resources.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\fr\Microsoft.ReportViewer.WebForms.resources.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\it\Microsoft.ReportViewer.WebForms.resources.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\ja\Microsoft.ReportViewer.WebForms.resources.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\ko\Microsoft.ReportViewer.WebForms.resources.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\pt\Microsoft.ReportViewer.WebForms.resources.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\ru\Microsoft.ReportViewer.WebForms.resources.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\zh-CHS\Microsoft.ReportViewer.WebForms.resources.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\zh-CHT\Microsoft.ReportViewer.WebForms.resources.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\obj\Debug\Abundance_Nk.Web.Tests.csprojResolveAssemblyReference.cache
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\obj\Debug\Abundance_Nk.Web.Tests.csproj.CoreCompileInputs.cache
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\obj\Debug\Abundance_Nk.Web.Tests.csproj.CopyComplete
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\obj\Debug\Abundance_Nk.Web.Tests.dll
+\\Mac\Home\Documents\Visual Studio 2017\Projects\projects\ado-portal\Abundance_Nk.Web.Tests\obj\Debug\Abundance_Nk.Web.Tests.pdb
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Web.Tests.dll.config
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Web.Tests.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Web.Tests.pdb
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Web.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Web.Infrastructure.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Newtonsoft.Json.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Helpers.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Razor.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.WebPages.Deployment.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.WebPages.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.WebPages.Razor.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Optimization.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Mvc.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Owin.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Model.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Business.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\EntityFramework.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.ReportViewer.WebForms.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Ionic.Zip.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.AspNet.Identity.Owin.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Security.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Security.Cookies.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\zxing.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Host.SystemWeb.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\BarcodeLib.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Data.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Security.OAuth.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Web.pdb
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Web.dll.config
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Newtonsoft.Json.xml
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Helpers.xml
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Razor.xml
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.WebPages.xml
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.WebPages.Deployment.xml
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.WebPages.Razor.xml
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.xml
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Optimization.xml
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Mvc.xml
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Model.pdb
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Model.dll.config
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Business.pdb
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Business.dll.config
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\EntityFramework.xml
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.AspNet.Identity.Owin.xml
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Security.xml
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Security.Cookies.xml
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Host.SystemWeb.xml
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Data.pdb
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Security.OAuth.xml
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\ja\Microsoft.ReportViewer.WebForms.resources.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\it\Microsoft.ReportViewer.WebForms.resources.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\ru\Microsoft.ReportViewer.WebForms.resources.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\pt\Microsoft.ReportViewer.WebForms.resources.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\de\Microsoft.ReportViewer.WebForms.resources.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\zh-CHT\Microsoft.ReportViewer.WebForms.resources.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\zh-CHS\Microsoft.ReportViewer.WebForms.resources.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\ko\Microsoft.ReportViewer.WebForms.resources.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\fr\Microsoft.ReportViewer.WebForms.resources.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\es\Microsoft.ReportViewer.WebForms.resources.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\obj\Debug\Abundance_Nk.Web.Tests.csproj.CoreCompileInputs.cache
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\obj\Debug\Abundance_Nk.Web.Tests.csproj.CopyComplete
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\obj\Debug\Abundance_Nk.Web.Tests.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\obj\Debug\Abundance_Nk.Web.Tests.pdb
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\obj\Debug\Abundance_Nk.Web.Tests.csprojAssemblyReference.cache
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\EPPlus.dll
+\\Mac\Home\Desktop\DotnetProjects\LloydAnt\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\EPPlus.xml
+C:\Users\RUUBIXCUBE\source\repos\Ado-Portal-2\ado-portal\Abundance_Nk.Web.Tests\obj\Debug\Abundance_Nk.Web.Tests.csproj.CoreCompileInputs.cache
+\\Mac\Home\Downloads\ado-portal\Abundance_Nk.Web.Tests\obj\Debug\Abundance_Nk.Web.Tests.csprojAssemblyReference.cache
+\\Mac\Home\Downloads\ado-portal\Abundance_Nk.Web.Tests\obj\Debug\Abundance_Nk.Web.Tests.csproj.CoreCompileInputs.cache
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\obj\Debug\Abundance_Nk.Web.Tests.csprojAssemblyReference.cache
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\obj\Debug\Abundance_Nk.Web.Tests.csproj.CoreCompileInputs.cache
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Web.Tests.dll.config
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Web.Tests.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Web.Tests.pdb
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Web.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Web.Infrastructure.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Newtonsoft.Json.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Helpers.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Razor.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.WebPages.Deployment.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.WebPages.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.WebPages.Razor.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Optimization.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Mvc.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Owin.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Model.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Business.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\EntityFramework.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.ReportViewer.WebForms.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Ionic.Zip.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\zxing.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.AspNet.Identity.Owin.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\BarcodeLib.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Security.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Security.Cookies.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Host.SystemWeb.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Data.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\RestSharp.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\EPPlus.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\RazorEngine.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Security.OAuth.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Web.pdb
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Web.dll.config
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Newtonsoft.Json.xml
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Helpers.xml
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Razor.xml
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.WebPages.xml
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.WebPages.Deployment.xml
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.WebPages.Razor.xml
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.xml
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Optimization.xml
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Mvc.xml
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Model.pdb
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Model.dll.config
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Business.pdb
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Business.dll.config
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\EntityFramework.xml
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\zxing.pdb
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\zxing.xml
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.AspNet.Identity.Owin.xml
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Security.xml
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Security.Cookies.xml
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Host.SystemWeb.xml
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Data.pdb
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\RestSharp.xml
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\EPPlus.xml
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\RazorEngine.xml
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Security.OAuth.xml
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\obj\Debug\Abundance_Nk.Web.Tests.csproj.CopyComplete
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\obj\Debug\Abundance_Nk.Web.Tests.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\obj\Debug\Abundance_Nk.Web.Tests.pdb
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\obj\Debug\Abundance_Nk.Web.Tests.csprojResolveAssemblyReference.cache
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\obj\Debug\Abundance_Nk.Web.Tests.csproj.CoreCompileInputs.cache
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Web.Tests.dll.config
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Web.Tests.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Web.Tests.pdb
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Web.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Web.Infrastructure.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Helpers.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Razor.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.WebPages.Deployment.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.WebPages.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.WebPages.Razor.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Optimization.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Mvc.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Owin.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Model.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Business.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\EntityFramework.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.ReportViewer.WebForms.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Ionic.Zip.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\zxing.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.AspNet.Identity.Owin.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\BarcodeLib.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Security.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Security.Cookies.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Host.SystemWeb.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Data.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\RestSharp.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\EPPlus.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\RazorEngine.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Security.OAuth.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Web.pdb
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Web.dll.config
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Helpers.xml
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Razor.xml
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.WebPages.xml
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.WebPages.Deployment.xml
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.WebPages.Razor.xml
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.xml
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Optimization.xml
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Mvc.xml
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Model.pdb
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Model.dll.config
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Business.pdb
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Business.dll.config
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\EntityFramework.xml
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\zxing.pdb
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\zxing.xml
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.AspNet.Identity.Owin.xml
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Security.xml
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Security.Cookies.xml
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Host.SystemWeb.xml
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Data.pdb
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\RestSharp.xml
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\EPPlus.xml
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\RazorEngine.xml
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Security.OAuth.xml
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\obj\Debug\Abundance_Nk.Web.Tests.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\obj\Debug\Abundance_Nk.Web.Tests.pdb
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Http.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Http.WebHost.dll
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Http.xml
+\\Mac\Home\Documents\OFFICE DOC\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Http.WebHost.xml
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Http.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Http.WebHost.dll
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Http.xml
+C:\Users\Miracle\Ado-New\ado-portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Http.WebHost.xml
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Web.Tests.dll.config
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Web.Tests.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Web.Tests.pdb
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Web.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Web.Infrastructure.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Helpers.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Razor.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.WebPages.Deployment.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.WebPages.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.WebPages.Razor.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Optimization.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Mvc.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Owin.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Model.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Business.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Http.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\EntityFramework.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.ReportViewer.WebForms.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Ionic.Zip.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.AspNet.Identity.Core.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\zxing.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.AspNet.Identity.Owin.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\BarcodeLib.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Security.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Security.Cookies.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Http.WebHost.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Host.SystemWeb.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Data.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\RestSharp.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\EPPlus.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\RazorEngine.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Security.OAuth.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Web.pdb
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Web.dll.config
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Helpers.xml
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Razor.xml
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.WebPages.xml
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.WebPages.Deployment.xml
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.WebPages.Razor.xml
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.xml
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Optimization.xml
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Mvc.xml
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Model.pdb
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Model.dll.config
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Business.pdb
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Business.dll.config
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Http.xml
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\EntityFramework.xml
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.AspNet.Identity.EntityFramework.xml
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.AspNet.Identity.Core.xml
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\zxing.pdb
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\zxing.xml
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.AspNet.Identity.Owin.xml
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Security.xml
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Security.Cookies.xml
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\System.Web.Http.WebHost.xml
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Host.SystemWeb.xml
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Abundance_Nk.Data.pdb
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\RestSharp.xml
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\EPPlus.xml
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\RazorEngine.xml
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\bin\Debug\Microsoft.Owin.Security.OAuth.xml
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\obj\Debug\Abundance_Nk.Web.Tests.csprojResolveAssemblyReference.cache
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\obj\Debug\Abundance_Nk.Web.Tests.csproj.CoreCompileInputs.cache
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\obj\Debug\Abundance_Nk.Web.Tests.dll
+C:\Users\Miracle\Ijero-Ekiti-Portal\Abundance_Nk.Web.Tests\obj\Debug\Abundance_Nk.Web.Tests.pdb

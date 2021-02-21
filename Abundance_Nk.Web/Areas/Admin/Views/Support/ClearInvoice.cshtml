@@ -1,0 +1,174 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.SupportViewModel
+
+@{
+    ViewBag.Title = "ClearInvoice";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link href="~/Content/sweetalert.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<script src="~/Scripts/sweetalert.min.js"></script>
+
+<script type="text/javascript">
+
+    function clearInvoice(paymentId) {
+
+        $("#loading").show();
+
+        if (!paymentId) {
+            $("#loading").hide();
+            swal("Attention", "Parameter not set.", "error");
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("DeleteInvoice", "Support")',
+            dataType: 'json',
+            data: { paymentId: paymentId },
+            success: function (result) {
+                if (result.IsError == false) {
+                    $("#loading").hide();
+                    swal("Good Job!", result.Message, "success");
+                }
+                else {
+                    $("#loading").hide();
+                    swal("Attention!", result.Message, "error");
+                }
+                location.reload(true);
+            },
+            error: function (ex) {
+                swal("Attention!",'Failed to retrieve options.' + ex, "error");
+                $("#loading").hide();
+            }
+        });
+        $("#loading").hide();
+    }
+</script>
+
+@if (TempData["Message"] != null)
+{
+    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div style="font-size:x-large">Clear Invoice</div>
+            </div>
+            <div class="panel-body">
+
+                @using (Html.BeginForm("ClearInvoice", "Support", new { area = "Admin" }, FormMethod.Post))
+                {
+                    <div class="row">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Student.MatricNumber, "Matric NO. / Application NO.", htmlAttributes: new {@class = "control-label col-md-2"})
+                            <div class="col-md-4">
+                                @Html.TextBoxFor(model => model.Student.MatricNumber, new {@class = "form-control", @required = "required"})
+                                @Html.ValidationMessageFor(model => model.Student.MatricNumber, "", new {@class = "text-danger"})
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Submit" class="btn btn-success mr5" /> &nbsp;
+                                <span style="display:none;" id="loading"><img src="~/Content/Images/bx_loader.gif" width="20px" height="20px"/></span>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+
+
+            </div>
+
+        </div>
+
+        @if (Model == null || Model.Payments == null) { return; }
+        @if (Model.Payments != null &&  Model.Payments.Count > 0)
+        {
+            <div class="col-md-12">
+                <div>
+                    @if (Model.studentLevel != null)
+                    {
+                        <h5>Name: @Model.studentLevel.Student.FullName</h5>
+                        
+                        <h5>Matric No.: @Model.studentLevel.Student.MatricNumber</h5>
+                        <h5>Programme:@Model.studentLevel.Programme.Name</h5>
+                        <h5>Department:@Model.studentLevel.Department.Name</h5>
+                        if (Model.studentLevel.DepartmentOption != null)
+                    {
+                            <h5>Programme:@Model.studentLevel.DepartmentOption.Name</h5>
+                        }
+                    }
+                    else
+                    {
+                        <h5>Name: @Model.AppliedCourse.Person.FullName</h5>
+                        <h5>Application No.: @Model.AppliedCourse.ApplicationForm.Number</h5>
+                        <h5>Programme:@Model.AppliedCourse.Programme.Name</h5>
+                        <h5>Department:@Model.AppliedCourse.Department.Name</h5>
+                        if (Model.AppliedCourse.Option != null)
+                    {
+                            <h5>Programme:@Model.AppliedCourse.Option.Name</h5>
+                        }
+                    }
+
+
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed table-striped">
+                        <thead></thead>
+                        <thead>
+                            <tr>
+                                <th>
+                                    SN
+                                </th>
+                                <th>
+                                    Payment Type
+                                </th>
+                                <th>
+                                    Invoice No
+                                </th>
+                                <th>
+                                    Date Generated
+                                </th>
+                                <th>
+                                    Session
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.Payments.Count; i++)
+                            {
+                                var sn = i + 1;
+                                <tr>
+                                    <td>@sn</td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => Model.Payments[i].FeeType.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => Model.Payments[i].InvoiceNumber)
+                                    </td>
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => Model.Payments[i].DatePaid)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => Model.Payments[i].Session.Name)
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-primary mr-5" onclick="clearInvoice(@Model.Payments[i].Id);">Clear</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        }
+    </div>
+</div>
+

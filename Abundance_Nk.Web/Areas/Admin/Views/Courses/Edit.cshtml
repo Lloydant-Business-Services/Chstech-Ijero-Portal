@@ -1,0 +1,373 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.CourseViewModel
+@using GridMvc.Html
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="~/Scripts/file-upload/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="~/Scripts/file-upload/jquery-ui-1.9.2.min.js"></script>
+<script type="text/javascript" src="~/Scripts/file-upload/jquery.fileupload-ui.js"></script>
+<script type="text/javascript" src="~/Scripts/file-upload/jquery.fileupload.js"></script>
+<script type="text/javascript" src="~/Scripts/file-upload/jquery.iframe-transport.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.print.js"></script>
+<script>
+    $(document).ready(function() {
+        $("#divDepartmentOption").hide();
+
+        var level = $("#course_Level_Id").val();
+        var DepartmentOption = $("#course_DepartmentOption_Id").val();
+
+        if (DepartmentOption != undefined && DepartmentOption > 0) {
+            $("#divDepartmentOption").show();
+        }
+
+
+        //Hide Department Option on Department change
+        $("#course_Department_Id").change(function() {
+
+            $("#divDepartmentOption").hide();
+
+        });
+
+        $("#course_Programme_Id").change(function () {
+
+            $("#course_Department_Id").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartments", "Courses")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#course_Programme_Id").val() },
+                // Get Selected Country ID.
+                success: function(departments) {
+                    $("#course_Department_Id").append('<option value="' + 0 + '">' +
+                        '-- Select Department --' + '</option>');
+                    $.each(departments, function(i, department) {
+                        $("#course_Department_Id").append('<option value="' + department.Value + '">' +
+                            department.Text + '</option>');
+                    });
+                },
+                error: function(ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+
+            $("#course_Level_Id").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetLevels", "Courses")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#course_Programme_Id").val() },
+                // Get Selected Country ID.
+                success: function (levels) {
+                    $("#course_Level_Id").append('<option value="' + 0 + '">' +
+                        '-- Select Level --' + '</option>');
+                    $.each(levels, function (i, level) {
+                        $("#course_Level_Id").append('<option value="' + level.Value + '">' +
+                            level.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve levels.' + ex);
+                }
+            });
+
+            var programme = $("#course_Programme_Id").val();
+            var department = $("#course_Department_Id").val();
+            var level = $("#course_Level_Id").val();
+
+            if (programme == undefined || department == undefined || level == undefined) {
+                $("#divDepartmentOption").hide();
+                return;
+            }
+
+            $("#course_DepartmentOption_Id").empty();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartmentOptionByDepartment", "Courses")', // we are calling json method
+                dataType: 'json',
+                data: { id: department, programmeid: programme, levelId: level },
+                success: function (departmentOptions) {
+
+                    if (departmentOptions == "" || departmentOptions == null || departmentOptions == undefined || departmentOptions.Lenght <= 0) {
+                        $("#divDepartmentOption").hide();
+                    } else {
+                        $("#course_DepartmentOption_Id").append('<option value="' + 0 + '"> -- Select -- </option>');
+                        $.each(departmentOptions, function (i, Option) {
+                            $("#course_DepartmentOption_Id").append('<option value="' + Option.Value + '">' + Option.Text + '</option>');
+                        });
+                        if (programme > 2) {
+                            $("#divDepartmentOption").show();
+                        }
+
+                    }
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve department Options.' + ex);
+                }
+            });
+
+        });
+
+        //Load Department Option
+        $("#course_Level_Id").change(function() {
+
+            var programme = $("#course_Programme_Id").val();
+            var department = $("#course_Department_Id").val();
+            var level = $("#course_Level_Id").val();
+
+            if (programme == undefined || department == undefined || level == undefined) {
+                return;
+            }
+
+            $("#course_DepartmentOption_Id").empty();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartmentOptionByDepartment", "Courses")', // we are calling json method
+                dataType: 'json',
+                data: { id: department, programmeid: programme, levelId : level },
+                success: function(departmentOptions) {
+
+                    if (departmentOptions == "" || departmentOptions == null || departmentOptions == undefined || departmentOptions.Lenght <= 0) {
+                        $("#divDepartmentOption").hide();
+                    } else {
+                        $("#course_DepartmentOption_Id").append('<option value="' + 0 + '"> -- Select -- </option>');
+                        $.each(departmentOptions, function(i, Option) {
+                            $("#course_DepartmentOption_Id").append('<option value="' + Option.Value + '">' + Option.Text + '</option>');
+                        });
+                        if (programme > 2) {
+                            $("#divDepartmentOption").show();
+                        }
+
+                    }
+                },
+                error: function(ex) {
+                    alert('Failed to retrieve department Options.' + ex);
+                }
+            });
+        });
+
+        $("#course_Department_Id").change(function () {
+
+            var programme = $("#course_Programme_Id").val();
+            var department = $("#course_Department_Id").val();
+            var level = $("#course_Level_Id").val();
+
+            if (programme == undefined || department == undefined || level == undefined) {
+                return;
+            }
+
+            $("#course_DepartmentOption_Id").empty();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartmentOptionByDepartment")', // we are calling json method
+                dataType: 'json',
+                data: { id: department, programmeid: programme, levelId: level },
+                success: function (departmentOptions) {
+
+                    if (departmentOptions == "" || departmentOptions == null || departmentOptions == undefined) {
+                        $("#divDepartmentOption").hide();
+                    } else {
+                        $("#course_DepartmentOption_Id").append('<option value="' + 0 + '"> -- Select -- </option>');
+                        $.each(departmentOptions, function (i, Option) {
+                            $("#course_DepartmentOption_Id").append('<option value="' + Option.Value + '">' + Option.Text + '</option>');
+                        });
+                        if (programme > 2) {
+                            $("#divDepartmentOption").show();
+                        }
+
+                    }
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve department Options.' + ex);
+                }
+            });
+        });
+    })
+</script>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <div class="row">
+                <div>
+                    @if (TempData["Message"] != null)
+                    {
+                        @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+                    }
+                </div>
+            </div>
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <h3>View Departmental Courses</h3>
+                    <hr style="margin-top:0" />
+                    <div class="col-md-12">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.course.Programme.Id, "Programme", new { @class = "control-label " })
+                                    @Html.DropDownListFor(model => model.course.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.Programmes, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.course.Programme.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.course.Level.Id, "Level", new { @class = "control-label" })
+                                    @Html.DropDownListFor(model => model.course.Level.Id, (IEnumerable<SelectListItem>)ViewBag.levels, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.course.Level.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.course.Department.Id, "Department", new {@class = "control-label "})
+                                    @Html.DropDownListFor(model => model.course.Department.Id, (IEnumerable<SelectListItem>) ViewBag.Departments, new {@class = "form-control"})
+                                    @Html.ValidationMessageFor(model => model.course.Department.Id, null, new {@class = "text-danger"})
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div id="divDepartmentOption" class="form-group">
+                                    @Html.LabelFor(model => model.course.DepartmentOption.Id, "Course", new {@class = "control-label "})
+                                    @Html.DropDownListFor(model => model.course.DepartmentOption.Id, (IEnumerable<SelectListItem>) ViewBag.DepartmentOptionId, new {@class = "form-control"})
+                                    @Html.ValidationMessageFor(model => model.course.DepartmentOption.Id, null, new {@class = "text-danger"})
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-8 col-md-10">
+                                <input type="submit" value="View" class="btn btn-default" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            }
+            <br />
+
+            @if (Model != null)
+            {
+               
+                using (Html.BeginForm("SaveCourseChanges", "Courses", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                 
+                    <div class="row">
+                        <h4>First Semester</h4>
+                        @if (Model.firstSemesterCourses != null)
+                        {
+                            <!-- Table -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="pull-right record-count-label">
+                                        <label class="caption">Total Course Unit</label>&nbsp;<span class="badge" style="background-color: gray; border-radius: 2px !important; color:white !important">@Model.FirstSemesterTotalCourseUnit</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <table class="table table table-bordered table-hover table-striped">
+
+                                <thead>
+                                    <tr>
+                                        <th>Code</th>
+                                        <th>Course Title</th>
+                                        <th>Course Unit</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="color:black;">
+                                    @for (int i = 0; i < Model.firstSemesterCourses.Count; i++)
+                                    {
+                                        <tr>
+                                            <td>@Html.TextBoxFor(model => model.firstSemesterCourses[i].Code, new { @class = "form-control olevel" })</td>
+                                            <td>@Html.TextBoxFor(model => model.firstSemesterCourses[i].Name, new { @class = "form-control olevel" })</td>
+                                            <td>@Html.TextBoxFor(model => model.firstSemesterCourses[i].Unit, new { @class = "form-control olevel" })</td>
+                                                @Html.HiddenFor(model => model.firstSemesterCourses[i].Department.Id)
+                                                @Html.HiddenFor(model => model.firstSemesterCourses[i].Programme.Id)
+                                                @Html.HiddenFor(model => model.firstSemesterCourses[i].DepartmentOption.Id)
+                                                @Html.HiddenFor(model => model.firstSemesterCourses[i].Level.Id)
+                                                @Html.HiddenFor(model => model.firstSemesterCourses[i].Semester.Id)
+                                                @Html.HiddenFor(model => model.firstSemesterCourses[i].Type.Id)
+                                                @Html.HiddenFor(model => model.firstSemesterCourses[i].Id)
+                                        </tr>
+                                    }
+
+                                </tbody>
+
+
+
+                            </table>
+
+                        }
+                    </div>
+
+                    <div class="row">
+                        <h4>Second Semester</h4>
+                        @if (Model.secondSemesterCourses != null)
+                        { <div class="row">
+                            <div class="col-md-12">
+                                <div class="pull-right record-count-label">
+                                    <label class="caption">Total Course Unit</label>&nbsp;<span class="badge" style="background-color: gray; border-radius: 2px !important; color:white !important">@Model.SecondSemesterTotalCourseUnit</span>
+                                </div>
+                            </div>
+                        </div>
+                            <!-- Table -->
+                            <table class="table table table-bordered table-hover table-striped">
+
+                                <thead>
+                                    <tr>
+                                        <th>Code</th>
+                                        <th>Course Title</th>
+                                        <th>Course Unit</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="color:black;">
+                                    @for (int i = 0; i < Model.secondSemesterCourses.Count; i++)
+                                    {
+                                        <tr>
+                                            <td>@Html.TextBoxFor(model => model.secondSemesterCourses[i].Code, new { @class = "form-control" })</td>
+                                            <td>@Html.TextBoxFor(model => model.secondSemesterCourses[i].Name, new { @class = "form-control" })</td>
+                                            <td>@Html.TextBoxFor(model => model.secondSemesterCourses[i].Unit, new { @class = "form-control" })</td>
+                                                @Html.HiddenFor(model => model.secondSemesterCourses[i].Department.Id)
+                                                @Html.HiddenFor(model => model.secondSemesterCourses[i].Programme.Id)
+                                                @Html.HiddenFor(model => model.secondSemesterCourses[i].DepartmentOption.Id)
+                                                @Html.HiddenFor(model => model.secondSemesterCourses[i].Level.Id)
+                                                @Html.HiddenFor(model => model.secondSemesterCourses[i].Semester.Id)
+                                                @Html.HiddenFor(model => model.secondSemesterCourses[i].Type.Id)
+                                                @Html.HiddenFor(model => model.secondSemesterCourses[i].Id)
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        }
+                    </div>
+
+
+                    <div class="form-group">
+                        <div class="col-md-offset-8 col-md-10">
+                            <input type="submit" value="Save Changes" class="btn btn-default" />
+                        </div>
+                    </div>
+                }
+            }
+
+
+
+        </div>
+
+    </div>
+
+    <div class="col-md-1"></div>
+</div>

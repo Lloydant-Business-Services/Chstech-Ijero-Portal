@@ -1,0 +1,144 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.MatricNumberViewModel
+@{
+    ViewBag.Title = "UploadMatricNoManually";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#loading").hide();
+
+            $("#Programme").on('change',function () {
+
+                $("#Department").empty();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetDepartments", "MatricNumber")', // Calling json method
+                    dataType: 'json',
+                    data: { id: $("#Programme").val() },
+
+                    success: function (departments) {
+                        $("#Department").append('<option value="' + 0 + '">' +
+                            '-- Select Department --' + '</option>');
+                        $.each(departments, function (i, department) {
+                            $("#Department").append('<option value="' + department.Value + '">' +
+                                department.Text + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve departments.' + ex);
+                    }
+                });
+
+
+            });
+        })
+        function ButtonClick() {
+            $("#loading").hide();
+        }
+
+
+    </script>
+}
+
+
+<div class="col-md-12">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+        <div class="panel"  style="background: #f2f2f2;">
+            <div class="panel-heading">
+                <h4 style="color:#fff">Matric Number Upload Manually</h4>
+            </div>
+            <div class="panel-body">
+
+               
+                    <div class="card">
+                        @using (Html.BeginForm("UploadManuallyGeneratedMatricNo", "MatricNumber", new { area = "Admin" }, FormMethod.Post))
+                        {
+                            <div class="row">
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.Programme.Name, "Programme", new { @class = "col-sm-2 control-label " })
+                                        <div class="col-sm-10">
+                                            @Html.DropDownListFor(model => model.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.Programme, new { @class = "form-control", @id = "Programme", @required = "required" })
+                                            @Html.ValidationMessageFor(model => model.Programme.Id, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.Department.Name, "Department", new { @class = "col-sm-2 control-label " })
+                                        <div class="col-sm-10">
+                                            @Html.DropDownListFor(model => model.Department.Id, (IEnumerable<SelectListItem>)ViewBag.Department, new { @class = "form-control", @id = "Department", @required = "required" })
+                                            @Html.ValidationMessageFor(model => model.Department.Id, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.Session.Name, "Session", new { @class = "col-sm-2 control-label " })
+                                        <div class="col-sm-10">
+                                            @Html.DropDownListFor(model => model.Session.Id, (IEnumerable<SelectListItem>)ViewBag.Session, new { @class = "form-control", @id = "Level", @required = "required" })
+                                            @Html.ValidationMessageFor(model => model.Session.Id, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input class="btn btn-success mr5" onclick="ButtonClick()" type="submit" name="submit" id="submit" value="Download Template" />
+                                        <div id="loading" style="display: none">
+                                            <img src="@Url.Content("~/Content/Images/bx_loader.gif")" />
+                                            <span>Loading ...</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        }
+                    </div>
+                
+            </div>
+        </div>
+
+
+        <div class="panel" style="background: #f2f2f2;">
+            <div class="panel-heading">
+                <h4 style="color:#fff;">Matric Number Upload Manually</h4>
+            </div>
+              
+            <div class="panel-body">
+                @using (Html.BeginForm("ProcessUploadMatricNumberExcel", "MatricNumber", new { area = "Admin" }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <input type="file" title="Upload Result" id="file" name="file" class="form-control" /> <br />
+                    <input class="btn btn-success mr5 " type="submit" name="submit" id="submit" value="Upload" />
+                }
+            </div>
+
+          
+        </div>
+
+
+    </div>
+    <div class="col-md-1"></div>
+</div>
+
+
+

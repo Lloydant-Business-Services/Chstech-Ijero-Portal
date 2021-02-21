@@ -1,0 +1,76 @@
+﻿@model Abundance_Nk.Web.Areas.Applicant.ViewModels.AdmissionViewModel
+@{
+    ViewBag.Title = "ProcessChangeOfCourse";
+    Layout = "~/Views/Shared/_NewThemeLayout.cshtml";
+}
+
+<div>
+    @if (TempData["Message"] != null)
+    {
+        @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+    }
+</div>
+
+
+<h4>Process Change Of Course</h4>
+
+@using (Html.BeginForm("ProcessChangeOfCourse", "Admission", new { Area = "Applicant" }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ApplicationForm.Number, "Application Number: ", new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.ApplicationForm.Number, new { @class = "form-control", @required = "required", @placeholder = "Enter Application Number" })
+                        @Html.ValidationMessageFor(model => model.ApplicationForm.Number, null, new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ConfirmationOrderNumber, "Confirmation Order Number: ", new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.TextBoxFor(model => model.ConfirmationOrderNumber, new { @class = "form-control", @required = "required", @placeholder = "Enter Confirmation Order Number" })
+                        @Html.ValidationMessageFor(model => model.ConfirmationOrderNumber, null, new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-3 col-md-9">
+                        <input type="submit" value="Submit" class="btn btn-default" />
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+}
+
+@if (Model.ApplicationForm != null && Model.ApplicationForm.Id > 0)
+{
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ApplicationForm.Person.FullName, "NAME: ", new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.DisplayFor(model => model.ApplicationForm.Person.FullName, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ApplicationForm.Person.FullName, null, new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ApplicationForm.Number, "NEW APPLICATION NUMBER: ", new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.DisplayFor(model => model.ApplicationForm.Number, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ApplicationForm.Number, null, new { @class = "text-danger" })
+                    </div>
+                </div>
+
+            </div>
+        </div> 
+    </div>
+    
+            }

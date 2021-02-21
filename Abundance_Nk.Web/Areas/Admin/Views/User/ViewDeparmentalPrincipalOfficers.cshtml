@@ -1,0 +1,300 @@
+﻿
+@using Abundance_Nk.Web.Models
+@model Abundance_Nk.Web.Areas.Admin.ViewModels.UserViewModel
+@{
+                /**/
+
+                /**/
+
+                /**/
+
+                /**/
+
+                /**/
+
+                /**/
+
+                ViewBag.Title = "Staff Department";
+                Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@if (TempData["Message"] != null)
+{
+    @Html.Partial("_Message", TempData["Message"])
+}
+
+@section Scripts {
+
+
+    <link href="~/Scripts/DataTables-1.10.15/media/css/jquery.dataTables.css" rel="stylesheet" />
+    <script src="~/Scripts/DataTables-1.10.15/media/js/jquery.dataTables.js"></script>
+    <link href="~/Scripts/DataTables-1.10.15/extensions/Buttons/css/buttons.dataTables.css" rel="stylesheet" />
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Buttons/js/dataTables.buttons.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Buttons/js/buttons.colVis.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Responsive/js/dataTables.responsive.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/buttons.flash.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/buttons.html5.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/buttons.print.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/jszip.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/pdfmake.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/vfs_fonts.js"></script>
+
+
+    <script type="text/javascript">
+
+
+        $(document).ready(function () {
+            $.extend($.fn.dataTable.shadows, {
+                responsive: false
+            });
+
+            $("#attendanceTable").DataTable({
+                dom: 'Bfrtip',
+                ordering: true,
+                buttons: [
+                    {
+                        extend: 'copy',
+                        exportOptions: {
+                            columns: ':visible',
+                            modifier: {
+                                orientation: 'Potrait'
+                            }
+                        },
+                        orientation: 'Potrait'
+
+
+                    },
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                            columns: ':visible',
+                            modifier: {
+                                orientation: 'Potrait'
+                            }
+                        },
+                        orientation: 'Potrait'
+
+                    },
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: ':visible',
+                            modifier: {
+                                orientation: 'Potrait'
+                            }
+                        },
+                        orientation: 'Potrait'
+
+
+                    },
+                    {
+                        extend: 'pdf',
+                        exportOptions: {
+                            columns: ':visible',
+                            header: true,
+                            modifier: {
+                                orientation: 'Potrait'
+                            }
+
+
+
+                        },
+                        orientation: 'Potrait'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: ':visible',
+                            modifier: {
+                                orientation: 'Potrait'
+                            }
+                        },
+                        orientation: 'Potrait'
+
+
+                    }, , 'colvis'
+                ]
+            });
+        })
+        //Activate
+
+
+
+        function Activate(id,status) {
+            var response=false;
+            if (status) {
+
+                response = confirm("Are you sure You want to Activate this Portfolio?");
+            }
+            else {
+
+                response = confirm("Are you sure You want to De-Activate this Portfolio ?");
+            }
+
+            if (response) {
+                if (status) {
+                    $('.activate').text("...Activating");
+                    $('.activate').attr('disabled', true);
+                }
+                else {
+                    $('.activate').text("...De-Activating");
+                    $('.activate').attr('disabled', true);
+                }
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ActivateDeactivatePortfolio", "User")', // Calling json method
+                traditional: true,
+                data: { id, status },
+                success: function (result) {
+                    if (!result.isError && result.Message) {
+                        alert(result.Message);
+                        location.reload(true);
+                    }
+                },
+                error: function(ex) {
+                    alert('Failed to retrieve courses.' + ex);
+                }
+            });
+        }
+        else {
+            return false;
+        }
+        }
+    </script>
+
+    <style>
+        .btn-success {
+            color: #1cc88a;
+            background-color: transparent;
+            border: 2px solid #eee;
+            border-radius: 3px !important;
+        }
+
+        .btn-danger {
+            color: #ca2819;
+            background-color: transparent;
+            border: 2px solid #eee;
+            border-radius: 3px !important;
+        }
+    </style>
+}
+    <div id="tt" class="easyui-tabs" style="height:1000px;">
+        @using (Html.BeginForm("ViewDeparmentalPrincipalOfficers", "User", new { area = "Admin" }, FormMethod.Post))
+        {
+
+                <div title="DEPARTMENT PRINCIPAL STAFF (HOD & Exam Officer)">
+                    <div class="container mt-3">
+                        <div class="card card-shadow p-4">
+                            <h2>STAFF DEPARTMENT</h2>
+
+                            <div class="row">
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Session.Name, "Session", new { @class = "col-sm-2 control-label " })
+                                    <div class="col-sm-10">
+                                        @Html.DropDownListFor(model => model.Session.Id, (IEnumerable<SelectListItem>)ViewBag.Session, new { @class = "form-control", @id = "Session", requiredt = true })
+                                        @Html.ValidationMessageFor(model => model.Session.Id, null, new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+
+                                    <div class="col-sm-6">
+                                        <input class="btn btn-primary mr5 " type="submit" name="submit" id="submit" value="View" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+
+                                    <div class="col-sm-6">
+                                        @Html.ActionLink("Assign Deparment", "AssignDepartmentToUser", "User", new { Area = "Admin" }, new { @class = "btn btn-info " })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                        }
+                        <br />
+                        @if (Model.StaffDepartments != null && Model.StaffDepartments.Count > 0)
+                        {
+
+
+
+                            <div class="container mt-3">
+                                <div class="card card-shadow p-4">
+                                    <div class="table-responsive">
+                                        <table class="table-bordered table-hover table-striped  table" id="attendanceTable">
+
+                                            <thead>
+                                                <tr>
+                                                    <th>S/N</th>
+                                                    <th>
+                                                        Staff Username
+                                                    </th>
+                                                    <th>
+                                                        Department
+                                                    </th>
+                                                    <th>
+                                                        Portfolio
+                                                    </th>
+
+                                                    <th>
+
+                                                    </th>
+                                                    <th>
+
+                                                    </th>
+
+                                                </tr>
+
+                                            </thead>
+                                            <tbody>
+
+                                                @for (int i = 0; i < Model.StaffDepartments.Count; i++)
+                                                {
+                                                    var sn = i + 1;
+                                                    <tr>
+                                                        <td>@sn</td>
+                                                        <td>
+                                                            @Model.StaffDepartments[i].Staff.User.Username
+                                                        </td>
+                                                        <td>
+                                                            @Model.StaffDepartments[i].Department.Name
+                                                        </td>
+                                                        <td>
+                                                            @Model.StaffDepartments[i].Staff.User.Role.Name
+                                                        </td>
+
+                                                        @if (Model.StaffDepartments[i].IsHead || Model.StaffDepartments[i].IsExamOfficer)
+                                                        {
+                                                            <td>
+                                                                Active
+                                                            </td>
+                                                            <td>
+                                                                <button class="btn btn-info activate" onclick="Activate(@Model.StaffDepartments[i].Id,false)">De-Activate</button>
+                                                            </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td>
+                                                                In-Active
+                                                            </td>
+                                                            <td>
+                                                                <button class="btn btn-primary activate" onclick="Activate(@Model.StaffDepartments[i].Id,true)">Activate</button>
+                                                            </td>
+                                                        }
+
+
+
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                </div>
+                           
+                                }
+
+                            </div>

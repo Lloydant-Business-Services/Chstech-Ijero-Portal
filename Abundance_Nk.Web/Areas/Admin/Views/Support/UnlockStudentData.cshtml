@@ -1,0 +1,96 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.SupportViewModel
+
+@{
+    ViewBag.Title = "Unlock Student Data";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@if (TempData["Message"] != null)
+{
+    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div style="font-size:x-large">Unlock Student Data</div>
+            </div>
+            <div class="panel-body">
+
+
+
+                @using (Html.BeginForm("UnlockStudentData", "Support", new { area = "Admin" }, FormMethod.Post))
+                {
+                    <div class="row">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.studentModel.MatricNumber, "Matriculation Number", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-6">
+                                @Html.TextBoxFor(model => model.studentModel.MatricNumber, new { @class = "form-control", @placeholder = "Enter Matric Number", @required = "required" })
+                                @Html.ValidationMessageFor(model => model.studentModel.MatricNumber, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Submit" class="btn btn-success mr5" />
+                            </div>
+                        </div>
+                    </div>
+                }
+
+
+
+            </div>
+
+        </div>
+
+        @if (Model.studentModel == null) { return; }
+        @if (Model.studentModel != null && Model.studentModel.LastName != null || Model.studentModel.FirstName != null || Model.studentModel.OtherName != null)
+        {
+            using (Html.BeginForm("SaveUnlockedData", "Support", new { area = "Admin" }, FormMethod.Post))
+            {
+                <div class="row">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.studentModel.LastName, "Last Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.studentModel.LastName, new { @class = "form-control", @disabled = "disabled" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.studentModel.FirstName, "First Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.studentModel.FirstName, new { @class = "form-control", @disabled = "disabled" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.studentModel.OtherName, "Other Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.studentModel.OtherName, new { @class = "form-control", @disabled = "disabled" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.studentModel.Category.Id, "Student Category", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-6">
+                            @Html.DropDownListFor(model => model.studentModel.Category.Id, (IEnumerable<SelectListItem>)ViewBag.Category, new { @class = "form-control", @required = "required" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Save" class="btn btn-success mr5" />
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+

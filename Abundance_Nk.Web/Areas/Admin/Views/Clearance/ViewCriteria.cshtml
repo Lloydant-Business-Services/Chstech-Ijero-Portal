@@ -1,0 +1,115 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.ClearanceViewModel
+@using System.Linq
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+@*<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<link href="~/Content/style.default.css" rel="stylesheet" />
+<link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />*@
+
+
+
+@if (Model == null || Model.admissionCriteriaForOLevelSubject == null) { return; }
+
+@if (Model.admissionCriteriaForOLevelSubject != null)
+{
+
+    @Html.ActionLink("Back", "AdmissionCriteria", null, new { @class = "btn btn-white btn-lg mr5" })
+
+    <div class="panel panel-default" style="color:black">
+        <!-- Default panel contents -->
+        <h2>@Model.admissionCriteriaForOLevelSubject[0].MainCriteria.Department.Name Criteria</h2>
+        <div class="panel-heading"><b>O-Level Subjects</b></div>
+        <!-- Table -->
+        <table class="table table table-bordered table-hover table-striped">
+
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Minimum Grade</th>
+                    <th>Compulsory</th>
+                    <th>Alternatives</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody style="color:black;">
+                @for (var itemIndex = 0; itemIndex < Model.admissionCriteriaForOLevelSubject.Count; itemIndex++)
+            {
+                <tr>
+                    <td>@Model.admissionCriteriaForOLevelSubject[itemIndex].Subject.Name</td>
+                    <td>@Model.admissionCriteriaForOLevelSubject[itemIndex].MinimumGrade.Name</td>
+                    <td>@Model.admissionCriteriaForOLevelSubject[itemIndex].IsCompulsory</td>
+                    @if (Model.admissionCriteriaForOLevelSubject[itemIndex].Alternatives.Count > 0)
+    {
+                <td>
+                    @for (int i = 0; i < Model.admissionCriteriaForOLevelSubject[itemIndex].Alternatives.Count; i++)
+    {
+                <span>@Model.admissionCriteriaForOLevelSubject[itemIndex].Alternatives[i].OLevelSubject.Name | </span>
+}
+                </td>
+
+}
+else
+{
+                <td>-</td>
+}
+                    <td><i class="fa fa-edit"> @Html.ActionLink("Edit", "EditCriteria", "Clearance", new { Area = "Admin", id = @Model.admissionCriteriaForOLevelSubject[itemIndex].MainCriteria.Id }, null)</i></td>
+                    <td><i class="fa fa-recycle"> @Html.ActionLink("Delete", "DeleteCriteriaSubject", "Clearance", new { Area = "Admin", AdmissionCriteriaSubjectId = @Model.admissionCriteriaForOLevelSubject[itemIndex].Id }, null)</i></td>
+
+                </tr>
+
+
+
+
+            }
+
+            </tbody>
+
+
+
+        </table>
+
+    </div>
+
+
+    <div class="panel panel-default" style="color:black">
+        <!-- Default panel contents -->
+        <div class="panel-heading"><b>O-Level Type</b></div>
+        <!-- Table -->
+        <table class="table table table-bordered table-hover table-striped">
+
+            <thead>
+                <tr>
+                    <th>O-Level Type</th>
+                    <th>Minimum Required Subjects</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody style="color:black;">
+                @for (var itemIndex = 0; itemIndex < Model.admissionCriteriaForOLevelType.Count; itemIndex++)
+                {
+                    <tr>
+                        <td>@Model.admissionCriteriaForOLevelType[itemIndex].OLevelType.Name</td>
+                        <td>@Model.admissionCriteriaForOLevelType[itemIndex].MainCriteria.MinimumRequiredNumberOfSubject</td>
+                        <td><i class="fa fa-edit"> @Html.ActionLink("Edit", "ViewCriteria", "Clearance", new { Area = "Admin" }, null)</i></td>
+                    </tr>
+
+
+
+
+                }
+
+            </tbody>
+
+
+
+        </table>
+    </div>
+
+    @Html.ActionLink("Back", "AdmissionCriteria", null, new { @class = "btn btn-white btn-lg mr5" })
+
+
+}

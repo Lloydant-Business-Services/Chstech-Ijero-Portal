@@ -1,0 +1,282 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.ResultUploadViewModel
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    th.rotate {
+        /* Something you can count on */
+        height: 120px;
+        white-space: nowrap;
+    }
+
+    th.rotate > div {
+        font-size: small;
+        transform: translate(0px, 0px) rotate(270deg);
+        width: 10px;
+    }
+        th.rotate > div > span {
+            /*border-bottom: 1px solid #ccc;*/
+            padding: 5px 10px;
+        }
+
+</style>
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        if ($("#StudentResult_Programme_Id").val() == "") {
+            $('.uploadReady').attr('disabled', true);
+        }
+
+        $("#StudentResult_Programme_Id").change(function () {
+
+            $("#StudentResult_Department_Id").empty();
+            var programme = $("#StudentResult_Programme_Id").val();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartmentByProgrammeId")', // we are calling json method
+                dataType: 'json',
+                data: { id: programme },
+                success: function (departments) {
+                    if (departments != "") {
+                        $("#StudentResult_Department_Id").append('<option value="' + 0 + '"> -- Select Department -- </option>');
+
+                        $.each(departments, function (i, department) {
+                            $("#StudentResult_Department_Id").append('<option value="' + department.Id + '">' + department.Name + '</option>');
+                        });
+
+                        $(".uploadReady").attr('disabled', false)
+                    }
+                    else {
+                        $(".uploadReady").attr('disabled', true)
+                    }
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+        })
+    })
+
+</script>
+
+<h2>Student Result Upload</h2>
+
+@using (Html.BeginForm("Upload", "Result", FormMethod.Post, new { id = "frmUpload", enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(model => model.StudentResult.UploadedFileUrl)
+    @*@Html.HiddenFor(model => model.StudentResult.Uploader.Id)*@
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-12  shadow">
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
+                    <div class="row">
+                        <div>
+                            @if (TempData["Message"] != null)
+                            {
+                                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+                            }
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <h4 style="color:green">Provide upload criteria</h4>
+                        <hr style="margin-top:0" />
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @*@Html.LabelFor(model => model.Programme.Id, new { @class = "control-label " })*@
+                                        @Html.DropDownListFor(model => model.StudentResult.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.Programmes, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.StudentResult.Programme.Id, null, new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @*@Html.LabelFor(model => model.Level.Id, new { @class = "control-label " })*@
+                                        @Html.DropDownListFor(model => model.StudentResult.Level.Id, (IEnumerable<SelectListItem>)ViewBag.Levels, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.StudentResult.Level.Id, null, new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @*@Html.LabelFor(model => model.StudentResultType.Id, new { @class = "control-label" })*@
+                                @Html.DropDownListFor(model => model.StudentResult.Type.Id, (IEnumerable<SelectListItem>)ViewBag.ResultTypes, new { @class = "form-control uploadReady" })
+                                @Html.ValidationMessageFor(model => model.StudentResult.Type.Id)
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @*@Html.LabelFor(model => model.Department.Id, new { @class = "control-label  " })*@
+                                @Html.DropDownListFor(model => model.StudentResult.Department.Id, (IEnumerable<SelectListItem>)ViewBag.Departments, new { @class = "form-control uploadReady" })
+                                @Html.ValidationMessageFor(model => model.StudentResult.Department.Id)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @*@Html.LabelFor(model => model.SessionSemester.Id, new { @class = "control-label " })*@
+                                @Html.DropDownListFor(model => model.StudentResult.SessionSemester.Id, (IEnumerable<SelectListItem>)ViewBag.SessionSemesters, new { @class = "form-control uploadReady" })
+                                @Html.ValidationMessageFor(model => model.StudentResult.SessionSemester.Id)
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input class="btn btn-default btn-metro" type="file" name="file" id="file" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.DropDownListFor(model => model.StudentResult.MaximumObtainableScore, (IEnumerable<SelectListItem>)ViewBag.MaximumObtainableScores, new { @class = "form-control uploadReady" })
+                                @Html.ValidationMessageFor(model => model.StudentResult.MaximumObtainableScore)
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        @*<h4 style="color:green">Select excel file and upload</h4>*@
+                        <h4 style="color:green">Upload or cancel uploaded file</h4>
+                        <hr style="margin-top:0" />
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                @*@Html.TextBoxFor(m => m.ExcelFile, new { id = "file", type = "file", @class = "btn btn-default btn-metro", style = "color:red;" })*@
+
+                                <input class="btn btn-success btn-success" type="submit" name="btnUpload" id="btnUpload" value="Upload" />
+                                <input class="btn btn-white btn-default" type="button" name="btnCancel" id="btnCancel" value="Cancel" />
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-1"></div>
+        </div>
+
+
+
+
+
+        </div>
+    @*</div>*@
+}
+
+@*@using (Html.BeginForm("SaveUpload", "Result", FormMethod.Post, new { id = "frmUpload2", enctype = "multipart/form-data" }))*@
+@using (Ajax.BeginForm("SaveUpload", "Result", new { enctype = "multipart/form-data" }, new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, LoadingElementId = "busy", UpdateTargetId = "divExcelData" }))
+{
+    <div id="divExcelData">
+        @Html.HiddenFor(model => model.StudentResult.Programme.Id)
+        @Html.HiddenFor(model => model.StudentResult.Level.Id)
+        @Html.HiddenFor(model => model.StudentResult.Type.Id)
+        @Html.HiddenFor(model => model.StudentResult.Department.Id)
+        @Html.HiddenFor(model => model.StudentResult.SessionSemester.Id)
+        @Html.HiddenFor(model => model.StudentResult.MaximumObtainableScore)
+        @Html.HiddenFor(model => model.StudentResult.UploadedFileUrl)
+        @Html.HiddenFor(model => model.StudentResult.Uploader.Id)
+
+        @if (Model != null && Model.ExcelData != null && Model.ExcelData.Rows.Count > 0)
+        {
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12 ">
+
+                            <div class="form-inline pull-right">
+                                <div class="form-group">
+                                    <div id="busy" style="display:none">
+                                        <span>... Processing</span>
+                                        <img src="@Url.Content("~/Content/Images/bx_loader.gif")" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group" style="margin-right:0; padding-right:0">
+                                    <p>
+                                        @*btn-success btn-success*@
+                                        @*<input class="btn btn-white btn-lg" type="submit" name="btnSave" id="btnSave" value="Save" />*@
+                                        <input class="btn btn-white btn-lg" type="submit" name="btnSave" id="btnSave" value="Save" />
+                                    </p>
+                                </div>
+
+                                
+                            </div>
+
+                            
+                        </div>
+                    </div>
+                    <hr class="no-top-padding" />
+                    <div class="row">
+                        <div class="col-md-12">
+                            <b>Uploaded File Summary</b>
+
+                            <div class="pull-right record-count-label">
+                                <label class="caption">Sum of Selected Course Unit</label><span id="spFirstSemesterTotalCourseUnit" class="badge">55</span>
+                                <label class="caption">Min Unit</label><span id="spFirstSemesterMinimumUnit" class="badge">90</span>
+                                <label class="caption">Max Unit</label><span id="spFirstSemesterMaximumUnit" class="badge">8</span>
+                                <span class="caption">Total Course</span><span class="badge">56</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="table-responsive " style="font-size:9pt">
+                                <table class="table table-condensed grid-table table-striped">
+                                    <thead>
+                                        <tr class="well" style="height:35px; vertical-align:middle">
+                                            @for (int i = 0; i < Model.ExcelData.Columns.Count; i++)
+                                            {
+                                                <th class="rotate" style="border-right: 1px solid gainsboro;"><div><span>@Model.ExcelData.Columns[i].Caption</span></div></th>
+                                            }
+                                        </tr>
+                                    </thead>
+
+                                    @for (int i = 0; i < Model.ExcelData.Rows.Count; i++)
+                                    {
+                                        <tr>
+                                            @for (int j = 0; j < Model.ExcelData.Columns.Count; j++)
+                                            {
+                                                <td style="border-right: 1px solid gainsboro;">
+                                                    <span>@Model.ExcelData.Rows[i][j]</span>
+                                                </td>
+                                            }
+                                        </tr>
+                                    }
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+}
+

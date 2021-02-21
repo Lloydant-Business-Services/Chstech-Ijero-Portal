@@ -1,0 +1,70 @@
+﻿
+@{
+    //Layout = null;
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+}
+
+@*@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    
+}*@
+<script src="~/Scripts/jquery.min.js"></script>
+<script src="~/Scripts/responsive-tabs.js"></script>
+
+<script type="text/javascript">
+    //(function ($) {
+    //    fakewaffle.responsiveTabs(['xs', 'sm']);
+    //})(jQuery);
+
+    //$('#myTab a').click(function (e) {
+    //    e.preventDefault();
+    //    $(this).tab('show');
+    //});
+
+    function resizeIframe(obj) {
+        obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+    }
+</script>
+
+<div style="color:black">
+    <h3>
+        Application Summary
+    </h3>
+    </div>
+
+    <div class="alert alert-dismissible alert-success">
+        <p>
+            <b>Application Summary</b> can be viewed by selecting Session from the drop dowm below, then click the Display Report button to display an exportable and printable report.
+        </p>
+    </div>
+
+    <iframe src="~/Reports/Presenter/ApplicationSummary.aspx" style="width:100%; " frameborder="0" scrolling="no" id="iframe" onload='javascript:resizeIframe(this);'></iframe>
+
+
+    @*<ul class="nav nav-tabs responsive" id="myTab">
+            <li class="test-class active"><a class="deco-none misc-class" href="#how-to" data-toggle="tab"> Application Summary</a></li>
+            <li class="test-class"><a href="#features" data-toggle="tab">List of Applicants</a></li>
+            <li><a class="deco-none" href="#source" data-toggle="tab">Applicants Photo Card</a></li>
+        </ul>
+
+        <div class="tab-content responsive">
+            <div class="tab-pane active" id="how-to">
+                <br />
+                <iframe src="~/Reports/Presenter/ApplicationSummary.aspx" style="width:100%; " frameborder="0" scrolling="no" id="iframe" onload='javascript:resizeIframe(this);'></iframe>
+
+            </div>
+            <div class="tab-pane" id="features">
+                <br />
+                <iframe src="~/Reports/Presenter/PostJambApplicant.aspx" style="width:100%; " frameborder="0" scrolling="no" id="iframe" onload='javascript:resizeIframe(this);'></iframe>
+
+            </div>
+            <div class="tab-pane" id="source">
+                <br />
+                <iframe src="~/Reports/Presenter/ApplicantPhotoCard.aspx" style="width:100%; " frameborder="0" scrolling="no" id="iframe" onload='javascript:resizeIframe(this);'></iframe>
+
+            </div>
+        </div>*@
+
+    <br />

@@ -1,0 +1,164 @@
+﻿@model Abundance_Nk.Web.Areas.Applicant.ViewModels.AdmissionViewModel
+<div class="col-md-12 card p-5">
+    <div class="panel-heading">
+        <h3>Online Clearance</h3>  
+    </div>
+    <div class="panel-body">
+
+        <br />
+        <div id="divRejectReason" style="margin-bottom:15px; text-align:justify; display:none">
+            <blockquote>
+                <p style="color:red; font-weight:bold">
+                    We regret to inform you that you did not qualify for admission into the above programme and department due to following reason:
+                </p>
+                <small>@Model.ApplicationForm.Remarks<cite title="Source Title"></cite></small>
+            </blockquote>
+        </div>
+
+
+        <div class="row ">
+
+            <div class="col-md-12 ">
+                @using (Html.BeginForm("VerifyOlevelResult", "Admission", FormMethod.Post))
+                {
+                    @Html.HiddenFor(m => m.ApplicantStatusId)
+                    @Html.HiddenFor(m => m.AppliedCourse.Programme.Id)
+                    @Html.HiddenFor(m => m.ApplicationForm.Id)
+                    @Html.HiddenFor(m => m.ApplicationForm.Person.Id)
+                    @Html.HiddenFor(m => m.ApplicationForm.RejectReason)
+                    @Html.HiddenFor(m => m.ApplicationForm.Rejected)
+                    @Html.HiddenFor(m => m.ApplicationForm.Number)
+
+                    <div class="row" id="divOLevel">
+                        <div class="col-md-6">
+                            <h5><b>First Sitting</b></h5>
+                            <hr class="no-top-padding" />
+                            @Html.HiddenFor(model => model.FirstSittingOLevelResult.Id)
+                            <div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.FirstSittingOLevelResult.Type.Id, "Type", new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        @Html.DropDownListFor(model => model.FirstSittingOLevelResult.Type.Id, (IEnumerable<SelectListItem>)ViewBag.FirstSittingOLevelTypeId, new { @class = "form-control olevel" })
+                                        @Html.ValidationMessageFor(model => model.FirstSittingOLevelResult.Type.Id)
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.FirstSittingOLevelResult.ExamNumber, new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        @Html.TextBoxFor(model => model.FirstSittingOLevelResult.ExamNumber, new { @class = "form-control olevel" })
+                                        @Html.ValidationMessageFor(model => model.FirstSittingOLevelResult.ExamNumber)
+                                    </div>
+                                </div>
+
+                                <div class="form-group ">
+                                    @Html.LabelFor(model => model.FirstSittingOLevelResult.ExamYear, new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        @Html.DropDownListFor(model => model.FirstSittingOLevelResult.ExamYear, (IEnumerable<SelectListItem>)ViewBag.FirstSittingExamYearId, new { @class = "form-control olevel" })
+                                        @Html.ValidationMessageFor(model => model.FirstSittingOLevelResult.ExamYear)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <table class="table table-condensed table-responsive" style="background-color:whitesmoke">
+                                <tr>
+                                    <th>
+                                        Subject
+                                    </th>
+                                    <th>
+                                        Grade
+                                    </th>
+                                    <th></th>
+                                </tr>
+
+                                @for (int i = 0; i < 9; i++)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DropDownListFor(model => model.FirstSittingOLevelResultDetails[i].Subject.Id, (IEnumerable<SelectListItem>)ViewData["FirstSittingOLevelSubjectId" + i], new { @class = "form-control olevel" })
+                                        </td>
+                                        <td>
+                                            @Html.DropDownListFor(model => model.FirstSittingOLevelResultDetails[i].Grade.Id, (IEnumerable<SelectListItem>)ViewData["FirstSittingOLevelGradeId" + i], new { @class = "form-control olevel" })
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h5><b>Second Sitting</b></h5>
+                            <hr class="no-top-padding" />
+
+                            @Html.HiddenFor(model => model.SecondSittingOLevelResult.Id)
+
+                            <div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.SecondSittingOLevelResult.Type.Id, "Type", new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        @Html.DropDownListFor(model => model.SecondSittingOLevelResult.Type.Id, (IEnumerable<SelectListItem>)ViewBag.SecondSittingOLevelTypeId, new { @class = "form-control olevel" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.SecondSittingOLevelResult.ExamNumber, new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        @Html.TextBoxFor(model => model.SecondSittingOLevelResult.ExamNumber, new { @class = "form-control olevel" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group ">
+                                    @Html.LabelFor(model => model.SecondSittingOLevelResult.ExamYear, new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        @Html.DropDownListFor(model => model.SecondSittingOLevelResult.ExamYear, (IEnumerable<SelectListItem>)ViewBag.SecondSittingExamYearId, new { @class = "form-control olevel" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <table class="table table-condensed table-responsive" style="background-color:whitesmoke">
+                                <tr>
+                                    <th>
+                                        Subject
+                                    </th>
+                                    <th>
+                                        Grade
+                                    </th>
+                                    <th></th>
+                                </tr>
+
+                                @for (int i = 0; i < 9; i++)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DropDownListFor(model => model.SecondSittingOLevelResultDetails[i].Subject.Id, (IEnumerable<SelectListItem>)ViewData["SecondSittingOLevelSubjectId" + i], new { @class = "form-control olevel" })
+                                        </td>
+                                        <td>
+                                            @Html.DropDownListFor(model => model.SecondSittingOLevelResultDetails[i].Grade.Id, (IEnumerable<SelectListItem>)ViewData["SecondSittingOLevelGradeId" + i], new { @class = "form-control olevel" })
+                                        </td>
+                                    </tr>
+                                }
+
+                            </table>
+                        </div>
+                    </div>
+
+                            <br />
+                            <hr />
+                            <div class="form-inline">
+                                <div class="form-group margin-bottom-0">
+                                    <input class="btn btn-success btn-lg mr5 " type="submit" name="submit" id="submit" value="Check Clearance Status" />
+
+                                </div>
+
+                            </div>
+                            <br />
+                            <div id="divVerifyOlevelResultData"></div>
+
+                }
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+

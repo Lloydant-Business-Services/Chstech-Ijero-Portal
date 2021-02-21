@@ -1,0 +1,101 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.MenuViewModel
+@{
+    ViewBag.Title = "DeleteMenu";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+
+<div class="col-md-12">
+    @if (TempData["Message"] != null)
+    {
+
+        @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+    }
+
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">Delete Menu</h4>
+        </div>
+
+            @using (Html.BeginForm("DeleteMenu", "Menu", new { Area = "Admin" }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        @Html.HiddenFor(m => m.Menu.Id)
+
+                        <div>
+                            <h3>Are you sure you want to delete this menu?</h3>
+                            <hr />
+                            <dl class="dl-horizontal">
+                                <dt>
+                                    @Html.DisplayName("Display Name:")
+                                </dt>
+
+                                <dd>
+                                    @Html.DisplayFor(model => model.Menu.DisplayName)
+                                </dd>
+                                <br />
+
+                                <dt>
+                                    @Html.DisplayName("Area:")
+                                </dt>
+
+                                <dd>
+                                    @Html.DisplayFor(model => model.Menu.Area)
+                                </dd>
+                                <br />
+
+                                <dt>
+                                    @Html.DisplayName("Controller:")
+                                </dt>
+
+                                <dd>
+                                    @Html.DisplayFor(model => model.Menu.Controller)
+                                </dd>
+                                <br />
+
+                                <dt>
+                                    @Html.DisplayName("Action:")
+                                </dt>
+
+                                <dd>
+                                    @Html.DisplayFor(model => model.Menu.Action)
+                                </dd>
+                                <br />
+
+                                <dt>
+                                    @Html.DisplayName("Activated:")
+                                </dt>
+
+                                <dd>
+                                    @Html.DisplayFor(model => model.Menu.Activated)
+                                </dd>
+                                <br />
+
+                                <dt>
+                                    @Html.DisplayName("Menu Group:")
+                                </dt>
+
+                                <dd>
+                                    @Html.DisplayFor(model => model.Menu.MenuGroup.Name)
+                                </dd>
+
+                            </dl>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-1 col-md-11">
+                                <input type="submit" value="Yes" class="btn btn-success" />   |
+                                @Html.ActionLink("Cancel", "ViewMenuByMenuGroup", "Menu", new { @class = "btn btn-success" })
+                            </div>
+                        </div>
+                    </div>
+
+                    </div>
+            }
+
+        </div>
+
+    </div>

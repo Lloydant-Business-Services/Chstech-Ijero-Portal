@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Abundance_Nk.Model.Model.ApplicationForm>
+
+@if (Model != null && Model.Count() > 0)
+{
+    <div class="table-responsive custom-text-black">
+        <table class="table table-condensed grid-table table-head-alt mb30">
+            <thead>
+                <tr class="well" style="height:38px; vertical-align:middle">
+                    <th>
+                        @Html.CheckBox("selectAll", new { @class = "ckbox ckbox-default" })
+                    </th>
+                   
+                    <th>
+                        Form Number
+                    </th>
+                    <th>
+                        Name
+                    </th>
+
+                    <th>
+                        Reject Reason
+                    </th>
+                </tr>
+            </thead>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.CheckBox(" ", false, new { @class = "ckb ", id = item.Id })
+                    </td>
+                    
+                    <td>
+                        
+                        <ul class="nav navbar-nav2 ">
+                            <li class="dropdown">
+                                <a style="padding:1px; " class="dropdown-toggle" data-toggle="dropdown" href="#">@Html.DisplayFor(modelItem => item.Number)<span></span></a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <li class="divider"></li>
+                                    <li>@Html.ActionLink("Application Form", "ApplicationForm", "AdmissionProcessing", new { Area = "Admin", fid = item.Id }, new { target = "_blank", style = "line-height:5px; font-size:10pt; margin-bottom:5px" })</li>
+                                    <li class="divider"></li>
+                                    @*<li>@Html.ActionLink("PUTME Result Slip", "Index", "PostUtmeResult", new { Area = "Applicant", fid = item.Id }, new { target = "_blank", style = "line-height:5px; font-size:10pt; margin-bottom:5px" })</li>*@
+                                </ul>
+                            </li>
+                        </ul>
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Person.FullName)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RejectReason)
+                    </td>
+                </tr>
+            }
+        </table>
+
+    </div>
+}

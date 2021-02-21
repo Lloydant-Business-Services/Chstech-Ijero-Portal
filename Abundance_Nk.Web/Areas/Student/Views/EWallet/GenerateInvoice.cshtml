@@ -1,0 +1,121 @@
+﻿@model Abundance_Nk.Web.Areas.Student.ViewModels.EWalletViewModel
+
+@{
+    ViewBag.Title = "Wallet Deposit";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/Content/sweetalert.css" />
+<script type="text/javascript" src="~/Scripts/jquery-2.1.3.min.js"></script>
+<script type="text/javascript" src="~/Scripts/sweetalert.min.js"></script>
+
+@using (Html.BeginForm("GenerateInvoice", "EWallet", FormMethod.Post))
+{
+    @Html.HiddenFor(model => model.FeeType.Id)
+    @Html.HiddenFor(model => model.PaymentType.Id)
+    @Html.HiddenFor(model => model.Person.Type.Id)
+    @Html.HiddenFor(model => model.Person.Id)
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h2>Wallet Deposit</h2>
+                    <p><b>Provide the session, level, amount to deposit and then click the Deposit button to generate an invoice.</b></p>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10">
+                        <div class="row">
+                            <div>
+                                @if (TempData["Message"] != null)
+                                {
+                                    var msg = (Abundance_Nk.Model.Model.Message)TempData["Message"];
+                                    //@Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+                                    <script>swal("Attention!", '@msg.Description', "error");</script>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <hr style="margin-top:0" />
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+
+                                            @Html.LabelFor(model => model.Session.Id, new { @class = "control-label " })
+                                            @Html.DropDownListFor(model => model.Session.Id, (IEnumerable<SelectListItem>)ViewBag.Sessions, new { @class = "form-control", required = "required" })
+                                            @Html.ValidationMessageFor(model => model.Session.Id, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.HiddenFor(model => model.StudentLevel.Programme.Id)
+                                            @Html.LabelFor(model => model.StudentLevel.Programme.Id, new { @class = "control-label " })
+                                            @Html.DropDownListFor(model => model.StudentLevel.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.Programmes, new { @class = "form-control", disabled = true })
+                                            @Html.ValidationMessageFor(model => model.StudentLevel.Programme.Id, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.HiddenFor(model => model.StudentLevel.Department.Id)
+                                            @Html.LabelFor(model => model.StudentLevel.Department.Id, "Course", new { @class = "control-label " })
+                                            @Html.DropDownListFor(model => model.StudentLevel.Department.Id, (IEnumerable<SelectListItem>)ViewBag.Departments, new { @class = "form-control", disabled = true })
+                                            @Html.ValidationMessageFor(model => model.StudentLevel.Department.Id, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.StudentLevel.Level.Id, new { @class = "control-label " })
+                                            @Html.DropDownListFor(model => model.StudentLevel.Level.Id, (IEnumerable<SelectListItem>)ViewBag.Levels, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.StudentLevel.Level.Id, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.EWalletPayment.Amount, "Amount", new { @class = "control-label " })
+                                            @Html.TextBoxFor(model => model.EWalletPayment.Amount, new { @class = "form-control", required = "required" })
+                                            @Html.ValidationMessageFor(model => model.EWalletPayment.Amount, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-md-1"></div>
+            </div>
+
+            <div class="panel-footer">
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10 ">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input class="btn btn-success btn-lg mr5" type="submit" name="submit" id="submit" value="Deposit" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-1"></div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+}

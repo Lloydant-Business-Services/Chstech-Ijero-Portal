@@ -1,0 +1,189 @@
+﻿@using Abundance_Nk.Web.Models
+@model Abundance_Nk.Web.Areas.Admin.ViewModels.ELearningViewModel
+
+@{
+                /**/
+
+                ViewBag.Title = "E-Learning";
+                Layout = "~/Areas/Student/Views/Shared/_NewThemeLayout.cshtml";
+}
+
+
+<div class="">
+    <div class="card-header">Pending Assignment(s)</div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table-bordered table-hover table-striped  table">
+                <tr>
+                    <th>
+                        Course Code
+                    </th>
+                    <th>
+                        Course Name
+                    </th>
+                    <th>
+                        Topic
+                    </th>
+                    <th>
+                        Instruction
+                    </th>
+                    <th>
+                        Set Date
+                    </th>
+                    <th>
+                        Due Date
+                    </th>
+                    <th>
+
+                    </th>
+                    <th>
+
+                    </th>
+
+                </tr>
+
+                @for (int i = 0; i < Model.AssignmentDTOCategory.PendingAssignment.Count(); i++)
+                {
+                    DateTime currentDateTime = DateTime.UtcNow;
+                    <tr>
+                        <td>
+                            @Model.AssignmentDTOCategory.PendingAssignment[i].CourseCode
+                        </td>
+                        <td>
+                            @Model.AssignmentDTOCategory.PendingAssignment[i].CourseName
+                        </td>
+                        <td>
+                            @Model.AssignmentDTOCategory.PendingAssignment[i].Assignment
+                        </td>
+                        <td>
+                            @Model.AssignmentDTOCategory.PendingAssignment[i].Instructions
+                        </td>
+                        <td>
+                            @Model.AssignmentDTOCategory.PendingAssignment[i].DateSet
+                        </td>
+                        <td>
+                            @Model.AssignmentDTOCategory.PendingAssignment[i].DueDate
+                        </td>
+                        <td>
+                            @if (Convert.ToDateTime(Model.AssignmentDTOCategory.PendingAssignment[i].DueDate) >= currentDateTime)
+                            {
+                                <a href="@Url.Content(Model.AssignmentDTOCategory.PendingAssignment[i].URL)" class="btn btn-primary-alt" target="_blank">View</a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Content(Model.AssignmentDTOCategory.PendingAssignment[i].URL)" class="btn btn-primary-alt" target="_blank" disabled>View</a>
+                            }
+
+                        </td>
+                        <td>
+
+
+                            @if (Convert.ToDateTime(Model.AssignmentDTOCategory.PendingAssignment[i].DueDate) >= currentDateTime)
+                            {
+                               
+                                    @Html.ActionLink("Submit Assignment", "Submit", "Elearning", new { Area = "Student", id = Utility.Encrypt(Model.AssignmentDTOCategory.PendingAssignment[i].Id.ToString()) }, new { @class = "btn btn-success" })
+                            }
+                            else
+                            {
+                                @Html.ActionLink("Submission Ended", "Submit", "Elearning", new { Area = "Student", id = Utility.Encrypt(Model.AssignmentDTOCategory.PendingAssignment[i].Id.ToString()) }, new { @class = "btn btn-secondary", onclick = "javascript:return false;" })
+                            }
+
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+<hr />
+<br />
+<div class="">
+    <div class="card-header">Submitted Assignment(s)</div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table-bordered table-hover table-striped  table">
+                <tr>
+                    <th>
+                        Course Code
+                    </th>
+                    <th>
+                        Course Name
+                    </th>
+                    <th>
+                        Topic
+                    </th>
+                    <th>
+                        Instruction
+                    </th>
+                    <th>
+                        Set Date
+                    </th>
+                    <th>
+                        Due Date
+                    </th>
+                    <th>
+                        Score
+                    </th>
+                    <th>
+
+                    </th>
+                    <th>
+
+                    </th>
+
+                </tr>
+
+                @for (int i = 0; i < Model.AssignmentDTOCategory.SubmittedAssignment.Count(); i++)
+                {
+                    DateTime currentDateTime = DateTime.UtcNow;
+                <tr>
+                    <td>
+                        @Model.AssignmentDTOCategory.SubmittedAssignment[i].CourseCode
+                    </td>
+                    <td>
+                        @Model.AssignmentDTOCategory.SubmittedAssignment[i].CourseName
+                    </td>
+                    <td>
+                        @Model.AssignmentDTOCategory.SubmittedAssignment[i].Assignment
+                    </td>
+                    <td>
+                        @Model.AssignmentDTOCategory.SubmittedAssignment[i].Instructions
+                    </td>
+                    <td>
+                        @Model.AssignmentDTOCategory.SubmittedAssignment[i].DateSet
+                    </td>
+                    <td>
+                        @Model.AssignmentDTOCategory.SubmittedAssignment[i].DueDate
+                    </td>
+                    @if (Model.AssignmentDTOCategory.SubmittedAssignment[i].isPublished)
+                    {
+                        <td>@Model.AssignmentDTOCategory.SubmittedAssignment[i].AssignmentScore</td>
+                    }
+                    else
+                    {
+                        <td>No Score Yet</td>
+                    }
+                    <td>
+                        @if (Convert.ToDateTime(Model.AssignmentDTOCategory.SubmittedAssignment[i].DueDate) >= currentDateTime)
+                        {
+                            <a href="@Url.Content(Model.AssignmentDTOCategory.SubmittedAssignment[i].URL)" class="btn btn-primary-alt" target="_blank">View</a>
+                        }
+                        else
+                        {
+                            <a href="@Url.Content(Model.AssignmentDTOCategory.SubmittedAssignment[i].URL)" class="btn btn-primary-alt" target="_blank" disabled>View</a>
+                        }
+
+                    </td>
+                    <td>
+                        @Html.ActionLink("View Submission", "ViewSubmittedAssignment", "Elearning", new { Area = "Student", id = Utility.Encrypt(Model.AssignmentDTOCategory.SubmittedAssignment[i].submittedAssignmentId.ToString()) }, new { @class = "btn btn-info" })
+
+
+                    </td>
+                </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+
+

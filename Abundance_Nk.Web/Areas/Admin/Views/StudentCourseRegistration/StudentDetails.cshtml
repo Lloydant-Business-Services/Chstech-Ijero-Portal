@@ -1,0 +1,525 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.StudentCourseRegistrationViewModel
+@{
+    ViewBag.Title = "StudentDetails";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+
+<script type="text/javascript">
+
+    function RemoveCourse(courseRegDetail) {
+        $("#loading").show();
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("RemoveCourse", "StudentCourseRegistration")', // Calling json method
+            dataType: 'json',
+            data: { id: courseRegDetail },
+            success: function (result) {
+                if (result.IsError === false) {
+                    alert(result.SuccessMessage);
+                    window.location.reload(true);
+                } else {
+                    alert(result.ErrorMessage);
+                    window.location.reload(true);
+                }
+            },
+            error: function (ex) {
+                alert('Operation failed!.' + ex);
+            }
+        });
+        return false;
+    }
+
+    function DeleteStudentLevel(studentLevelId) {
+        $("#loading").show();
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("DeleteStudentLevel", "StudentCourseRegistration")', // Calling json method
+            dataType: 'json',
+            data: { id: studentLevelId },
+            success: function (result) {
+                if (result.IsError === false) {
+                    alert(result.SuccessMessage);
+                    window.location.reload(true);
+                } else {
+                    alert(result.ErrorMessage);
+                    window.location.reload(true);
+                }
+            },
+            error: function (ex) {
+                alert('Operation Failed.' + ex);
+            }
+        });
+        return false;
+    }
+
+        function AddStudentLevel(studentLevelId) {
+        $("#loading").show();
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("AddStudentLevel", "StudentCourseRegistration")', // Calling json method
+            dataType: 'json',
+            data: { Id: studentLevelId },
+            success: function (result) {
+                if (result.IsError === false) {
+                    alert(result.SuccessMessage);
+                    window.location.reload(true);
+                } else {
+                    alert(result.ErrorMessage);
+                    window.location.reload(true);
+                }
+            },
+            error: function (ex) {
+                alert('Operation Failed.' + ex);
+            }
+        });
+        return false;
+    }
+
+    function DeleteCourseReg(courseRegId) {
+        $("#loading").show();
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("DeleteCourseRegistration", "StudentCourseRegistration")', // Calling json method
+            dataType: 'json',
+            data: { id: courseRegId },
+            success: function (result) {
+                if (result.IsError === false) {
+                    alert(result.SuccessMessage);
+                    window.location.reload(true);
+                } else {
+                    alert(result.ErrorMessage);
+                    window.location.reload(true);
+                }
+            },
+            error: function (ex) {
+                alert('Operation Failed.' + ex);
+            }
+        });
+        return false;
+    }
+
+    function DeactivateStudent(mode) {
+        $("#loading").show();
+
+        var matricNumber = $("#Student_MatricNumber").val();
+
+        if (matricNumber == undefined || matricNumber == "") {
+            alert("Input Matric Number");
+            $("#loading").hide();
+            return;
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("DeactivateStudent", "StudentCourseRegistration")', // Calling json method
+            dataType: 'json',
+            data: { studentMatricNumber: matricNumber, activeMode : mode },
+            success: function (result) {
+                if (result.IsError === false) {
+                    alert(result.SuccessMessage);
+                    window.location.reload(true);
+                } else {
+                    alert(result.ErrorMessage);
+                    window.location.reload(true);
+                }
+            },
+            error: function (ex) {
+                alert('Operation failed!.' + ex);
+            }
+        });
+        return false;
+    }
+
+</script>
+
+
+
+<div class="row">
+    <div class="col-md-12">
+
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div style="font-size: x-large">View Student Details</div>
+            </div>
+            <div class="panel-body">
+                @using (Html.BeginForm("StudentDetails", "StudentCourseRegistration", new { area = "Admin" }, FormMethod.Post))
+                {
+                    <div class="row">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Student.MatricNumber, "Matric Number:", new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(model => model.Student.MatricNumber, new { @class = "form-control", @placeholder = "Enter Matric Number", @required = "required" })
+                                @Html.ValidationMessageFor(model => model.Student.MatricNumber, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Get Details" class="btn btn-success mr5" />
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@if (Model != null)
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div style="font-size: large">Student Details</div>
+        </div>
+        <div class="panel-body">
+            <div class="col-md-12">
+
+
+
+                <div class="col-md-6">
+                    <dl class="dl-horizontal">
+                        <dt>Matric Number / Application Number : </dt>
+                        @if (!string.IsNullOrEmpty(Model.Student.MatricNumber))
+                        {
+                            <dd>@Model.Student.MatricNumber.ToUpper()</dd>
+                        }
+                        else if (Model.Student.ApplicationForm != null && !string.IsNullOrEmpty(Model.Student.ApplicationForm.Number))
+                        {
+                            <dd>@Model.Student.ApplicationForm.Number.ToUpper()</dd>
+                        }
+                        <dt>Name: </dt>
+                        <dd>@Model.Student.FullName.ToUpper()</dd>
+                        @if (Model.Student.Sex != null)
+                        {
+                            <dt>Sex: </dt>
+                            <dd>@Model.Student.Sex.Name</dd>
+                        }
+
+
+                        <dt>Mobile Phone: </dt>
+                        <dd>@Model.Student.MobilePhone</dd>
+
+                        <dt>Email Address: </dt>
+                        <dd>@Model.Student.Email</dd>
+
+                        @if (Model.Student.Nationality != null)
+                        {
+                            <dt>Nationality: </dt>
+                            <dd>@Model.Student.Nationality.Name.ToUpper()</dd>
+                        }
+                        @if (Model.Student.State != null)
+                        {
+                            <dt>State: </dt>
+                            <dd>@Model.Student.State.Name.ToUpper()</dd>
+                        }
+                        @if (Model.Student.HomeTown != null)
+                        {
+                            <dt>Home Town: </dt>
+                            <dd>@Model.Student.HomeTown.ToUpper()</dd>
+                        }
+                        @if (Model.Student.HomeAddress != null)
+                        {
+                            <dt>Home Address: </dt>
+                            <dd>@Model.Student.HomeAddress.ToUpper()</dd>
+                        }
+                        @if (Model.Student.SchoolContactAddress != null)
+                        {
+                            <dt>School Contact Address: </dt>
+                            <dd>@Model.Student.SchoolContactAddress.ToUpper()</dd>
+                        }
+                        <dt>Student Status: </dt>
+
+                        @if (Model.Student.Activated == null || Model.Student.Activated == true)
+                        {
+                            <dd>Active</dd>
+                            <dt></dt>
+                            <dd><button class="btn btn-success btn-sm" onclick="DeactivateStudent(0)">Deactivate</button></dd>
+                        }
+                        else
+                        {
+                            <dd>Not Active</dd>
+                            <dt></dt>
+                            <dd><button class="btn btn-success btn-sm" onclick="DeactivateStudent(1)">Activate</button></dd>
+
+                        }
+
+
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    @if (Model.Student.ImageFileUrl != null)
+                    {
+                        <p><img class="pull-left" src="@Model.Student.ImageFileUrl" width="100" height="100" /></p>
+                    }
+                    else
+                    {
+                        <p><img class="pull-left" src="~/Content/Images/default_avatar.png" width="150" height="150" /></p>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div style="font-size: large">Student Level Details</div>
+                </div>
+                <div class="panel-body">
+                    @{ var programmeId = 0;
+                        if (Model.StudentLevelList.Count > 0)
+                        {
+                            programmeId = Model.StudentLevelList.FirstOrDefault().Programme.Id;
+                        }
+                    }
+                    <table class="col-md-12 table table-bordered table-hover table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Programme</th>
+                                <th>Department</th>
+                                @if (programmeId > 0 && programmeId != 1 && programmeId != 2 && programmeId != 6)
+                                {
+                                    <th>Department Option</th>
+                                }
+
+                                <th>Level</th>
+                                <th>Session</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        @for (int i = 0; i < Model.StudentLevelList.Count; i++)
+                        {
+                            <tbody>
+                                <tr>
+                                    <td>@Model.StudentLevelList[i].Programme.Name</td>
+                                    <td>@Model.StudentLevelList[i].Department.Name</td>
+                                    @if (programmeId > 0 && programmeId != 1 && programmeId != 2 && programmeId != 6)
+                                    {
+                                        if (Model.StudentLevelList[i].DepartmentOption != null && Model.StudentLevelList[i].DepartmentOption.Name != null)
+                                        {
+                                            <td>@Model.StudentLevelList[i].DepartmentOption.Name</td>
+                                        }
+                                        else
+                                        {
+                                            <td>No Option</td>
+                                        }
+
+                                    }
+                                    @*else
+        {
+            <td>No Option</td>
+        }*@
+
+                                    <td>@Model.StudentLevelList[i].Level.Name</td>
+                                    <td>@Model.StudentLevelList[i].Session.Name</td>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <td>@Html.ActionLink("Edit", "EditStudentLevel", new { Controller = "StudentCourseRegistration", Area = "Admin", sid = Model.StudentLevelList[i].Id }, new { @class = "btn btn-success mr5", @target = "_blank" }) </td>
+                                    }
+                                    else
+                                    {
+                                        <td>@Html.ActionLink("Edit", "EditStudentLevel", new { Controller = "StudentCourseRegistration", Area = "Admin", sid = Model.StudentLevelList[i].Id }, new { @class = "btn btn-success mr5", @disabled = "disabled" }) </td>
+                                    }
+
+                                    @if (User.IsInRole("Admin") && User.Identity.Name == "william")
+                                    {
+                                        <td>
+                                            <button class="btn btn-success mr5" onclick="DeleteStudentLevel(@Model.StudentLevelList[i].Id)">Delete</button>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            <button class="btn btn-success mr5" disabled="disabled" onclick="DeleteStudentLevel(@Model.StudentLevelList[i].Id)">Delete</button>
+                                        </td>
+                                    }
+
+                                </tr>
+                            </tbody>
+                        }
+                    </table>
+                    <div class="row">
+                        <button class="btn btn-success mr5" onclick="AddStudentLevel(@Model.StudentLevelList[0].Student.Id)">Add Level</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div style="font-size: large">Student Payment Details</div>
+                </div>
+                <div class="panel-body">
+
+                    <table class="col-md-12 table table-bordered table-hover table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Payment Date</th>
+                                <th>Amount</th>
+                                <th>Invoice Number</th>
+                                <th>Confirmation Number</th>
+                                <th>Fee Type</th>
+                                <th>Session</th>
+                                <th>Edit</th>
+                                <th>Receipts</th>
+                            </tr>
+                        </thead>
+                        @for (int i = 0; i < Model.Payments.Count; i++)
+                        {
+                            <tbody>
+                                <tr>
+                                    <td>@Model.Payments[i].DatePaid.ToLongDateString()</td>
+                                    <td>@Model.Payments[i].Amount</td>
+                                    <td>@Model.Payments[i].InvoiceNumber</td>
+                                    <td>@Model.Payments[i].ConfirmationNumber</td>
+                                    <td>@Model.Payments[i].FeeType.Name</td>
+                                    <td>@Model.Payments[i].Session.Name</td>
+                                    @*<td><button class="btn btn-success mr5" href="~/Area/Admin/Support/EditPayment?pmid=@Model.Payments[i].Id">Delete</button></td>*@
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <td>@Html.ActionLink("Edit", "EditPayment", new { Controller = "Support", Area = "Admin", pmid = @Model.Payments[i].Id }, new { @class = "btn btn-success", @target = "_blank" })</td>
+                                    }
+                                    else
+                                    {
+                                        <td>@Html.ActionLink("Edit", "EditPayment", new { Controller = "Support", Area = "Admin", pmid = @Model.Payments[i].Id }, new { @class = "btn btn-success", disabled = "disabled" })</td>
+                                    }
+                                    <td>@Html.ActionLink("View", "Receipt", new { Controller = "Credential", Area = "Common", pmid = @Model.Payments[i].Id }, new { @class = "btn btn-success", @target = "_blank" })</td>
+                                </tr>
+                            </tbody>
+                        }
+                    </table>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div style="font-size: large">Student Course Registration Details</div>
+                </div>
+                <div class="panel-body">
+
+                    @for (int i = 0; i < Model.CourseRegistrations.Count; i++)
+                    {
+                        <table class="col-md-12 table table-bordered table-hover table-responsive">
+                            <thead>
+                                <tr>
+                                    <th>Level</th>
+                                    <th>Session</th>
+                                    <th>Course Semester</th>
+                                    <th>Course Code</th>
+                                    <th>Course Name</th>
+                                    <th>Course Unit</th>
+                                    @if (programmeId > 0 && programmeId != 1 && programmeId != 2 && programmeId != 6)
+                                    {
+                                    <th>Course Dept. Opt</th>
+                                    }
+                                    <th>Course Mode</th>
+                                    <th>Test Score</th>
+                                    <th>Exam Score</th>
+                                    <th>Special Case</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            @if (Model.CourseRegistrations[i].Details != null && Model.CourseRegistrations[i].Details.Count > 0)
+                            {
+                                for (int j = 0; j < Model.CourseRegistrations[i].Details.Count; j++)
+                                {
+                                    <tbody>
+                                        <tr>
+                                            <td>@Model.CourseRegistrations[i].Level.Name</td>
+                                            <td>@Model.CourseRegistrations[i].Session.Name</td>
+                                            <td>@Model.CourseRegistrations[i].Details[j].Semester.Name</td>
+                                            <td>@Model.CourseRegistrations[i].Details[j].Course.Code</td>
+                                            <td>@Model.CourseRegistrations[i].Details[j].Course.Name</td>
+                                            <td>@Model.CourseRegistrations[i].Details[j].CourseUnit</td>
+
+                                            @if (programmeId > 0 && programmeId != 1 && programmeId != 2 && programmeId != 6)
+                                            {
+                                                if (Model.CourseRegistrations[i].Details[j].Course.DepartmentOption != null)
+                                                {
+                                                    <td>@Model.CourseRegistrations[i].Details[j].Course.DepartmentOption.Name</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>No Option</td>
+                                                }
+                                            }
+
+
+                                            <td>@Model.CourseRegistrations[i].Details[j].Mode.Name</td>
+                                            @if ((Model.CourseRegistrations[i].Details[j].TestScore + Model.CourseRegistrations[i].Details[j].ExamScore) < 40)
+                                            {
+                                                <td style="color: red">@Model.CourseRegistrations[i].Details[j].TestScore.ToString()</td>
+                                                <td style="color: red">@Model.CourseRegistrations[i].Details[j].ExamScore.ToString()</td>
+                                            }
+                                            else
+                                            {
+                                                <td>@Model.CourseRegistrations[i].Details[j].TestScore.ToString()</td>
+                                                <td>@Model.CourseRegistrations[i].Details[j].ExamScore.ToString()</td>
+                                            }
+
+                                            <td>@Model.CourseRegistrations[i].Details[j].SpecialCase</td>
+                                            @if (User.IsInRole("Admin") || User.IsInRole("R&DC"))
+                                            {
+                                                <td><button class="btn btn-success mr5" onclick="RemoveCourse(@Model.CourseRegistrations[i].Details[j].Id)">Remove Course</button></td>
+                                            }
+                                            else
+                                            {
+                                                <td><button class="btn btn-success mr5" disabled="disabled" onclick="RemoveCourse(@Model.CourseRegistrations[i].Details[j].Id)">Remove Course</button></td>
+                                            }
+
+                                        </tr>
+                                    </tbody>
+                                }
+                            }
+
+                        </table>
+
+                        if (User.IsInRole("Admin") || User.IsInRole("R&DC"))
+                        {
+                            <button class="btn btn-success mr5" onclick="DeleteCourseReg(@Model.CourseRegistrations[i].Id)">Remove Course Registration</button>
+                            @Html.ActionLink("Edit Course Registration", "EditCourseRegistration", new { Controller = "StudentCourseRegistration", Area = "Admin", cid = Model.CourseRegistrations[i].Id }, new { @class = "btn btn-success mr5", @target = "_blank" })
+                        }
+
+                        <br />
+                        <br />
+                    }
+                    <br />
+                    <div class="col-md-12">
+                        @Html.ActionLink("Add A Course", "AddExtraCourse", new { Controller = "StudentCourseRegistration", Area = "Admin" }, new { @class = "btn btn-success", @target = "_blank" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+}

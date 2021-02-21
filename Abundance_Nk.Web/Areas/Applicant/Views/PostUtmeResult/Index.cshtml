@@ -1,0 +1,81 @@
+﻿@model Abundance_Nk.Web.Areas.Applicant.ViewModels.PostUtmeResultViewModel
+
+@{
+    ViewBag.Title = "PUTME RESULT";
+    Layout = "~/Views/Shared/_NewThemeLayout.cshtml";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>PUTME RESULT</title>
+</head>
+<body>
+    <div class="row">
+       <div>
+                                    @if (TempData["Message"] != null)
+                                    {
+                                        @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+                                    }
+                                </div>
+
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <img src="@Url.Content("~/Content/Images/results.jpg")" alt="" width="500px" />
+                        </div>
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title text-center">CHECK SCREENING RESULT</h3>
+                                </div>
+                                <div class="panel-body">
+                                    @using (Html.BeginForm("Index", "PostUtmeResult", FormMethod.Post))
+                                {
+                                        @Html.AntiForgeryToken()
+                                        
+                                        <div class="input-group">
+                                            <span class="input-group-addon" id="basic-addon1">Programme</span>
+                                            @Html.DropDownListFor(model => model.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.ProgrammeId, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.Programme.Id, null, new { @class = "text-danger" })
+                                        </div>
+                                        <br />
+
+                                        <div class="input-group">
+                                            <span class="input-group-addon" id="basic-addon1">Examination No</span>
+                                            @Html.TextBoxFor(model => model.JambRegistrationNumber, new { @class = "form-control", @placeholder = "Enter your Examination Number" })
+                                            @Html.ValidationMessageFor(model => model.JambRegistrationNumber, null, new { @class = "text-danger" })
+                                        </div>
+                                        <br />
+                                        <div class="input-group">
+                                            <span class="input-group-addon" id="basic-addon1">Confirmation Order NO.</span>
+                                            @Html.TextBoxFor(model => model.PinNumber, new { @class = "form-control", @placeholder = "Enter Scratch Card Pin Number" })
+                                            @Html.ValidationMessageFor(model => model.PinNumber, null, new { @class = "text-danger" })
+                                        </div>
+                                        <br />
+                                   
+                                        <div class="col-md-offset-6">
+                                            <button class="btn btn-default " type="submit">Check Result</button>
+                                         </div>
+                                }
+                                    </div>
+                                        <div class="panel-footer">
+                                            <p class="text-center">
+                                                If you encounter any issues kindly send an email to <cite>support@lloydant.com</cite> or  call <cite>07088391544</cite>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                    </div>
+                    <marquee> <h2>Use the same Confirmation Order Number used during application to view your result</h2></marquee>
+                </div>
+                    </div>
+                </div>
+            </div>
+        </body>
+    </html>
+
+

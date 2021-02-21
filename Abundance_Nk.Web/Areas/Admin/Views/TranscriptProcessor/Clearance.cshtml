@@ -1,0 +1,56 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.TranscriptProcessorViewModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+ ViewBag.Title = "Clearance Desk";
+}
+
+<script>
+    function getnewValue(val) {
+        var dropdownChanged = val.id;
+        var buttonId = document.getElementById(dropdownChanged).offsetParent.nextElementSibling.childNodes[0].id;
+        var buttonUrl = document.getElementById(dropdownChanged).offsetParent.nextElementSibling.childNodes[0].href;
+
+        var ur = buttonUrl + "&stat=" + val.value;
+        document.getElementById(buttonId).href = ur;
+
+    }
+
+    $("a").click(function () {
+        alert($(this).text);
+    });
+</script>
+<h2>Incoming Clearance Requests</h2>
+
+<div>
+
+    <table class="table table-bordered table-hover table-striped">
+        <thead>
+            <tr>
+                <th>@Html.ActionLink("FULLNAME", "Index", new { sortOrder = ViewBag.FullName, currentFilter = ViewBag.CurrentFilter })</th>
+                <th>@Html.ActionLink("MATRIC NO", "Index", new { sortOrder = ViewBag.FullName, currentFilter = ViewBag.CurrentFilter })</th>
+                <th>@Html.ActionLink("DATE REQUESTED", "Index", new { sortOrder = ViewBag.FullName, currentFilter = ViewBag.CurrentFilter })</th>
+                <th>@Html.ActionLink("DESTINATION", "Index", new { sortOrder = ViewBag.Number, currentFilter = ViewBag.CurrentFilter })</th>
+                <th>@Html.ActionLink("CLEARANCE STATUS", "Index", new { sortOrder = ViewBag.Number, currentFilter = ViewBag.CurrentFilter })</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody style="color:black;">
+            @for (int i = 0; i < Model.transcriptRequests.Count; i++)
+            {
+                <tr>
+                    <td>@Html.DisplayTextFor(m => m.transcriptRequests[i].student.FullName)</td>
+                    <td>@Html.DisplayTextFor(m => m.transcriptRequests[i].student.MatricNumber)</td>
+                    <td>@Html.DisplayTextFor(m => m.transcriptRequests[i].DateRequested)</td>
+                    <td>@Html.DisplayTextFor(m => m.transcriptRequests[i].DestinationAddress)</td>
+                    <td>@Html.DropDownListFor(m => m.transcriptRequests[i].transcriptClearanceStatus.TranscriptClearanceStatusId, (IEnumerable<SelectListItem>)ViewData["clearanceStatus" + i], new { @class = "form-control", @onChange = "getnewValue(this)" })</td>
+                    <td>@Html.ActionLink("Update", "UpdateClearance", "TranscriptProcessor", new { tid = Model.transcriptRequests[i].Id }, new { @class = "btn btn-default", @id = "url" + i })</td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+
+
+
+</div>
+

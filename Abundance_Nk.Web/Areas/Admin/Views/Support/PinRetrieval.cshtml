@@ -1,0 +1,100 @@
+@model Abundance_Nk.Web.Areas.Admin.ViewModels.SupportViewModel
+@{
+    ViewBag.Title = "PinRetrieval";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    Abundance_Nk.Model.Model.PaymentEtranzact paymentEtranzact = ViewBag.paymentEtransact as Abundance_Nk.Model.Model.PaymentEtranzact;
+    Abundance_Nk.Model.Model.ScratchCard scratchCard = ViewBag.scratchCardPin as Abundance_Nk.Model.Model.ScratchCard;
+}
+
+@using (Html.BeginForm("PinRetrieval", "Support", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+            <div class="col-md-12">
+
+
+                <div class="panel panel-default ">
+                    <div class="panel-body ">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <h4>Pin Retrieval</h4>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ApplicationForm.Number, new { @class = "col-sm-2 control-label " })
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(model => model.ApplicationForm.Number, new { @class = "form-control", @placeholder = "Enter Application No" })
+                                @Html.ValidationMessageFor(model => model.ApplicationForm.Number, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-10">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-10">
+                                <input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="Search" />
+                                <div class="btn btn-default">
+                                    @Html.ActionLink("Back to Home", "Index", "Home", new { Area = "" }, null)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @if (paymentEtranzact == null ) { return; }
+                <table class="table table-bordered he">
+                    <tr style="background-color:#4FA955">
+                        <th>
+                            Full Name
+                        </th>
+                        <th>
+                            Confirmation Number
+                        </th>
+                        <th>
+                            Transaction Amount
+                        </th>
+                        <th>
+                            Invoice Number
+                        </th>
+                        <th>
+                            Pin
+                        </th>
+                    </tr>
+                    <tr>
+                        <th>
+                            @paymentEtranzact.CustomerName
+                        </th>
+                        <th>
+                            @paymentEtranzact.ConfirmationNo
+                        </th>
+                        <th>
+                            @paymentEtranzact.TransactionAmount
+                        </th>
+                        <th>
+                            @paymentEtranzact.CustomerID
+                        </th>
+                        <th>
+                            @if (scratchCard.Pin != null)
+                            {
+                                @scratchCard.Pin
+                            }
+                            
+                        </th>
+
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+
+

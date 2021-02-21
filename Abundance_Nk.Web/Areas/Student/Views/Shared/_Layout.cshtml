@@ -1,0 +1,203 @@
+﻿@using Abundance_Nk.Model.Model
+@using Microsoft.AspNet.Identity
+@using Abundance_Nk.Web.Models
+<!doctype html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <meta name="theme-color" content="#3e454c">
+        <title>The Federal Polytechnic, Ado</title>
+        <!-- Font awesome -->
+        <link rel="stylesheet" href="~/Content/font-awesome/css/font-awesome.min.css">
+        <!-- Sandstone Bootstrap CSS -->
+        <link rel="stylesheet" href="~/Content/bootstrap.min.css">
+        <!-- Admin Stye -->
+        <link rel="stylesheet" href="~/Content/StudentAreaStyle.css">
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+            <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    @{
+        Student student = null;
+        StudentExtraYearSession studentExtraYear = null;
+        if(!string.IsNullOrEmpty(User.Identity.Name))
+        {
+            student = Utility.GetStudent(@User.Identity.Name);
+            if (student != null)
+            {
+                studentExtraYear = Utility.GetExtraYearStudent(student);
+            }
+        }
+        else
+        {
+            
+            Response.Redirect("/Security/Account/Login");
+        }
+   
+}
+<body>
+    @if(student != null)
+    {
+        <div class="brand clearfix">
+            <a href="#" class="logo"><img src="~/Content/Images/school_logo.jpg" class="img-responsive" alt=""></a>
+            <span class="menu-btn"><i class="fa fa-bars"></i></span>
+            <ul class="ts-profile-nav">
+                @using(Html.BeginForm("LogOff","Account",new { Area = "Security" },FormMethod.Post,new { id = "logoutForm",@class = "navbar-right" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <li class="ts-account">
+                        <a href="#"><img src="~/Content/Images/default_avatar.png" class="ts-avatar hidden-side" alt=""> <small></small> <i class="fa fa-angle-down hidden-side"></i></a>
+                        <ul>
+                            <li><a href="javascript:document.getElementById('logoutForm').submit()">Logout</a></li>
+                        </ul>
+                    </li>
+
+                }
+
+            </ul>
+        </div>
+        <div class="ts-main-content">
+            <nav class="ts-sidebar">
+                <ul class="ts-sidebar-menu">
+                    <div class="text-center">
+                        @if (File.Exists(Server.MapPath("~" + student.ImageFileUrl)))
+                        {
+                            <img src="@Url.Content('~' + @student.ImageFileUrl)" width="128px" height="128px" />
+                        }
+                        else
+                        {
+                            <img src="~/Content/Images/default_avatar.png" />
+                        }
+                    </div>
+
+                    <li class="ts-label">@student.FullName</li>
+                    <li><a href="@Url.Action("index", "Home")"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+                    <li><a href="@Url.Action("ChangePassword","Home")"><i class="fa fa-dashboard"></i> Change Password</a></li>
+                    <li><a href="@Url.Action("profile", "Home")"><i class="fa fa-user"></i> Profile</a></li>
+                    @*<li><a href="@Url.Action("Fees", "Home")"><i class="fa fa-money"></i> Invoices</a></li>*@
+                    @*<li><a href="@Url.Action("PayFees","Home")"><i class="fa fa-money"></i> Pay Fees</a></li>
+        <li><a href="@Url.Action("OtherFees","Home")"><i class="fa fa-money"></i>Other Fees</a></li>*@
+                    @if (studentExtraYear == null)
+                    {
+                        <li><a href="@Url.Action("Fees", "Home")"><i class="fa fa-money"></i> Invoices</a></li>
+                        <li><a href="@Url.Action("Index", "ExtraYear", new { area = "Student"})"><i class="fa fa-money"></i>Extra Year Invoices</a></li>
+
+                    }
+                    else
+                    {
+                        <li><a href="@Url.Action("ExtraYearFees", "Home")"><i class="fa fa-money"></i> Invoices</a></li>
+                    }
+
+                    @if (studentExtraYear == null)
+                    {
+                        <li><a href="@Url.Action("Logon","Home", new {area = "Student"})"><i class="fa fa-money"></i> Session Registration</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="@Url.Action("step_3", "Home", new { area = "Student" })"><i class="fa fa-money"></i> Session Registration</a></li>
+                    }
+
+
+                    <li><a href="@Url.Action("GenerateShortFallInvoice","Home")"><i class="fa fa-money"></i> Generate ShortFall Invoice</a></li>
+                    <li><a href="@Url.Action("PayShortFallFee", "Home")"><i class="fa fa-money"></i>Pay ShortFall Fee</a></li>
+                    <li><a href="@Url.Action("PaymentHistory", "Home")"><i class="fa fa-barcode"></i> Receipts</a></li>
+                    @*<li><a href="@Url.Action("PaymentReceipt", "Home")"><i class="fa fa-barcode"></i> Print Other Receipt</a></li>*@
+                    @if (studentExtraYear == null)
+                    {
+                        <li><a href="@Url.Action("CourseRegistration", "Home")"><i class="fa fa-paperclip"></i> Course Registration</a></li>
+                        <li><a href="@Url.Action("Result", "Home")"><i class="fa fa-dashboard"></i> Results</a></li>
+                        <li><a href="@Url.Action("CreateHostelRequest", "Hostel")"><i class="fa fa-building"></i>Request For Hostel Allocation</a></li>
+                        <li><a href="@Url.Action("GenerateHostelInvoice", "Hostel")"><i class="fa fa-building"></i>Generate Hostel Invoice</a></li>
+                        <li><a href="@Url.Action("PayHostelFee", "Hostel")"><i class="fa fa-building"></i>Pay Hostel Fee</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="@Url.Action("ExtraYearRegistration", "Home")"><i class="fa fa-paperclip"></i> Course Registration</a></li>
+                    }
+                    <li><a href="@Url.Action("Index", "EWallet")"><i class="fa fa-building"></i>E-Wallet</a></li>
+                    @using (Html.BeginForm("LogOff", "Account", new { Area = "Security" }, FormMethod.Post, new { id = "logoutForm1" }))
+                    {
+
+                        <li><a href="javascript:document.getElementById('logoutForm1').submit()">Logout</a></li>
+
+
+                    }
+                    <!-- Account from above -->
+                    @*<ul class="ts-profile-nav">
+            <li class="ts-account">
+                <a href="#"><img src="~/Content/Images/default_avatar.png" class="ts-avatar hidden-side" alt=""> Account <i class="fa fa-angle-down hidden-side"></i></a>
+                <ul>
+                    <li><a href="#">Logout</a></li>
+                </ul>
+            </li>
+        </ul>*@
+                </ul>
+            </nav>
+            <div class="content-wrapper">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 ">
+                            @RenderBody()
+                           
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+    }
+    else
+    {
+
+        <div class="brand clearfix">
+            FPO
+            <a href="#" class="logo"><img src="~/Content/Images/school_logo.jpg" class="img-responsive" alt=""></a>
+            <span class="menu-btn"><i class="fa fa-bars"></i></span>
+            <ul class="ts-profile-nav">
+                @using(Html.BeginForm("LogOff","Account",new { Area = "Security" },FormMethod.Post,new { id = "logoutForm",@class = "navbar-right" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <li class="ts-account">
+                        <a href="#"><img src="~/Content/Images/default_avatar.png" class="ts-avatar hidden-side" alt=""> <small></small> <i class="fa fa-angle-down hidden-side"></i></a>
+                        <ul>
+                            <li><a href="javascript:document.getElementById('logoutForm').submit()">Logout</a></li>
+                        </ul>
+                    </li>
+
+                }
+
+            </ul>
+        </div>
+        <div class="ts-main-content">
+            <div class="content-wrapper">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12 ">
+                            @RenderBody()
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+    }
+    <!-- Loading Scripts -->
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/main.js"></script>
+    @*@Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")*@
+    @RenderSection("scripts",false)
+</body>
+
+</html>

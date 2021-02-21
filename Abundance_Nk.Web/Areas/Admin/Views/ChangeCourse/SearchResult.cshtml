@@ -1,0 +1,200 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.ChangeCourseViewModel
+@{
+    ViewBag.Title = "SearchResult";
+    }
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+        var items = $('#StudentLevel_DepartmentOption_Id option').size();
+        if (items > 0) {
+            $("#divDepartmentOption").show();
+        }
+        else {
+            $("#divDepartmentOption").hide();
+        }
+
+        $("#AppliedCourse_Programme_Id").change(function () {
+            var programme = $("#AppliedCourse_Programme_Id").val();
+
+            $("#AppliedCourse_Department_Id").empty();
+            //$("#AppliedCourse_Level_Id").empty();
+
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetDepartmentAndLevelByProgrammeId", "ChangeCourse")',
+                dataType: 'json',
+                data: { id: programme },
+                success: function (data) {
+                    var levels = data.Levels;
+                    var departments = data.Departments;
+
+                    if (departments != "" && departments != null && departments != undefined) {
+                        $("#AppliedCourse_Department_Id").append('<option value="' + 0 + '"> -- Select -- </option>');
+
+                        $.each(departments, function (i, department) {
+                            $("#AppliedCourse_Department_Id").append('<option value="' + department.Id + '">' + department.Name + '</option>');
+                        });
+                    }
+                   
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+
+
+
+        })
+    })
+
+</script>
+@using(Html.BeginForm("GenerateInvoice","ChangeCourse",FormMethod.Post))
+{ 
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.Person.Type.Id)
+    @Html.HiddenFor(model => model.Person.Id)
+    @Html.HiddenFor(model => model.ApplicationForm.Id)
+    
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h2>Change of Course Invoice</h2>
+                <p><b>Provide your Application Form Number, fill change of course form and then click the Generate Invoice button to generate your invoice.</b></p>
+            </div>
+        </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10">
+                        <div class="row">
+
+                        </div>
+
+                        <div class="row">
+                            <h3>Student Details</h3>
+                            <hr style="margin-top:0" />
+                            <div class="col-md-12">
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group margin-bottom-3">
+                                            <div class="col-md-4">
+                                                @Html.LabelFor(model => model.Person.FirstName, new { @class = "control-label " })
+                                            </div>
+                                            <div class="col-md-8 text-bold">
+                                                @Html.DisplayFor(model => model.Person.FirstName)
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group margin-bottom-3">
+                                            <div class="col-md-4">
+                                                @Html.LabelFor(model => model.Person.LastName, new { @class = "control-label " })
+                                            </div>
+                                            <div class="col-md-8 text-bold">
+                                                @Html.DisplayFor(model => model.Person.LastName)
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group margin-bottom-3">
+                                            <div class="col-md-4">
+                                                @Html.LabelFor(model => model.Person.OtherName, new { @class = "control-label " })
+                                            </div>
+                                            <div class="col-md-8 text-bold">
+                                                @Html.DisplayFor(model => model.Person.OtherName)
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group margin-bottom-3">
+                                            <div class="col-md-4">
+                                                @Html.LabelFor(model => model.ApplicationForm.Number, new { @class = "control-label " })
+                                            </div>
+                                            <div class="col-md-8 text-bold">
+                                                @Html.DisplayFor(model => model.ApplicationForm.Number)
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group margin-bottom-3">
+                                            <div class="col-md-4">
+                                                @Html.LabelFor(model => model.AppliedCourse.Department.Name, new { @class = "control-label " })
+                                            </div>
+                                            <div class="col-md-8 text-bold">
+                                                @Html.DisplayFor(model => model.AppliedCourse.Department.Name)
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group margin-bottom-3">
+                                            <div class="col-md-4">
+                                                @Html.LabelFor(model => model.AppliedCourse.Programme.Name, new { @class = "control-label " })
+                                            </div>
+                                            <div class="col-md-8 text-bold">
+                                                @Html.DisplayFor(model => model.AppliedCourse.Programme.Name)
+                                            </div>
+                                        </div>
+                                    </div>
+                                      <br />                 
+
+                                    </div>
+                        </div>
+
+                        <br />
+                    </div>
+                        <div class="row">
+                            <h3>Change of Course Form</h3>
+                            <hr style="margin-top:0" />
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.AppliedCourse.Programme.Id, new { @class = "control-label " })
+                                    @Html.DropDownListFor(model => model.AppliedCourse.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.ProgrammeId, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.AppliedCourse.Programme.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.AppliedCourse.Department.Id, new { @class = "control-label " })
+                                    @Html.DropDownListFor(model => model.AppliedCourse.Department.Id, (IEnumerable<SelectListItem>)ViewBag.Departments, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.AppliedCourse.Department.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                </div>
+
+                <div class="col-md-1"></div>
+            </div>
+
+        <div class="panel-footer">
+            <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md-10 ">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <input class="btn btn-success btn-lg mr5" type="submit" name="submit" id="submit" value="Next" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+    </div>
+}

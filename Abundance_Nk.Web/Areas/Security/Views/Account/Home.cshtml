@@ -1,0 +1,48 @@
+﻿@{
+    ViewBag.Title = "Admin Home";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<br />
+<div class="row">
+    <div class="col-md-4">
+        <div class="panel panel-default well" style="height:315px">
+            <div class="panel-body">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>@ViewBag.Title</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 custom-text-black">
+                Welcome to the Admin Home. <br /><br />
+                @if (TempData["Message"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>@TempData["Message"]</strong>
+                    </div>
+                }
+                
+                @Html.ActionLink("Click here to change your password", "ChangePassword") 
+            </div>
+        </div>
+    </div>
+
+    @*<div class="col-md-4">
+            <section id="socialLoginForm">
+                @Html.Partial("_ExternalLoginsListPartial", new { Action = "ExternalLogin", ReturnUrl = ViewBag.ReturnUrl })
+            </section>
+        </div>*@
+</div>
+
+
+
+@*@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}*@

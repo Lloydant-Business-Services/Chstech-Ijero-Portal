@@ -1,0 +1,53 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.TranscriptBursarViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    ViewBag.Title = "Transcript Report";
+}
+<div>
+    @if(TempData["Message"] != null)
+    {
+        @Html.Partial("_Message",(Abundance_Nk.Model.Model.Message)TempData["Message"])
+    }
+</div>
+
+<script type="text/javascript">
+    $('.datepicker').datepicker(); //Initialise any date pickers
+</script>
+
+<h2>Incoming Transcript Payments</h2>
+<h3>Total Payments made: @Model.remitaPayments.Count()</h3>
+<div>
+
+    <table class="table table-bordered table-hover table-striped table-responsive">
+
+        <tr>
+            <th>@Html.ActionLink("Full Name","Index",new { sortOrder = ViewBag.FullName,currentFilter = ViewBag.CurrentFilter })</th>
+            <th>@Html.ActionLink("Date Requesterd","Index",new { sortOrder = ViewBag.FullName,currentFilter = ViewBag.CurrentFilter })</th>
+            <th>@Html.ActionLink("Description","Index",new { sortOrder = ViewBag.Number,currentFilter = ViewBag.CurrentFilter })</th>
+            <th>@Html.ActionLink("Amount","Index",new { sortOrder = ViewBag.Number,currentFilter = ViewBag.CurrentFilter })</th>
+
+            <th>@Html.ActionLink("RRR","Index",new { sortOrder = ViewBag.Number,currentFilter = ViewBag.CurrentFilter })</th>
+            @*<th>Reject</th>*@
+        </tr>
+
+
+        @for(int i = 0;i < Model.remitaPayments.Count;i++)
+        {
+            <tr>
+                <td>@Html.DisplayTextFor(m => m.remitaPayments[i].payment.Person.FullName)</td>
+                <td>@Html.DisplayTextFor(m => m.remitaPayments[i].TransactionDate)</td>
+                <td>@Html.DisplayTextFor(m => m.remitaPayments[i].Description)</td>
+                <td>@Html.DisplayTextFor(m => m.remitaPayments[i].TransactionAmount)</td>
+                <td>@Html.DisplayTextFor(m => m.remitaPayments[i].RRR)</td>
+            </tr>
+        }
+
+
+    </table>
+
+
+
+</div>

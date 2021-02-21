@@ -1,0 +1,622 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.MatricNumberViewModel
+@{
+    ViewBag.Title = "MatricNumberFormat";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Scripts {
+    <link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+    @Scripts.Render("~/bundles/jquery")
+
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/file-upload/jquery-ui-1.9.2.min.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('#formatTable').DataTable();
+
+        });
+
+        function confirmDelete(id) {
+            if (confirm("Are you sure you want to delete this format?")) {
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("RemoveFormat", "MatricNumber")', // Calling json method
+                    dataType: 'json',
+                    data: { formatId: id },
+                    success: function (result) {
+                        alert(result.Message);
+                        window.location.reload(true);
+                    },
+                    error: function (ex) {
+                        alert('Failed.' + ex);
+                    }
+                });
+            } else {
+                return false;
+            }
+
+            return false;
+        }
+
+        function editRecord(id) {
+
+            var valueArray = populateRecords();
+            var myJson = JSON.stringify(valueArray);
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("EditFormat", "MatricNumber")',
+                dataType: 'json',
+                data: { formatId: id, myRecordArray: myJson, action: "edit" },
+                beforeSend: function () {
+                    $("#load").show();
+                },
+                complete: function () {
+                    $("#load").hide();
+                },
+                success: function (result) {
+                    if (result.IsError === false) {
+
+                        $("#idEdit").val(result.Id);
+                        $("#idEdit").attr("readonly", "readonly");
+                        $("#idTextBox").show();
+
+                        $("#sessionEdit").val(result.Session);
+                        $("#programmeEdit").val(result.Programme);
+                        $("#formatEdit").val(result.Format);
+                        $("#departmentCodeEdit").val(result.DepartmentCode);
+                        $("#startFromEdit").val(result.StartFrom);
+                        $("#levelEdit").val(result.Level);
+                        $("#departmentEdit").val(result.Department);
+                        $("#departmentOptionEdit").val(result.DepartmentOption);
+
+                        $("#myModalHeader").text("Edit");
+                        $("#btnSaveCreatedRecord").hide();
+                        $("#btnSaveEditedRecord").show();
+
+                        $('#editModal').modal('show');
+                    } else {
+                        alert(result.Message);
+                    }
+                },
+                error: function (ex) {
+                    alert('Edit failed.' + ex);
+                }
+            });
+        }
+
+        function saveEditedRecord() {
+
+                var valueArray = populateRecords();
+                var myJson = JSON.stringify(valueArray);
+                var id = $("#idEdit").val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("EditFormat", "MatricNumber")',
+                    dataType: 'json',
+                    data: { formatId: id, myRecordArray: myJson, action: "save" },
+                    beforeSend: function () {
+                        $("#load").show();
+                    },
+                    complete: function () {
+                        $("#load").hide();
+                    },
+                    success: function (result) {
+                        if (result.IsError === false) {
+                            alert(result.Message);
+                            $('#editModal').modal('hide');
+                            window.location.reload(true);
+                        } else {
+                            alert(result.Message);
+                        }
+                    },
+                    error: function (ex) {
+                        alert('Save operation failed.' + ex);
+                    }
+                });
+        }
+
+        function populateRecords() {
+            var valueArray = {
+                "id": $("#idEdit").val(), "programme": $("#programmeEdit").val(), "department": $("#departmentEdit").val(), "departmentOption": $("#departmentOptionEdit").val(),
+                "level": $("#levelEdit").val(), "session": $("#sessionEdit").val(), "format": $("#formatEdit").val(), "departmentCode": $("#departmentCodeEdit").val(),
+                "startFrom": $("#startFromEdit").val()
+            }
+
+            return valueArray;
+        }
+
+        function showCreateModal() {
+
+            $("#sessionEdit").val("");
+            $("#programmeEdit").val("");
+            $("#formatEdit").val("");
+            $("#startFromEdit").val("");
+            $("#levelEdit").val("");
+            $("#departmentEdit").val("");
+            $("#departmentOptionEdit").val("");
+            $("#departmentCode").val("");
+            $("#idEdit").attr("readonly", "readonly");
+
+            $("#myModalHeader").text("Create");
+            $("#btnSaveCreatedRecord").show();
+            $("#btnSaveEditedRecord").hide();
+
+            $('#editModal').modal('show');
+        }
+
+        function saveRecord() {
+
+            var valueArray = populateRecords();
+            var myJson = JSON.stringify(valueArray);
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveFormat", "MatricNumber")',
+                dataType: 'json',
+                data: { myRecordArray: myJson },
+                beforeSend: function () {
+                    $("#load").show();
+                },
+                complete: function () {
+                    $("#load").hide();
+                },
+                success: function (result) {
+                    if (result.IsError === false) {
+                        alert(result.Message);
+                        $('#editModal').modal('hide');
+                        window.location.reload(true);
+                    } else {
+                        alert(result.Message);
+                    }
+                },
+                error: function (ex) {
+                    alert('Create operation failed.' + ex);
+                }
+            });
+        }
+
+        $("#programmeEdit").on('change', function () {
+            $("#departmentEdit").empty();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartments", "MatricNumber")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#programmeEdit").val() },
+                success: function (departments) {
+                    $("#departmentEdit").append('<option value="' + 0 + '"> -- Select -- </option>');
+                    $.each(departments, function (i, departments) {
+                        $("#departmentEdit").append('<option value="' + departments.Value + '">' + departments.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+
+            var programme = $("#programmeEdit").val();
+            var department = $("#departmentEdit").val();
+
+            if (!programme || !department) {
+                $("#divDepartmentOption").hide();
+                return false;
+            }
+            $("#departmentOptionEdit").empty();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartmentOptionByDepartment", "MatricNumber")', // we are calling json method
+                dataType: 'json',
+                data: { id: department, programmeid: programme },
+                success: function (departmentOptions) {
+
+                    if (!departmentOptions || departmentOptions.length <= 0) {
+                        $("#divDepartmentOption").hide();
+                    } else {
+                        $("#departmentOptionEdit").append('<option value="' + 0 + '"> -- Select -- </option>');
+                        $.each(departmentOptions, function (i, Option) {
+                            $("#departmentOptionEdit").append('<option value="' + Option.Value + '">' + Option.Text + '</option>');
+                        });
+                        if (programme > 2) {
+                        $("#divDepartmentOption").show();
+                        }
+
+                    }
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve department Options.' + ex);
+                }
+            });
+
+            return false;
+        });
+
+        $("#departmentEdit").on('change', function () {
+
+            var programme = $("#programmeEdit").val();
+            var department = $("#departmentEdit").val();
+
+            if (!programme || !department) {
+                $("#divDepartmentOption").hide();
+                return false;
+            }
+
+            $("#departmentOptionEdit").empty();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartmentOptionByDepartment", "MatricNumber")', // we are calling json method
+                dataType: 'json',
+                data: { id: department, programmeid: programme },
+                success: function (departmentOptions) {
+
+                    if (!departmentOptions || departmentOptions.length <= 0) {
+                        $("#divDepartmentOption").hide();
+                    } else {
+                        $("#departmentOptionEdit").append('<option value="' + 0 + '"> -- Select -- </option>');
+                        $.each(departmentOptions, function (i, Option) {
+                            $("#departmentOptionEdit").append('<option value="' + Option.Value + '">' + Option.Text + '</option>');
+                        });
+                        //if (programme > 2) {
+                        $("#divDepartmentOption").show();
+                        //}
+
+                    }
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve department Options.' + ex);
+                }
+            });
+
+            return false;
+        });
+
+        function generateMatricNumber(id){
+
+            if (confirm("Are you sure you want to generate matric numbers for the selected department?")) {
+                $("#load").show();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GenerateMatricNumber", "MatricNumber")', // Calling json method
+                    dataType: 'json',
+                    data: { formatId: id },
+                    success: function (result) {
+                        alert(result.Message);
+                        $("#load").hide();
+                        window.location.reload(true);
+                    },
+                    error: function (ex) {
+                        alert('Failed.' + ex);
+                        $("#load").hide();
+                    }
+                });
+            } else {
+                return false;
+            }
+
+            return false;
+        }
+
+        function generateMatricNumberBulk(){
+
+            if (confirm("Are you sure you want to generate matric numbers for the selected session?")) {
+                $("#loadGenerateBulk").show();
+                var session = $("#Session_Id").val();
+                if (session == undefined || session == '0' || session == '') {
+                    alert("Kindly select session to proceed.");
+                    $("#loadGenerateBulk").hide();
+                    return;
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GenerateMatricNumberBulk", "MatricNumber")', // Calling json method
+                    dataType: 'json',
+                    data: { sessionId: session },
+                    success: function (result) {
+                        alert(result.Message);
+                        $("#loadGenerateBulk").hide();
+                        window.location.reload(true);
+                    },
+                    error: function (ex) {
+                        alert('Failed.' + ex);
+                        $("#loadGenerateBulk").hide();
+                    }
+                });
+            } else {
+                return false;
+            }
+
+            return false;
+        }
+
+        function clearMatricNumber(id){
+
+            if (confirm("Are you sure you want to clear the generated matric numbers for the selected department?")) {
+                $("#load").show();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("ClearMatricNumber", "MatricNumber")', // Calling json method
+                    dataType: 'json',
+                    data: { formatId: id },
+                    success: function (result) {
+                        alert(result.Message);
+                        $("#clearLoad").hide();
+                        window.location.reload(true);
+                    },
+                    error: function (ex) {
+                        alert('Failed.' + ex);
+                        $("#clearLoad").hide();
+                    }
+                });
+            } else {
+                return false;
+            }
+
+            return false;
+        }
+        function clearMatricNumberBulk(){
+
+            if (confirm("Are you sure you want to clear the generated matric numbers for the selected session?")) {
+                $("#loadClearBulk").show();
+                var session = $("#Session_Id").val();
+                if (session == undefined || session == '0' || session == '') {
+                    alert("Kindly select session to proceed.");
+                    $("#loadClearBulk").hide();
+                    return;
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("ClearMatricNumberBulk", "MatricNumber")', // Calling json method
+                    dataType: 'json',
+                    data: { sessionId: session },
+                    success: function (result) {
+                        alert(result.Message);
+                        $("#loadClearBulk").hide();
+                        window.location.reload(true);
+                    },
+                    error: function (ex) {
+                        alert('Failed.' + ex);
+                        $("#loadClearBulk").hide();
+                    }
+                });
+            } else {
+                return false;
+            }
+
+            return false;
+        }
+
+    </script>
+}
+
+<div>
+    @if (TempData["Message"] != null)
+    {
+        @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+    }
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">Set Matric Number Format</h4>
+    </div>
+    <div class="panel-body">
+        <div class="col-md-12">
+
+            @using (Html.BeginForm("MatricNumberFormat", "MatricNumber", FormMethod.Post))
+            {
+                <div class="row">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Session.Id, "Session:", new { @class = "control-label" })
+                        @Html.DropDownListFor(model => model.Session.Id, (IEnumerable<SelectListItem>)ViewBag.Sessions, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Session.Id)
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </div>
+                </div>
+
+            }
+
+
+
+            @if (Model.MatricNumberAssignments != null && Model.MatricNumberAssignments.Count > 0)
+            {
+                <div class="panel panel-danger">
+                    <div class="panel-body table-responsive">
+
+
+                        <table class="table-bordered table-hover table-striped table" id="formatTable">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Session
+                                    </th>
+                                    <th>
+                                        Programme
+                                    </th>
+                                    <th>
+                                        Level
+                                    </th>
+                                    <th>
+                                        Department
+                                    </th>
+                                    <th>
+                                        Option
+                                    </th>
+                                    <th>
+                                        Format
+                                    </th>
+                                    <th>
+                                        Start From
+                                    </th>
+                                    @*<th>
+                                            Department Code
+                                        </th>*@
+                                    <th>
+                                        Edit
+                                    </th>
+                                    <th>
+                                        Delete
+                                    </th>
+                                    <th>
+                                        Generate Matric Numbers
+                                    </th>
+                                    <th>
+                                        Clear Matric Numbers
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.MatricNumberAssignments.Count; i++)
+                                {
+                                    <tr>
+
+                                        @Html.HiddenFor(model => model.MatricNumberAssignments[i].Id)
+
+                                        <td>
+                                            @Model.MatricNumberAssignments[i].Session.Name
+                                        </td>
+                                        <td>
+                                            @Model.MatricNumberAssignments[i].Programme.Name
+                                        </td>
+                                        <td>
+                                            @Model.MatricNumberAssignments[i].Level.Name
+                                        </td>
+                                        <td>
+                                            @Model.MatricNumberAssignments[i].Department.Name
+                                        </td>
+                                        @if (Model.MatricNumberAssignments[i].DepartmentOption != null)
+                                        {
+                                            <td>
+                                                @Model.MatricNumberAssignments[i].DepartmentOption.Name
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td></td>
+                                        }
+                                        <td>
+                                            @Model.MatricNumberAssignments[i].MatricNoStartFrom
+                                        </td>
+                                        <td>
+                                            @Model.MatricNumberAssignments[i].MatricSerialNoStartFrom
+                                        </td>
+                                        @*<td>
+                                                @Model.MatricNumberAssignments[i].DepartmentCode
+                                            </td>*@
+                                        <td>
+                                            <button class="btn btn-success" onclick="editRecord(@Model.MatricNumberAssignments[i].Id)">Edit</button>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-success" onclick="confirmDelete(@Model.MatricNumberAssignments[i].Id)">Delete</button>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-success" onclick="generateMatricNumber(@Model.MatricNumberAssignments[i].Id)">Generate</button> &nbsp;
+                                            <span style="display: none" id="load"><img src="~/Content/Images/bx_loader.gif" /></span>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-success" onclick="clearMatricNumber(@Model.MatricNumberAssignments[i].Id)">Clear Matric Numbers</button> &nbsp;
+                                            <span style="display: none" id="clearLoad"><img src="~/Content/Images/bx_loader.gif" /></span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+
+            }
+
+            <button type="button" class="btn btn-success" onclick="showCreateModal()">Add Format</button>
+            @if (Model.MatricNumberAssignments != null && Model.MatricNumberAssignments.Count > 0)
+            {
+
+                <span class="pull-right">
+                    <button class="btn btn-success" onclick="generateMatricNumberBulk()">Generate Matric Number Bulk</button> &nbsp;
+                    <span style="display: none" id="loadGenerateBulk"><img src="~/Content/Images/bx_loader.gif" /></span>
+                    <button class="btn btn-success" onclick="clearMatricNumberBulk()">Clear All Matric Numbers</button> &nbsp;
+                    <span style="display: none" id="loadClearBulk"><img src="~/Content/Images/bx_loader.gif" /></span>
+                </span>
+            }
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" role="dialog" id="editModal" style="z-index: 1000000">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" style="display: none" id="myModalHeader"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Id, "ID:", new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.Id, new { @class = "form-control", id = "idEdit" })
+                    @Html.ValidationMessageFor(model => model.Id)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Programme.Id, "Programme:", new { @class = "control-label" })
+                    @Html.DropDownListFor(model => model.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.Programmes, new { @class = "form-control", id = "programmeEdit" })
+                    @Html.ValidationMessageFor(model => model.Programme.Id)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Level.Id, "Level:", new { @class = "control-label" })
+                    @Html.DropDownListFor(model => model.Level.Id, (IEnumerable<SelectListItem>)ViewBag.Levels, new { @class = "form-control", id = "levelEdit" })
+                    @Html.ValidationMessageFor(model => model.Level.Id)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Department.Id, "Department:", new { @class = "control-label" })
+                    @Html.DropDownListFor(model => model.Department.Id, (IEnumerable<SelectListItem>)ViewBag.Departments, new { @class = "form-control", id = "departmentEdit" })
+                    @Html.ValidationMessageFor(model => model.Department.Id)
+                </div>
+                <div style="display: none" id="divDepartmentOption" class="form-group">
+                    @Html.LabelFor(model => model.DepartmentOption.Id, "Option:", new { @class = "control-label" })
+                    @Html.DropDownListFor(model => model.DepartmentOption.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentOptions, new { @class = "form-control", id = "departmentOptionEdit" })
+                    @Html.ValidationMessageFor(model => model.DepartmentOption.Id)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Session.Id, "Session:", new { @class = "control-label" })
+                    @Html.DropDownListFor(model => model.Session.Id, (IEnumerable<SelectListItem>)ViewBag.Sessions, new { @class = "form-control", id = "sessionEdit" })
+                    @Html.ValidationMessageFor(model => model.Session.Id)
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.StudentMatricNumberAssignment.MatricNoStartFrom, "Format:", new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.StudentMatricNumberAssignment.MatricNoStartFrom, new { @class = "form-control", id = "formatEdit", placeholder = "e.g. FPA/AC/17/1-" })
+                    @Html.ValidationMessageFor(model => model.StudentMatricNumberAssignment.MatricNoStartFrom)
+                </div>
+                @*<div class="form-group">
+                        @Html.LabelFor(model => model.StudentMatricNumberAssignment.DepartmentCode, "Department Code:", new { @class = "control-label" })
+                        @Html.TextBoxFor(model => model.StudentMatricNumberAssignment.DepartmentCode, new { @class = "form-control", id = "departmentCodeEdit" })
+                        @Html.ValidationMessageFor(model => model.StudentMatricNumberAssignment.DepartmentCode)
+                    </div>*@
+                <div class="form-group">
+                    @Html.LabelFor(model => model.StudentMatricNumberAssignment.MatricSerialNoStartFrom, "Start From:", new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.StudentMatricNumberAssignment.MatricSerialNoStartFrom, new { @class = "form-control", id = "startFromEdit", type = "Number" })
+                    @Html.ValidationMessageFor(model => model.StudentMatricNumberAssignment.MatricSerialNoStartFrom)
+                </div>
+
+            </div>
+            <div class="modal-footer form-group">
+                <span style="display: none" id="load"><img src="~/Content/Images/bx_loader.gif" /></span>
+
+                <button style="display: none" type="button" id="btnSaveEditedRecord" class="btn btn-success" onclick="saveEditedRecord()">Save</button>
+                <button style="display: none" type="button" id="btnSaveCreatedRecord" class="btn btn-success" onclick="saveRecord()">Create</button>
+
+                <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

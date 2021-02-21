@@ -1,0 +1,67 @@
+﻿@model Abundance_Nk.Web.Areas.Applicant.ViewModels.AdmissionViewModel
+
+<div class="col-md-12 card p-5">
+    @*<div class="panel-heading">
+
+        <h3>Confirm Your Details</h3>
+    </div>*@
+    <div class="panel-body">
+
+        <br />
+
+        <div style="margin-bottom:15px; text-align:justify">
+            <blockquote>
+                <p style="color:darkgreen; font-weight:bold">
+                    Welcome to the final step of your admission process.
+                </p>
+
+                @*<small>Please confirm your Order Number for Acceptance and School Fees payment below. In case of any discrepancy, report immediately to the appropriate authority. Thereafter click on the <b>Fill Student Form</b> button to fill your form<cite title="Source Title"></cite></small>*@
+                <small>Kindly login to the student portal by clicking the login button at the top right corner of your screen. Use your application number as username and the default "1234567" as password.<cite title="Source Title"></cite></small>
+            </blockquote>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 ">
+                <div class="well">
+                    
+
+                    <div class="form-group col-md-12 margin-bottom-0">
+                        @Html.LabelFor(model => model.AcceptanceInvoiceNumber)
+                        @Html.TextBoxFor(model => model.AcceptanceInvoiceNumber, new { @class = "form-control" , @readonly = "readonly" })
+                    </div>
+
+                    <div class="form-group col-md-12 margin-bottom-0">
+                        @Html.LabelFor(model => model.SchoolFeesInvoiceNumber)
+                        @Html.TextBoxFor(model => model.SchoolFeesInvoiceNumber, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+
+                    <div class="form-group col-md-12 margin-bottom-0">
+                        @Html.LabelFor(model => model.AcceptanceReceiptNumber)
+                        @Html.TextBoxFor(model => model.AcceptanceReceiptNumber, new { @class = "form-control", @readonly = "readonly" })
+                      
+                    </div>
+
+                    <div class="form-group col-md-12 margin-bottom-0">
+                        @Html.LabelFor(model => model.SchoolFeesReceiptNumber)
+                        @Html.TextBoxFor(model => model.SchoolFeesReceiptNumber, new { @class = "form-control", @readonly = "readonly" })
+                        </div>
+                    </div>
+                </div>
+
+                @*<div class="row">
+                    <div class="form-group col-md-12 margin-bottom-0">
+                        @Html.ActionLink("Fill Student Form", "Form", "Information", new { Area = "Student", fid = Model.ApplicationForm.Id, pid = Model.AppliedCourse.Programme.Id }, new { @class = "btn btn-white btn-lg ", target = "_blank", id = "alStudentForm" })
+                        @Html.ActionLink("Fill Course Registration Form", "Form", "CourseRegistration", new { Area = "Student", sid = Abundance_Nk.Web.Models.Utility.Encrypt(Model.ApplicationForm.Person.Id.ToString()), ssid = 0 }, new { @class = "btn btn-white btn-lg ", target = "_blank", id = "alCourseRegistration" })
+                     
+                    </div>
+                    <div class="form-group col-md-12 margin-bottom-0">
+                        <div id="divProcessingAcceptanceInvoice" style="display:none">
+                            <img src="@Url.Content("~/Content/Images/bx_loader.gif")" />
+                            <span>Processing ...</span>
+                        </div>
+                    </div>
+                </div>*@
+
+            </div>
+        </div>
+    </div>
+</div>

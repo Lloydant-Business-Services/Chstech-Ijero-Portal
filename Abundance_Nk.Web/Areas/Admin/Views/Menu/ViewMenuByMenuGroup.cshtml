@@ -1,0 +1,124 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.MenuViewModel
+@{
+    ViewBag.Title = "ViewMenuByMenuGroup";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading panel-dark-head">
+                <h4>View Menu</h4>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+
+                    @using (Html.BeginForm("ViewMenuByMenuGroup", "Menu", new {Area = "Admin"}, FormMethod.Post))
+                    {
+                        <div class="row">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.MenuGroup.Name, "Menu Group", new {@class = "col-sm-2 control-label "})
+                                <div class="col-sm-10">
+                                    @Html.DropDownListFor(model => model.MenuGroup.Id, (IEnumerable<SelectListItem>) ViewBag.MenuGroup, new {@class = "form-control", @required = "required"})
+                                    @Html.ValidationMessageFor(model => model.MenuGroup.Id, null, new {@class = "text-danger"})
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-2"></div>
+                                <div class="col-sm-10">
+                                    <input class="btn btn-success mr5 " type="submit" name="submit" id="submit" value="View"/>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+
+                </div>
+            </div>
+            <br />
+            <div class="panel-body">
+                <div class="col-md-12">
+
+                    
+                    @if (Model.MenuList != null && Model.MenuList.Count > 0)
+                    {
+                        <div class="panel panel-danger">
+                            <div class="panel-body">
+                                <table class="table-bordered table-hover table-striped table-responsive table">
+                                    <tr>
+                                        <th>
+                                            Area
+                                        </th>
+                                        <th>
+                                            Controller
+                                        </th>
+                                        <th>
+                                            Action
+                                        </th>
+                                        <th>
+                                            Display Name
+                                        </th>
+                                        <th>
+                                            Activated
+                                        </th>
+                                        <th>
+                                            Edit
+                                        </th>
+                                        <th>
+                                            Delete
+                                        </th> 
+                                    </tr>
+
+                                    @for (int i = 0; i < Model.MenuList.Count; i++)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Model.MenuList[i].Area
+                                            </td>
+                                            <td>
+                                                @Model.MenuList[i].Controller
+                                            </td>
+                                            <td>
+                                                @Model.MenuList[i].Action
+                                            </td>
+                                            <td>
+                                                @Model.MenuList[i].DisplayName
+                                            </td>
+                                            <td>
+                                                @Model.MenuList[i].Activated
+                                            </td>
+                                            <td>
+                                                @Html.ActionLink("Edit", "EditMenu", "Menu", new { Area = "Admin", mid = Model.MenuList[i].Id}, new { @class = "btn btn-success " })
+                                            </td>
+                                            <td>
+                                                @Html.ActionLink("Delete", "ConfirmDeleteMenu", "Menu", new { Area = "Admin", mid = Model.MenuList[i].Id}, new { @class = "btn btn-success " })
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </table>
+
+                            </div>
+                        </div>
+                    }
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-1"></div>
+</div>
+

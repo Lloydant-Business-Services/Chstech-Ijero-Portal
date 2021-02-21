@@ -1,0 +1,167 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.StudentCourseRegistrationViewModel
+@{
+    ViewBag.Title = "RegisterCourse";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@if(TempData["Message"] != null)
+{
+    @Html.Partial("_Message",(Abundance_Nk.Model.Model.Message)TempData["Message"])
+}
+@if(TempData["Action"] != null)
+{
+    <div class="alert alert-dismissible alert-success">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <p>@TempData["Action"].ToString()</p>
+    </div>
+}
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+       
+        //Programme Drop down Selected-change event
+        $("#Programme").change(function () {
+            
+            $("#Department").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartments", "StudentCourseRegistration")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#Programme").val() },
+                // Get Selected Country ID.
+                success: function (departments) {
+                    $("#Department").append('<option value="' + 0 + '">' +
+                            '-- Select Department --' + '</option>');
+                    $.each(departments, function (i, department) {
+                        $("#Department").append('<option value="' + department.Value + '">' +
+                             department.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+            return false;
+        })
+        //Session Drop down Selected change event
+        $("#Session").change(function() {
+
+
+            $("#Semester").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetSemester", "StudentCourseRegistration")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#Session").val() },
+                // Get Selected Country ID.
+                success: function(semesters) {
+                    $("#Semester").append('<option value="' + 0 + '">' +
+                        '-- Select Semester --' + '</option>');
+                    $.each(semesters, function(i, semester) {
+                        $("#Semester").append('<option value="' + semester.Value + '">' +
+                            semester.Text + '</option>');
+                    });
+                },
+                error: function(ex) {
+                    alert('Failed to retrieve semesters.' + ex);
+                }
+            });
+            return false;
+        });
+    });
+</script>
+
+@using(Html.BeginForm("RegisterAll","StudentCourseRegistration",new { area = "Admin" },FormMethod.Post))
+{
+
+    <div class="col-md-12">
+        <div class="form-group" style="color:black">
+            <h4>Register Course For All Students</h4>
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Session.Name,"Session",new { @class = "col-sm-2 control-label " })
+        <div class="col-sm-10">
+            @Html.DropDownListFor(model => model.Session.Id,(IEnumerable<SelectListItem>)ViewBag.Session,new { @class = "form-control",@id = "Session" })
+            @Html.ValidationMessageFor(model => model.Session.Id,null,new { @class = "text-danger" })
+        </div>
+
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Semester.Name,"Semester",new { @class = "col-sm-2 control-label " })
+        <div class="col-sm-10">
+            @Html.DropDownListFor(model => model.Semester.Id,(IEnumerable<SelectListItem>)ViewBag.Semester,new { @class = "form-control",@id = "Semester" })
+            @Html.ValidationMessageFor(model => model.Semester.Id,null,new { @class = "text-danger" })
+        </div>
+
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Programme.Name,"Programme",new { @class = "col-sm-2 control-label " })
+        <div class="col-sm-10">
+            @Html.DropDownListFor(model => model.Programme.Id,(IEnumerable<SelectListItem>)ViewBag.Programme,new { @class = "form-control",@id = "Programme" })
+            @Html.ValidationMessageFor(model => model.Programme.Id,null,new { @class = "text-danger" })
+        </div>
+
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Department.Name,"Department",new { @class = "col-sm-2 control-label " })
+        <div class="col-sm-10">
+            @Html.DropDownListFor(model => model.Department.Id,(IEnumerable<SelectListItem>)ViewBag.Department,new { @class = "form-control",@id = "Department" })
+            @Html.ValidationMessageFor(model => model.Department.Id,null,new { @class = "text-danger" })
+        </div>
+
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Level.Name,"Level",new { @class = "col-sm-2 control-label " })
+        <div class="col-sm-10">
+            @Html.DropDownListFor(model => model.Level.Id,(IEnumerable<SelectListItem>)ViewBag.Level,new { @class = "form-control",@id = "Level" })
+            @Html.ValidationMessageFor(model => model.Level.Id,null,new { @class = "text-danger" })
+        </div>
+
+    </div>
+   
+    <div class="form-group">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-10">
+            <input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="View" />
+
+        </div>
+    </div>
+
+}
+ 
+<br />
+@if (Model.CourseRegistrations != null && Model.CourseRegistrations.Count > 0)
+{
+    <div class="panel panel-danger">
+        <div class="panel-body">
+            <table class="table-bordered table-hover table-striped table-responsive table">
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Matric Number
+                    </th>
+                </tr>
+
+                @for (int i = 0; i < Model.CourseRegistrations.Count(); i++)
+                {
+                    <tr>
+                        <td>
+                            @Model.CourseRegistrations[i].Name
+                        </td>
+                        <td>
+                            @Model.CourseRegistrations[i].Student.MatricNumber
+                        </td>
+                    </tr>
+                }
+
+            </table>
+
+            <br/>
+            @Html.ActionLink("Register All", "SaveAllRegisteredStudents", "StudentCourseRegistration", new { Area = "Admin"}, new { @class = "btn btn-success " })
+        </div>
+    </div>
+}
+

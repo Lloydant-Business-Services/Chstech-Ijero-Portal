@@ -1,0 +1,38 @@
+﻿@{
+    Layout = null;
+}
+
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<link href="~/Content/style.default.css" rel="stylesheet" />
+<link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />
+
+<div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+            <br />
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-fw fa-upload"></i>Download File</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group" style="text-align:center">
+
+                        <div class="col-sm-10 pull-left">
+                            @Html.ActionLink("Donwload Zip", "GetZip", new { controller = "Result"}, new { @class = "btn btn-success mr5"})
+                            <a href="~/Reports/Presenter/Result/NotificationOfResultBulk.aspx" class="btn btn-success mr5">Back</a>
+                        </div>
+                    </div>
+            </div>
+        </div>
+            </div>
+        <div class="col-md-1"></div>
+    </div>
+
+
+
+

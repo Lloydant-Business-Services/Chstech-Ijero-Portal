@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewBag.Title = "Admission Count Summary";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<script src="~/Scripts/jquery.min.js"></script>
+<script src="~/Scripts/responsive-tabs.js"></script>
+
+<script type="text/javascript">
+        function resizeIframe(obj) {
+            obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+        }
+</script>
+
+@*<div>
+        Application Form Summary
+    </div>*@
+
+<br />
+<div class="alert alert-dismissible alert-danger">
+    <p>
+        <b>Admission Summary</b> can be viewed by selecting Session from the drop dowm below, then click the Display Report button to display an exportable and printable report.
+    </p>
+</div>
+
+<iframe src="~/Reports/Presenter/AdmissionSummaryReport.aspx" style="width:100%; " frameborder="0" scrolling="no" id="iframe" onload='javascript:resizeIframe(this);'></iframe>
+
+<br />
+
+

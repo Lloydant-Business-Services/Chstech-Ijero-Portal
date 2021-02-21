@@ -1,0 +1,220 @@
+﻿@model Abundance_Nk.Web.Areas.Applicant.ViewModels.TranscriptViewModel
+@{
+    ViewBag.Title = "Convocation Fee";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Scripts/jquery-2.1.3.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            var items = $('#@Html.IdFor(m => m.StudentLevel.DepartmentOption.Id)').val();
+            if (items == undefined || items != "") {
+                $("#divDepartmentOption").hide();
+            } else {
+                $("#divDepartmentOption").show();
+            }
+
+           
+
+            $("#Programme").change(function() {
+                var programme = $("#Programme").val();
+
+                $("#Department").empty();
+                $("#Level").empty();
+
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetDepartmentAndLevelByProgrammeId", "Payment", new {Area = "Student"})',
+                    dataType: 'json',
+                    data: { id: programme },
+                    success: function(data) {
+                        var levels = data.Levels;
+                        var departments = data.Departments;
+
+                        if (departments != "" && departments != null && departments != undefined) {
+                            $("#Department").append('<option value="' + 0 + '"> -- Select -- </option>');
+
+                            $.each(departments, function(i, department) {
+                                $("#Department").append('<option value="' + department.Id + '">' + department.Name + '</option>');
+                            });
+                        }
+
+                        if (levels != "" && levels != null && levels != undefined) {
+                            $("#Level").append('<option value="' + 0 + '"> -- Select -- </option>');
+
+                            $.each(levels, function(i, level) {
+                                $("#Level").append('<option value="' + level.Id + '">' + level.Name + '</option>');
+                            });
+                        }
+                    },
+                    error: function(ex) {
+                        alert('Failed to retrieve departments.' + ex);
+                    }
+                });
+            });
+
+
+            //Load Department Option
+            $("#Department").change(function() {
+                var department = $("#Department").val();
+                var programme = $("#Programme").val();
+
+                $("#DepartmentOption").empty();
+                if (programme > 2) {
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("GetDepartmentOptionByDepartment", "Payment", new {area = "Student"})', // we are calling json method
+                        dataType: 'json',
+                        data: { id: department, programmeid: programme },
+                        success: function(departmentOptions) {
+                            if (departmentOptions == "" || departmentOptions == null || departmentOptions == undefined) {
+                                $("#divDepartmentOption").hide();
+                            } else {
+                                $("#DepartmentOption").append('<option value="' + 0 + '"> -- Select -- </option>');
+                                $.each(departmentOptions, function(i, Option) {
+                                    $("#DepartmentOption").append('<option value="' + Option.Value + '">' + Option.Text + '</option>');
+                                });
+
+                                $("#divDepartmentOption").show();
+                            }
+                        },
+                        error: function(ex) {
+                            alert('Failed to retrieve department Options.' + ex);
+                        }
+                    });
+
+                }
+            });
+
+            //alert("Please Cross-check all the fields as changes would not be allowed afterwards");
+        })
+
+    </script>
+
+<div class="row">
+    <div class="well col-xs-10 col-sm-10 col-md-6 col-xs-offset-1 col-sm-offset-1 col-md-offset-3 panel-body">
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class=" text-success">
+                    <h1><b>Convocation Fee</b></h1>
+                </div>
+
+
+                <section id="loginForm">
+                    @using (Html.BeginForm("ConvocationFee", "Transcript", new { Area = "Applicant" }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true)
+
+                        <h5>Please enter your <b>Matriculation Number</b> in the box below to generate your Convocation Fee invoice</h5>
+                        <hr class="no-top-padding" />
+
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Student.MatricNumber, new { @class = "col-md-4 control-label" })
+                                    <div class="col-md-8">
+                                        @Html.TextBoxFor(model => model.Student.MatricNumber, new { @class = "form-control", required = "required" })
+                                        @Html.ValidationMessageFor(model => model.Student.MatricNumber, null, new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.FeeType.Id, new { @class = "col-md-4 control-label" })
+                                    <div class="col-md-8">
+                                        @Html.HiddenFor(m => m.FeeType.Id)
+
+                                        @Html.DropDownListFor(m => m.FeeType.Id, (IEnumerable<SelectListItem>)ViewBag.FeeTypes, new { @class = "form-control", disabled = true })
+                                        @Html.ValidationMessageFor(m => m.FeeType.Id, null, new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-md-offset-4 col-md-8">
+                                        <input type="submit" value="Next" class="btn btn-default" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                @if (TempData["Message"] != null)
+                                {
+                                    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+                                }
+                            </div>
+                        </div>
+                    }
+                </section>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@if (Model.ShowInvoicePage)
+{
+    using (Html.BeginForm("ConvocationFeeInvocie", "Transcript", FormMethod.Post))
+{
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+
+        @Html.HiddenFor(model => model.FeeType.Id)
+        @Html.HiddenFor(model => model.PaymentMode.Id)
+        @Html.HiddenFor(model => model.PaymentType.Id)
+        @Html.HiddenFor(model => model.Person.Type.Id)
+        @Html.HiddenFor(model => model.Person.Id)
+        @Html.HiddenFor(model => model.Student.Id)
+        @Html.HiddenFor(model => model.StudentAlreadyExist)
+
+    if (Model.StudentAlreadyExist)
+    {
+        @Html.HiddenFor(model => model.StudentLevel.Department.Faculty.Id)
+    }
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h2>Convocation Fee Invoice</h2>
+                    <p><b>Provide your programme, course of choice, fill other personal details below and then click the Generate Invoice button to generate your invoice.</b></p>
+                </div>
+            </div>
+
+            @if (Model.StudentAlreadyExist)
+            {
+                @Html.Partial("_RegisteredStudent", Model)
+            }
+            else
+            {
+                @Html.Partial("_UnRegisteredStudent", Model)
+            }
+
+            <div class="panel-footer">
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10 ">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input class="btn btn-success btn-lg mr5" type="submit" name="submit" id="submit" value="Generate Invoice" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-1"></div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+}
+}
+
+

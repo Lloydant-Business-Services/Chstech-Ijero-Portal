@@ -1,0 +1,51 @@
+﻿@model Abundance_Nk.Model.Entity.PAYMENT_SCHOLARSHIP
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>PAYMENT_SCHOLARSHIP</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Amount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Amount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Scholarship_Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Scholarship_Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PERSON.First_Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PERSON.First_Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SESSION.Session_Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SESSION.Session_Name)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

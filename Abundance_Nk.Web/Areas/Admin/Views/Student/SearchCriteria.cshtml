@@ -1,0 +1,542 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.StudentViewModel
+@{
+    ViewBag.Title = "MatricNumberGeneration";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Scripts {
+    <link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet"/>
+    <link href="~/Scripts/DataTables-1.10.15/select.dataTables.min.css" rel="stylesheet"/>
+    <link href="~/Content/bootstrap-table.css" rel="stylesheet"/>
+    @Scripts.Render("~/bundles/jquery")
+
+    @*<script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/file-upload/jquery-ui-1.9.2.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/dataTables.select.min.js"></script>
+    <script src="~/Content/bootstrap-table.js"></script>*@
+
+<link href="~/Scripts/DataTables-1.10.15/media/css/jquery.dataTables.css" rel="stylesheet" />
+<script src="~/Scripts/DataTables-1.10.15/media/js/jquery.dataTables.js"></script>
+<link href="~/Scripts/DataTables-1.10.15/extensions/Buttons/css/buttons.dataTables.css" rel="stylesheet" />
+<script src="~/Scripts/DataTables-1.10.15/extensions/Buttons/js/dataTables.buttons.js"></script>
+<script src="~/Scripts/DataTables-1.10.15/extensions/Buttons/js/buttons.colVis.js"></script>
+<script src="~/Scripts/DataTables-1.10.15/extensions/Responsive/js/dataTables.responsive.js"></script>
+@*<script src="~/Scripts/dataTables.js"></script>
+    <link href="~/Content/dataTables.css" rel="stylesheet"/>*@
+
+<script src="~/Scripts/DataTables-1.10.15/buttons.flash.min.js"></script>
+<script src="~/Scripts/DataTables-1.10.15/buttons.html5.min.js"></script>
+<script src="~/Scripts/DataTables-1.10.15/buttons.print.min.js"></script>
+<script src="~/Scripts/DataTables-1.10.15/jszip.min.js"></script>
+<script src="~/Scripts/DataTables-1.10.15/pdfmake.min.js"></script>
+<script src="~/Scripts/DataTables-1.10.15/vfs_fonts.js"></script>
+
+    <script type="text/javascript">
+
+        var studentDataTable;
+
+        $(document).ready(function () {
+
+            $("#tab1").attr('style', 'background-color: #ebbbdb; color:#990066; border-radius: 100px;');
+            $("#tab2").attr('style', 'background-color: #990066; color:white; border-radius: 100px;');
+
+            $("#search").on('click', function () {
+
+                $("#studentTableBody").empty();
+
+                $("#ldGetStudents").show();
+                $("#divStudentList").hide();
+
+                var searchCriteria = PopulateSearchCriteria();
+                
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetStudents", "Student")', // Calling json method
+                    dataType: 'json',
+                    data: { searchParameter: JSON.stringify(searchCriteria) },
+                    success: function(result) {
+                        if (result && result.IsError == false) {
+                            if (result.StudentInformation && result.StudentInformation.length > 0) {
+                                setTable(result.StudentInformation);
+                            }
+                        } else {
+                            alert(result.Message);
+                        }
+
+                        $("#ldGetStudents").hide();
+                    },
+                    error: function(jqXHR) {
+                        alert('Failed.' + jqXHR.statusText);
+                        $("#ldGetStudents").hide();
+                    }
+                });
+            });
+
+            $("#Programme_Id").on('change', function() {
+                $("#Department_Id").empty();
+                var programmeValue = $("#Programme_Id").val();
+
+                if (!programmeValue) {
+                    $("#Department_Id").append('<option value=" ">All</option>');
+                    return;
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetDepartments", "Student")', // Calling json method
+                    dataType: 'json',
+                    data: { programmeId: programmeValue},
+                    success: function(departments) {
+                        $("#Department_Id").append('<option value=" ">All</option>');
+                        $.each(departments, function(i, departments) {
+                            $("#Department_Id").append('<option value="' + departments.Value + '">' + departments.Text + '</option>');
+                        });
+                    },
+                    error: function(ex) {
+                        alert('Failed to retrieve departments.' + ex);
+                    }
+                });
+                return false;
+            });
+
+            $("#Country_Id").on('change', function() {
+                $("#State_Id").empty();
+                $("#LocalGovernment_Id").empty();
+
+                var countryValue = $("#Country_Id").val();
+
+                if (!countryValue) {
+
+                    $("#State_Id").append('<option value=" ">All</option>');
+                    $("#LocalGovernment_Id").append('<option value=" ">All</option>');
+
+                    return;
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetStates", "Student")', // Calling json method
+                    dataType: 'json',
+                    data: { countryId: countryValue },
+                    success: function (states) {
+
+                        $("#State_Id").append('<option value=" ">All</option>');
+                        $("#LocalGovernment_Id").append('<option value=" ">All</option>');
+
+                        $.each(states, function (i, state) {
+                            $("#State_Id").append('<option value="' + state.Value + '">' + state.Text + '</option>');
+                        });
+                    },
+                    error: function(ex) {
+                        alert('Failed to retrieve states.' + ex);
+                    }
+                });
+                return false;
+            });
+
+            $("#State_Id").on('change', function() {
+                $("#LocalGovernment_Id").empty();
+
+                var stateValue = $("#State_Id").val();
+
+                if (!stateValue) {
+                    $("#LocalGovernment_Id").append('<option value=" ">All</option>');
+                    return;
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetLocalGovernment", "Student")', // Calling json method
+                    dataType: 'json',
+                    data: { stateId: stateValue },
+                    success: function (lgas) {
+
+                        $("#LocalGovernment_Id").append('<option value=" ">All</option>');
+
+                        $.each(lgas, function (i, lga) {
+                            $("#LocalGovernment_Id").append('<option value="' + lga.Value + '">' + lga.Text + '</option>');
+                        });
+                    },
+                    error: function(ex) {
+                        alert('Failed to retrieve LGA.' + ex);
+                    }
+                });
+                return false;
+            });
+        });
+
+
+        function setTable(tableData) {
+
+            //check if datatable is set
+            if (studentDataTable) {
+                studentDataTable.destroy();
+            }
+            $("#studentTableBody").empty();
+            //populate table
+            $.each(tableData, function (i, item) {
+                $("#studentTableBody").append('<tr><td>' + item.Name + '</td>' + '<td>' + item.MobilePhone + '</td>' + '<td>' + item.SexName + '</td>' +
+                    '<td>' + item.ApplicationFormNumber + '</td>' + '<td>' + item.MatricNumber + '</td>' + '<td>' + item.Activated + '</td>' +
+                    '<td>' + item.ProgrammeName + '</td>' + '<td>' + item.DepartmentName + '</td>' + '<td>' + item.LevelName + '</td>' +
+                    '<td>' + item.SessionName + '</td></tr>');
+            });
+
+            //set datatable
+            studentDataTable = $('#studentTable').DataTable({
+                dom: 'Bfrtip',
+                ordering: true,
+                buttons: [
+                    {
+                        extend: 'copy',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+
+
+                    },
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+
+
+                    },
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+
+
+                    },
+                    {
+                        extend: 'pdf',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+
+
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+
+
+                    }, , 'colvis'
+                ]
+            });
+
+            $("#divStudentList").show();
+        }
+
+        function changeStyle(suffix) {
+            if (suffix == 1) {
+                $("#tab1").attr('style', 'background-color: #ebbbdb; color:#990066; border-radius: 100px;');
+                $("#tab2").attr('style', 'background-color: #990066; color:white; border-radius: 100px;');
+            } else if (suffix == 2) {
+                $("#tab2").attr('style', 'background-color: #ebbbdb; color:#990066; border-radius: 100px;');
+                $("#tab1").attr('style', 'background-color: #990066; color:white; border-radius: 100px;');
+            }
+        }
+
+        function PopulateSearchCriteria() {
+            var jsonDataArray = {
+
+            "SessionId": $("#Session_Id").val(),
+            "ProgrammeId": $("#Programme_Id").val(),
+            "FirstName": $("#Person_FirstName").val(),
+            "LastName": $("#Person_LastName").val(),
+            "ApplicationNumber": $("#ApplicationForm_Number").val(),
+            "StateId": $("#State_Id").val(),
+            "ModeOfEntryId": $("#ModeOfEntry_Id").val(),
+            "Confirmed": $("#Confirmed_Id").val(),
+            "StatusId": $("#StudentStatus_Id").val(),
+            "StateId": $("#State_Id").val(),
+            "LocalGovernmentId": $("#LocalGovernment_Id").val(),
+            "DepartmentId": $("#Department_Id").val(),
+            "AdmissionSetId": $("#AdmittedSession_Id").val(),
+            "MatricNumber": $("#Student_MatricNumber").val(),
+            "CountryId": $("#Country_Id").val(),
+           
+        };
+
+        return jsonDataArray;
+        }
+
+    </script>
+}
+
+<div>
+    @if (TempData["Message"] != null)
+    {
+        @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+    }
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">Student Search Criteria</h4>
+    </div>
+    <div class="panel-body">
+        <div class="col-md-12">
+
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#searchFilter" style="background-color: #990066; color:white; border-radius: 100px;" onclick="changeStyle(1)" id="tab1">Search Filter</a></li>
+                @*<li><a data-toggle="tab" disable="disabled" href="#generateMatNumber" style="background-color: #990066; color:white; border-radius: 100px;" onclick="changeStyle(2)" id="tab2">Update Student</a></li>*@
+            </ul>
+            <br />
+            <div class="tab-content">
+                <div id="searchFilter" class="tab-pane fade in active">
+                    <div class="col-md-12">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Session.Id, "Session:", new { @class = "control-label" })
+                                @Html.DropDownListFor(model => model.Session.Id, (IEnumerable<SelectListItem>)ViewBag.Session, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Session.Id)
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Programme.Id, "Programme:", new { @class = "control-label" })
+                                @Html.DropDownListFor(model => model.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.Programme, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Programme.Id)
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ApplicationForm.Number, "Application Number:", new { @class = "control-label" })
+                                @Html.TextBoxFor(model => model.ApplicationForm.Number, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ApplicationForm.Number)
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Person.FirstName, "First Name:", new { @class = "control-label" })
+                                @Html.TextBoxFor(model => model.Person.FirstName, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Person.FirstName)
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.State.Id, "State:", new { @class = "control-label" })
+                                @Html.DropDownListFor(model => model.State.Id, (IEnumerable<SelectListItem>)ViewBag.State, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.State.Id)
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ModeOfEntry.Id, "Mode Of Entry:", new { @class = "control-label" })
+                                @Html.DropDownListFor(model => model.ModeOfEntry.Id, (IEnumerable<SelectListItem>)ViewBag.ModeOfEntry, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ModeOfEntry.Id)
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Department.Id, "Course Of Study:", new { @class = "control-label" })
+                                @Html.DropDownListFor(model => model.Department.Id, (IEnumerable<SelectListItem>)ViewBag.Department, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Department.Id)
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Confirmed.Id, "Confirmed:", new { @class = "control-label" })
+                                @Html.DropDownListFor(model => model.Confirmed.Id, (IEnumerable<SelectListItem>)ViewBag.Confirmed, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Confirmed.Id)
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Person.LastName, "First Name:", new { @class = "control-label" })
+                                @Html.TextBoxFor(model => model.Person.LastName, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Person.LastName)
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.StudentStatus.Id, "Status:", new { @class = "control-label" })
+                                @Html.DropDownListFor(model => model.StudentStatus.Id, (IEnumerable<SelectListItem>)ViewBag.Status, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.StudentStatus.Id)
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.AdmittedSession.Id, "Admission Set:", new { @class = "control-label" })
+                                @Html.DropDownListFor(model => model.AdmittedSession.Id, (IEnumerable<SelectListItem>)ViewBag.AdmissionSet, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.AdmittedSession.Id)
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Student.MatricNumber, "Matric No/Reg No:", new { @class = "control-label" })
+                                @Html.TextBoxFor(model => model.Student.MatricNumber, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Student.MatricNumber)
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Country.Id, "Country:", new { @class = "control-label" })
+                                @Html.DropDownListFor(model => model.Country.Id, (IEnumerable<SelectListItem>)ViewBag.Country, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Country.Id)
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.LocalGovernment.Id, "Local Govt. Area:", new { @class = "control-label" })
+                                @Html.DropDownListFor(model => model.LocalGovernment.Id, (IEnumerable<SelectListItem>)ViewBag.Country, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.LocalGovernment.Id)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="form-group">
+                                <button type="button" class="btn btn-success" id="search">Search</button>
+                                <span style="display: none" id="ldGetStudents"><img src="~/Content/Images/bx_loader.gif" /></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @*<div id="generateMatNumber" class="tab-pane fade">
+
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-1">Prefix:</div>
+                                <div class="col-md-2"><input type="text" class="form-control" id="prefix" /></div>
+                                <div class="col-md-1">Suffix:</div>
+                                <div class="col-md-2"><input type="text" class="form-control" id="suffix" /></div>
+                                <div class="col-md-4">
+
+                                    <button type="button" class="btn btn-success" onclick="getLargestMatricNumber()">Get Largest Matric NO</button>
+                                    <span style="display: none" id="ldGetLargestMatricNumber"><img src="~/Content/Images/bx_loader.gif" /></span>
+                                </div>
+
+                            </div>
+                        </div>
+                        <br />
+                        <hr />
+                        <br />
+                        <div class="row">
+                            <div class="col-md-2">Start Number:</div>
+                            <div class="col-md-2"><input type="text" class="form-control" id="startNumber" /></div>
+                            <div class="col-md-2">Number Length:</div>
+                            <div class="col-md-2"><input type="text" class="form-control" id="numberLength" /></div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-2">Prefix:</div>
+                            <div class="col-md-2"><input type="text" class="form-control" id="generationPrefix" /></div>
+                            <div class="col-md-2">Suffix:</div>
+                            <div class="col-md-2"><input type="text" class="form-control" id="generationSuffix" /></div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="radio-inline">
+                                    <input type="radio" name="student" id="studentsWithoutMatricNumber" value="1" onchange="filterStudentList(1)"> Students without matric number
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="student" id="selectedStudents" value="2" onchange="filterStudentList(2)"> Selected Students
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="student" id="allStudents" value="3" checked onchange="filterStudentList(3)"> All Students
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <button type="button" class="btn btn-success" onclick="generateMatricNumber()">Generate</button>
+                                <span style="display: none" id="ldGenerateMatricNumber"><img src="~/Content/Images/bx_loader.gif" /></span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>*@
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<div id="divStudentList" style="display:none;" class="panel panel-default">
+    <div class="panel-body table-responsive">
+        <div class="col-md-12">
+
+                    <table class="table-bordered table-hover table-striped table" id="studentTable">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Name
+                                </th>
+                                <th>
+                                    Phone Number
+                                </th>
+                                <th>
+                                    Sex
+                                </th>
+                                <th>
+                                    Application Number
+                                </th>
+                                <th>
+                                    Matric Number
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                                <th>
+                                    Programme
+                                </th>
+                                <th>
+                                    Department
+                                </th>
+                                <th>
+                                    Level
+                                </th>
+                                <th>
+                                    Session
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentTableBody"></tbody>
+
+                    </table>
+               
+        </div>
+    </div>
+</div>
+@*
+    <div id="divLargestMatricNumber" style="display:none;" class="panel panel-default">
+        <div class="panel-body">
+            <div class="col-md-12">
+
+                <div class="panel panel-danger">
+                    <div class="panel-body table-responsive">
+
+                        <table class="table-bordered table-hover table-striped table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Name
+                                    </th>
+                                    <th>
+                                        Sex
+                                    </th>
+                                    <th>
+                                        Application Number
+                                    </th>
+                                    <th>
+                                        Matric Number
+                                    </th>
+                                    <th>
+                                        Status
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="largestMatricNumberTable"></tbody>
+
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="divNoStudentFound" style="display:none;" class="row">
+        <h4>No Student Found</h4>
+    </div>*@

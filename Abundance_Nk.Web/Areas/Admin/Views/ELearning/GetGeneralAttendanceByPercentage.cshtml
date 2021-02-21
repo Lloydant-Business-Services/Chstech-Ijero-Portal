@@ -1,0 +1,218 @@
+﻿
+@using Abundance_Nk.Web.Models
+@model Abundance_Nk.Web.Areas.Admin.ViewModels.ELearningViewModel
+@{
+                /**/
+
+                /**/
+
+                /**/
+
+                /**/
+
+                /**/
+
+                ViewBag.Title = "General Class Attendance";
+                Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@if (TempData["Message"] != null)
+{
+    @Html.Partial("_Message", TempData["Message"])
+}
+
+@section Scripts {
+
+
+    <link href="~/Scripts/DataTables-1.10.15/media/css/jquery.dataTables.css" rel="stylesheet" />
+    <script src="~/Scripts/DataTables-1.10.15/media/js/jquery.dataTables.js"></script>
+    <link href="~/Scripts/DataTables-1.10.15/extensions/Buttons/css/buttons.dataTables.css" rel="stylesheet" />
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Buttons/js/dataTables.buttons.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Buttons/js/buttons.colVis.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Responsive/js/dataTables.responsive.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/buttons.flash.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/buttons.html5.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/buttons.print.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/jszip.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/pdfmake.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/vfs_fonts.js"></script>
+
+
+    <script type="text/javascript">
+
+
+        $(document).ready(function () {
+            $.extend($.fn.dataTable.shadows, {
+                responsive: false
+            });
+
+            $("#attendanceTable").DataTable({
+                dom: 'Bfrtip',
+                ordering: true,
+                buttons: [
+                    {
+                        extend: 'copy',
+                        title:'Summarised Class Attendance',
+                        exportOptions: {
+                            columns: ':visible',
+                            modifier: {
+                                orientation: 'Potrait'
+                            }
+                        },
+                        orientation: 'Potrait'
+
+
+                    },
+                    {
+                        extend: 'csv',
+                        title: 'Summarised Class Attendance',
+                        exportOptions: {
+                            columns: ':visible',
+                            modifier: {
+                                orientation: 'Potrait'
+                            }
+                        },
+                        orientation: 'Potrait'
+
+                    },
+                    {
+                        extend: 'excel',
+                        title: 'Summarised Class Attendance',
+                        exportOptions: {
+                            columns: ':visible',
+                            modifier: {
+                                orientation: 'Potrait'
+                            }
+                        },
+                        orientation: 'Potrait'
+
+
+                    },
+                    {
+                        extend: 'pdf',
+                        title: 'Summarised Class Attendance',
+                        exportOptions: {
+                            columns: ':visible',
+                            header: true,
+                            modifier: {
+                                orientation: 'Potrait'
+                            }
+
+
+
+                        },
+                        orientation: 'Potrait'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        title: 'Summarised Class Attendance',
+                        exportOptions: {
+                            columns: ':visible',
+                            modifier: {
+                                orientation: 'Potrait'
+                            }
+                        },
+                        orientation: 'Potrait'
+
+
+                    }, , 'colvis'
+                ]
+            });
+        })
+        //go back
+        function goBack() {
+            window.history.back()
+        }
+    </script>
+
+    <style>
+        .btn-success {
+            color: #1cc88a;
+            background-color: transparent;
+            border: 2px solid #eee;
+            border-radius: 3px !important;
+        }
+
+        .btn-danger {
+            color: #ca2819;
+            background-color: transparent;
+            border: 2px solid #eee;
+            border-radius: 3px !important;
+        }
+    </style>
+}
+<br />
+@if (Model.TopicAttendanceList != null && Model.TopicAttendanceList.Count > 0)
+{
+    
+<div class="container">
+    <div class="card-footer">
+        <a href="#" class="btn btn-primary" style="background-color:dodgerblue" onclick="goBack()">Back</a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table-bordered table-hover table-striped  table" id="attendanceTable">
+
+                <thead>
+                    <tr class="table-head-alt text-center">
+                        <th colspan="5" style="font-weight:600">@Model.eCourse.Course.Code - @Model.eCourse.Course.Name </th>
+                    </tr>
+                    <tr lass="table-head-alt text-center">
+                        <th colspan="5" style="font-weight:400">General Class Attendance</th>
+                    </tr>
+
+                    <tr>
+                        <th>S/N</th>
+                        <th>
+                            Student Name
+                        </th>
+                        <th>
+                            Matric Number
+                        </th>
+                        <th>Programme</th>
+
+                        <th>
+                            Attendance
+                        </th>
+                        <th>
+                            Attendance(%)
+                        </th>
+
+                    </tr>
+
+                </thead>
+                <tbody>
+
+                    @for (int i = 0; i < Model.TopicAttendanceList.Count; i++)
+                    {
+                        var sn = i + 1;
+                    <tr>
+                        <td>@sn</td>
+                        <td>
+                            @Model.TopicAttendanceList[i].CourseRegistrationDetail.CourseRegistration.Student.FullName
+                        </td>
+                        <td>
+                            @Model.TopicAttendanceList[i].CourseRegistrationDetail.CourseRegistration.Student.MatricNumber
+                        </td>
+                        <td>
+                            @Model.TopicAttendanceList[i].CourseRegistrationDetail.CourseRegistration.Programme.Name
+                        </td>
+                        <td>
+                            @Model.TopicAttendanceList[i].PresentCount
+                        </td>
+                        <td>
+                            @Model.TopicAttendanceList[i].PresentPercentage
+                        </td>
+
+
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+}
+
+

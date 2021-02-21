@@ -1,0 +1,29 @@
+﻿@model Abundance_Nk.Web.Areas.Applicant.ViewModels.AdmissionViewModel
+
+
+
+
+<div class="col-md-12 p-3">
+    <div class="panel-heading">
+    </div>
+    <div class="card-body">
+
+        <br />
+
+        <div style="margin-bottom:15px; text-align:justify">
+            <blockquote>
+                <p style="color:darkgreen; font-weight:bold">
+                    Congratulations! You have been offered Admission into the College of Health Science and Technology Ijero-Ekiti
+                </p>
+                     <small>
+                    This marks the first step of your admission process. Click on the <b>Next</b> button below, to check your clearance status and proceed with your admission process. Good Luck!<cite title="Source Title"></cite>
+                </small>
+            </blockquote>
+            <div class="form-group">
+                @Html.ActionLink("Print Admission Letter", "AdmissionLetter", "Credential", new { Area = "Common", fid = Abundance_Nk.Web.Models.Utility.Encrypt(Model.ApplicationForm.Id.ToString()) }, new { @class = "btn btn-white btn-lg ", target = "_blank" })
+
+            </div>
+        </div>
+
+    </div>
+</div>

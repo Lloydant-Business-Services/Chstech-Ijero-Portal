@@ -1,0 +1,218 @@
+﻿@model Abundance_Nk.Web.Areas.Student.ViewModels.PaymentViewModel
+
+@{
+    ViewBag.Title = "Generate Invoice";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var items = $('#StudentLevel_DepartmentOption_Id option').size();
+        if (items > 0) {
+            $("#divDepartmentOption").show();
+        } else {
+            $("#divDepartmentOption").hide();
+        }
+
+        $("#StudentLevel_Programme_Id").change(function() {
+            var programme = $("#StudentLevel_Programme_Id").val();
+
+            $("#StudentLevel_Department_Id").empty();
+            $("#StudentLevel_Level_Id").empty();
+
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetDepartmentAndLevelByProgrammeId", "Payment")',
+                dataType: 'json',
+                data: { id: programme },
+                success: function(data) {
+                    var levels = data.Levels;
+                    var departments = data.Departments;
+
+                    if (departments != "" && departments != null && departments != undefined) {
+                        $("#StudentLevel_Department_Id").append('<option value="' + 0 + '"> -- Select -- </option>');
+
+                        $.each(departments, function(i, department) {
+                            $("#StudentLevel_Department_Id").append('<option value="' + department.Id + '">' + department.Name + '</option>');
+                        });
+                    }
+
+                    if (levels != "" && levels != null && levels != undefined) {
+                        $("#StudentLevel_Level_Id").append('<option value="' + 0 + '"> -- Select -- </option>');
+
+                        $.each(levels, function(i, level) {
+                            $("#StudentLevel_Level_Id").append('<option value="' + level.Id + '">' + level.Name + '</option>');
+                        });
+                    }
+                },
+                error: function(ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+        });
+
+        var programme = $("#StudentLevel_Programme_Id").val();
+
+        if (programme) {
+$("#StudentLevel_Level_Id").empty();
+
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetDepartmentAndLevelByProgrammeId", "Payment")',
+                dataType: 'json',
+                data: { id: programme },
+                success: function(data) {
+                    var levels = data.Levels;
+                    
+                    if (levels != "" && levels != null && levels != undefined) {
+                        $("#StudentLevel_Level_Id").append('<option value="' + 0 + '"> -- Select -- </option>');
+
+                        $.each(levels, function(i, level) {
+                            $("#StudentLevel_Level_Id").append('<option value="' + level.Id + '">' + level.Name + '</option>');
+                        });
+                    }
+                },
+                error: function(ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+        }
+            
+
+        //Load Department Option
+        $("#StudentLevel_Department_Id").change(function() {
+            var department = $("#StudentLevel_Department_Id").val();
+            var programme = $("#StudentLevel_Programme_Id").val();
+
+            $("#StudentLevel_DepartmentOption_Id").empty();
+            if (programme == 3 || programme == 4 || programme == 5) {
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetDepartmentOptionByDepartment")', // we are calling json method
+                    dataType: 'json',
+                    data: { id: department, programmeid: programme },
+                    success: function(departmentOptions) {
+                        if (departmentOptions == "" || departmentOptions == null || departmentOptions == undefined) {
+                            $("#divDepartmentOption").hide();
+                        } else {
+                            $("#StudentLevel_DepartmentOption_Id").append('<option value="' + 0 + '"> -- Select -- </option>');
+                            $.each(departmentOptions, function(i, Option) {
+                                $("#StudentLevel_DepartmentOption_Id").append('<option value="' + Option.Value + '">' + Option.Text + '</option>');
+                            });
+
+                            $("#divDepartmentOption").show();
+                        }
+                    },
+                    error: function(ex) {
+                        alert('Failed to retrieve department Options.' + ex);
+                    }
+                });
+
+            }
+        })
+
+        //alert("Please Cross-check all the fields as changes would not be allowed afterwards");
+
+        $("#Session_Id").change(function () {
+
+            var session = $("#Session_Id").val();
+            var student = $("#@Html.IdFor(m => m.Person.Id)").val();
+            var programme = $("#StudentLevel_Programme_Id").val();
+
+            if (session == "" || session == 0 || session == "0") {
+                return;
+            }
+
+            $("#PaymentMode_Id").empty();
+
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetPaymentModes", "Payment")',
+                dataType: 'json',
+                data: { studentId: student, sessionId: session, progId: programme },
+                success: function (result) {
+
+                    $("#PaymentMode_Id").append('<option value="' + 0 + '"> -- Select -- </option>');
+
+                    if (result && result.length > 0) {
+                        $.each(result, function (i, mode) {
+                            $("#PaymentMode_Id").append('<option value="' + mode.Value + '">' + mode.Text + '</option>');
+                        });
+                    }
+                },
+                error: function (ex) {
+                    alert('Failed to payment options.' + ex);
+                }
+            });
+        })
+    });
+
+
+</script>
+
+@using (Html.BeginForm("GenerateInvoice", "Payment", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    
+    @Html.HiddenFor(model => model.FeeType.Id)
+    @Html.HiddenFor(model => model.PaymentType.Id)
+    @Html.HiddenFor(model => model.Person.Type.Id)
+    @Html.HiddenFor(model => model.Person.Id)
+    @Html.HiddenFor(model => model.StudentAlreadyExist)
+    
+    if (Model.StudentAlreadyExist)
+    {
+        @Html.HiddenFor(model => model.StudentLevel.Department.Faculty.Id)
+    }
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h2>School Fees Invoice</h2>
+                    <p><b>Provide your programme, course of choice, fill other personal details below and then click the Generate Invoice button to generate your invoice.</b></p>
+                </div>
+            </div>
+            <div class="row">
+                <div>
+                    @*@if (TempData["Message"] != null)
+                    {
+                        @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+                    }*@
+                </div>
+            </div>
+
+            @if (Model.StudentAlreadyExist)
+            {
+                @Html.Partial("_RegisteredStudent", Model)
+            }
+            else
+            {
+                @Html.Partial("_UnRegisteredStudent", Model)
+            }
+
+            <div class="panel-footer">
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10 ">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input class="btn btn-success btn-lg mr5" type="submit" name="submit" id="submit" value="Generate Invoice" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-1"></div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+}
+
+
+

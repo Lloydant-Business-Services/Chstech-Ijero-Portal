@@ -1,0 +1,160 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.SupportViewModel
+@{
+    ViewBag.Title = "ViewCarryOverCourses";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@if (TempData["Message"] != null)
+{
+    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+}
+
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        //Session Drop down Selected change event
+        $("#Session").change(function () {
+            $("#Semester").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetSemester", "Support")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#Session").val() },
+                // Get Selected Country ID.
+                success: function (semesters) {
+                    $("#Semester").append('<option value="' + 0 + '">' +
+                           '-- Select Semester --' + '</option>');
+                    $.each(semesters, function (i, semester) {
+                        $("#Semester").append('<option value="' + semester.Value + '">' +
+                             semester.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve semesters.' + ex);
+                }
+            });
+            return false;
+        })
+
+    });
+</script>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-fw fa-edit"></i>Add Carry Over Course</h3>
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm("ViewCarryOverCourses", "Support", new { area = "Admin" }, FormMethod.Post))
+        {
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.MatricNumber, "Matric Number", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(model => model.MatricNumber, new { @class = "form-control", @required = "required" })
+                    @Html.ValidationMessageFor(model => model.MatricNumber, null, new { @class = "text-danger" })
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Session.Name, "Session", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.DropDownListFor(model => model.Session.Id, (IEnumerable<SelectListItem>)ViewBag.Session, new { @class = "form-control", @id = "Session", @required = "required" })
+                    @Html.ValidationMessageFor(model => model.Session.Id, null, new { @class = "text-danger" })
+                </div>
+
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Semester.Name, "Semester", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.DropDownListFor(model => model.Semester.Id, (IEnumerable<SelectListItem>)ViewBag.Semester, new { @class = "form-control", @id = "Semester", @required = "required" })
+                    @Html.ValidationMessageFor(model => model.Semester.Id, null, new { @class = "text-danger" })
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Level.Name, "Level", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.DropDownListFor(model => model.Level.Id, (IEnumerable<SelectListItem>)ViewBag.Level, new { @class = "form-control", @id = "Level", @required = "required" })
+                    @Html.ValidationMessageFor(model => model.Level.Id, null, new { @class = "text-danger" })
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-10">
+                    <input class="btn btn-success mr5 " type="submit" name="submit" id="submit" value="View Courses" />
+
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+
+@if (Model == null || Model.Courses == null)
+    {
+        return;
+    }
+    @if (Model != null && Model.Courses.Count > 0)
+    {
+        using (Html.BeginForm("AddCarryOverCourses", "Support", new { area = "Admin" }, FormMethod.Post))
+        {
+            <table class="table table-responsive table-striped">
+                <tr>
+                    <th>
+                        COURSE NAME
+                    </th>
+                    <th>
+                        COURSE CODE
+                    </th>
+                    <th>
+                        COURSE UNIT
+                    </th>
+                    <th>
+                        SELECT
+                    </th>
+                </tr>
+                @for (int i = 0; i < Model.Courses.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            @Html.HiddenFor(model => Model.Courses[i].Id)
+                            @Model.Courses[i].Name
+                        </td>
+                        <td>
+                            @Html.HiddenFor(model => Model.Courses[i].Code)
+                            @Model.Courses[i].Code
+                        </td>
+                        <td>
+                            @Html.HiddenFor(model => Model.Courses[i].Unit)
+                            @Model.Courses[i].Unit
+                        </td>
+                        <td>
+                            @Html.CheckBoxFor(model => Model.Courses[i].IsRegistered)
+                        </td>
+                    </tr>
+                }
+            </table>
+            <br />
+            <div class="form-group">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-10">
+                    <input class="btn btn-success mr5 " type="submit" name="submit" id="submit" value="Add Courses" />
+
+                </div>
+            </div>
+        }
+        @*<div class="form-group" style="text-align:center">
+
+            <div class="col-sm-10 pull-left">
+                <input class="btn btn-success mr5 " type="submit" name="submit" id="submit" value="Save Upload" />
+                @Html.ActionLink("Add Courses", "AddCarryOverCourses", new { controller = "Support", area = "Admin" }, new { @class = "btn btn-success mr5" })
+            </div>
+        </div>*@
+    }
+
+

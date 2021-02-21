@@ -1,0 +1,122 @@
+﻿@using Abundance_Nk.Model.Model
+@model Abundance_Nk.Web.Areas.Student.ViewModels.ResultViewModel
+@{
+    ViewBag.Title = "SemesterResult";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#submit').click(function () {
+
+            $('#submit').submit();
+            var dataToSend = JSON.parse($('#frmEvaluation').serializeArray());
+        });
+    });
+</script>
+<h3>STUDENT EVALUATION OF INSTRUCTIONAL DELIVERY</h3>
+@using(Html.BeginForm("SemesterResult","Result",new { Area = "Student" },FormMethod.Post,new { id = "frmEvaluation" }))
+{
+    @Html.HiddenFor(model => model.Session.Id)
+    @Html.HiddenFor(model => model.Semester.Id)
+    
+    if(Model.CourseEvaluations == null)
+    {
+        return;
+    }
+    if(Model.CourseEvaluations.Count > 0)
+    {
+        <cite>
+            <b>Instruction: </b><br />
+            Students are to read each statement carefully and respond by "ticking" for a True statement or “un-ticking” for an Untrue Statement in the box provided.
+        </cite>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                <div class="col-md-12">
+                    <table class="table table-bordered table-hover table-striped table-responsive">
+                        <tr>
+
+                            <th>Question</th>
+                            @for (int j = 0; j < Model.CourseEvaluations.Count; j++)
+                             {
+                            <th>@Model.CourseEvaluations[j].Course.Code</th>
+                             }
+
+                        </tr>
+                        @Html.HiddenFor(model => Model.StudentLevel.Student.Id)
+                        @for(int i = 0;i < Model.CourseEvaluations.FirstOrDefault().CourseEvaluationQuestion.Count;i++)
+                         {
+                        <tr>
+                            <td>@Model.CourseEvaluations.FirstOrDefault().CourseEvaluationQuestion[i].Question</td>
+                            @for(int j = 0;j < Model.CourseEvaluations.Count;j++)
+                                 {
+                                     Model.CourseEvaluations[j].QuestioinId = Model.CourseEvaluations.FirstOrDefault().CourseEvaluationQuestion[i].Id;
+
+                            @Html.HiddenFor(model => Model.CourseEvaluations[j].QuestioinId)
+                            @Html.HiddenFor(model => Model.CourseEvaluations[j].Course.Id)
+                            <td>@Html.CheckBoxFor(model => Model.CourseEvaluations[j].Selected,new { id = "Question_" + Model.CourseEvaluations.FirstOrDefault().CourseEvaluationQuestion[i].Id + "Course_Id_" + Model.CourseEvaluations[j].Course.Id,Name = "Question_" + Model.CourseEvaluations.FirstOrDefault().CourseEvaluationQuestion[i].Id + "Course_Id_" + Model.CourseEvaluations[j].Course.Id })</td>
+
+                                 }
+                        </tr>
+                         }
+
+                    </table>
+                </div>
+                <br />
+                <br />
+            </div>
+        </div>
+
+
+    <cite>
+        <b>Instruction: </b><br />
+        The students are to respond to each of the measuring instruments on a rating scale of 1-5 as designated with 5 being the highest (Strongly Agree)
+        1 = Strongly Disagree, 2 = Disagree, 3 = Undecided, 4 = Agree, 5 = Strongly Agree    </cite>
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                <div class="col-md-12">
+                    <br />
+                    <table class="table table-bordered table-hover table-striped table-responsive">
+                        <tr>
+
+                            <th>Question</th>
+                            @for(int j = 0;j < Model.CourseEvaluations.Count;j++)
+                            {
+                                <th>@Model.CourseEvaluations[j].Course.Code</th>
+                            }
+
+                        </tr>
+
+                        @for(int k = 0;k < Model.CourseEvaluationsTwo.FirstOrDefault().CourseEvaluationQuestion.Count;k++)
+                        {
+                            <tr>
+
+                                <td>@Model.CourseEvaluationsTwo.FirstOrDefault().CourseEvaluationQuestion[k].Question</td>
+                                @for(int m = 0;m < Model.CourseEvaluationsTwo.Count;m++)
+                                {
+                                    @*@Html.HiddenFor(model => model.CourseEvaluationsTwo[m].Course.Id)*@
+                                    <td>@Html.DropDownListFor(model => model.CourseEvaluationsTwo[m].Score,(IEnumerable<SelectListItem>)ViewBag.ScoreId,new { @class = "form-control",id = "SectionQuestion_" + Model.CourseEvaluationsTwo.FirstOrDefault().CourseEvaluationQuestion[k].Id + "Course_Id_" + Model.CourseEvaluationsTwo[m].Course.Id,Name = "SectionQuestion_" + Model.CourseEvaluationsTwo.FirstOrDefault().CourseEvaluationQuestion[k].Id + "Course_Id_" + Model.CourseEvaluationsTwo[m].Course.Id }) </td>
+                                    @*<td>@Html.DropDownListFor(model => model.CourseEvaluationsTwo[m].Score,(IEnumerable<SelectListItem>)ViewBag.ScoreId,new { @class = "form-control"}) </td>*@
+
+                                }
+                            </tr>
+                        }
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <input class="btn btn-success btn-lg mr5" type="submit" name="submit" id="submit" value="Submit" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+
+}

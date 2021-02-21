@@ -1,0 +1,274 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.StudentCourseRegistrationViewModel
+@{
+    ViewBag.Title = "AddExtraCourse";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        //Programme Drop down Selected-change event
+        $("#Programme").change(function () {
+
+            $("#Department").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartments", "StudentCourseRegistration")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#Programme").val() },
+                // Get Selected Country ID.
+                success: function(departments) {
+                    $("#Department").append('<option value="' + 0 + '">' +
+                        '-- Select Department --' + '</option>');
+                    $.each(departments, function(i, department) {
+                        $("#Department").append('<option value="' + department.Value + '">' +
+                            department.Text + '</option>');
+                    });
+                },
+                error: function(ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+            return false;
+        });
+        //Session Drop down Selected change event
+        $("#Session").change(function() {
+
+            $("#Semester").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetSemester", "StudentCourseRegistration")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#Session").val() },
+                // Get Selected Country ID.
+                success: function(semesters) {
+                    $("#Semester").append('<option value="' + 0 + '">' +
+                        '-- Select Semester --' + '</option>');
+                    $.each(semesters, function(i, semester) {
+                        $("#Semester").append('<option value="' + semester.Value + '">' +
+                            semester.Text + '</option>');
+                    });
+                },
+                error: function(ex) {
+                    alert('Failed to retrieve semesters.' + ex);
+                }
+            });
+            return false;
+        });
+
+    });
+
+    function CheckAll() {
+        if ($('#CourseId').is(':checked')) {
+            $('.checkAll').prop('checked', true);
+        }
+        else {
+            $('.checkAll').prop('checked', false);
+        }
+    }
+
+    function CheckAllCarryOver() {
+        if ($('#CarryOverId').is(':checked')) {
+            $('.checkAllCarryOver').prop('checked', true);
+        }
+        else {
+            $('.checkAllCarryOver').prop('checked', false);
+        }
+    }
+
+</script>
+
+<div class="col-md-12">
+
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading panel-dark-head">
+                <h4>Register Course</h4>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+
+                    @using (Html.BeginForm("AddExtraCourse", "StudentCourseRegistration", new { area = "Admin" }, FormMethod.Post))
+                    {
+
+                        
+                        
+                        <div class="row">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Student.MatricNumber, "Matric Number", new { @class = "col-sm-2 control-label " })
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(model => model.Student.MatricNumber, new { @class = "form-control", @required = "required"})
+                                    @Html.ValidationMessageFor(model => model.Student.MatricNumber, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Session.Name, "Session", new { @class = "col-sm-2 control-label " })
+                                <div class="col-sm-10">
+                                    @Html.DropDownListFor(model => model.Session.Id, (IEnumerable<SelectListItem>)ViewBag.Session, new { @class = "form-control", @id = "Session" })
+                                    @Html.ValidationMessageFor(model => model.Session.Id, null, new { @class = "text-danger" })
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Semester.Name, "Semester", new { @class = "col-sm-2 control-label " })
+                                <div class="col-sm-10">
+                                    @Html.DropDownListFor(model => model.Semester.Id, (IEnumerable<SelectListItem>)ViewBag.Semester, new { @class = "form-control", @id = "Semester" })
+                                    @Html.ValidationMessageFor(model => model.Semester.Id, null, new { @class = "text-danger" })
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Programme.Name, "Programme", new { @class = "col-sm-2 control-label " })
+                                <div class="col-sm-10">
+                                    @Html.DropDownListFor(model => model.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.Programme, new { @class = "form-control", @id = "Programme" })
+                                    @Html.ValidationMessageFor(model => model.Programme.Id, null, new { @class = "text-danger" })
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Department.Name, "Department", new { @class = "col-sm-2 control-label " })
+                                <div class="col-sm-10">
+                                    @Html.DropDownListFor(model => model.Department.Id, (IEnumerable<SelectListItem>)ViewBag.Department, new { @class = "form-control", @id = "Department" })
+                                    @Html.ValidationMessageFor(model => model.Department.Id, null, new { @class = "text-danger" })
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Level.Name, "Level", new { @class = "col-sm-2 control-label " })
+                                <div class="col-sm-10">
+                                    @Html.DropDownListFor(model => model.Level.Id, (IEnumerable<SelectListItem>)ViewBag.Level, new { @class = "form-control", @id = "Level" })
+                                    @Html.ValidationMessageFor(model => model.Level.Id, null, new { @class = "text-danger" })
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-sm-2"></div>
+                                <div class="col-sm-10">
+                                    <input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="View Courses" />
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                    }
+
+
+                </div>
+            </div>
+        </div>
+        
+        @if (Model.Courses == null) { return;} 
+        @if (Model.Courses.Count > 0)
+        {
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="col-md-12">
+                        
+                        @using (Html.BeginForm("SaveAddedCourse", "StudentCourseRegistration", FormMethod.Post))
+                        {
+                            @Html.HiddenFor(model => model.Student.MatricNumber)
+                            @Html.HiddenFor(model => model.Semester.Id)
+                            @Html.HiddenFor(model => model.Session.Id)
+                            @Html.HiddenFor(model => model.Programme.Id)
+                            @Html.HiddenFor(model => model.Department.Id)
+                            @Html.HiddenFor(model => model.Level.Id)
+                            
+                            <table class="table table-bordered table-hover table-striped table-responsive">
+                                <tr>
+                                    <th>Department</th>
+                                    <th>Department Option</th>
+                                    <th>Level</th>
+                                    <th>Course Code</th>
+                                    <th>Course Name</th>
+                                    <th>Course Unit</th>
+                                    <th>Course Semester</th>
+                                    <th><input type="checkbox" id="CourseId" onclick="CheckAll()"/> Select Course</th>
+                                    <th><input type="checkbox" id="CarryOverId" onclick="CheckAllCarryOver()"/> Carry Over</th>
+                                </tr>
+                                @for (int i = 0; i < Model.Courses.Count; i++)
+                                {
+                                    <tr>
+                                        @Html.HiddenFor(model => model.Courses[i].Id)
+                                        @Html.HiddenFor(model => model.Courses[i].Unit)
+                                        @Html.HiddenFor(model => model.Courses[i].Code)
+                                        @Html.HiddenFor(model => model.Courses[i].Name)
+
+                                        @if (Model.Courses[i].Department != null)
+                                        {
+                                            <td>@Model.Courses[i].Department.Name</td>
+                                        }
+                                        else
+                                        {
+                                            <td></td>
+                                        }
+                                        
+                                        @if (Model.Courses[i].DepartmentOption != null)
+                                        {
+                                            <td>@Model.Courses[i].DepartmentOption.Name</td>
+                                        }
+                                        else
+                                        {
+                                            <td></td>
+                                        } 
+                                        <td>@Model.Courses[i].Level.Name</td>
+                                        <td>@Model.Courses[i].Code</td>
+                                        <td>@Model.Courses[i].Name</td>
+                                        <td>@Model.Courses[i].Unit</td>
+                                        <td>@Model.Courses[i].Semester.Name</td>
+                                        <td>@Html.CheckBoxFor(model => model.Courses[i].IsRegistered, new { @type = "checkbox", @class = "checkAll" })</td>
+                                        <td>@Html.CheckBoxFor(model => model.Courses[i].isCarryOverCourse, new { @type = "checkbox", @class = "checkAllCarryOver" })</td>
+                                    </tr>
+                                }
+                            </table>
+
+                            <br/>
+                            
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-sm-12">
+                                        <input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="Save" />
+                                    </div> 
+                                </div>
+                            </div>
+                        }
+
+                        
+
+                    </div>
+                </div>
+            </div>
+        }
+        
+</div>
+
+
+
+
+

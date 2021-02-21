@@ -1,0 +1,106 @@
+﻿
+@model Abundance_Nk.Web.Areas.Applicant.ViewModels.TranscriptViewModel
+
+@{
+    ViewBag.Title = "MakePayment";
+    Layout = "~/Views/Shared/_NewThemeLayout.cshtml";
+}
+
+<div>
+    @if (TempData["Message"] != null)
+    {
+        @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+    }
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>
+            Make payment 
+        </h2>
+    </div>
+    <hr />
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+
+            @using (Html.BeginForm("MakePayment", "Transcript", FormMethod.Post, new { id = "frmIndex", enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+
+                <div class="row">
+                    <h4>Enter your confirmation order number and click on the pay button to make payment</h4>
+                    <hr style="margin-top:0" />
+                    <div class="col-md-12">
+
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.PaymentEtranzact.ConfirmationNo, "Confirmation Order Number", new { @class = "control-label " })
+                                    @Html.TextBoxFor(model => model.PaymentEtranzact.ConfirmationNo, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.PaymentEtranzact.ConfirmationNo, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+                       
+
+
+
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <input class="btn btn-success btn-lg mr5" type="submit" name="submit" id="submit" value="Pay" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <br />
+            }
+     
+        </div>
+
+    </div>
+    <div class="col-md-1"></div>
+</div>
+@if (Model == null || Model.PaymentEtranzact == null)
+{
+    return;
+}
+@if (Model != null || Model.PaymentEtranzact != null)
+{
+    <div class="col-md-8">
+        <div class="well well-sm">
+            <div class="form-group">
+
+                <br />
+                @if (Model.Paymentstatus == true)
+                {
+                    <div class="alert alert-success">
+                        Payment Successful
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-danger">
+                        Payment Failed, please try again later.
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+}

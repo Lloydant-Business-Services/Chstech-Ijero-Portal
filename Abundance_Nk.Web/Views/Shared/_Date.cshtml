@@ -1,0 +1,56 @@
+﻿@model DateTime
+
+@{
+    
+    Abundance_Nk.Model.Model.Value january = new Abundance_Nk.Model.Model.Value() { Id = 1, Name = "January" };
+    Abundance_Nk.Model.Model.Value february = new Abundance_Nk.Model.Model.Value() { Id = 1, Name = "February" };
+    Abundance_Nk.Model.Model.Value march = new Abundance_Nk.Model.Model.Value() { Id = 1, Name = "March" };
+    Abundance_Nk.Model.Model.Value april = new Abundance_Nk.Model.Model.Value() { Id = 1, Name = "April" };
+    Abundance_Nk.Model.Model.Value may = new Abundance_Nk.Model.Model.Value() { Id = 1, Name = "May" };
+    Abundance_Nk.Model.Model.Value june = new Abundance_Nk.Model.Model.Value() { Id = 1, Name = "June" };
+    Abundance_Nk.Model.Model.Value july = new Abundance_Nk.Model.Model.Value() { Id = 1, Name = "July" };
+    Abundance_Nk.Model.Model.Value august = new Abundance_Nk.Model.Model.Value() { Id = 1, Name = "August" };
+    Abundance_Nk.Model.Model.Value september = new Abundance_Nk.Model.Model.Value() { Id = 1, Name = "September" };
+    Abundance_Nk.Model.Model.Value october = new Abundance_Nk.Model.Model.Value() { Id = 1, Name = "October" };
+    Abundance_Nk.Model.Model.Value november = new Abundance_Nk.Model.Model.Value() { Id = 1, Name = "November" };
+    Abundance_Nk.Model.Model.Value december = new Abundance_Nk.Model.Model.Value() { Id = 1, Name = "December" };
+    
+    List<Abundance_Nk.Model.Model.Value> months = new List<Abundance_Nk.Model.Model.Value>()
+        {
+            january, february, march, april, may, june, july, august, september, october, november, december
+        };
+
+    List<SelectListItem> monthList = new List<SelectListItem>();
+    SelectListItem list = new SelectListItem();
+    list.Value = "";
+    list.Text = "";
+    monthList.Add(list);
+        
+    foreach ( Abundance_Nk.Model.Model.Value month in months)
+    {
+        SelectListItem selectList = new SelectListItem();
+        selectList.Value = month.Id.ToString();
+        selectList.Text = month.Name;
+        monthList.Add(selectList);
+    }
+
+    
+    
+}
+
+<div class="form-inline">
+    <div class="form-group">
+        @Html.DropDownListFor(m => m.Month, (IEnumerable<SelectListItem>)ViewBag.MonthId, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.DropDownListFor(m => m.Day, (IEnumerable<SelectListItem>)ViewBag.DayId, new { @class = "form-control" })
+    </div>
+
+   
+
+    <div class="form-group">
+        @Html.DropDownListFor(m => m.Year, (IEnumerable<SelectListItem>)ViewBag.YearId, new { @class = "form-control" })
+    </div>
+
+</div>

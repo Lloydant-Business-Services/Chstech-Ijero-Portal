@@ -1,0 +1,231 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.HostelViewModel
+@{
+    ViewBag.Title = "CreateHostelRooms";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@*<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>*@
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            $("#Hostel").change(function() {
+                $("#Series").empty();
+
+                var hostel = $("#Hostel").val();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetHostelSeries", "HostelAllocation")', // we are calling json method
+                    dataType: 'json',
+                    data: { id: hostel },
+                    success: function(series) {
+                        $("#Series").append('<option value="' + 0 + '"> -- Select -- </option>');
+                        $.each(series, function(i, Option) {
+                            $("#Series").append('<option value="' + Option.Value + '">' + Option.Text + '</option>');
+                        });
+
+                    },
+                    error: function(ex) {
+                        alert('Failed to retrieve hostel series.' + ex);
+                    }
+                });
+            });
+
+
+            var roomDataTable = $('#roomTable').DataTable();
+
+        });
+
+        function ReserveAll() {
+            if ($('#ReserveAllId').is(':checked')) {
+                $('.Reserve').prop('checked', true);
+            } else {
+                $('.Reserve').prop('checked', false);
+            }
+        }
+
+        function ActivateAll() {
+            if ($('#ActivateAllId').is(':checked')) {
+                $('.Activate').prop('checked', true);
+            } else {
+                $('.Activate').prop('checked', false);
+            }
+        }
+
+        function checkAllNumber(model, id) {
+            var myId = "row" + id;
+            if (model.checked) {
+
+                $("." + myId).prop('checked', true);
+
+            } else {
+                $("." + myId).prop('checked', false);
+            }
+        }
+
+    </script>
+}
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+          
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div> 
+
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading panel-dark-head">
+                    <h4>Hostel Rooms Setup</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            @using (Html.BeginForm("CreateHostelRooms", "HostelAllocation", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.HostelRoom.Hostel.Id, "Select Hostel: ", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-6">
+                                            @Html.DropDownListFor(model => model.HostelRoom.Hostel.Id, (IEnumerable<SelectListItem>)ViewBag.HostelId, new { @class = "form-control", @required = "required", @Id = "Hostel" })
+                                            @Html.ValidationMessageFor(model => model.HostelRoom.Hostel.Id, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.HostelRoom.Series.Id, "Select Series/Floor: ", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-6">
+                                            @Html.DropDownListFor(model => model.HostelRoom.Series.Id, (IEnumerable<SelectListItem>)ViewBag.HostelSeriesId, new { @class = "form-control", @required = "required", @Id = "Series" })
+                                            @Html.ValidationMessageFor(model => model.HostelRoom.Series.Id, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.HostelRoom.RoomCapacity, "Number Of Rooms: ", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-6">
+                                            @Html.TextBoxFor(model => model.HostelRoom.RoomCapacity, new { @class = "form-control", @required = "required" })
+                                            @Html.ValidationMessageFor(model => model.HostelRoom.RoomCapacity, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.HostelRoom.Corners, "Number Of Bed Spaces: ", new { @class = "control-label col-md-4" })
+                                        <div class="col-md-6">
+                                            @Html.TextBoxFor(model => model.HostelRoom.Corners, new { @class = "form-control", @required = "required" })
+                                            @Html.ValidationMessageFor(model => model.HostelRoom.Corners, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-md-offset-4 col-md-6">
+                                            <input type="submit" value="Create" class="btn btn-default" />
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+
+
+            @if (Model.RoomSettings != null && Model.RoomSettings.Count > 0)
+            {
+                using (Html.BeginForm("SaveRooms", "HostelAllocation", FormMethod.Post))
+                {
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="row">
+
+                                <div class="col-md-12 table-responsive">
+                                    <table class="table table-bordered table-hover table-striped" id="roomTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Room Number</th>
+                                                <th><input type="checkbox" id="ReserveAllId" onclick="ReserveAll()" /> Reserved</th>
+                                                <th><input type="checkbox" id="ActivateAllId" onclick="ActivateAll()" /> Room Activation</th>
+                                                @foreach (var corner in Model.RoomSettings[0].HostelRoomCorners)
+                                                {
+                                                    <th>Bed Space @corner.Name</th>
+                                                }
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        @for (int i = 0; i < Model.RoomSettings.Count; i++)
+                                        {
+                                            var myId = i;
+                                            <tr>
+                                                @Html.HiddenFor(model => model.RoomSettings[i].HostelRoom.Number)
+                                                @Html.HiddenFor(model => model.HostelRoom.Series.Id)
+                                                @Html.HiddenFor(model => model.HostelRoom.Hostel.Id)
+
+
+                                                <td>@Model.RoomSettings[i].HostelRoom.Number <input type="checkbox" onchange="checkAllNumber(this, @myId)" /></td>
+                                                <td>@Html.CheckBoxFor(model => model.RoomSettings[i].HostelRoom.Reserved, new { @type = "checkbox", @class = "Reserve" })</td>
+                                                <td>@Html.CheckBoxFor(model => model.RoomSettings[i].HostelRoom.Activated, new { @type = "checkbox", @class = "Activate" })</td>
+                                                @*@foreach (var corner in Model.RoomSettings[i].HostelRoomCorners)
+                                                    {
+                                                        <td>@Html.CheckBox("Corner")</td>
+
+                                                    }*@
+                                                @for (int j = 0; j < Model.RoomSettings[i].HostelRoomCorners.Count; j++)
+                                                {
+                                                    var className = "row" + i;
+                                                    <td>@Html.CheckBoxFor(model => model.RoomSettings[i].HostelRoomCorners[j].Activated, new { @type = "checkBox", @class = @className })</td>
+                                                    @Html.HiddenFor(model => model.RoomSettings[i].HostelRoomCorners[j].Name)
+                                                }
+                                            </tr>
+                                        }
+                                        </tbody>
+                                    </table>
+                                    <br/>
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <div class="col-md-6">
+                                                <input type="submit" value="Save" class="btn btn-success" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            }
+
+
+
+        </div>
+
+
+
+    </div>
+    <div class="col-md-1"></div>
+</div>
+
+

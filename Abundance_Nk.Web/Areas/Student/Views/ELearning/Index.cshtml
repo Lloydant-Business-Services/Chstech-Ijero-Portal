@@ -1,0 +1,250 @@
+﻿@using Abundance_Nk.Web.Models
+@model Abundance_Nk.Web.Areas.Admin.ViewModels.ELearningViewModel
+
+@{
+    ViewBag.Title = "E-Learning";
+    Layout = "~/Areas/Student/Views/Shared/_NewThemeLayout.cshtml";
+}
+
+
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        function populateCourses() {
+            $("#Course").empty();
+            var values = new Array();
+            //vals = [$("#Department").val(), $("#Level").val(), $("#Semester").val()];
+            values[0] = $("#Department").val();
+            values[1] = $("#Level").val();
+            values[2] = $("#Semester").val();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetCourses", "StaffCourseAllocation")', // Calling json method
+                traditional: true,
+                data: { ids: values },
+                // Get Selected Country ID.
+                success: function(courses) {
+
+                    $.each(courses, function(i, course) {
+                        $("#Course").append('<option value="' + course.Value + '">' +
+                            course.Text + '</option>');
+                    });
+                },
+                error: function(ex) {
+                    alert('Failed to retrieve courses.' + ex);
+                }
+            });
+
+        }
+
+        $("#Session").change(function() {
+            if ($("#Department").val() > 0 && $("#Level").val() > 0 && $("#Semester").val() > 0) {
+                populateCourses();
+            }
+
+            $("#Semester").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetSemester", "Elearning")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#Session").val() },
+                // Get Selected Country ID.
+                success: function(semesters) {
+                    $("#Semester").append('<option value="' + 0 + '">' +
+                        '-- Select Semester --' + '</option>');
+                    $.each(semesters, function(i, semester) {
+                        $("#Semester").append('<option value="' + semester.Value + '">' +
+                            semester.Text + '</option>');
+                    });
+                },
+                error: function(ex) {
+                    alert('Failed to retrieve semesters.' + ex);
+                }
+            });
+            return false;
+        });
+        $("#Department").change(function() {
+            if ($("#Department").val() > 0 && $("#Level").val() > 0 && $("#Semester").val() > 0) {
+                populateCourses();
+            }
+        });
+        $("#Session").change(function() {
+            if ($("#Department").val() > 0 && $("#Level").val() > 0 && $("#Semester").val() > 0) {
+                populateCourses();
+            }
+        });
+        $("#Level").change(function() {
+            if ($("#Department").val() > 0 && $("#Level").val() > 0 && $("#Semester").val() > 0) {
+                populateCourses();
+            }
+
+        });
+
+
+    });
+            //Update download count
+    function updateDownloadCount(id,url) {
+        var EcourseId = id;
+        var url = url;
+        if (EcourseId > 0) {
+                        $.ajax({
+                type: 'POST',
+                url: '@Url.Action("DownloadCount", "Elearning")', // Calling json method
+                dataType: 'json',
+                            data: { EcourseId },
+                // Get Selected Country ID.
+                            success: function (result) {
+                                if (result != null) {
+
+
+                                    let link = document.createElementNS("http://www.w3.org/1999/xhtml", "a");
+                                    link.href = url;
+                                    link.target = "_blank";
+
+                                    let event = new MouseEvent("click", {
+                                        "view": window,
+                                        "bubbles": false,
+                                        "cancelable": true
+                                    });
+
+                                    link.dispatchEvent(event);
+                                }
+                },
+                error: function(ex) {
+                    alert('Failed to retrieve semesters.' + ex);
+                }
+            });
+            return false;
+
+        }
+    };
+</script>
+
+@using (Html.BeginForm("Index", "Elearning", new { area = "Student" }, FormMethod.Post))
+{
+    <div class="">
+        @if (TempData["Message"] != null)
+        {
+            @Html.Partial("_Message", TempData["Message"])
+        }
+
+        <div class="card-heading">
+            <h3 class="panel-title">
+                <i class="fa fa-fw fa-download"></i>E-Learning Content Manager
+            </h3>
+        </div>
+        <div class="card-body">
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Session.Name, "Session", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.DropDownListFor(model => model.Session.Id, (IEnumerable<SelectListItem>)ViewBag.Session, new { @class = "form-control", @id = "Session" })
+                    @Html.ValidationMessageFor(model => model.Session.Id, null, new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Semester.Name, "Semester", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.DropDownListFor(model => model.Semester.Id, (IEnumerable<SelectListItem>)ViewBag.Semester, new { @class = "form-control", @id = "Semester" })
+                    @Html.ValidationMessageFor(model => model.Semester.Id, null, new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Level.Name, "Level", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.DropDownListFor(model => model.Level.Id, (IEnumerable<SelectListItem>)ViewBag.Level, new { @class = "form-control", @id = "Level" })
+                    @Html.ValidationMessageFor(model => model.Level.Id, null, new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-10">
+                    <input class="btn btn-primary mr5 " type="submit" name="submit" id="submit" value="View" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<br />
+@if (Model.ELearningViews != null && Model.ELearningViews.Count() > 0)
+{
+    <div class="">
+        <div class="card-body">
+            <div class=" table-responsive">
+                <table class="table-bordered table-hover table-striped table">
+                    <tr>
+                        <th>
+                            Course Code
+                        </th>
+                        <th>
+                            Course Name
+                        </th>
+                        <th>
+                            Topic
+                        </th>
+                        <th>
+                            Start Time
+                        </th>
+                        <th>
+                            End Time
+                        </th>
+                        <th>
+                            Lecture Note
+                        </th>
+                        <th>
+                            Video
+                        </th>
+
+                    </tr>
+
+                    @for (int i = 0; i < Model.ELearningViews.Count(); i++)
+                    {
+                        <tr>
+
+                            <td>
+                                @Model.ELearningViews[i].CourseCode
+                            </td>
+                            <td>
+                                @Model.ELearningViews[i].CourseName
+                            </td>
+                            <td>
+                                @Model.ELearningViews[i].Name
+                            </td>
+
+                            <td>
+                                @Model.ELearningViews[i].StartTime
+                            </td>
+                            <td>
+                                @Model.ELearningViews[i].EndTime
+                            </td>
+
+                            <td>
+                                @if (Model.ELearningViews[i].Url != null)
+                                {
+                                    <button class="btn btn-primary-alt" onclick="updateDownloadCount(@Model.ELearningViews[i].ECourseId,'@Url.Content(Model.ELearningViews[i].Url)')">View</button>
+                                }
+
+                            </td>
+                            <td>
+                                @if (Model.ELearningViews[i].VideoUrl != null)
+                                {
+                                    <button class="btn btn-primary-alt" onclick="updateDownloadCount(@Model.ELearningViews[i].ECourseId,'@Url.Content(Model.ELearningViews[i].VideoUrl)')">View</button>
+
+                                }
+
+
+                            </td>
+
+
+                        </tr>
+                    }
+                </table>
+            </div>
+
+        </div>
+    </div>
+}

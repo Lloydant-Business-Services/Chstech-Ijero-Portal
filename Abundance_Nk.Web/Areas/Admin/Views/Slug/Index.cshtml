@@ -1,0 +1,167 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.SlugViewModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="~/Scripts/file-upload/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="~/Scripts/file-upload/jquery-ui-1.9.2.min.js"></script>
+<script type="text/javascript" src="~/Scripts/file-upload/jquery.fileupload-ui.js"></script>
+<script type="text/javascript" src="~/Scripts/file-upload/jquery.fileupload.js"></script>
+<script type="text/javascript" src="~/Scripts/file-upload/jquery.iframe-transport.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.print.js"></script>
+
+<script type="text/javascript">
+    var jqXHRData;
+    $(document).ready(function () {
+
+        $("#appliedCourse_Programme_Id").change(function () {
+
+            $("#appliedCourse_Department_Id").empty();
+
+            var selectedProgramme = $("#appliedCourse_Programme_Id").val();
+            var programme = $("#appliedCourse_Programme_Id").val();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartmentByProgrammeId")', // we are calling json method
+                dataType: 'json',
+                data: { id: programme },
+                success: function (departments) {
+                    $("#appliedCourse_Department_Id").append('<option value="' + 0 + '"> -- Select -- </option>');
+
+                    $.each(departments, function (i, department) {
+                        $("#appliedCourse_Department_Id").append('<option value="' + department.Value + '">' + department.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+        });
+})
+</script>
+
+
+
+
+
+<div class="panel panel-default">
+    <div class="panel-body">
+@using (Html.BeginForm("Index", "Slug", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+
+        <div class="col-md-12">
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+            <div>
+                <h4><p class="custom-text-black text-center ">Download Data</p></h4>
+            </div>
+         
+                <div class="panel panel-default ">
+                    <div class="panel-body ">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <cite><p class="custom-text-black"> Select the programme and department</p></cite>
+                            </div>
+                        </div>
+
+
+                     
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.appliedCourse.Programme.Id, new { @class = "control-label custom-text-white" })
+                                    @Html.DropDownListFor(model => model.appliedCourse.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.ProgrammeId, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.appliedCourse.Programme.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.appliedCourse.Department.Id, "Course", new { @class = "control-label custom-text-white" })
+                                    @Html.DropDownListFor(model => model.appliedCourse.Department.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentId, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.appliedCourse.Department.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-2">
+                                <input class="btn btn-success mr5" name="view" id="view" value="View" type="submit" />
+                            </div>
+                            <div class="col-sm-10">
+                                
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+        </div>
+
+}
+        @if (Model == null || Model.applicantDetails == null) { return; }
+        @if (Model != null || Model.applicantDetails != null)
+        {
+            
+       
+                <div class="col-md-12">
+
+                    <table id="slugtable" class="table table-bordered table-hover table-striped">
+                        <thead>
+                        <tr>
+                                <th>@Html.ActionLink("ExamNo1", "Index", new { sortOrder = ViewBag.FullName, currentFilter = ViewBag.CurrentFilter })</th>
+                                <th>@Html.ActionLink("ExamNo2", "Index", new { sortOrder = ViewBag.Number, currentFilter = ViewBag.CurrentFilter })</th>
+                                <th>@Html.ActionLink("JAMB1", "Index", new { sortOrder = ViewBag.Number, currentFilter = ViewBag.CurrentFilter })</th>
+                                <th>@Html.ActionLink("JAMB2", "Index", new { sortOrder = ViewBag.Number, currentFilter = ViewBag.CurrentFilter })</th>
+                                <th>@Html.ActionLink("JAMB_SCORE", "Index", new { sortOrder = ViewBag.Number, currentFilter = ViewBag.CurrentFilter })</th>
+                                <th>@Html.ActionLink("DEPT", "Index", new { sortOrder = ViewBag.Number, currentFilter = ViewBag.CurrentFilter })</th>
+                                <th>@Html.ActionLink("DEPT2", "Index", new { sortOrder = ViewBag.Number, currentFilter = ViewBag.CurrentFilter })</th>
+                                <th>@Html.ActionLink("TYPE", "Index", new { sortOrder = ViewBag.Number, currentFilter = ViewBag.CurrentFilter })</th>
+                                <th>@Html.ActionLink("FULLNAME", "Index", new { sortOrder = ViewBag.Number, currentFilter = ViewBag.CurrentFilter })</th>
+                                <th>@Html.ActionLink("PHOTO", "Index", new { sortOrder = ViewBag.Number, currentFilter = ViewBag.CurrentFilter })</th>
+
+                            </tr>
+                        </thead>
+                        <tbody style="color:black;">
+                            @for (int i= 0; i< Model.applicantDetails.Count; i++)
+                            {
+                                <tr>
+                                    <th>@Model.applicantDetails[i].ExamNumber</th>
+                                    <th>@Model.applicantDetails[i].ExamNumber</th>
+                                    <th>@Model.applicantDetails[i].JambNumber</th>
+                                    <th>@Model.applicantDetails[i].JambNumber</th>
+                                    <th>@Model.applicantDetails[i].JambScore</th>
+                                    <th>@Model.applicantDetails[i].FirstChoiceDepartment</th>
+                                    <th>@Model.applicantDetails[i].SecondChoiceDepartment</th>
+                                    <th>H</th>
+                                    <th>@Model.applicantDetails[i].Name.ToUpper()</th>
+                                    <th>@Model.applicantDetails[i].PassportUrl</th>
+                                 </tr>
+                            }
+                            
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-10">
+                        <i class="glyphicon-upload"></i><input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="Save Upload" />
+
+                    </div>
+                </div>
+
+        }
+
+    </div>
+</div>

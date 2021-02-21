@@ -1,0 +1,222 @@
+﻿@using Abundance_Nk.Model.Model
+@model Abundance_Nk.Model.Model.Invoice
+@{
+    ViewBag.Title = "Invoice";
+    Layout = null;
+}
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/style.default.css" rel="stylesheet" />
+<link href="~/Content/misc.css" rel="stylesheet" />
+<br />
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#aPrint").on('click', function () {
+                $(".printable").print();
+                return false;
+            });
+
+        });
+
+    </script>
+}
+@if (Model != null)
+{
+    <div class="printable">
+        <div class="container">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        @if (TempData["Message"] != null)
+                        {
+                            @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+                        }
+
+                        @if (Model == null || Model.Person == null || Model.Payment == null) { return; }
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+
+                            <h5 class="lg-title mb10">From</h5>
+
+                            <div>
+                                <strong>@Model.Person.FullName</strong><br>
+                                <abbr title="Phone">Email:</abbr> @Model.Person.Email
+                                <br>
+                                <abbr title="Phone">Phone:</abbr> @Model.Person.MobilePhone
+                                <br />
+                                @if (Model.Department != null)
+                                {
+                                    <span>Department:</span><strong> @Model.Department.Name</strong>
+                                    <br />
+                                }
+
+                                <br />
+                                @if (Model != null)
+                                {
+                                    if (!string.IsNullOrEmpty(Model.JambRegistrationNumber))
+                                    {
+                                        <span><b>Payment Type:</b>: @Model.Payment.FeeType.Name</span>
+                                    }
+                                    else if (Model.Payment != null && Model.Payment.FeeType != null && !string.IsNullOrEmpty(Model.JambRegistrationNumber))
+                                    {
+                                        <br />
+                                        <span><b>JAMB Reg. No.</b>: @Model.JambRegistrationNumber</span>
+                                    }
+
+                                    if (!string.IsNullOrEmpty(Model.MatricNumber))
+                                    {
+                                        <span><b>Matric Number:</b>: @Model.MatricNumber</span>
+                                    }
+                                }
+
+                            </div>
+                        </div><!-- col-sm-6 -->
+
+                        <div class="col-xs-6 text-right">
+                            <h5 class="subtitle mb10">Invoice No.</h5>
+                            <h4 class="text-primary">@Model.Payment.InvoiceNumber</h4>
+
+
+                            @if (Model.remitaPayment != null && Model.remitaPayment.RRR != null)
+                            {
+                                <h5 class="subtitle mb10">RRR No.</h5>
+
+                                <h4 class="text-primary">@Model.remitaPayment.RRR</h4>
+                            }
+
+                            <h5 class="subtitle mb10">To</h5>
+
+                            <div>
+                                <strong>The Federal Polytechnic Ado-Ekiti</strong><br>
+                                Ekiti State.<br>
+                            </div>
+
+                            <br />
+                            <p><strong>Invoice Date:</strong> @DateTime.Now.ToLongDateString()</p>
+
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-dark table-invoice">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Quantity</th>
+                                    <th>Unit Price (₦)</th>
+                                    <th>Total Price (₦)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < @Model.Payment.FeeDetails.Count; i++)
+                                {
+                                    <tr>
+                                        <td>
+                                            <h5><a href="">@Model.Payment.FeeDetails[i].Fee.Name</a></h5>
+                                        </td>
+                                        <td>1</td>
+                                        <td>@Model.Payment.FeeDetails[i].Fee.Amount.ToString("n")</td>
+                                        <td>@Model.Payment.FeeDetails[i].Fee.Amount.ToString("n")</td>
+                                    </tr>
+                                }
+
+                                <tr>
+                                    <td>
+                                        <h5><a href=""></a></h5>
+                                        <p></p>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <h5><a href=""></a></h5>
+                                        <p> </p>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div><!-- table-responsive -->
+
+                    <table class="table table-total">
+                        <tbody>
+                            <tr>
+                                <td>Sub Total:</td>
+                                @if (@Model.Payment.FeeDetails != null)
+                                {
+                                    <td>@Model.Payment.FeeDetails.Sum(p => p.Fee.Amount).ToString("n")</td>
+                                }
+                                else
+                                {
+                                    <td>@Model.Amount.ToString("n")</td>
+                                }
+
+                            </tr>
+                            <tr>
+                                <td>VAT:</td>
+                                <td>0.00</td>
+                            </tr>
+                            <tr>
+                                <td>TOTAL:</td>
+                                @if (@Model.Payment.FeeDetails != null)
+                                {
+                                    <td>@Model.Payment.FeeDetails.Sum(p => p.Fee.Amount).ToString("n")</td>
+                                }
+                                else
+                                {
+                                    <td>@Model.Amount.ToString("n")</td>
+                                }
+                            </tr>
+                        </tbody>
+                    </table>
+
+
+                </div><!-- panel-body -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-hover">
+                            <thead>
+                            </thead>
+                            <tbody>
+
+                                <tr>
+                                    <td class="text-left">
+                                        @Html.ActionLink("PAY WITH CARD", "CardPayment", new { controller = "EWallet", area = "Student" }, new { @class = "btn btn-danger  btn-lg mr5", target = "_blank" })
+
+                                    </td>
+                                    <td> &nbsp; </td>
+                                    <td class="text-right text-danger">
+                                        <div class="row ">
+                                            <div class="col-md-3 ">
+                                                @if (Model.barcodeImageUrl != null)
+                                                {
+                                                    <img src="@Model.barcodeImageUrl" height="50" />
+                                                }
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+                <div class="well nomargin" style="margin:20px">
+                    Thank you for choosing our school.
+                </div>
+
+            </div><!-- panel -->
+        </div>
+
+
+    </div>
+}
+

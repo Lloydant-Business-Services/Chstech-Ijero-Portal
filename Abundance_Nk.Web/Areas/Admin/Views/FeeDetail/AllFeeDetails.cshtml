@@ -1,0 +1,61 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.FeeDetailViewModel
+@{
+    ViewBag.Title = "All Fee Details";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h4>Select fee type to view corresponding amount</h4>
+
+@using (Html.BeginForm("AllFeeDetails", "FeeDetail", new { Area = "Admin" }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <div class="panel panel-default">
+        <div class="panel-body">
+            @Html.ValidationSummary(true)
+          
+                <div class="form-group">
+                    @Html.LabelFor(m => m.feeType.Name, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-9">
+                        @Html.DropDownListFor(m =>m.feeType.Id, (IEnumerable<SelectListItem>)ViewBag.FeeTypeId, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.feeType.Id, null, new { @class = "text-danger" })
+                    </div>
+                </div>
+          
+          
+
+            <div class="form-group">
+                <div class="col-md-offset-3 col-md-9">
+                    <input type="submit" value="Submit" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+        @if (Model == null || Model.DepartmentalSchoolFeeList == null)
+        {
+            return;
+        }
+        @if (Model != null && Model.DepartmentalSchoolFeeList.Count() > 0)
+        {
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>Programme</th>
+                        <th>Department</th>
+                        <th>Level </th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody style="color:black;">
+                    @for (int i = 0; i < Model.DepartmentalSchoolFeeList.Count(); i++)
+                    {
+                        <tr>
+                            <td>@Model.DepartmentalSchoolFeeList[i].programme.Name</td>
+                            <td>@Model.DepartmentalSchoolFeeList[i].department.Name</td>
+                            <td>@Model.DepartmentalSchoolFeeList[i].level.Name</td>
+                            <td>@Model.DepartmentalSchoolFeeList[i].Amount</td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        }
+    </div>
+}

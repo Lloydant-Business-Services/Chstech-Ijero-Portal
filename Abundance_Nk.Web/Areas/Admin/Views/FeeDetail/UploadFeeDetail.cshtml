@@ -1,0 +1,206 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.FeeDetailViewModel
+@{
+    ViewBag.Title = "Fee Detail Upload";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section Scripts{
+    @Scripts.Render(("~/bundles/jquery"))
+
+    <link href="~/Content/sweetalert.css" rel="stylesheet"/>
+    <script src="~/Scripts/sweetalert.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $(".Load").hide();
+
+            $("#feeDetailTable").DataTable();
+        });
+
+        function showBusy() {
+            swal("Please!", "Ensure that the ids are very correct before upload!", "warning");
+            $(".Load").show();
+        }
+
+    </script>
+    
+}
+    <div class="alert alert-success fade in nomargin">
+        <h3 style="text-align: center">@ViewBag.Title</h3>
+      
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+
+        <div class="col-md-12">
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", TempData["Message"])
+            }
+            @using (Html.BeginForm("UploadFeeDetail", "FeeDetail", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+
+                <div class="panel panel-default ">
+                    <div class="panel-body ">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                              <p class="custom-text-black"> Select the Session then the excel file to upload</p>
+                                <marquee>Please the execel file should be arranged in the following format:  SN,Fee,FeeType,Programme,Level,PaymentMode,Department</marquee>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.CurrentSession.Id, new { @class = "control-label custom-text-black" })
+                                    @Html.DropDownListFor(model => model.CurrentSession.Id, (IEnumerable<SelectListItem>)ViewBag.SessionId, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.CurrentSession.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.UploadedFilePath, "Select File", new { @class = "col-md-2 control-label " })
+                                    <div><input type="file" title="Upload Fee Detail" id="file" name="file" class="form-control" /></div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-10">
+                            <button onclick="showBusy()" class="btn btn-success mr5" type="submit" name="submit" id="submit"><i class="fa fa-eject"> Upload</i></button><span class="Load"><img src="~/Content/Images/bx_loader.gif" /></span>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+
+        </div>
+
+        @if (Model == null || Model.feeDetails == null) { return; }
+
+        @if (Model != null && Model.feeDetails != null)
+        {
+            using (Html.BeginForm("SaveFeeDetail", "FeeDetail", FormMethod.Post))
+            {
+
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+
+                <div class="col-md-12 table-responsive">
+
+                    <table class="table table-bordered table-hover table-striped" id="feeDetailTable">
+                        <thead>
+                            <tr>
+                                <th>
+                                    SN
+                                </th>
+                                <th>
+                                    Fee
+                                </th>
+                                <th>
+                                    FeeType
+                                </th>
+                                
+                                <th>
+                                    Programme
+                                </th>
+
+                                <th>
+                                    Level
+                                </th>
+                                <th>
+                                    Payment Mode
+                                </th>
+                                <th>
+                                    Department
+                                </th>
+                                <th>
+                                    Session
+                                </th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody style="color:black;">
+
+                            @for (var itemIndex = 0; itemIndex < Model.feeDetails.Count; itemIndex++)
+                            {
+
+                                <tr>
+
+                                    <td>@Html.DisplayTextFor(m => m.feeDetails[itemIndex].SN)</td>
+                                    <td>@Html.DisplayTextFor(m => m.feeDetails[itemIndex].Fee.Name)</td>
+                                    <td>@Html.DisplayTextFor(m => m.feeDetails[itemIndex].FeeType.Name)</td>
+                                    @if (Model.feeDetails[itemIndex].Programme != null)
+                                    {
+                                        <td>@Html.DisplayTextFor(m => m.feeDetails[itemIndex].Programme.Name)</td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
+                                    @if (Model.feeDetails[itemIndex].Level != null)
+                                    {
+                                        <td>@Html.DisplayTextFor(m => m.feeDetails[itemIndex].Level.Name)</td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
+                                    @if (Model.feeDetails[itemIndex].PaymentMode != null)
+                                    {
+                                        <td>@Html.DisplayTextFor(m => m.feeDetails[itemIndex].PaymentMode.Name)</td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
+                                    @if (Model.feeDetails[itemIndex].Department != null)
+                                    {
+                                        <td>@Html.DisplayTextFor(m => m.feeDetails[itemIndex].Department.Name)</td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
+                                    
+                                    <td>@Html.DisplayTextFor(m => m.feeDetails[itemIndex].Session.Id)</td>
+                                </tr>
+
+
+
+
+                            }
+
+                        </tbody>
+                    </table>
+
+                </div>
+                <br/>
+                <div class="form-group">
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-10">
+                         <button onclick="showBusy()" class="btn btn-success mr5" type="submit" name="submit" id="submit" ><i class="fa fa-eject"> Save Upload</i></button><span class="Load"><img src="~/Content/Images/loading4.gif" /></span>
+
+                    </div>
+                </div>
+
+            }
+        }
+
+    </div>
+</div>

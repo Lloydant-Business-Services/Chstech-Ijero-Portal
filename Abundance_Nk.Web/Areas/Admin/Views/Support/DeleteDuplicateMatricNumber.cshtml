@@ -1,0 +1,96 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.SupportViewModel
+
+@{
+    ViewBag.Title = "FixDuplicateMatricNumber";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+
+        @if (TempData["Message"] != null)
+        {
+            @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+        }
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-fw fa-pencil"></i>Fix Duplicate Matric Number</h3>
+            </div>
+            <div class="panel-body">
+                @using (Html.BeginForm("DeleteDuplicateMatricNumber", "Support", new { area = "Admin" }, FormMethod.Post))
+                {
+                    <div class="row">
+                        <div class="col-md-2">
+                            @Html.LabelFor(model => model.studentModel.MatricNumber, "Matric Number", new { @class = "control-label " })
+                        </div>
+                    <div class="row col-md-8">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                
+                                @Html.TextBoxFor(model => model.studentModel.MatricNumber, new { @class = "form-control", @placeholder = "Enter Matric Number", @required = "required" })
+                                @Html.ValidationMessageFor(model => model.studentModel.MatricNumber, "The Matric Number is required", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input type="submit" value="Submit" class="btn btn-success mr5" />
+                            </div>
+                        </div>
+                    </div>
+                        </div>
+                }
+               
+            </div>
+        </div>
+        @if (Model != null)
+        {
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table-bordered table-hover table-striped table-responsive table">
+                                <tr>
+                                    <th>
+                                        Name
+                                    </th>
+                                    <th>
+                                        Matric Number
+                                    </th>
+                                    <th>
+                                        Edit Matric Number
+                                    </th>
+                                </tr>
+
+                                @for (int i = 0; i < Model.StudentList.Count(); i++)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Model.StudentList[i].FullName
+                                        </td>
+                                        <td>
+                                            @Model.StudentList[i].MatricNumber
+                                        </td>
+                                        <td>
+                                            @Html.ActionLink("Edit", "EditMatricNumber", "Support", new { area = "Admin", sid = Model.StudentList[i].Id }, new { @class = "btn btn-success btn-md " })
+                                        </td>
+                                    </tr>
+                                }                                                                                            
+                            </table>
+                            <blockquote><small>Check if the records belong to one student and click on the Fix Duplicate Button Or you can Edit the Matric Number if Different Students</small></blockquote>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <a href="/Admin/Support/FixDuplicateMatricNumber" class="btn btn-success mr5">Fix Duplicate</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="col-md-1"></div>
+</div>              

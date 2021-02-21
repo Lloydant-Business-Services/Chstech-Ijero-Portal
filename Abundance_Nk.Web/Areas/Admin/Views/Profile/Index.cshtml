@@ -1,0 +1,337 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.ProfileViewModel
+
+@{
+        //ViewBag.Title = "Index";
+        //Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    }
+
+
+@using Abundance_Nk.Web.Models
+@using Microsoft.AspNet.Identity
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        #sidebar-wrapper {
+            /*background: #8c388c !important;*/
+            font-size: 12px !important;
+            /*background: #a540a3 !important;*/
+            /*background: linear-gradient(to right, #8a3a87, #bb46b8) !important;*/
+            /*background: linear-gradient(to right, #9c199a, #81287e) !important;*/
+           
+            background: linear-gradient(to right, #163319, #112b12)!important;
+            /*font-family: Varela Round, sans-serif !important;*/
+            font-family: Quicksand, sans-serif !important;
+        }
+        .btn-primary {
+            background: #5b796e!important
+        }
+
+        body {
+            font-family: Quicksand, sans-serif !important;
+        }
+   
+        .easyui-tabs > .tabs-header {
+            background: #a0599ef0 !important;
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+
+    @*<link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">*@
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>CHSTECH | Admin Management</title>
+
+    <link rel="stylesheet" href="~/Content/MultiTab/bootstrap.min.css">
+    <!-- Optional theme -->
+    
+    @*@Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")*@
+    <!-- Bootstrap Core CSS -->
+    @*<link href="~/Content/dataTables.css" rel="stylesheet" />*@
+    @*<link href="~/Scripts/DataTables-1.10.15/media/css/dataTables.bootstrap.css" rel="stylesheet" />*@
+
+    @*<link href="~/Content/sbCss/bootstrap.min.css" rel="stylesheet" />*@
+    <!-- Custom CSS -->
+    @*<link href="~/Content/sbCss/sb-admin.css" rel="stylesheet" />*@
+    <!-- Morris Charts CSS -->
+    @*<link href="~/Content/sbCss/plugins/morris.css" rel="stylesheet" />*@
+    <!-- Custom Fonts -->
+    @*<link href="~/Content/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />*@
+    <!-- Custom styles for this template -->
+    <link href="~/Content/MultiTab/simple-sidebar.css" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="~/Content/MultiTab/easyui.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/MultiTab/icon.css">
+</head>
+<body>
+    
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="#">
+                        CHSTECH IJERO-EKITI
+                    </a>
+                </li>
+
+                <div id="MainMenu">
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        string role = Menu.GetUserRole(User.Identity.Name);
+                        List<Abundance_Nk.Model.Model.Menu> menuList = Menu.GetMenuList(role).OrderBy(m => m.MenuGroup.Name).ToList();
+
+                        if (menuList != null && menuList.Count > 0)
+                        {
+                            List<string> menuGroups = menuList.Select(m => m.MenuGroup.Name).Distinct().ToList();
+
+                            for (int i = 0; i < menuGroups.Count; i++)
+                            {
+                                string currentMenuGroup = menuGroups[i];
+                                List<Abundance_Nk.Model.Model.Menu> menuListForGroup = menuList.Where(m => m.MenuGroup.Name == currentMenuGroup).OrderBy(r => r.DisplayName).ToList();
+                                string scriptId = "#demo" + (i).ToString();
+                                string ulId = "demo" + (i).ToString();
+
+                                <div class="list-group panel">
+
+                                    <a href="@scriptId" class="list-group-item" data-toggle="collapse" data-parent="#MainMenu">@currentMenuGroup<i class="fa fa-caret-down"></i></a>
+                                    <div class="collapse" id="@ulId">
+                                        @foreach (Abundance_Nk.Model.Model.Menu currentMenu in menuListForGroup)
+                                        {
+                                            //var appRoot = System.Configuration.ConfigurationManager.AppSettings["AppRoot"].ToString();
+                                           //var appRoot = "https://students.fedpolyado.edu.ng/";
+                                           var appRoot = "http://localhost:2720/";
+                                            var url = appRoot + currentMenu.Area + '/' + currentMenu.Controller + '/' + currentMenu.Action + '/';
+                                            <a href="#" class="list-group-item" onclick="addTab( '@currentMenu.DisplayName' , '@url' )"> @currentMenu.DisplayName</a>
+                                        }
+                                    </div>
+
+                                </div>
+                            }
+                        }
+                    }
+
+                </div>
+
+
+               
+            </ul>
+        </div>
+        <!-- /#sidebar-wrapper -->
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid p-0">
+                <!--navigation bar-->
+                <nav class="navbar navbar-expand-lg navbar-light bg-light bg-purple">
+                    <a class="navbar-brand" href="#">COLLEGE OF HEALTH SCIENCES AND TECHNOLOGY, IJERO-EKITI</a>
+
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                     
+                            @if (Request.IsAuthenticated)
+                            {
+                                using (Html.BeginForm("LogOff", "Account", new { Area = "Security" }, FormMethod.Post, new { id = "logoutForm", @class= "ml-auto" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <ul class="navbar-nav ml-auto pull-right">
+                                        <li class="nav-item active"><a class="nav-link" href="" onclick="addTag('Welcome @User.Identity.GetUserName()!', '@Url.Action("Index", "Profile", new { Area = "Admin" })')">Welcome @User.Identity.GetUserName()!</a></li>
+
+                                        <li class="nav-item"><a class="nav-link" href="javascript:document.getElementById('logoutForm').submit()">Log Off</a></li>
+                                    </ul>
+                                }
+                            }
+
+       
+
+                    </div>
+                </nav>
+
+
+
+
+
+               
+                <div id="tt" class="easyui-tabs" style="height:1000px;">
+                    
+                    <div title="STAFF PROFILE">
+                        <div>
+                            <div>
+                                @if (TempData["Message"] != null)
+                                {
+                                    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+                                }
+                            </div>
+                        </div>
+                        <div class="container mt-3">
+
+                            <div class="card card-shadow p-4">
+                                <h2>STAFF PROFILE</h2>
+
+
+                                @using (Html.BeginForm("Index", "Profile", FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    @Html.ValidationSummary(true)
+                                    @Html.HiddenFor(model => model.staffDetail.Id)
+
+
+                                    <div class="col-md-12">
+                                        <h6>Please enter personal details</h6>
+                                        <hr style="margin-top: 0" />
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.staffDetail.LastName, new { @class = "control-label" })
+                                                @Html.TextBoxFor(model => model.staffDetail.LastName, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.staffDetail.LastName, null, new { @class = "text-danger" })
+                                            </div><!-- form-group -->
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.staffDetail.FirstName, new { @class = "control-label" })
+                                                @Html.TextBoxFor(model => model.staffDetail.FirstName, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.staffDetail.FirstName, null, new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.staffDetail.OtherName, new { @class = "control-label" })
+                                                @Html.TextBoxFor(model => model.staffDetail.OtherName, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.staffDetail.OtherName, null, new { @class = "text-danger" })
+                                            </div>
+                                        </div><!-- form-group -->
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.staffDetail.State.Id, new { @class = "control-label" })
+                                                @Html.DropDownListFor(model => model.staffDetail.State.Id, (IEnumerable<SelectListItem>)ViewBag.StateId, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.staffDetail.State.Id, null, new { @class = "text-danger" })
+                                            </div>
+                                        </div><!-- form-group -->
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.staffDetail.MobilePhone, new { @class = "control-label" })
+                                                @Html.TextBoxFor(model => model.staffDetail.MobilePhone, new { @class = "form-control", @placeholder = "080XXXXXXXX" })
+                                                @Html.ValidationMessageFor(model => model.staffDetail.MobilePhone, null, new { @class = "text-danger" })
+                                            </div>
+                                        </div><!-- form-group -->
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.staffDetail.Email, new { @class = "control-label" })
+                                                @Html.TextBoxFor(model => model.staffDetail.Email, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.staffDetail.Email, null, new { @class = "text-danger" })
+                                            </div>
+                                        </div><!-- form-group -->
+
+                                    </div>
+                                    <!-- row -->
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.staffDetail.MaritalStatus.Id, new { @class = "control-label" })
+                                                @Html.DropDownListFor(model => model.staffDetail.MaritalStatus.Id, (IEnumerable<SelectListItem>)ViewBag.MaritalStatusId, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.staffDetail.MaritalStatus.Id, null, new { @class = "text-danger" })
+                                            </div>
+                                        </div><!-- form-group -->
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.staffDetail.Religion.Id, new { @class = "control-label" })
+                                                @Html.DropDownListFor(model => model.staffDetail.Religion.Id, (IEnumerable<SelectListItem>)ViewBag.ReligionId, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.staffDetail.Religion.Id, null, new { @class = "text-danger" })
+                                            </div>
+                                        </div><!-- form-group -->
+
+                                    </div>
+                                    <!-- row -->
+                                    <div class="row">
+                                        <div class="col-md-1"></div>
+                                        <div class="col-sm-10 ">
+                                            <div class="form-inline">
+                                                <div class="form-group">
+                                                    <input class="btn btn-success btn-lg mr5" type="submit" name="submit" id="submit" value="Save" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    
+                    
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+
+    <!-- /#wrapper -->
+    <!-- jQuery -->
+    @*<script src="~/Content/js/jquery.js"></script>*@
+    <!-- Bootstrap Core JavaScript -->
+    @*<script src="~/Content/js/bootstrap.min.js"></script>*@
+    <!-- Morris Charts JavaScript -->
+    @*<script src="~/Content/js/plugins/morris/raphael.min.js"></script>
+        <script src="~/Content/js/plugins/morris/morris.min.js"></script>
+        <script src="~/Content/js/plugins/morris/morris-data.js"></script>*@
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="~/Scripts/MultiTab/jquery.min.js"></script>
+    <script src="~/Scripts/MultiTab/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/MultiTab/jquery.easyui.min.js"></script>
+
+    <!-- Menu Toggle Script -->
+    <script>
+        $("#wrapper").toggleClass("toggled");
+    </script>
+    <script>
+        function addTab(title, url) {
+           // var url = appRoot + Area + '/' + Controller + '/' + Action;
+            if ($('#tt').tabs('exists', title)) {
+                $('#tt').tabs('select', title);
+            } else {
+                var content = '<iframe scrolling="auto" frameborder="0"  src="' + url + '" style="width:100%;height:100%;" ></iframe>';
+                $('#tt').tabs('add', {
+                    title: title,
+                    content: content,
+                    closable: true
+                });
+            }
+        }
+    </script>
+
+    @*@section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+    @RenderSection("Scripts", required: false)*@
+
+</body>
+</html>

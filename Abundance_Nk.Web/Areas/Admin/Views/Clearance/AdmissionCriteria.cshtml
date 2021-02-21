@@ -1,0 +1,64 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.ClearanceViewModel
+@using System.Linq
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+@*<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<link href="~/Content/style.default.css" rel="stylesheet" />
+<link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />*@
+
+
+
+<div class="panel panel-default">
+    
+       
+   
+    <div class="panel-body">
+        @if (Model == null || Model.admissionCriteria == null) { return; }
+
+        @if (Model.admissionCriteria != null)
+        {
+
+            <h3> @Html.ActionLink("Add new Criteria", "AddAdmissionCriteria")</h3>
+
+            <table class="table table-bordered table-hover table-striped">
+
+                <thead>
+                    <tr>
+                        <th>@Html.ActionLink("Department", "AdmissionCriteria", new { sortOrder = ViewBag.Department, currentFilter = ViewBag.CurrentFilter })</th>
+                        <th>@Html.ActionLink("Programme", "AdmissionCriteria", new { sortOrder = ViewBag.Programme, currentFilter = ViewBag.CurrentFilter })</th>
+                        <th>@Html.ActionLink("Minimum Subjects Required", "AdmissionCriteria", new { sortOrder = ViewBag.Minimum, currentFilter = ViewBag.CurrentFilter })</th>
+                        <th>@Html.ActionLink("Date Added", "AdmissionCriteria", new { sortOrder = ViewBag.Date, currentFilter = ViewBag.CurrentFilter })</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody style="color:black;">
+                    @for (var itemIndex = 0; itemIndex < Model.admissionCriteriaList.Count; itemIndex++)
+                    {
+                        <tr>
+                            <td>@Model.admissionCriteriaList[itemIndex].Department.Name</td>
+                            <td>@Model.admissionCriteriaList[itemIndex].Programme.Name</td>
+                            <td>@Model.admissionCriteriaList[itemIndex].MinimumRequiredNumberOfSubject.ToString()</td>
+                            <td>@Model.admissionCriteriaList[itemIndex].DateEntered</td>
+                            <td><i class="fa fa-edit"> @Html.ActionLink("Edit", "ViewCriteria", "Clearance", new { Area = "Admin", Id = @Model.admissionCriteriaList[itemIndex].Id }, null)</i></td>
+                        </tr>
+
+
+
+
+                    }
+
+                </tbody>
+           
+            
+             </table>
+
+
+
+
+        }
+
+    </div>
+</div>

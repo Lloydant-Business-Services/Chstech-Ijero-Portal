@@ -1,0 +1,180 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.StudentCourseRegistrationViewModel
+@{
+    ViewBag.Title = "View Students By Department And Programme";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link href="~/Content/DataTables-1.10.15/media/css/jquery.dataTables.css" rel="stylesheet" />
+<link href="~/Content/DataTables-1.10.15/extensions/Buttons/css/buttons.dataTables.css" rel="stylesheet" />
+
+
+<script src="~/Scripts/jquery-2.1.3.js"></script>
+<script src="~/Scripts/dataTables.js"></script>
+<script src="~/Content/DataTables-1.10.15/media/js/jquery.dataTables.js"></script>
+<script src="~/Content/DataTables-1.10.15/extensions/Buttons/js/dataTables.buttons.js"></script>
+<script src="~/Content/DataTables-1.10.15/extensions/Buttons/js/buttons.colVis.js"></script>
+<script src="~/Content/DataTables-1.10.15/extensions/Responsive/js/dataTables.responsive.js"></script>
+<script src="~/Content/DataTables-1.10.15/buttons.flash.min.js"></script>
+<script src="~/Content/DataTables-1.10.15/buttons.html5.min.js"></script>
+<script src="~/Content/DataTables-1.10.15/buttons.print.min.js"></script>
+<script src="~/Content/DataTables-1.10.15/jszip.min.js"></script>
+<script src="~/Content/DataTables-1.10.15/pdfmake.min.js"></script>
+<script src="~/Content/DataTables-1.10.15/vfs_fonts.js"></script>
+
+
+<script type="text/javascript">
+    let jqXHRData;
+    let jqueryVersion = $.noConflict(true);
+    jqueryVersion(document).ready(() => {
+        jqueryVersion("#myTable").DataTable({
+            dom: 'Bfrtip',
+            ordering: true,
+            buttons: [
+                {
+                    extend: 'copy',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend: 'csv',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend: 'excel',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend: 'print',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+
+
+                }, , 'colvis'
+            ]
+        });
+
+    });
+</script>
+
+<div class="row">
+    <div class="col-xs-12">
+        @using (Html.BeginForm("ViewStudentsByDepartmentAndProgramme", "Student", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10">
+                        <div class="row">
+                            <div>
+                                @if (TempData["Message"] != null)
+                                {
+                                    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+                                }
+                                @if (TempData["Action"] != null)
+                                {
+                                    <div class="alert alert-dismissible alert-warning">
+                                        <button type="button" class="close" data-dismiss="alert">×</button>
+                                        <p>@TempData["Action"].ToString()</p>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <h3>View All Students By Department &amp; Programme</h3>
+                            <hr style="margin-top:0" />
+                            <div class="col-md-12">
+                                <div class="row">
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.DepartmentId, new { @class = "control-label " })
+                                            @Html.DropDownListFor(model => model.DepartmentId, (IEnumerable<SelectListItem>)ViewBag.Departments, new { @class = "form-control", id = "select-department", required = "required" })
+                                            @Html.ValidationMessageFor(model => model.DepartmentId, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.ProgrammeId, new { @class = "control-label " })
+                                            @Html.DropDownListFor(model => model.ProgrammeId, (IEnumerable<SelectListItem>)ViewBag.Programmes, new { @class = "form-control", id = "select-programme", required = "required" })
+                                            @Html.ValidationMessageFor(model => model.ProgrammeId, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <input class="btn btn-success btn-lg mr5" type="submit" name="submit" id="submit" value="Search" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (Model.StudentDetails != null && Model.StudentDetails.Count > 0)
+        {
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="col-md-12">
+                        <table class="table table-bordered table-hover table-striped" id="myTable">
+                            <thead>
+                                <tr>
+                                    <th>SN</th>
+                                    <th>Name</th>
+                                    <th>Matric Number/Application Number </th>
+                                    <th>Programme</th>
+                                    <th>Department</th>
+                                    <th>Session</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+
+                            <tbody style="color:black;">
+                                @{ int N = 0; }
+                                @for (var i = 0; i < Model.StudentDetails.Count(); i++)
+                                {
+                                <tr>
+                                    @{
+                                        N = i + 1;
+                                    }
+                                    <td>@N</td>
+                                    <td style="word-break:break-all;">
+                                        @Html.DisplayTextFor(model => model.StudentDetails[i].StudentName)
+                                    </td>
+                                    <td>@Html.DisplayTextFor(model => model.StudentDetails[i].MatricNumber)</td>
+                                    <td>@Html.DisplayTextFor(model => model.StudentDetails[i].ProgrammeName)</td>
+                                    <td>@Html.DisplayTextFor(model => model.StudentDetails[i].DepartmentName)</td>
+                                    <td>@Html.DisplayTextFor(model => model.StudentDetails[i].SessionName)</td>
+                                    <td><a class="btn btn-info" target="_blank" href="@Url.Action("ViewStudentDetail", "Student", new { Id = Model.StudentDetails[i].PersonId })">View Detail</a></td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    @*<div class="col-md-12" style="border-top: 1px solid #ddd;padding: 10px;">
+                        <a href="@Url.Action("ViewMultipleStudentDetails", "Student", new { @departmentId = Model.DepartmentId, @programmeId = Model.ProgrammeId, @Area = "Admin" })" target="_blank" class="btn btn-primary pull-right">Print All Records</a>
+                    </div>*@
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+

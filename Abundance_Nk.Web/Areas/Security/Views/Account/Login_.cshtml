@@ -1,0 +1,132 @@
+﻿@model Abundance_Nk.Web.Models.LoginViewModel
+
+@{
+    ViewBag.Title = "LOGIN";
+    Layout = "~/Views/Shared/_NewThemeLayout.cshtml";
+}
+
+<link href="~/Content/sweetalert.css" rel="stylesheet" />
+<script src="~/Scripts/sweetalert.min.js"></script>
+
+
+<br />
+<div class="row">
+    <div class="col-md-4">
+        <div class="panel panel-default well" style="height:315px">
+            <div class="panel-body">
+                
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>@ViewBag.Title</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <section id="loginForm">
+                    @using (Html.BeginForm("Login", "Account", new { Area = "Security", ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <hr class="no-top-padding" />
+
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                @Html.ValidationSummary(true)
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.UserName, new { @class = "col-md-2 control-label" })
+                                    <div class="col-md-10">
+                                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.UserName)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+                                    <div class="col-md-10">
+                                        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(m => m.Password)
+                                    </div>
+                                </div>
+                                @*<div class="form-group">
+                                        <div class="col-md-offset-2 col-md-10">
+                                            <div class="checkbox">
+                                                @Html.CheckBoxFor(m => m.RememberMe)
+                                                @Html.LabelFor(m => m.RememberMe)
+                                            </div>
+                                        </div>
+                                    </div>*@
+                                <div class="form-group">
+                                    <div class="col-md-offset-2 col-md-10">
+                                        <input type="submit" value="Log in" class="btn btn-default" />
+                                    </div>
+                                </div>
+                                @*<p>
+                                        @Html.ActionLink("Register", "Register") if you don't have a local account.
+                                    </p>*@
+
+                            </div>
+                        </div>
+                        
+                         <div class="row">
+                                    <div class="col-md-12">
+                                        @if (TempData["Message"] != null)
+                                        {
+                                            @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+                                        }
+                                    </div>
+                                </div>
+                    }
+                </section>
+            </div>
+        </div>
+    </div>
+
+            @*<div class="col-md-4">
+                    <section id="socialLoginForm">
+                        @Html.Partial("_ExternalLoginsListPartial", new { Action = "ExternalLogin", ReturnUrl = ViewBag.ReturnUrl })
+                    </section>
+                </div>*@
+        </div>
+
+<div id="infoModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Important Information</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    All students are expected to login to their accounts to generate invoices, print receipt and perform all portal functions.<br />
+                    Please use your matric number as the user name and 1234567 as the default password. <strong>Remember to change your password once you login to avoid compromise of your profile</strong>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+        @section Scripts {
+            @Scripts.Render("~/bundles/jqueryval")
+<script src="~/Scripts/jquery.min.js"></script>
+            <script src="~/Scripts/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        //$('#infoModal').modal('show');
+        //swal("Attention", "Students are mearnt to login using their matriculation or application number as username and default '1234567' as their password.\n " +
+        //            "Remember to change your password once you login to avoid compromise of your profile.", "warning");
+    });
+
+</script>
+
+        }

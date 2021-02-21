@@ -1,0 +1,291 @@
+﻿@model Abundance_Nk.Web.Areas.Student.ViewModels.PaymentViewModel
+
+@{
+    ViewBag.Title = "Generate Invoice";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var items = $('#StudentLevel_DepartmentOption_Id option').size();
+        if (items > 0) {
+            $("#divDepartmentOption").show();
+        }
+        else {
+            $("#divDepartmentOption").hide();
+        }
+
+        $("#StudentLevel_Programme_Id").change(function () {
+            var programme = $("#StudentLevel_Programme_Id").val();
+
+            $("#StudentLevel_Department_Id").empty();
+            $("#StudentLevel_Level_Id").empty();
+
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetDepartmentAndLevelByProgrammeId", "Payment")',
+                dataType: 'json',
+                data: { id: programme },
+                success: function (data) {
+                    var levels = data.Levels;
+                    var departments = data.Departments;
+
+                    if (departments != "" && departments != null && departments != undefined) {
+                        $("#StudentLevel_Department_Id").append('<option value="' + 0 + '"> -- Select -- </option>');
+
+                        $.each(departments, function (i, department) {
+                            $("#StudentLevel_Department_Id").append('<option value="' + department.Id + '">' + department.Name + '</option>');
+                        });
+                    }
+
+                    if (levels != "" && levels != null && levels != undefined) {
+                        $("#StudentLevel_Level_Id").append('<option value="' + 0 + '"> -- Select -- </option>');
+
+                        $.each(levels, function (i, level) {
+                            $("#StudentLevel_Level_Id").append('<option value="' + level.Id + '">' + level.Name + '</option>');
+                        });
+                    }
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+        })
+
+
+        //Load Department Option
+        $("#StudentLevel_Department_Id").change(function () {
+            var department = $("#StudentLevel_Department_Id").val();
+            var programme = $("#StudentLevel_Programme_Id").val();
+
+            $("#StudentLevel_DepartmentOption_Id").empty();
+            if (programme > 2) {
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetDepartmentOptionByDepartment")', // we are calling json method
+                    dataType: 'json',
+                    data: { id: department, programmeid: programme },
+                    success: function (departmentOptions) {
+                        if (departmentOptions == "" || departmentOptions == null || departmentOptions == undefined) {
+                            $("#divDepartmentOption").hide();
+                        }
+                        else {
+                            $("#StudentLevel_DepartmentOption_Id").append('<option value="' + 0 + '"> -- Select -- </option>');
+                            $.each(departmentOptions, function (i, Option) {
+                                $("#StudentLevel_DepartmentOption_Id").append('<option value="' + Option.Value + '">' + Option.Text + '</option>');
+                            });
+
+                            $("#divDepartmentOption").show();
+                        }
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve department Options.' + ex);
+                    }
+                });
+
+            }
+        })
+
+        //alert("Please Cross-check all the fields as changes would not be allowed afterwards");
+    })
+
+</script>
+
+@using (Html.BeginForm("GenerateCarryOverInvoice", "Payment", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    @Html.HiddenFor(model => model.FeeType.Id)
+    @Html.HiddenFor(model => model.PaymentMode.Id)
+    @Html.HiddenFor(model => model.PaymentType.Id)
+    @Html.HiddenFor(model => model.Person.Type.Id)
+    @Html.HiddenFor(model => model.Person.Id)
+    @Html.HiddenFor(model => model.StudentAlreadyExist)
+
+    if (Model.StudentAlreadyExist)
+    {
+        @Html.HiddenFor(model => model.StudentLevel.Department.Faculty.Id)
+    }
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h2>Carry Over Student's School Fees Invoice</h2>
+                    <p><b>Provide your programme, course of choice, fill other personal details below and then click the Generate Invoice button to generate your invoice.</b></p>
+                </div>
+            </div>
+
+          
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10">
+                        <div class="row">
+                            <div>
+                                @if (TempData["Message"] != null)
+                                {
+                                    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+                                }
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <h3>Choose Programme</h3>
+                            <hr style="margin-top:0" />
+                            <div class="col-md-12">
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.Session.Id, new { @class = "control-label " })
+                                            @Html.DropDownListFor(model => model.Session.Id, (IEnumerable<SelectListItem>)ViewBag.Sessions, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.Session.Id, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.StudentLevel.Programme.Id, new { @class = "control-label " })
+                                            @Html.DropDownListFor(model => model.StudentLevel.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.Programmes, new { @class = "form-control exist" })
+                                            @Html.ValidationMessageFor(model => model.StudentLevel.Programme.Id, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.StudentLevel.Department.Id, "Course", new { @class = "control-label " })
+                                            @Html.DropDownListFor(model => model.StudentLevel.Department.Id, (IEnumerable<SelectListItem>)ViewBag.Departments, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.StudentLevel.Department.Id, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div id="divDepartmentOption" class="form-group" style="display:none">
+                                            @Html.LabelFor(model => model.StudentLevel.DepartmentOption.Id, "Course Option", new { @class = "control-label" })
+                                            @Html.DropDownListFor(model => model.StudentLevel.DepartmentOption.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentOptions, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.StudentLevel.DepartmentOption.Id, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <br />
+
+                        <div class="row">
+                            <h3>Please enter other personal details</h3>
+                            <hr style="margin-top:0" />
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Person.LastName, new { @class = "control-label " })
+                                    @Html.TextBoxFor(model => model.Person.LastName, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Person.LastName, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Person.FirstName, new { @class = "control-label" })
+                                    @Html.TextBoxFor(model => model.Person.FirstName, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Person.FirstName, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Person.OtherName, new { @class = "control-label" })
+                                    @Html.TextBoxFor(model => model.Person.OtherName, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Person.OtherName, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Student.MatricNumber, new { @class = "control-label" })
+                                    @Html.TextBoxFor(model => model.Student.MatricNumber, new { @class = "form-control", required = "required" })
+                                    @Html.ValidationMessageFor(model => model.Student.MatricNumber, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Person.State.Id, new { @class = "control-label " })
+                                    @Html.DropDownListFor(model => model.Person.State.Id, (IEnumerable<SelectListItem>)ViewBag.States, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Person.State.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Person.Email, new { @class = "control-label" })
+                                    @Html.TextBoxFor(model => model.Person.Email, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Person.Email, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Person.MobilePhone, new { @class = "control-label" })
+                                    @Html.TextBoxFor(model => model.Person.MobilePhone, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Person.MobilePhone, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.StudentLevel.Level.Id, new { @class = "control-label " })
+                                    @Html.DropDownListFor(model => model.StudentLevel.Level.Id, (IEnumerable<SelectListItem>)ViewBag.Levels, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.StudentLevel.Level.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-1"></div>
+            </div>
+
+
+
+
+            <div class="panel-footer">
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10 ">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input class="btn btn-success btn-lg mr5" type="submit" name="submit" id="submit" value="Generate Invoice" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-1"></div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+}
+
+
+

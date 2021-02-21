@@ -1,0 +1,72 @@
+﻿@model IEnumerable<Abundance_Nk.Model.Entity.HOSTEL_SERIES>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading panel-dark-head">
+                <h4>Hostel Series</h4>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+
+                    <p>
+                        @Html.ActionLink("Create New", "Create", "", new { @class = "btn btn-success" })
+                    </p>
+                    <table class="table table-bordered table-hover table-striped">
+                        <tr>
+                            <th>
+                                @Html.DisplayName("Series Name")
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Activated)
+                            </th>
+                            <th>
+                                @Html.DisplayName("Hostel Name")
+                            </th>
+                            <th></th>
+                        </tr>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Series_Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Activated)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.HOSTEL.Hostel_Name)
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Edit", "Edit", new { id = item.Series_Id }, new { @class = "btn btn-success" }) |
+                                    @Html.ActionLink("Details", "Details", new { id = item.Series_Id }, new { @class = "btn btn-success" }) |
+                                    @Html.ActionLink("Delete", "Delete", new { id = item.Series_Id }, new { @class = "btn btn-success" })
+                                </td>
+                            </tr>
+                        }
+
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-1"></div>
+</div>
+
+

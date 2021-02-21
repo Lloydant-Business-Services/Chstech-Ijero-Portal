@@ -1,0 +1,194 @@
+﻿@using Abundance_Nk.Web.Models
+@model Abundance_Nk.Web.Areas.Admin.ViewModels.ELearningViewModel
+
+@{
+    /**/
+
+    ViewBag.Title = "E-Learning";
+    Layout = "~/Areas/Student/Views/Shared/_NewThemeLayout.cshtml";
+}
+
+
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+
+
+    });
+        function updateDownloadCount(id,url) {
+        var EcourseId = id;
+        var url = url;
+        if (EcourseId > 0) {
+                        $.ajax({
+                type: 'POST',
+                url: '@Url.Action("DownloadCount", "Elearning")', // Calling json method
+                dataType: 'json',
+                            data: { EcourseId },
+                // Get Selected Country ID.
+                            success: function (result) {
+                                if (result != null) {
+
+
+                                    let link = document.createElementNS("http://www.w3.org/1999/xhtml", "a");
+                                    link.href = url;
+                                    link.target = "_blank";
+
+                                    let event = new MouseEvent("click", {
+                                        "view": window,
+                                        "bubbles": false,
+                                        "cancelable": true
+                                    });
+
+                                    link.dispatchEvent(event);
+                                }
+                },
+                error: function(ex) {
+                    alert('Failed to retrieve semesters.' + ex);
+                }
+            });
+            return false;
+
+        }
+    };
+</script>
+
+<br />
+<div>
+    <h3 class="card-header">All Registered Courses</h3>
+    <div class="">
+        <h3 class="card-title">First Semester</h3>
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="table-bordered table-hover table-striped  table">
+                    <tr>
+                        <th>
+                            Course Code
+                        </th>
+                        <th>
+                            Course Title
+                        </th>
+                        <th>
+                            Level
+                        </th>
+                        <th>
+                            Session
+                        </th>
+
+                        <th>
+                            Semester
+                        </th>
+
+                        <th>
+                            E-Learning Resource
+                        </th>
+                        <th>
+                            Chat Room
+                        </th>
+
+                    </tr>
+
+                    @for (int i = 0; i < Model.CourseRegistrationSemesters.CourseRegistrationFirstSemester.Count; i++)
+                    {
+                        <tr>
+                            <td>
+                                @Model.CourseRegistrationSemesters.CourseRegistrationFirstSemester[i].Course.Code
+                            </td>
+                            <td>
+                                @Model.CourseRegistrationSemesters.CourseRegistrationFirstSemester[i].Course.Name
+                            </td>
+                            <td>
+                                @Model.CourseRegistrationSemesters.CourseRegistrationFirstSemester[i].CourseRegistration.Level.Name
+                            </td>
+                            <td>
+                                @Model.CourseRegistrationSemesters.CourseRegistrationFirstSemester[i].CourseRegistration.Session.Name
+                            </td>
+                            <td>
+                                @Model.CourseRegistrationSemesters.CourseRegistrationFirstSemester[i].Semester.Name
+                            </td>
+                            <td>
+                                @Html.ActionLink("View Content", "ECourseContent", "Elearning", new { Area = "Student", id = Utility.Encrypt(Model.CourseRegistrationSemesters.CourseRegistrationFirstSemester[i].Id.ToString()) }, new { @class = "btn btn-success" })
+                            </td>
+                            <td>
+
+                                @Html.ActionLink("Chat", "EnterChatRoom", "Elearning", new { Area = "Student", id = Utility.Encrypt(Model.CourseRegistrationSemesters.CourseRegistrationFirstSemester[i].Id.ToString()) }, new { @class = "btn btn-success" })
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+    <br />
+    <hr />
+
+    <div class="">
+        <h3>Second Semester</h3>
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="table-bordered table-hover table-striped  table">
+                    <tr>
+                        <th>
+                            Course Code
+                        </th>
+                        <th>
+                            Course Name
+                        </th>
+                        <th>
+                            Level
+                        </th>
+                        <th>
+                            Session
+                        </th>
+
+                        <th>
+                            Semester
+                        </th>
+
+                        <th>
+                            E-Learning Resource
+                        </th>
+                        <th>
+                            Chat Room
+                        </th>
+
+                    </tr>
+
+                    @for (int i = 0; i < Model.CourseRegistrationSemesters.CourseRegistrationSecondSemester.Count; i++)
+                    {
+                        <tr>
+                            <td>
+                                @Model.CourseRegistrationSemesters.CourseRegistrationSecondSemester[i].Course.Code
+                            </td>
+                            <td>
+                                @Model.CourseRegistrationSemesters.CourseRegistrationSecondSemester[i].Course.Name
+                            </td>
+                            <td>
+                                @Model.CourseRegistrationSemesters.CourseRegistrationSecondSemester[i].CourseRegistration.Level.Name
+                            </td>
+                            <td>
+                                @Model.CourseRegistrationSemesters.CourseRegistrationSecondSemester[i].CourseRegistration.Session.Name
+                            </td>
+                            <td>
+                                @Model.CourseRegistrationSemesters.CourseRegistrationSecondSemester[i].Semester.Name
+                            </td>
+                            <td>
+                                @Html.ActionLink("View Content", "ECourseContent", "Elearning", new { Area = "Student", id = Utility.Encrypt(Model.CourseRegistrationSemesters.CourseRegistrationSecondSemester[i].Id.ToString()) }, new { @class = "btn btn-success" })
+                            </td>
+                            <td>
+
+                                @Html.ActionLink("Chat", "EnterChatRoom", "Elearning", new { Area = "Student", id = Utility.Encrypt(Model.CourseRegistrationSemesters.CourseRegistrationSecondSemester[i].Id.ToString()) }, new { @class = "btn btn-success" })
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

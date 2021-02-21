@@ -1,0 +1,98 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.HostelViewModel
+@{
+    ViewBag.Title = "CompareAllocationCritereiaCount";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<div class="col-md-12">
+
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+                <h4>Allocation Criteria/Set Count Breakdown </h4>
+                @if (Model.DistinctAllocation != null && Model.DistinctAllocation.Count > 0)
+                {
+                            <table class="table-bordered table-hover table-striped table-responsive table">
+                                <tr>
+                                    <th>
+                                        Level
+                                    </th>
+                                    <th>
+                                        Hostel Type
+                                    </th>
+                                    <th>
+                                        Hostel Name
+                                    </th>
+                                    <th>
+                                        Series
+                                    </th>
+                                    <th>
+                                        Room/BedSpaces
+                                    </th>
+                                    <th>
+                                        Total Criteria Count
+                                    </th>
+                                    <th>
+                                        Number of Used Criteria
+                                    </th>
+                                    <th>
+                                        Number of Unused Criteria
+                                    </th>
+                                    <th>
+                                        Set Free Allocation Count(Level/Type)
+                                    </th>
+                                    <th>
+                                        Set Reserved Allocation Count(Level/Type)
+                                    </th>
+                                    
+                                        
+                                </tr>
+
+                                @for (int i = 0; i < Model.DistinctAllocation.Count; i++)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Model.DistinctAllocation[i].Level
+                                        </td>
+                                        <td>
+                                            @Model.DistinctAllocation[i].HostelType
+                                        </td>
+                                        <td>
+                                            @Model.DistinctAllocation[i].Hostel
+                                        </td>
+                                        <td>
+                                            @Model.DistinctAllocation[i].Series
+                                        </td>
+                                        <td>
+                                            @Model.DistinctAllocation[i].RoomCorner
+                                        </td>
+                                        <td>
+                                            @Model.DistinctAllocation[i].CriteriaCount
+                                        </td>
+                                        <td>
+                                            @Model.DistinctAllocation[i].UsedCriteriaCount
+                                        </td>
+                                        <td>
+                                            @Model.DistinctAllocation[i].UnusedCriteriaCount
+                                        </td>
+                                        <td>
+                                            @Model.DistinctAllocation[i].FreeAllocationCount
+                                        </td>
+                                        <td>
+                                            @Model.DistinctAllocation[i].ReservedAllocationAccount
+                                        </td>
+                                        
+                                    </tr>
+                                }
+
+                            </table>
+                }
+</div>
+
+
+

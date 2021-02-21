@@ -1,0 +1,54 @@
+﻿@{
+    //Layout = null;
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+}
+
+@*@section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+
+
+    }*@
+<script src="~/Scripts/jquery.min.js"></script>
+<script src="~/Scripts/responsive-tabs.js"></script>
+
+<script type="text/javascript">
+    $("#helpBtn").click(function () {
+        var help = $("#help");
+        help.toggle(300);
+    })
+    //(function ($) {
+    //    fakewaffle.responsiveTabs(['xs', 'sm']);
+    //})(jQuery);
+
+    //$('#myTab a').click(function (e) {
+    //    e.preventDefault();
+    //    $(this).tab('show');
+    //});
+
+    function resizeIframe(obj) {
+        obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+    }
+</script>
+
+<div style="color:black">
+    <h3>
+        Students Exam Permit
+    </h3>
+</div>
+
+<div class="col-md-12">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h3>This interface provides the user with a comprehensive and detailed pull of student's exam permit</h3>
+            <br />
+
+            Student Exam Permit can be pulled by the selecting Session and Programme, from the drop dowms below, then click the Display Report button to display an exportable and printable report.
+        </div>
+    </div>
+</div>
+
+
+<iframe src="~/Reports/Presenter/StudentExamPermit.aspx" style="width:100%; " frameborder="0" scrolling="no" id="iframe" onload='javascript:resizeIframe(this);'></iframe>
+
+<br />

@@ -1,0 +1,119 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.ClearanceViewModel
+@using System.Linq
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+@*<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<link href="~/Content/style.default.css" rel="stylesheet" />
+<link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />*@
+
+
+@using (Html.BeginForm("EditCriteria", "Clearance", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <div>
+
+    </div>
+
+    <div class="row">
+        <h5>Selected Programme</h5>
+        <hr style="margin-top:0" />
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.admissionCriteriaForOLevelSubject[0].MainCriteria.Programme.Id, new { @class = "control-label custom-text-black" })
+                        @Html.DisplayFor(model => model.admissionCriteriaForOLevelSubject[0].MainCriteria.Programme.Name, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.admissionCriteriaForOLevelSubject[0].MainCriteria.Programme.Id, null, new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.HiddenFor(model => model.admissionCriteriaForOLevelSubject[0].Id)
+                        @Html.HiddenFor(model => model.admissionCriteriaForOLevelSubject[0].MainCriteria.Department.Id, new { @class = "control-label custom-text-black" })
+                        @Html.DisplayFor(model => model.admissionCriteriaForOLevelSubject[0].MainCriteria.Department.Name, new { @class = "form-control" })
+                         </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div id="divJambNo" class="form-group" style="display:none">
+
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+   
+    <div>
+
+        <div class="row" id="divOLevel" style="color:black">
+            <div class="col-md-12">
+                <h5>Main Subject</h5>
+                <hr class="no-top-padding" />
+
+                <table class="table table-condensed table-responsive" style="background-color:whitesmoke">
+                    <tr>
+                        <th>
+                            Compulsory
+                        </th>
+                        <th>
+                            Subject
+                        </th>
+                        <th>
+                            Grade
+                        </th>
+                        <th>
+
+                        </th>
+                        <th>
+
+                        </th>
+                        <th>
+
+                        </th>
+                    </tr>
+
+                    @for (int i = 0; i < Model.admissionCriteriaForOLevelSubject.Count() ; i++)
+                    {
+                        @Html.HiddenFor(model => model.admissionCriteriaForOLevelSubject[i].MainCriteria.Id)
+                    
+                     <tr>
+                        <td>
+                            @Html.CheckBoxFor(model => Model.admissionCriteriaForOLevelSubject[i].IsCompulsory, new { @class = "ckb3" })
+                        </td>
+                        <td>
+                            @Html.DropDownListFor(model => Model.admissionCriteriaForOLevelSubject[i].Subject.Id, (IEnumerable<SelectListItem>)ViewData["FirstSittingOLevelSubjectId" + i], new { @class = "form-control olevel" })
+                            @Html.HiddenFor(model => model.admissionCriteriaForOLevelSubject[i].Id)
+                        </td>
+                        <td>
+                            @Html.DropDownListFor(model => Model.admissionCriteriaForOLevelSubject[i].MinimumGrade.Id, (IEnumerable<SelectListItem>)ViewData["FirstSittingOLevelGradeId" + i], new { @class = "form-control olevel" })
+
+                        </td>
+                        <td><i class="fa fa-edit"> @Html.ActionLink("Edit Alternatives", "EditAlternative", "Clearance", new { Area = "Admin", AdmissionCriteriaSubjectId = @Model.admissionCriteriaForOLevelSubject[i].Id }, null)</i></td>
+                        <td><i class="fa fa-recycle"> @Html.ActionLink("Delete", "DeleteCriteriaSubject", "Clearance", new { Area = "Admin", AdmissionCriteriaSubjectId = @Model.admissionCriteriaForOLevelSubject[i].Id }, null)</i></td>
+
+                    </tr>
+
+                    }
+
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+    <div>
+
+        <input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="Update Criteria" />
+
+    </div>
+}

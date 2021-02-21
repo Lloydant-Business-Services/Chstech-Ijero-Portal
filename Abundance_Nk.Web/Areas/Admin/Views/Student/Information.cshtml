@@ -1,0 +1,196 @@
+﻿
+@model Abundance_Nk.Web.Areas.Admin.ViewModels.UploadAdmissionViewModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="~/Scripts/file-upload/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="~/Scripts/file-upload/jquery-ui-1.9.2.min.js"></script>
+<script type="text/javascript" src="~/Scripts/file-upload/jquery.fileupload-ui.js"></script>
+<script type="text/javascript" src="~/Scripts/file-upload/jquery.fileupload.js"></script>
+<script type="text/javascript" src="~/Scripts/file-upload/jquery.iframe-transport.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.print.js"></script>
+
+<script type="text/javascript">
+    var jqXHRData;
+    $(document).ready(function () {
+
+        $("#divDepartmentOption").hide();
+        $("#Programme_Id").change(function () {
+
+            $("#Department_Id").empty();
+
+            var selectedProgramme = $("#Programme_Id").val();
+            var programme = $("#Programme_Id").val();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartmentByProgrammeId", "UploadAdmission")', // we are calling json method
+                dataType: 'json',
+                data: { id: programme },
+                success: function (departments) {
+                    $("#Department_Id").append('<option value="' + 0 + '"> -- Select -- </option>');
+
+                    $.each(departments, function (i, department) {
+                        $("#Department_Id").append('<option value="' + department.Value + '">' + department.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+        });
+
+        //Load Department Option
+        $("#Department_Id").change(function () {
+
+            var department = $("#Department_Id").val();
+            var programme = $("#Programme_Id").val();
+
+            $("#DepartmentOption_Id").empty();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartmentOptionByDepartment", "UploadAdmission")', // we are calling json method
+                dataType: 'json',
+                data: { id: department, programmeid: programme },
+                success: function (departmentOptions) {
+                    //$("#hfDepartmentOptionExist").val(departmentOptions[0]);
+
+                    if (departmentOptions == "" || departmentOptions == null || departmentOptions == undefined) {
+                        $("#divDepartmentOption").hide();
+                    }
+                    else {
+                        $("#DepartmentOption_Id").append('<option value="' + 0 + '"> -- Select -- </option>');
+                        $.each(departmentOptions, function (i, Option) {
+                            $("#DepartmentOption_Id").append('<option value="' + Option.Value + '">' + Option.Text + '</option>');
+                        });
+                        if (programme > 2) {
+                            $("#divDepartmentOption").show();
+                        }
+
+                    }
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve department Options.' + ex);
+                }
+            });
+
+        })
+
+        //$("#submit").on('click', function () {
+        //    $("#submit").hide();
+        //    $("#submitDisabled").show();
+        //});
+
+        //$("#save").on('click', function () {
+        //    $("#save").hide();
+        //    $("#saveDisabled").show();
+        //});
+})
+</script>
+
+
+
+<div class="alert alert-success fade in nomargin">
+    <h3>Student Information Report</h3>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+
+        <div class="col-md-12">
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+            <div>
+                <h4><p class="custom-text-black text-center ">Student Information Report</p></h4>
+            </div>
+            @using (Html.BeginForm("Information", "Student", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+
+                <div class="panel panel-default ">
+                    <div class="panel-body ">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <cite><span class="custom-text-black"> Select the programme and department to download report</span></cite>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-12">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.CurrentSession.Id, "Session", new { @class = "control-label custom-text-black" })
+                                    @Html.DropDownListFor(model => model.CurrentSession.Id, (IEnumerable<SelectListItem>)ViewBag.SessionId, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.CurrentSession.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Level.Name, "Level", new { @class = "control-label custom-text-black" })
+                                    @Html.DropDownListFor(model => model.Level.Id, (IEnumerable<SelectListItem>)ViewBag.LevelId, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Level.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Programme.Id, "Programme", new { @class = "control-label custom-text-black" })
+                                    @Html.DropDownListFor(model => model.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.ProgrammeId, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Programme.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Department.Id, "Department", new { @class = "control-label custom-text-black" })
+                                    @Html.DropDownListFor(model => model.Department.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentId, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Department.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-6">
+                                <div id="divDepartmentOption" class="form-group">
+                                    @Html.LabelFor(model => model.DepartmentOption.Id, "Option", new { @class = "control-label custom-text-black" })
+                                    @Html.DropDownListFor(model => model.DepartmentOption.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentOptionId, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.DepartmentOption.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-6">
+                            <blockquote>NB: to download bulk report, select only the programme, level and session.</blockquote>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="Download Report" />
+                                    <span>@Html.CheckBoxFor(m => m.IsBulk, new { @type = "checkbox", @class = "checkbox filled-in" }) Bulk</span>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+
+        </div>
+    </div>
+</div>

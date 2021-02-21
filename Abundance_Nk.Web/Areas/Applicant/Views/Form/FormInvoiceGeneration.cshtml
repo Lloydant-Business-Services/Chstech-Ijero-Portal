@@ -1,0 +1,488 @@
+﻿@model Abundance_Nk.Web.Areas.Applicant.ViewModels.PostJAMBFormPaymentViewModel
+
+@{
+    ViewBag.Title = "Form Invoice Generation";
+    Layout = "~/Views/Shared/_NewThemeLayout.cshtml";
+
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<link href="~/Content/sweetalert.css" rel="stylesheet" />
+<script src="~/Scripts/sweetalert.min.js"></script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        swal("ATTENTION ATTENTION ATTENTION", "In case payment challenges are experienced, Prospective Students are kindly advised to follow the required steps for resolution: \n\nStep 1: Check for the confirmation mail sent by REMITA after payment has been successful in the inbox of the email address used to make the Payment " +
+            "\nStep 2: Forward the confirmation mail to ict@fedpolyado.edu.ng and  copy support@lloydant.com. Please include" +
+            "the Candidates Full name and Contact Phone Number in the forwarded email.\n Step 3: Wait for 24 hours to receive feedback", "warning");
+
+        //var items = $('#AppliedCourse_Option_Id option').size();
+        //if (items > 0) {
+        //    $("#divDepartmentOption").show();
+        //}
+        //else {
+        //    $("#divDepartmentOption").hide();
+        //}
+
+
+        //$("#Programme_Id option[value=1]").remove();
+       // $("#Programme_Id option[value=3]").remove();
+
+        //$("#Programme_Id option[value=2]").remove();
+        //$("#Programme_Id option[value=4]").remove();
+        //$("#Programme_Id option[value=5]").remove();
+        //$("#Programme_Id option[value=6]").remove();
+
+
+
+           
+        var selectedProgramme = $("#Programme_Id").val();
+        if (selectedProgramme == 1) {
+            $("#divJambNo").show();
+        }
+        else
+        {
+            $("#divJambNo").hide();
+        }
+        
+  
+        $("#Programme_Id").change(function () {
+
+            var programme = $("#Programme_Id").val();
+            if (programme == 1) {
+                $("#divJambNo").show();
+                $("#divDepartmentOption").hide();
+            }
+            else if (programme == 2) {
+                $("#divJambNo").hide();
+                $("#divDepartmentOption").hide();
+            }
+            else if (programme == 3) {
+                $("#divJambNo").hide();
+                $("#divDepartmentOption").show();
+            }
+            else if (programme == 4) {
+                $("#divJambNo").hide();
+                $("#divDepartmentOption").show();
+            }
+            else if (programme == 6) {
+                $("#divJambNo").show();
+                $("#divDepartmentOption").hide();
+                $('#notice').show();
+            }
+            else {
+                $("#divJambNo").hide();
+                $("#divDepartmentOption").hide();
+            }
+
+            $("#AppliedCourse_Department_Id").empty();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartmentByProgrammeId")', // we are calling json method
+                dataType: 'json',
+                data: { id: programme },
+                success: function (departments) {
+                    $("#AppliedCourse_Department_Id").append('<option value="' + 0 + '"> -- Select -- </option>');
+
+                    $.each(departments, function (i, department) {
+                        $("#AppliedCourse_Department_Id").append('<option value="' + department.Value + '">' + department.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+        })
+
+        //Load Department Option
+        $("#AppliedCourse_Department_Id").change(function () {
+
+            var department = $("#AppliedCourse_Department_Id").val();
+            var programme = $("#Programme_Id").val();
+
+            $("#AppliedCourse_Option_Id").empty();
+
+            //if (department == 9 || department == 15 || department == 20) {
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetDepartmentOptionByDepartment")', // we are calling json method
+                    dataType: 'json',
+                    data: { id: department, programmeid: programme },
+                    success: function (departmentOptions) {
+                        //$("#hfDepartmentOptionExist").val(departmentOptions[0]);
+
+                        if (departmentOptions == "" || departmentOptions == null || departmentOptions == undefined || programme == 6) {
+                            $("#divDepartmentOption").hide();
+                        }
+                        else {
+                            $("#AppliedCourse_Option_Id").append('<option value="' + 0 + '"> -- Select -- </option>');
+                            $.each(departmentOptions, function (i, Option) {
+                                $("#AppliedCourse_Option_Id").append('<option value="' + Option.Value + '">' + Option.Text + '</option>');
+                            });
+
+                            if (programme > 2 && programme != 6)
+                            {
+                                $("#divDepartmentOption").show();
+                            }
+                          
+                        }
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve department Options.' + ex);
+                    }
+                });
+          
+        })
+
+        //alert("Please double-check all entries you have made; you cannot change any of your information once you have generated an invoice.");
+
+    })
+
+</script>
+
+
+@using (Html.BeginForm("FormInvoiceGeneration", "Form", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <div class="row">
+        @if (TempData["Message"] != null)
+        {
+            @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+        }
+    </div>
+
+    <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-success-head">
+                    <div class="panel-heading">
+                        <h2>Application Form Invoice</h2>
+                        <p><b>Provide your programme and course of choice, then fill other personal details below. Please note that ND Full Time Applicants must specify their JAMB Registration Number</b></p>
+                    </div>
+                </div>
+            
+                <div class="panel panel-custom">
+                            <div class="panel-body">
+                                <div class="col-md-12">
+
+                                        <div class="row">
+                                            <h3>Choose Programme</h3>
+                                            <hr style="margin-top:0" />
+                                            <div class="col-md-12">
+
+
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            @Html.LabelFor(model => model.Programme.Id, new { @class = "control-label custom-text-white" })
+                                                            @Html.DropDownListFor(model => model.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.ProgrammeId, new { @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.Programme.Id, null, new { @class = "text-danger" })
+                                                        </div>
+                                                    </div>
+
+
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            @Html.LabelFor(model => model.AppliedCourse.Department.Id, "Course", new { @class = "control-label custom-text-white" })
+                                                            @Html.DropDownListFor(model => model.AppliedCourse.Department.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentId, new { @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.AppliedCourse.Department.Id, null, new { @class = "text-danger" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div id="divJambNo" class="form-group" style="display:none">
+                                                            
+                                                            @Html.LabelFor(model => model.JambRegistrationNumber, new { @class = "control-label custom-text-white" })
+                                                            @Html.TextBoxFor(model => model.JambRegistrationNumber, new { @class = "form-control"})
+                                                            <h6 id="notice" style="color:red;display:none">Jamb No. is optional for ND Evening Fulltime Programme</h6>
+                                                            @Html.ValidationMessageFor(model => model.JambRegistrationNumber, null, new { @class = "text-danger" })
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div id="divDepartmentOption" class="form-group" style="display:none">
+                                                            @Html.LabelFor(model => model.AppliedCourse.Option.Id, "Course Option", new { @class = "control-label custom-text-white" })
+                                                            @Html.DropDownListFor(model => model.AppliedCourse.Option.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentOptionId, new { @class = "form-control" })
+                                                            @Html.ValidationMessageFor(model => model.AppliedCourse.Option.Id, null, new { @class = "text-danger" })
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <br />
+                                    <div class="row">
+                                        <h3>Please enter other personal details</h3>
+
+                                    </div>
+                                        <div class="row">
+                                           
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(model => model.Person.LastName, new { @class = "control-label custom-text-white" })
+                                                    @Html.TextBoxFor(model => model.Person.LastName, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.Person.LastName, null, new { @class = "text-danger" })
+                                                </div><!-- form-group -->
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(model => model.Person.FirstName, new { @class = "control-label custom-text-white" })
+                                                    @Html.TextBoxFor(model => model.Person.FirstName, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.Person.FirstName, null, new { @class = "text-danger" })
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        
+                                        <br />
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(model => model.Person.OtherName, new { @class = "control-label custom-text-white" })
+                                                    @Html.TextBoxFor(model => model.Person.OtherName, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.Person.OtherName, null, new { @class = "text-danger" })
+                                                </div>
+                                            </div><!-- form-group -->
+
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(model => model.Person.State.Id, new { @class = "control-label custom-text-white" })
+                                                    @Html.DropDownListFor(model => model.Person.State.Id, (IEnumerable<SelectListItem>)ViewBag.StateId, new { @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.Person.State.Id, null, new { @class = "text-danger" })
+                                                </div>
+                                            </div><!-- form-group -->
+                                        </div>
+                                    <br />
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(model => model.Person.MobilePhone, new { @class = "control-label custom-text-white" })
+                                                    @Html.TextBoxFor(model => model.Person.MobilePhone, new { @class = "form-control", @placeholder = "080XXXXXXXX", required = "required"})
+                                                    @Html.ValidationMessageFor(model => model.Person.MobilePhone, null, new { @class = "text-danger" })
+                                                </div>
+                                            </div><!-- form-group -->
+
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(model => model.Person.Email, new { @class = "control-label custom-text-white" })
+                                                    @Html.TextBoxFor(model => model.Person.Email, new { @class = "form-control", required = "required" })
+                                                    @Html.ValidationMessageFor(model => model.Person.Email, null, new { @class = "text-danger" })
+                                                </div>
+                                            </div><!-- form-group -->
+
+                                        </div><!-- row -->
+                                    <br/>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                              
+                                            </div>
+                                        </div><!-- form-group -->
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <input class="btn btn-primary-alt btn-lg mr5" type="submit" name="submit" id="submit" value="Generate Invoice" />
+                                            </div>
+                                        </div><!-- form-group -->
+                                    </div>
+                                    </div>
+
+                              </div>
+                            </div>
+
+                           
+                        </div><!-- panel -->
+</div>
+            
+
+
+
+
+
+
+
+
+
+
+
+    @*<div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4"></div>
+
+            <div class="col-md-4">
+
+
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">Generate Invoice</h4>
+                    </div>
+
+                    <div class="panel-body">
+                        <div class="row">
+                           
+                            <div class="col-md-12">
+                                <div>
+                                    @if (TempData["Message"] != null)
+                                    {
+                                        @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+                                    }
+                                </div>
+
+                                <div class="panel panel-default well-lg" >
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <span style="font-size:15pt">Choose Programme</span>
+                                        </div>
+
+                                        <div id="divProgramme">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.Programme.Id, new { @class = "control-label " })
+                                                @Html.DropDownListFor(model => model.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.ProgrammeId, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.Programme.Id, null, new { @class = "text-danger" })
+                                            </div>
+
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.AppliedCourse.Department.Id, "Department of Choice", new { @class = "control-label " })
+                                                @Html.DropDownListFor(model => model.AppliedCourse.Department.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentId, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.AppliedCourse.Department.Id, null, new { @class = "text-danger" })
+                                            </div>
+
+                                            <div id="divJambNo" class="form-group" style="display:none">
+                                                @Html.LabelFor(model => model.JambRegistrationNumber, new { @class = "control-label " })
+                                                @Html.TextBoxFor(model => model.JambRegistrationNumber, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.JambRegistrationNumber, null, new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+
+
+
+
+                                    </div>
+                                </div>
+
+
+
+                                <div class="panel panel-default" >
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <span style="font-size:15pt">Please enter other personal details</span>
+                                        </div>
+                                        <div>
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.Student.FirstName, new { @class = "control-label " })
+
+                                                @Html.TextBoxFor(model => model.Student.FirstName, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.Student.FirstName, null, new { @class = "text-danger" })
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.Student.LastName, new { @class = "control-label " })
+
+                                                @Html.TextBoxFor(model => model.Student.LastName, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.Student.LastName, null, new { @class = "text-danger" })
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.Student.OtherName, new { @class = "control-label " })
+
+                                                @Html.TextBoxFor(model => model.Student.OtherName, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.Student.OtherName, null, new { @class = "text-danger" })
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.Student.State.Id, new { @class = "control-label " })
+
+                                                @Html.DropDownListFor(model => model.Student.State.Id, (IEnumerable<SelectListItem>)ViewBag.StateId, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.Student.State.Id, null, new { @class = "text-danger" })
+                                            </div>
+
+
+
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.Student.MobilePhone, new { @class = "control-label " })
+
+                                                @Html.TextBoxFor(model => model.Student.MobilePhone, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.Student.MobilePhone, null, new { @class = "text-danger" })
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.Student.Email, new { @class = "control-label " })
+
+                                                @Html.TextBoxFor(model => model.Student.Email, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.Student.Email, null, new { @class = "text-danger" })
+                                            </div>
+
+                                        </div>
+                                        </div>
+                                    </div>
+
+
+
+
+                                    </div>
+                                </div>
+
+                            </div>
+    
+
+
+
+
+
+
+
+                   
+
+                        </div>
+                    </div>
+            <div class="col-md-4"></div>
+                </div>
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <div class="panel-footer ">
+                    <input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="Next" />
+
+                    <div class="btn btn-default">
+                        @Html.ActionLink("Back to Home", "Index", "Home", new { Area = "" }, null)
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+                
+
+       
+           
+       
+            </div>*@
+    
+            
+      
+   
+
+
+
+}
+
+
+
+

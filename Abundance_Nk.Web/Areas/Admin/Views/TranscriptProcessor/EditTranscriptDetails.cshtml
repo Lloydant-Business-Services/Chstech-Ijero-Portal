@@ -1,0 +1,211 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.TranscriptProcessorViewModel
+@{
+    ViewBag.Title = "EditTranscriptDetails";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //$("#State").hide();
+        $("#Country").change(function () {
+            if ($("#Country").val() == "NIG") {
+                $("#State").fadeIn("slow");
+            } else {
+                $("#State").fadeOut("slow");
+            }
+        });
+    })
+</script>
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+
+        @if (TempData["Message"] != null)
+        {
+            @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+        }
+
+        @*@using (Html.BeginForm("EditTranscriptDetails", "TranscriptProcessor", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>
+                        Edit Transcript Details
+                    </h3>
+                </div>
+                <hr />
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.transcriptRequest.student.MatricNumber, "Matric Number:", new { @class = "control-label " })
+                                        @Html.TextBoxFor(model => model.transcriptRequest.student.MatricNumber, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.transcriptRequest.student.MatricNumber, null, new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <input class="btn btn-success btn-sm mr5" type="submit" name="submit" id="submit" value="Edit" />
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        }*@
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <h3>
+                    Edit Transcript Details
+                </h3>
+            </div>
+            <hr />
+        </div>
+
+        @if (Model.transcriptRequest != null)
+        {
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    @using (Html.BeginForm("SaveTranscriptDetails", "TranscriptProcessor", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true)
+                        @Html.HiddenFor(model => model.transcriptRequest.student.Id)
+                        @Html.HiddenFor(model => model.transcriptRequest.Id)
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.transcriptRequest.student.LastName)
+                                    @Html.TextBoxFor(model => model.transcriptRequest.student.LastName, new { @class = "form-control", @required = "required" })
+                                    @*@Html.ValidationMessageFor(model => model.transcriptRequest.student.LastName)*@
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.transcriptRequest.student.FirstName)
+                                    @Html.TextBoxFor(model => model.transcriptRequest.student.FirstName, new { @class = "form-control", @required = "required" })
+                                    @*@Html.ValidationMessageFor(model => model.transcriptRequest.student.FirstName)*@
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.transcriptRequest.student.OtherName, new { @class = "control-label " })
+                                    @Html.TextBoxFor(model => model.transcriptRequest.student.OtherName, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.transcriptRequest.student.OtherName)
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.transcriptRequest.student.MatricNumber, new { @class = "control-label " })
+                                    @Html.TextBoxFor(model => model.transcriptRequest.student.MatricNumber, new { @class = "form-control", @required = "required" })
+                                    @Html.ValidationMessageFor(model => model.transcriptRequest.student.MatricNumber)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.transcriptRequest.DestinationAddress, new { @class = "control-label " })
+                                    @Html.TextAreaFor(model => model.transcriptRequest.DestinationAddress, new { @class = "form-control", @required = "required" })
+                                    @Html.ValidationMessageFor(model => model.transcriptRequest.DestinationAddress)
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.transcriptRequest.DateRequested, new { @class = "control-label " })
+                                    @Html.TextBoxFor(model => model.RequestDateString, new { @class = "form-control", @readonly = "readonly" })
+                                    @Html.ValidationMessageFor(model => model.transcriptRequest.DestinationAddress)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.transcriptRequest.DestinationCountry,"Destination Country", new { @class = "control-label " })
+                                    @Html.DropDownListFor(model => model.transcriptRequest.DestinationCountry.Id, (IEnumerable<SelectListItem>)ViewBag.Country, new { @class = "form-control", @id = "Country", @required = "required" })
+                                    @Html.ValidationMessageFor(model => model.transcriptRequest.DestinationCountry)
+                                </div>
+                            </div>
+
+                            <div class="col-md-6" id="State">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.transcriptRequest.DestinationState, "Destination State", new { @class = "control-label ", @id = "StateName" })
+                                    @Html.DropDownListFor(model => model.transcriptRequest.DestinationState.Id, (IEnumerable<SelectListItem>)ViewBag.State, new { @class = "form-control", @required = "required" })
+                                    @Html.ValidationMessageFor(model => model.transcriptRequest.DestinationState)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.transcriptRequest.transcriptClearanceStatus.TranscriptClearanceStatusName, new { @class = "control-label " })
+                                    @Html.DropDownListFor(model => model.transcriptRequest.transcriptClearanceStatus.TranscriptClearanceStatusId, (IEnumerable<SelectListItem>)ViewBag.TranscriptClearanceStatus, new { @class = "form-control", @required = "required" })
+                                    @Html.ValidationMessageFor(model => model.transcriptRequest.transcriptClearanceStatus.TranscriptClearanceStatusName)
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.transcriptRequest.transcriptStatus.TranscriptStatusName, new { @class = "control-label ", @id = "StateName" })
+                                    @Html.DropDownListFor(model => model.transcriptRequest.transcriptStatus.TranscriptStatusId, (IEnumerable<SelectListItem>)ViewBag.TranscriptStatus, new { @class = "form-control", @required = "required" })
+                                    @Html.ValidationMessageFor(model => model.transcriptRequest.transcriptStatus.TranscriptStatusName)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <input class="btn btn-success btn-sm mr5" type="submit" name="submit" id="submit" value="Save" />
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                    }
+
+                </div>
+            </div>
+        }
+
+
+    </div>
+    <div class="col-md-1"></div>
+</div>

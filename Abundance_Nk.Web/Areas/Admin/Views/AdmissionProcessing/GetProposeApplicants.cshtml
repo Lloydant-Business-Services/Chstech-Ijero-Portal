@@ -1,0 +1,820 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.AdmissionProposalViewModel
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@*<link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.4.1/css/buttons.dataTables.min.css">
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.flash.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.print.min.js"></script>*@
+
+@section Scripts {
+
+    <link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+
+    @Scripts.Render("~/bundles/jquery")
+
+    @*<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+        <script src="~/Scripts/jquery-migrate-1.2.1.min.js"></script>
+        <script src="~/Scripts/prettify.js"></script>
+        <script src="~/Scripts/custom.js"></script>
+        <script src="~/Scripts/jquery.min.js"></script>
+        <script src="~/Scripts/responsive-tabs.js"></script>*@
+    <style>
+        .modal-backdrop.in {
+            z-index: 0 !important
+        }
+        .btn-primary {
+            background: #5b796e !important
+        }
+        #selectedDepartmentOption {
+            display: none
+        }
+    </style>
+
+
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/file-upload/jquery-ui-1.9.2.min.js"></script>
+
+    <link href="~/Scripts/DataTables-1.10.15/media/css/jquery.dataTables.css" rel="stylesheet" />
+    <script src="~/Scripts/DataTables-1.10.15/media/js/jquery.dataTables.js"></script>
+    <link href="~/Scripts/DataTables-1.10.15/extensions/Buttons/css/buttons.dataTables.css" rel="stylesheet" />
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Buttons/js/dataTables.buttons.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Buttons/js/buttons.colVis.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Responsive/js/dataTables.responsive.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/buttons.flash.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/buttons.html5.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/buttons.print.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/jszip.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/pdfmake.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/vfs_fonts.js"></script>
+
+
+    <script type="text/javascript">
+        let checkCount = 0;
+        let dispprove = true;
+        $(document).ready(function () {
+            $("#DepartmentOption").hide();
+            $("#Programme").change(function () {
+
+                var programme = $("#Programme").val();
+
+                $("#Department").empty();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetDepartments", "UploadReturningStudents")', // Calling json method
+                dataType: 'json',
+                data: { id: programme },
+                // Get Selected Country ID.
+                success: function(departments) {
+                    $("#Department").append('<option value="' + 0 + '">' +
+                        '-- Select Department --' + '</option>');
+                    $.each(departments, function(i, department) {
+                        $("#Department").append('<option value="' + department.Value + '">' +
+                            department.Text + '</option>');
+                    });
+                },
+                error: function(ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+
+
+                //$("#divDepartmentOption").hide();
+
+            });
+
+
+
+
+
+
+
+
+        $("#Department").change(function () {
+                    $("#DepartmentOption").empty();
+
+                    var programme = $("#Programme").val();
+                    var department = $("#Department").val();
+
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartmentOption", "UploadReturningStudents")',
+                dataType: 'json',
+                data: { departmentId: parseInt(department), programmeId: parseInt(programme) },
+                success: function (departmentOptions) {
+
+                    if (departmentOptions == "" || departmentOptions == null || departmentOptions == undefined || departmentOptions.Lenght <= 0) {
+                        $("#DepartmentOption").hide();
+                    } else {
+                        $("#DepartmentOption").show();
+                        $("#DepartmentOption").append('<option value="' + 0 + '"> -- Select -- </option>');
+                        $.each(departmentOptions, function (i, Option) {
+                            $("#DepartmentOption").append('<option value="' + Option.Value + '">' + Option.Text + '</option>');
+                        });
+                        if (programme > 2) {
+                            $("#divDepartmentOption").show();
+                        }
+
+                    }
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve department Options.' + ex);
+                }
+            });
+
+        });
+
+
+              $("#selectedDepartment").change(function () {
+                    $("#selectedDepartmentOption").empty();
+
+                    var programme = $("#selectedProgramme").val();
+                    var department = $("#selectedDepartment").val();
+
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartmentOption", "UploadReturningStudents")', // we are calling json method
+                dataType: 'json',
+                data: { departmentId: parseInt(department), programmeId: parseInt(programme) },
+                success: function (departmentOptions) {
+
+                    if (departmentOptions == "" || departmentOptions == null || departmentOptions == undefined || departmentOptions.Lenght <= 0) {
+                        $("#selectedDepartmentOption").hide();
+                    } else {
+                        $("#selectedDepartmentOption").show();
+                        $("#selectedDepartmentOption").append('<option value="' + 0 + '"> -- Select -- </option>');
+                        $.each(departmentOptions, function (i, Option) {
+                            $("#selectedDepartmentOption").append('<option value="' + Option.Value + '">' + Option.Text + '</option>');
+                        });
+                        if (programme > 2) {
+                            $("#divDepartmentOption").show();
+                        }
+
+                    }
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve department Options.' + ex);
+                }
+            });
+
+        });
+
+
+            $('input[type="checkbox"]').click(function () {
+                //var isValid = $("#unusedQuotaDisplay").html(unusedQuota);
+                if (admQuota == "Admission Quota not set for the selected Session/Department" || admQuota == 0) {
+                    alert("Please set Admission Quota before proceeding");
+                    return false;
+                }
+                if ($(this).prop("checked") == true) {
+                    var checkboxes = $('input:checkbox:checked').length;
+
+                    if ($(this).prop("checked") == true && unusedQuota == null) {
+                        //unusedQuota--;
+                        checkCount++;
+                        $("#selectDisplay").html(checkCount);
+                        $("#unusedQuotaDisplay").html(unusedQuota);
+                        console.log("Checkbox is checked.");
+                    }
+
+                    else if ($(this).prop("checked") == true && unusedQuota > 0) {
+                        checkCount++;
+                        unusedQuota--;
+                        $("#selectDisplay").html(checkCount);
+                        $("#unusedQuotaDisplay").html(unusedQuota);
+                        console.log("Checkbox is checked.");
+
+                    }
+
+                    else if ($(this).prop("checked") == true && unusedQuota <= 0) {
+                        alert("Selected Applicants have exceeded the quota assigned")
+                        //$("#proceedBtn").hide(200)
+                        //$("#btnQuota").hide(200)
+                        $("#quotaGroup").hide(200)
+
+                        return false;
+                    }
+
+
+                }
+                else if ($(this).prop("checked") == false) {
+                    var checkboxes = $('input:checkbox:checked').length;
+                    checkCount--;
+                    unusedQuota++;
+                    $("#selectDisplay").html(checkCount);
+                    $("#unusedQuotaDisplay").html(unusedQuota);
+                    //$("#proceedBtn").show(200)
+                    //$("#btnQuota").show(200)
+                    $("#quotaGroup").show(200)
+
+                    console.log("Checkbox is unchecked.");
+
+                }
+            });
+
+
+
+            $('#example').DataTable({
+                dom: 'Bfrtip',
+                ordering: true,
+                retrieve: true,
+                buttons: [
+                    {
+                        extend: 'copy',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, , 'colvis'
+                ]
+            });
+        });
+    </script>
+
+
+
+
+
+
+
+    <script type="text/javascript">
+        var person = null;
+        let proposeArr = [];
+        var dept = "";
+        var programme = "";
+        var admQuota = 0;
+        var unusedQuota = null;
+
+
+
+
+
+
+       function resolveAdmissionQuota () {
+            const form = typeof window !== "undefined" ? document.querySelectorAll("input[name=applicant]") : [];
+
+            for (let a of form) {
+                if (a.checked) {
+                    if (admQuota > 1) {
+                        admQuota--;
+                        console.log(admQuota, "Reolve");
+                    }
+                }
+            }
+        };
+
+
+
+
+        function selectApplicant() {
+            proposeArr = [];
+            dept = $("#selectedDepartment").val();
+            programme = $("#selectedProgramme").val();
+            sessionSelect = $("#selectedSession").val();
+            departmentOptionSelect = $("#selectedDepartmentOption").val();
+
+            const form = typeof window !== "undefined" ? document.querySelectorAll("input[name=applicant_name]") : [];
+
+
+            for (let a of form) {
+                if (a.checked) proposeArr.push(a.value)
+            }
+
+            setTimeout(() => {
+                console.log(proposeArr, "Proposed Applicants")
+                //console.log(proposeArr, dept, programme "Proposed Applicants")
+            }, 1000)
+
+        }
+
+
+        $("#btnDisprove").click(function () {
+            dept = $("#selectedDepartment").val();
+            programme = $("#selectedProgramme").val();
+            sessionSelect = $("#selectedSession").val();
+
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("DisproveProposedApplicants", "AdmissionProcessing")",
+                //dataType: 'json',
+                traditional: true,
+                data: { applicantIds: proposeArr },
+                beforeSend: function () {
+                    $("#processing").show();
+                },
+                complete: function () {
+                    $("#processing").hide();
+                },
+                success: SuccessFunc,
+                error: ErrorFunc,
+            })
+
+            function SuccessFunc(data, status) {
+                alert("Operation Successful")
+                $("#processing").hide();
+
+                //BindSelectAll();
+                BindSelectOne();
+            }
+
+            function ErrorFunc() {
+                alert("Operation failed!");
+            }
+        });
+
+
+
+
+        $("#btnSend").click(function () {
+
+            if (departmentOptionSelect == null || departmentOptionSelect == undefined) {
+                departmentOptionSelect = 0;
+            }
+            else {
+                departmentOptionSelect = $("#selectedDepartmentOption").val();
+            }
+            dept = $("#selectedDepartment").val();
+            programme = $("#selectedProgramme").val();
+            sessionSelect = $("#selectedSession").val();
+
+
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("AdmitProposedApplicants", "AdmissionProcessing")",
+                //dataType: 'json',
+                traditional: true,
+                data: { programmeId: parseInt(programme), departmentId: parseInt(dept), sessionId: sessionSelect, departmentOptionId: departmentOptionSelect, applicantIds: proposeArr },
+                beforeSend: function () {
+                    $("#processing").show();
+                },
+                complete: function () {
+                    $("#processing").hide();
+                },
+                success: SuccessFunc,
+                error: ErrorFunc,
+            })
+
+            function SuccessFunc(data, status) {
+                alert("Operation Successful")
+                $("#processing").hide();
+
+                //BindSelectAll();
+                BindSelectOne();
+            }
+
+            function ErrorFunc() {
+                alert("Operation failed!");
+            }
+        });
+
+        $("#helpBtn").click(function () {
+            var help = $("#help");
+            help.toggle(300);
+        })
+
+        $("#btnSearch").click(function () {
+            $("#processing").show();
+        })
+
+
+        $("#btnQuota").click(function () {
+
+            $('input[name="applicant_name"]').each(function () {
+                this.checked = false;
+            });
+
+            dispprove = false;
+            dept = $("#selectedDepartment").val();
+            programme = $("#selectedProgramme").val();
+            sessionSelect = $("#selectedSession").val();
+            console.log(dept, programme, sessionSelect, "Items Select");
+
+            if (sessionSelect == null || sessionSelect == undefined || sessionSelect == "") {
+                alert("Select Session");
+                return false;
+            }
+
+                    $.ajax({
+                type: "POST",
+                url: "@Url.Action("GetAdmissionQuota", "AdmissionProcessing")",
+                //dataType: 'json',
+                traditional: true,
+                data: { programmeId: parseInt(programme), departmentId: parseInt(dept), sessionId: sessionSelect},
+
+                beforeSend: function () {
+                    $("#processing").show();
+                },
+                complete: function () {
+                    $("#processing").hide();
+                },
+                success: SuccessFunc2,
+                error: ErrorFunc2,
+            })
+
+            function SuccessFunc2(data, status) {
+                console.log(data);
+                admQuota = data.Message;
+                unusedQuota = data.UnusedQuota;
+                checkCount = 0;
+                if (data) {
+                    $("#selectDisplay").html(checkCount);
+                    $("#proceedBtn").css("display", "block")
+                    $("#quotaDisplay").html(admQuota);
+                    $("#unusedQuotaDisplay").html(unusedQuota);
+                    $("#processing").hide();
+                    $("#DepartmentOption").show();
+
+                }
+                $("#quotaDisplay").html(admQuota);
+                $("#unusedQuotaDisplay").html(unusedQuota);
+                $("#processing").hide();
+
+
+                //BindSelectAll();
+                BindSelectOne();
+            }
+
+            function ErrorFunc2() {
+                alert("Operation failed!");
+            }
+
+     
+
+
+        });
+
+
+    </script>
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h4>This interface provides the Admission Officer with a list of proposed Applicants for possible Admission.</h4>
+                <button class="btn btn-primary btn-sm" id="helpBtn">More Information</button>
+                <br />
+
+                <span id="help" style="display:none">
+                    <ul style="font-size:11px;margin-top:5px">
+                        <li>On landing, the interface presents the user with a dropdown list of Programmes and Departments.</li>
+                        <li>Proposed Applicants for Possible Admission are then pulled based on the selected Programme and Department respectively.</li>
+                        <li>The "Admit into" section presents the user with drop down list of Programme, Session and Department,  where the user/admission officer may reassign proposed applicants to which ever, programme/department of his choosing.</li>
+                        <li>There is a set Quota alloted to all Departments and programme for a given session. Hence, the "Show Quota" button fetches the alloted quota for a selected Department/programme; thereby guiding the user's selection of the number of Applicants for possible Admission.</li>
+                        <li>When choice applicants for possible admission has been duly selected, hit the "Confirm Selected Applicant" Button to complete the process.</li>
+
+                    </ul>
+
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+
+        @using (Html.BeginForm("GetProposeApplicants", "AdmissionProcessing", new { area = "Admin" }, FormMethod.Post))
+        {
+
+
+
+
+            <div class="panel panel-default">
+                <div class="panel-body ">
+                    <div class="form-inline ">
+
+                        <div>
+                            @Html.DropDownListFor(m => m.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.ProgrammeSelectList, new { @class = "form-control", @id="Programme", required = "required" })
+                            @Html.DropDownListFor(m => m.Department.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentSelectList, new { @class = "form-control", @id="Department", required = "required" })
+
+
+                            @Html.DropDownListFor(m => m.DepartmentOption.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentOptionSelectList, new { @class = "form-control", @id = "DepartmentOption", required = "required" })
+
+                            <button class="btn btn-primary btn-metro mr5" type="submit" name="btnSearch" id="btnSearch">Load Applicants</button>
+                            <br />
+                            <div>
+                                <span id="processing" style="display:none"><img width="30px" height="30px" src="@Url.Content("~/Content/Images/bx_loader.gif")" /></span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+        <div>
+
+            @*@if (Model != null && Model.ListOfAdmission != null && Model.ListOfAdmission.Count > 0)
+                {*@
+            @if (Model != null && Model.ProposeAdmission != null && Model.ProposeAdmission.Count > 0)
+            {
+
+                <div style="width:100%; align-content:flex-end">
+
+                </div>
+                <div class="form-inline ">
+
+                    <div class="form-group">
+                        <div id="quotaGroup">
+                            <p>Admit into: </p>
+                            @Html.DropDownListFor(m => m.Session.Id, (IEnumerable<SelectListItem>)ViewBag.SessionSelectList, new { @class = "form-control", @id = "selectedSession", required = "required" })
+                            @Html.DropDownListFor(m => m.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.ProgrammeSelectList, new { @class = "form-control", @id = "selectedProgramme", required = "required" })
+                            @Html.DropDownListFor(m => m.Department.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentSelectList, new { @class = "form-control", @id = "selectedDepartment", required = "required" })
+                           
+
+                            @Html.DropDownListFor(m => m.DepartmentOption.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentOptionSelectList, new { @class = "form-control", @id = "selectedDepartmentOption", required = "required" })
+
+                            <button type="button" id="btnQuota" class="btn btn-primary">
+                                Show Admission Quota <i class="fa fa-eye"></i>
+                            </button>
+                            <br />
+                            <button type="button" onclick="selectApplicant()" id="proceedBtn" class="btn btn-primary" data-toggle="modal" data-target="#myModal" style="display:none; margin-top:20px">
+                                Approve selected Applicants
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="selectApplicant()" data-toggle="modal" data-target="#disproveModal" style="margin-top:20px; background-color:orangered!important">
+                                Dispprove selected Applicants
+                            </button>
+
+                        </div>
+                        <br />
+                        <h5>
+                            Alloted Quota : <span class="badge badge-success" id="quotaDisplay"></span>
+                            &nbsp; &nbsp; Remaining Quota : <span class="badge badge-success" id="unusedQuotaDisplay"></span>
+                            &nbsp; &nbsp; Selected : <span class="badge badge-success" id="selectDisplay"> </span>
+                        </h5>
+
+                    </div>
+
+                </div>
+                <br />
+
+                <!-- The Modal -->
+                <div class="modal" id="myModal">
+                    <div class="modal-dialog" style="z-index:99999999999999">
+                        <div class="modal-content">
+
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">
+                                    @*Modal Heading*@
+                                </h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                Confirm Selected Applicants for Admission?
+                            </div>
+
+                            <!-- Modal footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-success" id="btnSend" data-dismiss="modal">Confirm</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="modal" id="disproveModal">
+                    <div class="modal-dialog" style="z-index:99999999999999">
+                        <div class="modal-content">
+
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">
+                                    @*Modal Heading*@
+                                </h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                Disprove Selected Applicant(s)?
+                            </div>
+
+                            <!-- Modal footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-success" id="btnDisprove" data-dismiss="modal">Confirm</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <table id="example" class="display nowrap table-responsive" style="width:100%">
+                    <thead>
+                        <tr class="well" style="height:35px; vertical-align:middle">
+                            <th>
+                                SN
+                            </th>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Sex
+                            </th>
+                            <th>
+                                Application Number
+                            </th>
+                            <th>
+                                State
+                            </th>
+                            @if (Model.Programme.Id == 1 || Model.Programme.Id == 2 || Model.Programme.Id == 6)
+                            {
+                                <th>
+                                    Jamb Reg No.
+                                </th>
+                                <th>
+                                    JAMB Subjects & Grades
+                                </th>
+
+                                <th>
+                                    Aggregate Points
+                                </th>
+                            }
+                           
+                            @*<th>
+                                    O'Level Details
+                                </th>*@
+                            <th>
+                                Check
+                            </th>
+                            @*<th>
+                                    Jamb Subjects
+                                </th>
+                                <th>
+                                    O' Level Subjects
+                                </th>
+                                <th>
+                                    State of Origin
+                                </th>
+                                <th>
+                                    Aggregate Score
+                                </th>
+                                <th>
+                                    IT Year/Month
+                                </th>
+                                <th>
+                                    School Finished
+                                </th>
+                                <th>
+                                    Approved Date
+                                </th>
+                                <th>
+                                    Proposed Date
+                                </th>
+                                <th>
+                                    Name of Proposed Officer
+                                </th>*@
+                        </tr>
+                    </thead>
+
+
+                    @for (int i = 0; i < Model.ProposeAdmission.Count; i++)
+                    {
+                        var sn = i + 1;
+                        <tr>
+                            <td>
+                                @sn
+                            </td>
+                            <td>
+                                @Model.ProposeAdmission[i].ApplicationForm.Person.FullName.ToUpper()
+                            </td>
+                            <td>
+                                @Model.ProposeAdmission[i].ApplicationForm.Person.Sex.Name
+                            </td>
+                            <td>
+                                @Model.ProposeAdmission[i].ApplicationForm.Number
+                            </td>
+                            <td>
+                                @Model.ProposeAdmission[i].ApplicationForm.Person.State.Name
+                            </td>
+                            @if (Model.ApplicantJambDetail.Count > 0 && (Model.Programme.Id == 1 || Model.Programme.Id == 2 || Model.Programme.Id == 6))
+                            {
+                                var jambDetail = Model.ApplicantJambDetail.Where(f => f.Person.Id == Model.ProposeAdmission[i].ApplicationForm.Person.Id).FirstOrDefault();
+                                <td>
+                                    @if (jambDetail != null && !string.IsNullOrEmpty(jambDetail.JambRegistrationNumber))
+                                    {
+                                        @Model.ApplicantJambDetail[i].JambRegistrationNumber.ToUpper()
+                                    }
+                                    else
+                                    {
+                                        <p>-</p>
+                                    }
+                                </td>
+                                    if (jambDetail == null)
+                                    {
+                                        <td>
+                                        <p style="font-size:11px"> - </p>
+                                        <p style="font-size:11px"> - </p>
+                                        <p style="font-size:11px"> - </p>
+                                        <p style="font-size:11px"> - </p>
+                                         </td>
+                                    }
+                                    else if (jambDetail.Subject1 == null || jambDetail.Subject2 == null)
+                                    {
+                                    <td>
+                                        <p style="font-size:11px"> - </p>
+                                        <p style="font-size:11px"> - </p>
+                                        <p style="font-size:11px"> - </p>
+                                        <p style="font-size:11px"> - </p>
+                                        </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        <p style="font-size:11px">@Model.ApplicantJambDetail[i].Subject1.Name - @Model.ApplicantJambDetail[i].Subject1Score</p>
+                                        <p style="font-size:11px">@Model.ApplicantJambDetail[i].Subject2.Name - @Model.ApplicantJambDetail[i].Subject2Score</p>
+                                        <p style="font-size:11px">@Model.ApplicantJambDetail[i].Subject3.Name - @Model.ApplicantJambDetail[i].Subject3Score</p>
+                                        <p style="font-size:11px">@Model.ApplicantJambDetail[i].Subject4.Name - @Model.ApplicantJambDetail[i].Subject4Score</p>
+                                    </td>
+                                }
+
+
+
+                                    if (Model.ApplicantResult.Count <= 0 || Model.ApplicantResult[i].AggregateScore == null)
+                                    {
+                                        <td>
+                                            <p>-</p>
+                                        </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        <p style="font-size:11px"> @Model.ApplicantResult[i].AggregateScore</p>
+                                    </td>
+
+                                }
+
+                            }
+                            else
+                            {
+                                @*<td>-</td>*@
+                            }
+
+                            @*<td>
+
+                                    <p style="font-size:11px">@Model.ApplicantOLevel[i]?.Subject?.Name - @Model.ApplicantOLevel[i]?.Grade?.Name</p>
+
+                                </td>*@
+
+                            @*<td>
+                                    @Html.CheckBox(" ", false, new { @class = "ckb", id = Model.ApplicantAppliedCourse[i].Person.Id })
+                                </td>*@
+                            <td>
+                                <div id="checkboxes">
+                                    <input id="ApplicantCheck" type="checkbox" value=@Model.ProposeAdmission[i].ApplicationForm.Id name="applicant_name" />
+                                </div>
+
+                            </td>
+                        </tr>
+                    }
+
+
+
+                </table>
+            }
+
+
+
+
+
+        </div>
+    </div>
+
+
+</div>

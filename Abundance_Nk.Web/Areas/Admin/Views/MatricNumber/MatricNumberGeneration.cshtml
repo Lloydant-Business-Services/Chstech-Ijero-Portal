@@ -1,0 +1,834 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.MatricNumberViewModel
+@{
+    ViewBag.Title = "MatricNumberGeneration";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Scripts {
+    <link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet"/>
+    <link href="~/Scripts/DataTables-1.10.15/select.dataTables.min.css" rel="stylesheet"/>
+    <link href="~/Content/bootstrap-table.css" rel="stylesheet"/>
+    @Scripts.Render("~/bundles/jquery")
+
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/file-upload/jquery-ui-1.9.2.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/dataTables.select.min.js"></script>
+    <script src="~/Content/bootstrap-table.js"></script>
+
+    <script type="text/javascript">
+
+        var studentDataTable;
+        var studentBootstrapTable;
+        var studentData;
+        var workingStudentData;
+        // Consider adding an ID to your table
+        // incase a second table ever enters the picture.
+        //var items = $("#studentTable tbody tr");
+
+        $(document).ready(function() {
+
+            $("#tab1").attr('style', 'background-color: #ebbbdb; color:#990066; border-radius: 100px;');
+            $("#tab2").attr('style', 'background-color: #990066; color:white; border-radius: 100px;');
+
+            $("#search").on('click', function() {
+
+                $("#ldGetStudents").show();
+
+                var programmeValue = $("#Programme_Id").val();
+                var sessionValue = $("#Session_Id").val();
+                var facultyValue = $("#Faculty_Id").val();
+                var departmentValue = $("#Department_Id").val();
+                var statusValue = $("#StudentStatus_Id").val();
+
+                if (!programmeValue || !sessionValue || !facultyValue || !departmentValue || !statusValue) {
+                    alert("Please ensure that all the parameters were selected before proceeding.");
+                    $("#ldGetStudents").hide();
+                    return;
+                }
+
+                $("#studentTableBody").empty();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetStudents", "MatricNumber")', // Calling json method
+                    dataType: 'json',
+                    data: { programmeId: programmeValue, sessionId: sessionValue, departmentId: departmentValue, statusId: statusValue },
+                    success: function(result) {
+                        if (result[0] && result[0].IsError == false) {
+                            if (result.length > 0) {
+                                studentData = result;
+
+                                appendStudentData(studentData);
+                                $.each(studentData, function() {
+                                    if (this.Select == true) {
+                                        $("#append" + this.Id).prop('checked', true);
+                                    } else {
+                                        $("#append" + this.Id).prop('checked', false);
+                                    }
+                                });
+                                //paginate();
+
+                                $("#divLargestMatricNumber").hide("slow");
+                                $("#divNoStudentFound").hide("slow");
+                                $("#divStudentList").show("slow");
+                            } else {
+                                $("#divLargestMatricNumber").hide("slow");
+                                $("#divNoStudentFound").show("slow");
+                                $("#divStudentList").hide("slow");
+                            }
+                        } else {
+                            alert(result[0].Message);
+                        }
+                        $("#ldGetStudents").hide();
+                    },
+                    error: function(jqXHR) {
+                        alert('Failed.' + jqXHR.statusText);
+                        $("#ldGetStudents").hide();
+                    }
+                });
+            });
+
+
+        });
+
+        function paginate() {
+            var numItems;
+            if (items) {
+                numItems = items.length;
+            }
+
+            var perPage = 2;
+
+            // Only show the first 2 (or first `per_page`) items initially.
+            items.slice(perPage).hide();
+
+            // Now setup the pagination using the `.pagination-page` div.
+            $(".pagination-page").pagination({
+                items: numItems,
+                itemsOnPage: perPage,
+                cssStyle: "light-theme",
+
+                // This is the actual page changing functionality.
+                onPageClick: function(pageNumber) {
+                    // We need to show and hide `tr`s appropriately.
+                    var showFrom = perPage * (pageNumber - 1);
+                    var showTo = showFrom + perPage;
+
+                    // We'll first hide everything...
+                    items.hide()
+                        // ... and then only show the appropriate rows.
+                        .slice(showFrom, showTo).show();
+                }
+            });
+        }
+
+        function setTable(tableData) {
+            //if (studentDataTable) {
+            //    studentDataTable.destroy();
+            //}
+            //if (studentBootstrapTable) {
+            //    studentBootstrapTable.destroy();
+            //}
+            //studentDataTable = $('#studentTable').DataTable({
+            //    columnDefs: [{
+            //        orderable: false,
+            //        className: 'select-checkbox',
+            //        targets: 0,
+            //        checkboxes: { selectRow: true }
+            //    }],
+            //    select: {
+            //        style: 'multi',
+            //        selector: 'td:first-child'
+            //    }
+            //});
+            //if (!studentDataTable) {
+            studentBootstrapTable = $('#studentTable').bootstrapTable({
+                //data: data
+                
+            });
+            //}
+
+        }
+
+        function appendStudentData(dataToAppend) {
+            if (dataToAppend) {
+
+                var myTableData = [];
+
+                $("#studentTableBody").empty();
+                for (i = 0; i < dataToAppend.length; i++) {
+                    //result[i].index = result[i].Id;
+                    //if (dataToAppend[i].Select == true) {
+                    //    var className = "checkAll selected";
+                    //    $("#studentTableBody").append('<tr> <td><p onclick="checkSelectedStudent(' + dataToAppend[i].Id + ')" id="append' + dataToAppend[i].Id + '"' +
+                    //        'class= "' + className + '"></p></td>' + '<td>' + dataToAppend[i].Name + '</td>' + '<td>' + dataToAppend[i].Sex +
+                    //        '</td>' + '<td>' + dataToAppend[i].ApplicationNumber + '</td>' + '<td>' + dataToAppend[i].MatricNumber + '</td>' + '<td>' + dataToAppend[i].Status + '</td></tr>');
+                    //}
+                    //else {
+                    //    var className = "checkAll";
+                    //    $("#studentTableBody").append('<tr> <td><p onclick="checkSelectedStudent(' + dataToAppend[i].Id + ')" id="append' + dataToAppend[i].Id + '"' +
+                    //        'class= "' + className + '"></p></td>' + '<td>' + dataToAppend[i].Name + '</td>' + '<td>' + dataToAppend[i].Sex +
+                    //        '</td>' + '<td>' + dataToAppend[i].ApplicationNumber + '</td>' + '<td>' + dataToAppend[i].MatricNumber + '</td>' + '<td>' + dataToAppend[i].Status + '</td></tr>');
+                    //}
+                    
+                    $("#studentTableBody").append('<tr> <td><input type="checkbox" onclick="checkSelectedStudent(' + dataToAppend[i].Id + ')" id="append' + dataToAppend[i].Id + '"' +
+                    'class= "checkAll"/></td>' + '<td>' + dataToAppend[i].Name + '</td>' + '<td>' + dataToAppend[i].Sex +
+                    '</td>' + '<td>' + dataToAppend[i].ApplicationNumber + '</td>' + '<td>' + dataToAppend[i].MatricNumber + '</td>' + '<td>' + dataToAppend[i].Status + '</td></tr>');
+                    
+                    
+                }
+
+                //setTable(dataToAppend);
+            }
+        }
+
+        function checkAllStudent() {
+            //if (studentDataTable) {
+            //    studentDataTable.destroy();
+            //}
+
+            if ($('#ckbAllStudent').is(':checked')) {
+                $.each(studentData, function() {
+                    this.Select = true;
+                });
+                //appendStudentData(studentData);
+                //studentDataTable = $('#studentTable').DataTable({
+                //    columnDefs: [{
+                //        orderable: false,
+                //        className: 'select-checkbox',
+                //        targets: 0,
+                //        checkboxes: { selectRow: true }
+                //    }],
+                //    select: {
+                //        style: 'multi',
+                //        selector: 'td:first-child'
+                //    }
+                //});
+                $('.checkAll').prop('checked', true);
+            } else {
+                $.each(studentData, function() {
+                    this.Select = false;
+                });
+                //appendStudentData(studentData);
+                //studentDataTable = $('#studentTable').DataTable({
+                //    columnDefs: [{
+                //        orderable: false,
+                //        className: 'select-checkbox',
+                //        targets: 0,
+                //        checkboxes: { selectRow: true }
+                //    }],
+                //    select: {
+                //        style: 'multi',
+                //        selector: 'td:first-child'
+                //    }
+                //});
+                $('.checkAll').prop('checked', false);
+            }
+
+            return;
+        }
+
+        function checkSelectedStudent(studentId) {
+            //if (studentDataTable) {
+            //    studentDataTable.destroy();
+            //}
+
+            if ($("#append" + studentId).is(':checked')) {
+                $.each(studentData, function() {
+                    if (this.Id == studentId) {
+                        this.Select = true;
+                    }
+                });
+                //appendStudentData(studentData);
+                //studentDataTable = $('#studentTable').DataTable({
+                //    columnDefs: [{
+                //        orderable: false,
+                //        className: 'select-checkbox',
+                //        targets: 0,
+                //        checkboxes: { selectRow: true }
+                //    }],
+                //    select: {
+                //        style: 'multi',
+                //        selector: 'td:first-child'
+                //    }
+                //});
+
+                $("#append" + studentId).prop('checked', true);
+            } else {
+                $.each(studentData, function() {
+                    if (this.Id == studentId) {
+                        this.Select = false;
+                    }
+                });
+                //appendStudentData(studentData);
+                //studentDataTable = $('#studentTable').DataTable({
+                //    columnDefs: [{
+                //        orderable: false,
+                //        className: 'select-checkbox',
+                //        targets: 0,
+                //        checkboxes: { selectRow: true }
+                //    }],
+                //    select: {
+                //        style: 'multi',
+                //        selector: 'td:first-child'
+                //    }
+                //});
+
+                $("#append" + studentId).prop('checked', false);
+            }
+
+            return;
+        }
+
+        function filterStudentList(filterType) {
+            //if (studentDataTable) {
+            //    studentDataTable.destroy();
+            //}
+            switch (filterType) {
+            case 1:
+                workingStudentData = studentData.filter(x => !x.MatricNumber);
+                appendStudentData(workingStudentData);
+                //studentDataTable = $('#studentTable').DataTable({
+                //    columnDefs: [{
+                //        orderable: false,
+                //        className: 'select-checkbox',
+                //        targets: 0,
+                //        checkboxes: { selectRow: true }
+                //    }],
+                //    select: {
+                //        style: 'multi',
+                //        selector: 'td:first-child'
+                //    }
+                //});
+                $.each(workingStudentData, function() {
+                    if (this.Select == true) {
+                        $("#append" + this.Id).prop('checked', true);
+                    } else {
+                        $("#append" + this.Id).prop('checked', false);
+                    }
+                });
+
+                $("#divLargestMatricNumber").hide("slow");
+                $("#divNoStudentFound").hide("slow");
+                $("#divStudentList").show("slow");
+                break;
+            case 2:
+                workingStudentData = studentData.filter(x => x.Select == true);
+                appendStudentData(workingStudentData);
+                //studentDataTable = $('#studentTable').DataTable({
+                //    columnDefs: [{
+                //        orderable: false,
+                //        className: 'select-checkbox',
+                //        targets: 0,
+                //        checkboxes: { 'selectRow': true }
+                //    }],
+                //    select: {
+                //        style: 'multi',
+                //        selector: 'td:first-child'
+                //    }
+                //});
+                $.each(workingStudentData, function() {
+                    if (this.Select == true) {
+                        $("#append" + this.Id).prop('checked', true);
+                    } else {
+                        $("#append" + this.Id).prop('checked', false);
+                    }
+                });
+
+                $("#divLargestMatricNumber").hide("slow");
+                $("#divNoStudentFound").hide("slow");
+                $("#divStudentList").show("slow");
+                break;
+            case 3:
+                var myStudentData = new Array();
+                $.each(studentData, function() {
+                    var myData = workingStudentData.find(x => x.Id == this.Id);
+                    if (myData) {
+                        myStudentData.push(myData);
+                    } else {
+                        myStudentData.push(this);
+                    }
+                });
+                studentData = myStudentData;
+                appendStudentData(studentData);
+                //studentDataTable = $('#studentTable').DataTable({
+                //    columnDefs: [{
+                //        orderable: false,
+                //        className: 'select-checkbox',
+                //        targets: 0,
+                //        checkboxes: { selectRow: true }
+                //    }],
+                //    select: {
+                //        style: 'multi',
+                //        selector: 'td:first-child'
+                //    }
+                //});
+                $.each(studentData, function() {
+                    if (this.Select == true) {
+                        $("#append" + this.Id).prop('checked', true);
+                    } else {
+                        $("#append" + this.Id).prop('checked', false);
+                    }
+                });
+
+                $("#divLargestMatricNumber").hide("slow");
+                $("#divNoStudentFound").hide("slow");
+                $("#divStudentList").show("slow");
+                break;
+            default:
+                appendStudentData(studentData);
+                //studentDataTable = $('#studentTable').DataTable({
+                //    columnDefs: [{
+                //        orderable: false,
+                //        className: 'select-checkbox',
+                //        targets: 0,
+                //        checkboxes: { selectRow: true }
+                //    }],
+                //    select: {
+                //        style: 'multi',
+                //        selector: 'td:first-child'
+                //    }
+                //});
+                $.each(studentData, function() {
+                    if (this.Select == true) {
+                        $("#append" + this.Id).prop('checked', true);
+                    } else {
+                        $("#append" + this.Id).prop('checked', false);
+                    }
+                });
+                break;
+            }
+
+        }
+
+        function generateMatricNumber() {
+
+            if (confirm("Are you sure you want to generate matric numbers for the selected students?")) {
+                $("#ldGenerateMatricNumber").show();
+
+                var dataToSend;
+                //if ($("#allStudents").is('checked')) {
+                //    dataToSend = workingStudentData;
+                //} else {
+                //    dataToSend = studentData;
+                //}$('input[type=radio][name=student]').value;
+                
+                var dataValue = $("input:radio[name='student']:checked").val();
+                if (dataValue == '3') {
+                    dataToSend = studentData;
+                } else {
+                    dataToSend = workingStudentData;
+                }
+
+                var prefixValue = $("#generationPrefix").val();
+                var suffixValue = $("#generationSuffix").val();
+                var startNumberValue = $("#startNumber").val();
+                var numberLengthValue = $("#numberLength").val();
+
+                if (!dataToSend || !prefixValue || !suffixValue || !startNumberValue || !numberLengthValue) {
+                    alert("Please ensure that all the parameters were selected before proceeding.");
+                    $("#ldGenerateMatricNumber").hide();
+                    return;
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GenerateMatricNumberAlt", "MatricNumber")', // Calling json method
+                    dataType: 'json',
+                    data: {
+                        studentsArray: JSON.stringify(dataToSend),
+                        prefix: prefixValue,
+                        suffix: suffixValue,
+                        startNumber: startNumberValue,
+                        numberLength: numberLengthValue,
+                        programmeId: $("#Programme_Id").val(),
+                        sessionId: $("#Session_Id").val(),
+                        departmentId: $("#Department_Id").val()
+                    },
+                    success: function(result) {
+                        alert(result.Message);
+                        $("#ldGenerateMatricNumber").hide();
+                    },
+                    error: function(jqXHR) {
+                        alert('Failed.' + jqXHR.statusText);
+                        $("#ldGenerateMatricNumber").hide();
+                    }
+                });
+            } else {
+                return false;
+            }
+
+            return false;
+        }
+
+        $("#Programme_Id").on('change', function() {
+            $("#Department_Id").empty();
+            var programmeValue = $("#Programme_Id").val();
+            var facultyValue = $("#Faculty_Id").val();
+
+            if (!programmeValue || !facultyValue) {
+                return;
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartmentsAlt", "MatricNumber")', // Calling json method
+                dataType: 'json',
+                data: { programmeId: programmeValue, facultyId: facultyValue },
+                success: function(departments) {
+                    $("#Department_Id").append('<option value="' + 0 + '"> -- Select -- </option>');
+                    $.each(departments, function(i, departments) {
+                        $("#Department_Id").append('<option value="' + departments.Value + '">' + departments.Text + '</option>');
+                    });
+                },
+                error: function(ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+            return false;
+        });
+
+        $("#Faculty_Id").on('change', function() {
+            $("#Department_Id").empty();
+            var programmeValue = $("#Programme_Id").val();
+            var facultyValue = $("#Faculty_Id").val();
+
+            if (!programmeValue || !facultyValue) {
+                return;
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartmentsAlt", "MatricNumber")', // Calling json method
+                dataType: 'json',
+                data: { programmeId: programmeValue, facultyId: facultyValue },
+                success: function(departments) {
+                    $("#Department_Id").append('<option value="' + 0 + '"> -- Select -- </option>');
+                    $.each(departments, function(i, departments) {
+                        $("#Department_Id").append('<option value="' + departments.Value + '">' + departments.Text + '</option>');
+                    });
+                },
+                error: function(ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+            return false;
+        });
+
+        function changeStyle(suffix) {
+            if (suffix == 1) {
+                $("#tab1").attr('style', 'background-color: #ebbbdb; color:#990066; border-radius: 100px;');
+                $("#tab2").attr('style', 'background-color: #990066; color:white; border-radius: 100px;');
+            } else if (suffix == 2) {
+                $("#tab2").attr('style', 'background-color: #ebbbdb; color:#990066; border-radius: 100px;');
+                $("#tab1").attr('style', 'background-color: #990066; color:white; border-radius: 100px;');
+            }
+        }
+
+        function getLargestMatricNumber() {
+
+            $("#ldGetLargestMatricNumber").show();
+
+            var prefix = $("#prefix").val();
+            var suffix = $("#suffix").val();
+
+            if (!prefix || !suffix) {
+                alert("Please input the prefix and suffix to get the largest matric number.");
+                $("#ldGetLargestMatricNumber").hide();
+                return;
+            }
+
+            $("#largestMatricNumberTable").empty();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetLargestMatricNumber", "MatricNumber")', // Calling json method
+                dataType: 'json',
+                data: { wildcard: prefix + suffix },
+                success: function(result) {
+                    if (result[0] && result[0].IsError == false) {
+                        if (result.length > 0) {
+                            for (i = 0; i < result.length; i++) {
+                                //result[i].index = result[i].Id;
+                                $("#largestMatricNumberTable").append('<tr><td>' + result[i].Name + '</td>' + '<td>' + result[i].Sex + '</td>' + '<td>' + result[i].ApplicationNumber + '</td>' + '<td>' + result[i].MatricNumber + '</td>' + '<td>' + result[i].Status + '</td></tr>');
+
+                            }
+
+                            $("#divLargestMatricNumber").show("slow");
+                            $("#divNoStudentFound").hide("slow");
+                            $("#divStudentList").hide("slow");
+                        } else {
+                            $("#divLargestMatricNumber").hide("slow");
+                            $("#divNoStudentFound").show("slow");
+                            $("#divStudentList").hide("slow");
+                        }
+                    } else {
+                        alert(result[0].Message);
+                    }
+                    $("#ldGetLargestMatricNumber").hide();
+                },
+                error: function(jqXHR) {
+                    alert('Failed.' + jqXHR.statusText);
+                    $("#ldGetLargestMatricNumber").hide();
+                }
+            });
+        }
+
+        function clearMatricNumber() {
+
+            $("#ldclearMatricNumber").show();
+
+            var prefix = $("#prefix").val();
+            var suffix = $("#suffix").val();
+
+            if (!prefix || !suffix) {
+                alert("Please input the prefix and suffix before proceeding.");
+                $("#ldclearMatricNumber").hide();
+                return;
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ClearMatricNumber", "MatricNumber")', // Calling json method
+                dataType: 'json',
+                data: { wildcard: prefix + suffix },
+                success: function(result) {
+                    if (result.IsError == false) {
+                        alert("Operation Successful! Click search to view the changes.");
+                    } else {
+                        alert(result.Message);
+                    }
+                    $("#ldclearMatricNumber").hide();
+                },
+                error: function(jqXHR) {
+                    alert('Failed.' + jqXHR.statusText);
+                    $("#ldclearMatricNumber").hide();
+                }
+            });
+        }
+
+    </script>
+}
+
+<div>
+    @if (TempData["Message"] != null)
+    {
+        @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+    }
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">Generate Matric Number</h4>
+    </div>
+    <div class="panel-body">
+        <div class="col-md-12">
+
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#searchFilter" style="background-color: #990066; color:white; border-radius: 100px;" onclick="changeStyle(1)" id="tab1">Search Filter</a></li>
+                <li><a data-toggle="tab" href="#generateMatNumber" style="background-color: #990066; color:white; border-radius: 100px;" onclick="changeStyle(2)" id="tab2">Generate Matric Number</a></li>
+            </ul>
+            <br />
+            <div class="tab-content">
+                <div id="searchFilter" class="tab-pane fade in active">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Session.Id, "Session:", new { @class = "control-label" })
+                                @Html.DropDownListFor(model => model.Session.Id, (IEnumerable<SelectListItem>)ViewBag.Sessions, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Session.Id)
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Programme.Id, "Programme:", new { @class = "control-label" })
+                                @Html.DropDownListFor(model => model.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.Programmes, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Programme.Id)
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Faculty.Id, "Faculty:", new { @class = "control-label" })
+                                @Html.DropDownListFor(model => model.Faculty.Id, (IEnumerable<SelectListItem>)ViewBag.Faculties, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Faculty.Id)
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Department.Id, "Course of Study:", new { @class = "control-label" })
+                                @Html.DropDownListFor(model => model.Department.Id, (IEnumerable<SelectListItem>)ViewBag.Departments, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Department.Id)
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.StudentStatus.Id, "Status:", new { @class = "control-label" })
+                                @Html.DropDownListFor(model => model.StudentStatus.Id, (IEnumerable<SelectListItem>)ViewBag.Status, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.StudentStatus.Id)
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <button type="button" class="btn btn-success" id="search">Search</button>
+                                <span style="display: none" id="ldGetStudents"><img src="~/Content/Images/bx_loader.gif" /></span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div id="generateMatNumber" class="tab-pane fade">
+
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-1">Prefix:</div>
+                                <div class="col-md-2"><input type="text" class="form-control" id="prefix" /></div>
+                                <div class="col-md-1">Suffix:</div>
+                                <div class="col-md-2"><input type="text" class="form-control" id="suffix" /></div>
+                                <div class="col-md-4">
+
+                                    <button type="button" class="btn btn-success" onclick="getLargestMatricNumber()">Get Largest Matric NO</button>
+                                    <span style="display: none" id="ldGetLargestMatricNumber"><img src="~/Content/Images/bx_loader.gif" /></span>
+                                    @*<button type="button" class="btn btn-success" onclick="clearMatricNumber()">Clear Matric NO</button>
+                                        <span style="display: none" id="ldclearMatricNumber"><img src="~/Content/Images/bx_loader.gif" /></span>*@
+                                </div>
+
+                            </div>
+                        </div>
+                        <br />
+                        <hr />
+                        <br />
+                        <div class="row">
+                            <div class="col-md-2">Start Number:</div>
+                            <div class="col-md-2"><input type="text" class="form-control" id="startNumber" /></div>
+                            <div class="col-md-2">Number Length:</div>
+                            <div class="col-md-2"><input type="text" class="form-control" id="numberLength" /></div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-2">Prefix:</div>
+                            <div class="col-md-2"><input type="text" class="form-control" id="generationPrefix" /></div>
+                            <div class="col-md-2">Suffix:</div>
+                            <div class="col-md-2"><input type="text" class="form-control" id="generationSuffix" /></div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="radio-inline">
+                                    <input type="radio" name="student" id="studentsWithoutMatricNumber" value="1" onchange="filterStudentList(1)"> Students without matric number
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="student" id="selectedStudents" value="2" onchange="filterStudentList(2)"> Selected Students
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="student" id="allStudents" value="3" checked onchange="filterStudentList(3)"> All Students
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <button type="button" class="btn btn-success" onclick="generateMatricNumber()">Generate</button>
+                                <span style="display: none" id="ldGenerateMatricNumber"><img src="~/Content/Images/bx_loader.gif" /></span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            @*<button type="button" class="btn btn-success" onclick="showCreateModal()">Add Format</button>
+                @if (Model.MatricNumberAssignments != null && Model.MatricNumberAssignments.Count > 0)
+                {
+                    <span class="pull-right">
+                        <button class="btn btn-success" onclick="generateMatricNumberBulk()">Generate Matric Number Bulk</button> &nbsp;
+                        <span style="display: none" id="loadGenerateBulk"><img src="~/Content/Images/bx_loader.gif" /></span>
+                        <button class="btn btn-success" onclick="clearMatricNumberBulk()">Clear All Matric Numbers</button> &nbsp;
+                        <span style="display: none" id="loadClearBulk"><img src="~/Content/Images/bx_loader.gif" /></span>
+                    </span>
+                }*@
+        </div>
+    </div>
+
+</div>
+
+<div id="divStudentList" style="display:none;" class="panel panel-default">
+    <div class="panel-body">
+        <div class="col-md-12">
+
+            <div class="panel panel-danger">
+                <div class="panel-body table-responsive pagination-page">
+
+                    <table class="table-bordered table-hover table-striped table" id="studentTable" data-show-header="true" data-pagination="true"
+                           data-id-field="name"
+                           data-page-list="[5, 10, 25, 50, 100, ALL]"
+                           data-page-size="5">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="ckbAllStudent" onclick="checkAllStudent()" /> Select</th>
+                                <th>
+                                    Name
+                                </th>
+                                <th>
+                                    Sex
+                                </th>
+                                <th>
+                                    Application Number
+                                </th>
+                                <th>
+                                    Matric Number
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentTableBody"></tbody>
+
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="divLargestMatricNumber" style="display:none;" class="panel panel-default">
+    <div class="panel-body">
+        <div class="col-md-12">
+
+            <div class="panel panel-danger">
+                <div class="panel-body table-responsive">
+
+                    <table class="table-bordered table-hover table-striped table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Name
+                                </th>
+                                <th>
+                                    Sex
+                                </th>
+                                <th>
+                                    Application Number
+                                </th>
+                                <th>
+                                    Matric Number
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="largestMatricNumberTable"></tbody>
+
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="divNoStudentFound" style="display:none;" class="row">
+    <h4>No Student Found</h4>
+</div>

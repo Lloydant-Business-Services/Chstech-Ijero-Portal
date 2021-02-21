@@ -1,0 +1,39 @@
+﻿@model IEnumerable< Abundance_Nk.Model.Model.DepartmentalSchoolFees>
+
+@{
+    ViewBag.Title = "AllSchoolFees";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>All School Fees</h2>
+
+<table class="table table table-bordered table-hover table-striped">
+
+    <thead>
+        <tr>
+            <th>Programme</th>
+            <th>Department</th>
+            <th>Level </th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+    <tbody style="color:black;">
+        @foreach (var fee in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => fee.programme.Name)</td>
+                <td>@Html.DisplayFor(modelItem => fee.department.Name)</td>
+                <td>@Html.DisplayFor(modelItem => fee.level.Name)</td>
+                <td>@Html.DisplayFor(modelItem => fee.Amount)</td>
+            </tr>
+        }
+
+</tbody>
+
+
+
+
+
+
+
+</table>

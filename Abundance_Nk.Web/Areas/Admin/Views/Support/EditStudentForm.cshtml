@@ -1,0 +1,110 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.SupportViewModel
+
+@{
+    ViewBag.Title = "Name Correction";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script>
+
+
+    //Session Drop down Selected change event
+    function GetDeptOption() {
+        $("#DeptOption").empty();
+        $("#deptOption").hide();
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetDepartmentOptions", "Support")', // Calling json method
+            dataType: 'json',
+            data: { ProgId: $("#Programme").val(), DeptId: $("#Department").val() },
+            // Get Selected Country ID.
+            success: function(departmentOptions) {
+              
+                //$("#DeptOption").append('<option value="' + 0 + '">' +
+                //    '-- Select Department Option --' + '</option>');
+                $.each(departmentOptions, function(i, departmentoption) {
+                    $("#DeptOption").append('<option value="' + departmentoption.Value + '">' + departmentoption.Text + '</option>');
+                    $("#deptOption").show();
+                });
+            },
+            error: function(ex) {
+                alert('Failed to retrieve options.' + ex);
+                $("#deptOption").hide();
+            }
+        });
+        $("#deptOption").hide();
+        //return false;
+    }
+
+
+</script>
+
+<br/>
+
+@if (TempData["Message"] != null)
+{
+    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+}
+<div class="row">
+    <div class="col-md-12">
+
+        @if (Model.Person == null) { return; }
+        @if (Model.Person != null)
+        {
+            using (Html.BeginForm("EditStudentFormPost", "Support", new { area = "Admin" }, FormMethod.Post))
+            {
+                @Html.HiddenFor(model => model.Person.Id)
+                <div class="row">
+                <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div style="font-size:x-large">Name Correction</div>
+                    </div>
+                    <div class="panel-body">
+                <div class="row">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Person.LastName, "Last Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.Person.LastName, new { @class = "form-control", @placeholder = "Enter Last Name", required = "required" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Person.FirstName, "First Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.Person.FirstName, new { @class = "form-control", @placeholder = "Enter First Name", required = "required" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Person.OtherName, "Other Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.Person.OtherName, new { @class = "form-control", @placeholder = "Enter Other Name", required = "required" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Person.MobilePhone, "Phone Number", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.Person.MobilePhone, new { @class = "form-control", @placeholder = "Enter Phone Number" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Save" class="btn btn-success mr5" />
+                        </div>
+                    </div>
+                </div>
+                </div>
+                </div>
+                </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+

@@ -1,0 +1,258 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.FeeDetailViewModel
+@{
+    ViewBag.Title = "Payment Upload";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section Scripts{
+    @Scripts.Render(("~/bundles/jquery"))
+
+    <link href="~/Content/sweetalert.css" rel="stylesheet"/>
+    <script src="~/Scripts/sweetalert.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $(".Load").hide();
+
+            $("#paymentTable").DataTable();
+            $("#paymentSuccessTable").DataTable();
+        });
+
+        function showBusy() {
+            $(".Load").show();
+        }
+
+    </script>
+    
+}
+    <div class="alert alert-success fade in nomargin">
+        <h3 style="text-align: center">@ViewBag.Title</h3>
+      
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+
+        <div class="col-md-12">
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", TempData["Message"])
+            }
+            @using (Html.BeginForm("UploadPayment", "FeeDetail", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+
+                <div class="panel panel-default ">
+                    <div class="panel-body ">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                              <p class="custom-text-black"> Select the Session then the excel file to upload</p>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.CurrentSession.Id, "Session", new {@class = "control-label custom-text-black"})
+                                    @Html.DropDownListFor(model => model.CurrentSession.Id, (IEnumerable<SelectListItem>) ViewBag.SessionId, new {@class = "form-control"})
+                                    @Html.ValidationMessageFor(model => model.CurrentSession.Id, null, new {@class = "text-danger"})
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.feeType.Id, "FeeType", new { @class = "control-label custom-text-black" })
+                                    @Html.DropDownListFor(model => model.feeType.Id, (IEnumerable<SelectListItem>)ViewBag.FeeTypeId, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.feeType.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div><input type="file" title="Upload Fee Detail" id="file" name="file" class="form-control" /></div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="col-sm-10">
+                                <button onclick="showBusy()" class="btn btn-success mr5" type="submit" name="submit" id="submit"><i class="fa fa-eject"> Upload</i></button>
+                                <span class="Load"><img src="~/Content/Images/bx_loader.gif" /></span>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+
+        </div>
+
+        @if (Model == null || Model.Payments == null) { return; }
+
+        @if (Model != null && Model.Payments != null)
+        {
+            using (Html.BeginForm("SavePayment", "FeeDetail", FormMethod.Post))
+            {
+                <div class="col-md-12 table-responsive">
+                    @Html.HiddenFor(m => m.CurrentSession.Id)
+                    @Html.HiddenFor(m => m.feeType.Id)
+                    <table class="table table-bordered table-hover table-striped" id="paymentTable">
+                        <thead>
+                            <tr>
+                                <th>
+                                    SN
+                                </th>
+                                <th>
+                                    Payment Date
+                                </th>
+                                <th>
+                                    Payment Ref. Number
+                                </th>
+
+                                <th>
+                                    Merchant Reference
+                                </th>
+
+                                <th>
+                                    Merchant ID
+                                </th>
+                                <th>
+                                    Customer ID
+                                </th>
+                                <th>
+                                    Customer Name
+                                </th>
+                                <th>
+                                    Payment Item
+                                </th>
+                                <th>
+                                    Amount
+                                </th>
+                                <th>
+                                    Payment Method
+                                </th>
+                                <th>
+                                    Bank
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody style="color:black;">
+
+                            @for (var itemIndex = 0; itemIndex < Model.Payments.Count; itemIndex++)
+                            {
+                                var sn = 1 + itemIndex;
+                                <tr>
+                                    <td>@sn</td>
+                                    <td>@Html.DisplayTextFor(m => m.Payments[itemIndex].PaymentDate)</td>
+                                    <td>@Html.DisplayTextFor(m => m.Payments[itemIndex].PaymentRefNumber)</td>
+                                    <td>@Html.DisplayTextFor(m => m.Payments[itemIndex].MerchantReference)</td>
+                                    <td>@Html.DisplayTextFor(m => m.Payments[itemIndex].MerchantId)</td>
+                                    <td>@Html.DisplayTextFor(m => m.Payments[itemIndex].CustomerId)</td>
+                                    <td>@Html.DisplayTextFor(m => m.Payments[itemIndex].CustomerName)</td>
+                                    <td>@Html.DisplayTextFor(m => m.Payments[itemIndex].PaymentItem)</td>
+                                    <td>@Html.DisplayTextFor(m => m.Payments[itemIndex].Amount)</td>
+                                    <td>@Html.DisplayTextFor(m => m.Payments[itemIndex].PaymentMethod)</td>
+                                    <td>@Html.DisplayTextFor(m => m.Payments[itemIndex].Bank)</td>
+                                </tr>
+
+                            }
+
+                        </tbody>
+                    </table>
+
+                </div>
+                <br/>
+                <div class="form-group">
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-10">
+                         <button onclick="showBusy()" class="btn btn-success mr5" type="submit" name="submit" id="submit" ><i class="fa fa-eject"> Save Upload</i></button><span class="Load"><img src="~/Content/Images/bx_loader.gif" /></span>
+
+                    </div>
+                </div>
+
+            }
+        }
+        
+        @if (Model != null && Model.SuccessfulPayments != null)
+        {
+            <div class="col-md-12 table-responsive">
+                <h4>Successful Uploads</h4>
+                <table class="table table-bordered table-hover table-striped" id="paymentSuccessTable">
+                    <thead>
+                    <tr>
+                        <th>
+                            SN
+                        </th>
+                        <th>
+                            Payment Date
+                        </th>
+                        <th>
+                            Payment Ref. Number
+                        </th>
+
+                        <th>
+                            Merchant Reference
+                        </th>
+
+                        <th>
+                            Merchant ID
+                        </th>
+                        <th>
+                            Customer ID
+                        </th>
+                        <th>
+                            Customer Name
+                        </th>
+                        <th>
+                            Payment Item
+                        </th>
+                        <th>
+                            Amount
+                        </th>
+                        <th>
+                            Payment Method
+                        </th>
+                        <th>
+                            Bank
+                        </th>
+                    </tr>
+                    </thead>
+
+                    <tbody style="color: black;">
+
+                    @for (var itemIndex = 0; itemIndex < Model.SuccessfulPayments.Count; itemIndex++)
+                    {
+                        var sn = 1 + itemIndex;
+                        <tr>
+                            <td>@sn</td>
+                            <td>@Html.DisplayTextFor(m => m.SuccessfulPayments[itemIndex].PaymentDate)</td>
+                            <td>@Html.DisplayTextFor(m => m.SuccessfulPayments[itemIndex].PaymentRefNumber)</td>
+                            <td>@Html.DisplayTextFor(m => m.SuccessfulPayments[itemIndex].MerchantReference)</td>
+                            <td>@Html.DisplayTextFor(m => m.SuccessfulPayments[itemIndex].MerchantId)</td>
+                            <td>@Html.DisplayTextFor(m => m.SuccessfulPayments[itemIndex].CustomerId)</td>
+                            <td>@Html.DisplayTextFor(m => m.SuccessfulPayments[itemIndex].CustomerName)</td>
+                            <td>@Html.DisplayTextFor(m => m.SuccessfulPayments[itemIndex].PaymentItem)</td>
+                            <td>@Html.DisplayTextFor(m => m.SuccessfulPayments[itemIndex].Amount)</td>
+                            <td>@Html.DisplayTextFor(m => m.SuccessfulPayments[itemIndex].PaymentMethod)</td>
+                            <td>@Html.DisplayTextFor(m => m.SuccessfulPayments[itemIndex].Bank)</td>
+                        </tr>
+
+                    }
+
+                    </tbody>
+                </table>
+
+            </div>
+        }
+    </div>
+</div>

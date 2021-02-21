@@ -1,0 +1,410 @@
+﻿@using Abundance_Nk.Web.Models
+@model Abundance_Nk.Web.Areas.Admin.ViewModels.SupportViewModel
+@{
+    ViewBag.Title = "Purge Student";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Scripts {
+    <link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet"/>
+    @Scripts.Render("~/bundles/jquery")
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            if ($("#DepartmentOption").val() && $("#DepartmentOption").val() !== "0") {
+                $("#divDepartmentOption").show();
+            }
+
+            $('#myTable').DataTable();
+
+            $("#loading").hide();
+
+            //Programme Drop down Selected-change event
+            $("#Programme").change(function() {
+                $("#Department").empty();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetDepartments", "Support")', // Calling json method
+                    dataType: 'json',
+                    data: { id: $("#Programme").val() },
+                    // Get Selected Country ID.
+                    success: function(departments) {
+                        $("#Department").append('<option value="' +
+                            0 +
+                            '">' +
+                            '-- Select Department --' +
+                            '</option>');
+                        $.each(departments,
+                            function(i, department) {
+                                $("#Department").append('<option value="' +
+                                    department.Value +
+                                    '">' +
+                                    department.Text +
+                                    '</option>');
+                            });
+                    },
+                    error: function(ex) {
+                        alert('Failed to retrieve departments.' + ex);
+                    }
+                });
+
+
+                $("#Level").empty();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetLevels", "Support")', // Calling json method
+                    dataType: 'json',
+                    data: { id: $("#Programme").val() },
+                    
+                    success: function (levels) {
+                        $("#Level").append('<option value="' + 0 + '">' +
+                            '-- Select Level --' + '</option>');
+                        $.each(levels, function (i, level) {
+                            $("#Level").append('<option value="' + level.Value + '">' +
+                                level.Text + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve levels.' + ex);
+                    }
+                });
+
+                var programme = $("#Programme").val();
+                var department = $("#Department").val();
+                var level = $("#Level").val();
+
+                if (!programme || !department || !level || programme == "0" || department == "0" || level == "0") {
+                    $("#divDepartmentOption").hide();
+                    return false;
+                }
+
+                $("#DepartmentOption").empty();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetDepartmentOptionByDepartment", "Courses")', // we are calling json method
+                    dataType: 'json',
+                    data: { id: department, programmeid: programme, levelId: level },
+                    success: function (departmentOptions) {
+
+                        if (!departmentOptions || departmentOptions.length <= 0) {
+                            $("#divDepartmentOption").hide();
+                        } else {
+                            $("#DepartmentOption").append('<option value="' + 0 + '"> -- Select -- </option>');
+                            $.each(departmentOptions, function (i, Option) {
+                                $("#DepartmentOption").append('<option value="' + Option.Value + '">' + Option.Text + '</option>');
+                            });
+                            if (programme > 2) {
+                                $("#divDepartmentOption").show();
+                            }
+
+                        }
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve department Options.' + ex);
+                    }
+                });
+
+                return false;
+            });
+
+            $("#Level").change(function () {
+
+                var programme = $("#Programme").val();
+                var department = $("#Department").val();
+                var level = $("#Level").val();
+
+                if (!programme || !department || !level || programme == "0" || department == "0" || level == "0") {
+                    return;
+                }
+
+                $("#DepartmentOption").empty();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetDepartmentOptionByDepartment", "Courses")', // we are calling json method
+                    dataType: 'json',
+                    data: { id: department, programmeid: programme, levelId: level },
+                    success: function (departmentOptions) {
+
+                        if (!departmentOptions || departmentOptions.length <= 0) {
+                            $("#divDepartmentOption").hide();
+                        } else {
+                            $("#DepartmentOption").append('<option value="' + 0 + '"> -- Select -- </option>');
+                            $.each(departmentOptions, function (i, Option) {
+                                $("#DepartmentOption").append('<option value="' + Option.Value + '">' + Option.Text + '</option>');
+                            });
+                            if (programme > 2) {
+                                $("#divDepartmentOption").show();
+                            }
+
+                        }
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve department Options.' + ex);
+                    }
+                });
+            });
+
+            $("#Department").change(function () {
+
+                var programme = $("#Programme").val();
+                var department = $("#Department").val();
+                var level = $("#Level").val();
+
+                if (!programme || !department || !level || programme == "0" || department == "0" || level == "0") {
+                    return;
+                }
+
+                $("#DepartmentOption").empty();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetDepartmentOptionByDepartment", "Courses")', // we are calling json method
+                    dataType: 'json',
+                    data: { id: department, programmeid: programme, levelId: level },
+                    success: function (departmentOptions) {
+
+                        if (!departmentOptions || departmentOptions.length <= 0) {
+                            $("#divDepartmentOption").hide();
+                        } else {
+                            $("#DepartmentOption").append('<option value="' + 0 + '"> -- Select -- </option>');
+                            $.each(departmentOptions, function (i, Option) {
+                                $("#DepartmentOption").append('<option value="' + Option.Value + '">' + Option.Text + '</option>');
+                            });
+                            if (programme > 2) {
+                                $("#divDepartmentOption").show();
+                            }
+                        }
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve department Options.' + ex);
+                    }
+                });
+            });
+
+        });
+
+        function purgeSingleStudent(personId) {
+
+            if (confirm("Are you sure you want to purge this student?")) {
+
+                $("#progress").show();
+
+                if (personId == undefined || personId <= 0) {
+                    alert("Invalid parameter.");
+                    $("#progress").hide();
+                    return;
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("PurgeSingleStudent", "Support")', // Calling json method
+                    dataType: 'json',
+                    data: { studentId: personId },
+                    success: function (result) {
+                        alert(result.SuccessMessage);
+                        $("#progress").hide();
+                        window.location.reload(true);
+                    },
+                    error: function (ex) {
+                        alert('Failed.' + ex);
+                        $("#progress").hide();
+                    }
+                });
+            } else {
+                return false;
+            }
+
+            return false;
+        }
+
+        function purgeStudentBulk() {
+
+            if (confirm("Are you sure you want to purge all the students for the selected programme, department and level?")) {
+
+                $("#progress").show();
+
+                var programme = $("#Programme").val();
+                var department = $("#Department").val();
+                var departmentOption = $("#DepartmentOption").val();
+                var session = $("#Session").val();
+                var level = $("#Level").val();
+
+                if (programme == undefined || programme == "" || programme == "0" || department == undefined || department == "" || department == "0" || session == undefined || session == "" ||
+                    session == "0" || level == undefined || level == "" || level == "0")
+                {
+                    alert("Ensure the programme, level, department and session are selected before proceeding.");
+                    $("#progress").hide();
+                    return;
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("PurgeStudentBulk", "Support")', // Calling json method
+                    dataType: 'json',
+                    data: { programmeId: programme, departmentId: department, departmentOptionId: departmentOption, sessionId: session, levelId: level },
+                    success: function (result) {
+                        alert(result.SuccessMessage);
+                        $("#progress").hide();
+                        window.location.reload(true);
+                    },
+                    error: function (ex) {
+                        alert('Failed.' + ex);
+                        $("#progress").hide();
+                    }
+                });
+            } else {
+                return false;
+            }
+
+            return false;
+        }
+
+    </script>
+}
+
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+
+            <div class="panel panel-default">
+                @using (Html.BeginForm("PurgeStudent", "Support", new { area = "Admin" }, FormMethod.Post))
+                {
+                    <div class="panel-heading">
+                        <h3 class="panel-title" style="color: white"><i class="fa fa-fw fa-remove"></i>Purge Students</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Session.Name, "Session", new { @class = "col-sm-2 control-label " })
+                            <div class="col-sm-10">
+                                @Html.DropDownListFor(model => model.Session.Id, (IEnumerable<SelectListItem>)ViewBag.Session, new { @class = "form-control", @id = "Session", @required = "required" })
+                                @Html.ValidationMessageFor(model => model.Session.Id, null, new { @class = "text-danger" })
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Programme.Name, "Programme", new { @class = "col-sm-2 control-label " })
+                            <div class="col-sm-10">
+                                @Html.DropDownListFor(model => model.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.Programme, new { @class = "form-control", @id = "Programme", @required = "required" })
+                                @Html.ValidationMessageFor(model => model.Programme.Id, null, new { @class = "text-danger" })
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Level.Name, "Level", new { @class = "col-sm-2 control-label " })
+                            <div class="col-sm-10">
+                                @Html.DropDownListFor(model => model.Level.Id, (IEnumerable<SelectListItem>)ViewBag.Level, new { @class = "form-control", @id = "Level", @required = "required" })
+                                @Html.ValidationMessageFor(model => model.Level.Id, null, new { @class = "text-danger" })
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Department.Name, "Department", new {@class = "col-sm-2 control-label "})
+                            <div class="col-sm-10">
+                                @Html.DropDownListFor(model => model.Department.Id, (IEnumerable<SelectListItem>) ViewBag.Department, new {@class = "form-control", @id = "Department", @required = "required"})
+                                @Html.ValidationMessageFor(model => model.Department.Id, null, new {@class = "text-danger"})
+                            </div>
+                        </div>
+
+                        <div id="divDepartmentOption" style="display: none;" class="form-group">
+                            @Html.LabelFor(model => model.DepartmentOption.Name, "Option", new { @class = "col-sm-2 control-label " })
+                            <div class="col-sm-10">
+                                @Html.DropDownListFor(model => model.DepartmentOption.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentOption, new { @class = "form-control", @id = "DepartmentOption", @required = "required" })
+                                @Html.ValidationMessageFor(model => model.DepartmentOption.Id, null, new { @class = "text-danger" })
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-10">
+                                <input class="btn btn-success mr5 " type="submit" name="submit" id="submit" value="Submit" />
+
+                            </div>
+                        </div>
+
+                    </div>
+                }
+
+                @if (Model.StudentLevelList != null && Model.StudentLevelList.Count > 0)
+                {
+                    <div class="panel panel-danger">
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <button class="btn btn-primary btn-sm" onclick="purgeStudentBulk()"><i class="fa fa-remove"> Purge All</i></button>
+                                <span id="progress" style="display:none"><img src="~/Content/Images/bx_loader.gif" /></span>
+                                <table id="myTable" class="table-bordered table-hover table-striped table">
+                                    <thead>
+                                        <tr>
+                                            <th>Sn</th>
+                                            <th>
+                                                Name
+                                            </th>
+                                            <th>
+                                                Matric Number
+                                            </th>
+                                            <th>
+                                                Sex
+                                            </th>
+                                            <th>
+                                                Phone Number
+                                            </th>
+                                            <th>
+                                            </th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (int i = 0; i < Model.StudentLevelList.Count; i++)
+            {
+                var sn = i + 1;
+                            <tr>
+                                <td>@sn</td>
+                                <td>
+                                    @Model.StudentLevelList[i].Student.FullName.ToUpper()
+                                </td>
+                                <td>
+                                    @Model.StudentLevelList[i].Student.MatricNumber
+                                </td>
+                                @if (Model.StudentLevelList[i].Student.Sex != null)
+    {
+                            <td>
+                                @Model.StudentLevelList[i].Student.Sex.Name.ToUpper()
+                            </td>
+}
+else
+{
+                            <td>
+                                NIL
+                            </td>
+}
+
+                                <td>
+                                    @Model.StudentLevelList[i].Student.MobilePhone
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="purgeSingleStudent(@Model.StudentLevelList[i].Student.Id)"><i class="fa fa-remove"> Purge</i></button>
+                                </td>
+                            </tr>
+}
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+    </div>

@@ -1,0 +1,19 @@
+﻿@using System.Xml.Linq;
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>API</title>
+</head>
+<body>
+    <div> 
+        @MvcHtmlString.Create(XDocument.Load(ViewBag.xmlUrl).ToString()));
+    </div>
+</body>
+</html>

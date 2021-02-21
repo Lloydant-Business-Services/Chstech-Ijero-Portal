@@ -1,0 +1,679 @@
+﻿@model Abundance_Nk.Web.Areas.Student.ViewModels.CourseRegistrationViewModel
+
+@{
+    // Layout = "~/Views/Shared/_NewThemeLayout.cshtml";
+    Layout = "~/Areas/Student/Views/Shared/_NewThemeLayout.cshtml";
+}
+
+@*<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+    <script src="~/Scripts/jquery-migrate-1.2.1.min.js"></script>
+    <script src="~/Scripts/prettify.js"></script>
+    <script src="~/Scripts/custom.js"></script>
+
+    <link href="~/Content/pretty-menu.css" rel="stylesheet" />
+    <link href="~/Content/misc.css" rel="stylesheet" />*@
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script src="~/Scripts/responsive-tabs.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            BindCheckBoxes();
+
+            UpdateUIState();
+
+        //$("frmCourseRegistration").submit(function (e) {
+        //    //if ($("frmCourseRegistration").valid()) {
+        //        $.post($(this).attr("action"), $(this).serialize());
+        //    //}
+        //    e.preventDefault();
+        //});
+
+            //$('input.example').on('change', function () {
+
+            //    $('CTE315').not(this).prop('checked', false);
+
+            //});
+
+        $("#btnRegisterCourse").click(function () {
+            try
+            {
+
+                var data = $('#frmCourseRegistration').serialize();
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("Form", "CourseRegistration")",
+                    dataType: "json",
+                    data: $("#frmCourseRegistration").serialize(),
+                    beforeSend: function () {
+                        $("#processing").show();
+                    },
+                    complete: function () {
+                        $("#processing").hide();
+                    },
+
+                    success: SuccessFunc,
+                    error: ErrorFunc,
+                })
+
+
+
+            }
+            catch (e) {
+                alert(e);
+            }
+        });
+
+            function ErrorFunc() {
+                alert("Operation failed!");
+            }
+
+            function SuccessFunc(data, status) {
+
+                if (data.message.indexOf("Error Occurred") <= -1) {
+                    $('#btnRegisterCourse').prop('disabled', true);
+                    $("#selectAllFirstSemester").prop('disabled', true);
+                    $("#selectAllSecondSemester").prop('disabled', true);
+                    $(".ckb1").prop('disabled', true);
+                    $(".ckb2").prop('disabled', true);
+
+                    $('#divCourseFormPrintOut').show();
+                }
+
+                alert(data.message);
+            }
+
+        function InvalidUserInput() {
+            try
+            {
+                var firstSemesterMinimumUnit = $('#FirstSemesterMinimumUnit').val();
+                var firstSemesterMaximumUnit = $('#FirstSemesterMaximumUnit').val();
+                var secondSemesterMinimumUnit = $('#SecondSemesterMinimumUnit').val();
+                var secondSemesterMaximumUnit = $('#SecondSemesterMaximumUnit').val();
+                var firstSemesterCarryOverTotalUnit = $('#TotalFirstSemesterCarryOverCourseUnit').val();
+                var secondSemesterCarryOverTotalUnit = $('#TotalSecondSemesterCarryOverCourseUnit').val();
+
+                var firstSemesterSelectedUnit = CalculateSelectedCourseUnit($(".ckb1"));
+                var secondSemesterSelectedUnit = CalculateSelectedCourseUnit($(".ckb2"));
+
+                firstSemesterSelectedUnit += parseInt(firstSemesterCarryOverTotalUnit);
+                secondSemesterSelectedUnit += parseInt(secondSemesterCarryOverTotalUnit);
+
+                if (firstSemesterSelectedUnit < firstSemesterMinimumUnit) {
+                    return true;
+                }
+                else if (firstSemesterMaximumUnit < firstSemesterSelectedUnit) {
+                    return true;
+                }
+                else if (secondSemesterSelectedUnit < secondSemesterMinimumUnit) {
+                    return true;
+                }
+                else if (secondSemesterMaximumUnit < secondSemesterSelectedUnit) {
+                    return true;
+                }
+
+                return false;
+            }
+            catch (e) {
+                throw e;
+            }
+        }
+
+        function BindCheckBoxes() {
+
+            try
+            {
+                BindSelectAll($("#selectAllFirstSemester"), $(".ckb1"), $('#spFirstSemesterTotalCourseUnit'));
+                BindSelectAll($("#selectAllSecondSemester"), $(".ckb2"), $('#spSecondSemesterTotalCourseUnit'));
+                BindSelectOne($("#selectAllFirstSemester"), $(".ckb1"), $('#spFirstSemesterTotalCourseUnit'));
+                BindSelectOne($("#selectAllSecondSemester"), $(".ckb2"), $('#spSecondSemesterTotalCourseUnit'));
+
+                UpdateSelectAllCheckBox($("#selectAllFirstSemester"), $(".ckb1"))
+                UpdateSelectAllCheckBox($("#selectAllSecondSemester"), $(".ckb2"))
+            }
+            catch (e) {
+                alert(e);
+            }
+        }
+
+        function BindSelectAll(chkBox, chkBoxClass, courseUnitLabel) {
+            chkBox.click(function (event) {
+
+                try {
+                    if (this.checked) {
+                        chkBoxClass.each(function () {
+                            this.checked = true;
+                        });
+                    }
+                    else {
+                        chkBoxClass.each(function () {
+                            this.checked = false;
+                        });
+                    }
+
+                    var totalUnit = CalculateSelectedCourseUnit(chkBoxClass);
+                    courseUnitLabel.html(totalUnit);
+
+                    UpdateButtonState();
+                }
+                catch (e) {
+                    alert(e);
+                }
+            });
+        }
+
+        function UpdateButtonState() {
+
+            try
+            {
+                if (InvalidUserInput()) {
+                    $('#btnRegisterCourse').prop('disabled', true);
+                }
+                else {
+                    $('#btnRegisterCourse').prop('disabled', false);
+                }
+
+            }
+            catch (e) {
+                throw e;
+            }
+        }
+
+        function BindSelectOne(chkBox, chkBoxClass, courseUnitLabel) {
+            chkBoxClass.click(function (event) {
+
+                try {
+                    var totalSelected = chkBoxClass.filter(":checked").length;
+                    var totalCheckBoxCount = chkBoxClass.length;
+
+                    if (!this.checked) {
+                        chkBox.removeAttr('checked');
+                    }
+                    else {
+                        if (totalSelected == totalCheckBoxCount) {
+                            chkBox.prop('checked', 'checked');
+                        }
+                    }
+
+                    var totalUnit = CalculateSelectedCourseUnit(chkBoxClass);
+                    courseUnitLabel.html(totalUnit);
+
+                    UpdateButtonState();
+                }
+                catch (e) {
+                    alert(e);
+                }
+            });
+        }
+
+        function UpdateSelectAllCheckBox(chkBox, chkBoxClass) {
+            try{
+                var totalSelected = chkBoxClass.filter(":checked").length;
+                var totalCheckBoxCount = chkBoxClass.length;
+
+                if (totalSelected == totalCheckBoxCount) {
+                    chkBox.prop('checked', 'checked');
+                }
+            }
+            catch (e) {
+                alert(e);
+            }
+        }
+
+        function CalculateSelectedCourseUnit(checkBox) {
+            try {
+                var totalUnit = 0;
+                var values = new Array();
+
+                $.each(checkBox.filter(":checked").closest("td").siblings('.unit'),
+                      function () {
+                          values.push($(this).text());
+
+                      });
+
+                if (values != null && values.length > 0) {
+                    for (var i = 0; i < values.length; i++) {
+                        totalUnit += parseInt(values[i]);
+                    }
+                }
+
+                return totalUnit;
+            }
+            catch (e) {
+                alert(e);
+            }
+        }
+
+
+        //function CalculateSelectedCourseUnit(checkBox) {
+
+        //    try
+        //    {
+        //        var totalUnit = 0;
+
+        //        //var units = checkBox.map(function () { return $(this).val(); });
+        //        var units = checkBox.filter(":checked").map(function () { return $(this).val(); });
+        //        if (units.toArray() != null && units.toArray().length > 0) {
+        //            for (var i = 0; i < units.toArray().length; i++) {
+        //                totalUnit += units[i] << 0;
+        //            }
+        //        }
+
+        //        return totalUnit;
+        //    }
+        //    catch (e) {
+        //        throw e;
+        //    }
+        //}
+
+        function UpdateUIState() {
+            try {
+                var courseAlreadyRegistered = $('#CourseAlreadyRegistered').val();
+                if (courseAlreadyRegistered.toLowerCase() == 'true') {
+                    $('#btnRegisterCourse').prop('disabled', false);
+
+                    var approved = $('#RegisteredCourse_Approved').val();
+                    if (approved.toLowerCase() == 'true') {
+                        $('#buttons').hide('fast');
+                        $(".ckb1").prop('disabled', true);
+                        $(".ckb2").prop('disabled', true);
+                    }
+                    else {
+                        $('#buttons').show();
+                        $(".ckb1").prop('disabled', false);
+                        $(".ckb2").prop('disabled', false);
+                    }
+
+                    $('#divCourseFormPrintOut').show();
+                }
+                else {
+                    $('#buttons').show();
+                    $('#btnRegisterCourse').prop('disabled', true);
+                    $(".ckb1").prop('disabled', false);
+                    $(".ckb2").prop('disabled', false);
+
+                    $('#divCourseFormPrintOut').hide('fast');
+                }
+
+
+                var firstSemesterMaximumUnit = $('#FirstSemesterMaximumUnit').val();
+                var secondSemesterMaximumUnit = $('#SecondSemesterMaximumUnit').val();
+                var firstSemesterCarryOverTotalUnit = $('#TotalFirstSemesterCarryOverCourseUnit').val();
+                var secondSemesterCarryOverTotalUnit = $('#TotalSecondSemesterCarryOverCourseUnit').val();
+
+                if ((parseInt(firstSemesterCarryOverTotalUnit) <= parseInt(firstSemesterMaximumUnit)) && (parseInt(secondSemesterCarryOverTotalUnit) <= parseInt(secondSemesterMaximumUnit))) {
+                    $("#selectAllCarryOverCourses").prop('checked', 'checked');
+                    $("#selectAllCarryOverCourses").prop('disabled', true);
+
+                    ////$(".ckb3").prop('checked', true);
+                    //$(".ckb3").prop('checked', 'checked');
+                    $(".ckb3").prop('disabled', true);
+                }
+            }
+            catch (e) {
+                throw e;
+            }
+        }
+
+
+
+    });
+
+    </script>
+}
+
+<div class="col-md-12 card p-5">
+
+    @using (Html.BeginForm("Form", "CourseRegistration", new { Area = "Student" }, FormMethod.Post, new { id = "frmCourseRegistration" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+
+        @Html.HiddenFor(model => model.Student.Id)
+        @Html.HiddenFor(model => model.CurrentSessionSemester.SessionSemester.Session.Id)
+        @Html.HiddenFor(model => model.StudentLevel.Level.Id)
+
+        @Html.HiddenFor(model => model.TotalSecondSemesterCarryOverCourseUnit)
+        @Html.HiddenFor(model => model.TotalFirstSemesterCarryOverCourseUnit)
+        @Html.HiddenFor(model => model.FirstSemesterMinimumUnit)
+        @Html.HiddenFor(model => model.FirstSemesterMaximumUnit)
+        @Html.HiddenFor(model => model.SecondSemesterMinimumUnit)
+        @Html.HiddenFor(model => model.SecondSemesterMaximumUnit)
+        @Html.HiddenFor(model => model.CourseAlreadyRegistered)
+        @Html.HiddenFor(model => model.CarryOverExist)
+
+        @Html.HiddenFor(model => model.RegisteredCourse.Id)
+        @Html.HiddenFor(model => model.RegisteredCourse.Approved)
+
+        if (Model.Student != null && Model.Student.ApplicationForm != null)
+        {
+            @Html.HiddenFor(model => model.Student.ApplicationForm.Id)
+        }
+
+
+        <div class="col-md-12 card card-primary p-5">
+
+            <div class="form-group">
+                <div class="col-md-12" style="font-size:15pt; text-transform:uppercase">
+                    @Html.HiddenFor(model => model.Student.Id)
+                    @Html.HiddenFor(model => model.StudentLevel.Level.Id)
+                    @Html.DisplayFor(model => model.Student.FullName) (@Html.DisplayFor(model => model.StudentLevel.Level.Name)) DETAILS
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group margin-bottom-0">
+                        <div class="col-md-4">
+                            @Html.LabelFor(model => model.Student.MatricNumber, new { @class = "control-label " })
+                        </div>
+                        <div class="col-md-8 ">
+                            @Html.HiddenFor(model => model.Student.MatricNumber)
+                            @Html.DisplayFor(model => model.Student.MatricNumber)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group margin-bottom-0">
+                        <div class="col-md-5">
+                            @Html.Label("Session", new { @class = "control-label " })
+                        </div>
+                        <div class="col-md-7 ">
+                            @Html.HiddenFor(model => model.CurrentSessionSemester.SessionSemester.Session.Id)
+                            @Html.DisplayFor(model => model.CurrentSessionSemester.SessionSemester.Session.Name)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group margin-bottom-0">
+                        <div class="col-md-4">
+                            @Html.LabelFor(model => model.StudentLevel.Programme.Name, new { @class = "control-label " })
+                        </div>
+                        <div class="col-md-8 ">
+                            @Html.HiddenFor(model => model.StudentLevel.Programme.Id)
+                            @Html.DisplayFor(model => model.StudentLevel.Programme.Name)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group margin-bottom-0">
+                        <div class="col-md-5">
+                            @Html.LabelFor(model => model.StudentLevel.Department.Name, new { @class = "control-label " })
+                        </div>
+                        <div class="col-md-7 ">
+                            @Html.HiddenFor(model => model.StudentLevel.Department.Id)
+                            @Html.DisplayFor(model => model.StudentLevel.Department.Name)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group margin-bottom-0">
+                        <div class="col-md-4">
+                            @Html.LabelFor(model => model.StudentLevel.Department.Faculty.Name, new { @class = "control-label " })
+                        </div>
+                        <div class="col-md-8 ">
+                            @Html.DisplayFor(model => model.StudentLevel.Department.Faculty.Name)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group margin-bottom-0">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        if (Model != null && Model.CarryOverCourses != null && Model.CarryOverCourses.Count > 0)
+        {
+            <div class="col-md-12 card p-5">
+                <div class="panel-body">
+                    <div>
+
+                      
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive " style="font-size:9pt">
+                                    <table class="table table-condensed grid-table table-head-alt mb30">
+                                        <thead>
+                                            <tr class="well" style="height:35px; vertical-align:middle">
+                                                <th>
+                                                    @Html.CheckBox("selectAllCarryOverCourses")
+                                                </th>
+                                                <th>
+                                                    Course Code
+                                                </th>
+                                                <th>
+                                                    Course Title
+                                                </th>
+                                                <th>
+                                                    Course Unit
+                                                </th>
+                                                <th>
+                                                    Course Type
+                                                </th>
+                                                <th>
+                                                    Semester
+                                                </th>
+                                            </tr>
+                                        </thead>
+
+                                        @for (int i = 0; i < Model.CarryOverCourses.Count; i++)
+                                        {
+                                            <tr>
+                                                <td style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                                    @Html.HiddenFor(model => Model.CarryOverCourses[i].Course.IsRegistered)
+                                                    @Html.CheckBoxFor(model => Model.CarryOverCourses[i].Course.IsRegistered, new { @class = "ckb3", id = Model.CarryOverCourses[i].Course.Id })
+                                                </td>
+
+                                                <td style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                                    @Html.HiddenFor(model => Model.CarryOverCourses[i].Course.Code)
+                                                    @Html.DisplayFor(model => Model.CarryOverCourses[i].Course.Code)
+                                                </td>
+
+                                                <td style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                                    @Html.HiddenFor(model => Model.CarryOverCourses[i].Course.Id)
+                                                    @Html.DisplayFor(model => Model.CarryOverCourses[i].Course.Name)
+                                                </td>
+
+                                                <td class="unit" style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                                    @Html.HiddenFor(model => Model.CarryOverCourses[i].Course.Unit)
+                                                    @Html.DisplayFor(model => Model.CarryOverCourses[i].Course.Unit)
+                                                </td>
+
+                                                <td style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                                    @Html.HiddenFor(model => Model.CarryOverCourses[i].Course.Type.Id)
+                                                    @Html.DisplayFor(model => Model.CarryOverCourses[i].Course.Type.Name)
+                                                </td>
+
+                                                <td style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                                    @Html.HiddenFor(model => Model.CarryOverCourses[i].Semester.Id)
+                                                    @Html.DisplayFor(model => Model.CarryOverCourses[i].Semester.Name)
+                                                </td>
+
+                                                @Html.HiddenFor(model => Model.CarryOverCourses[i].Id)
+                                                @Html.HiddenFor(model => Model.CarryOverCourses[i].Mode.Id)
+                                                @Html.HiddenFor(model => Model.CarryOverCourses[i].CourseRegistration.Id)
+                                            </tr>
+                                        }
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="col-md-12 card p-5">
+            <div class="panel-body">
+                <div id="divFirstSemesterCourses">
+                    @if (Model != null && Model.FirstSemesterCourses != null && Model.FirstSemesterCourses.Count > 0)
+                    {
+                      
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="table-responsive " style="font-size:9pt">
+                                        <table class="table table-condensed grid-table table-head-alt mb30">
+                                            <thead>
+                                                <tr class="well" style="height:35px; vertical-align:middle">
+                                                   
+                                                    <th>
+                                                        Course Code
+                                                    </th>
+                                                    <th>
+                                                        Course Title
+                                                    </th>
+                                                    <th>
+                                                      Videos
+                                                    </th>
+                                                    <th>
+                                                       E-books
+                                                    </th>
+                                                </tr>
+                                            </thead>
+
+                                            @for (int i = 0; i < Model.FirstSemesterCourses.Count; i++)
+                                            {
+                                                <tr>
+
+                                                    <td>
+                                                        @Html.HiddenFor(model => Model.FirstSemesterCourses[i].Course.Code)
+                                                        @Html.DisplayFor(model => Model.FirstSemesterCourses[i].Course.Code, new { @class = "form-control", @readonly = "readonly" })
+                                                    </td>
+
+                                                    <td>
+                                                        @Html.HiddenFor(model => Model.FirstSemesterCourses[i].Course.Id)
+                                                        @Html.DisplayFor(model => Model.FirstSemesterCourses[i].Course.Name, new { @class = "form-control", @readonly = "readonly" })
+                                                    </td>
+
+                                                    <td>
+                                                        <a href="~/Content/E/evideo.mp4" target="_blank" class="btn btn-danger">Watch Videos</a>
+                                                    </td>
+
+                                                    <td>
+                                                        <a href="~/Content/E/csharp_ebook.pdf" target="_blank" class="btn btn-danger">View E-Books</a>
+
+                                                    </td>
+
+
+                                                    @Html.HiddenFor(model => Model.FirstSemesterCourses[i].Semester.Id)
+                                                    @Html.HiddenFor(model => Model.FirstSemesterCourses[i].Mode.Id)
+                                                    @Html.HiddenFor(model => Model.FirstSemesterCourses[i].Id)
+                                                    @Html.HiddenFor(model => Model.FirstSemesterCourses[i].CourseRegistration.Id)
+                                                </tr>
+                                            }
+
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+
+            <div class="col-md-12 card p-5">
+                <div class="panel-body">
+                    <div id="divSecondSemesterCourses">
+                        @if (Model != null && Model.SecondSemesterCourses != null && Model.SecondSemesterCourses.Count > 0)
+                        {
+                           
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="table-responsive" style="font-size:9pt">
+                                        <table class="table table-condensed grid-table table-head-alt mb5">
+                                            <thead>
+                                                <tr class="well" style="height:35px; vertical-align:middle">
+                                                    <th>
+                                                        @Html.CheckBox("selectAllSecondSemester")
+                                                    </th>
+                                                    <th>
+                                                        Course Code
+                                                    </th>
+                                                    <th>
+                                                        Course Title
+                                                    </th>
+                                                    <th>
+                                                        Videos
+                                                    </th>
+                                                    <th>
+                                                       E-Books
+                                                    </th>
+                                                </tr>
+                                            </thead>
+
+                                            @for (int i = 0; i < Model.SecondSemesterCourses.Count; i++)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.CheckBoxFor(model => Model.SecondSemesterCourses[i].Course.IsRegistered, new { @class = "ckb2", id = Model.SecondSemesterCourses[i].Course.Id })
+                                                    </td>
+
+                                                    <td>
+                                                        @Html.HiddenFor(model => Model.SecondSemesterCourses[i].Course.Code)
+                                                        @Html.DisplayFor(model => Model.SecondSemesterCourses[i].Course.Code)
+                                                    </td>
+
+                                                    <td>
+                                                        @Html.HiddenFor(model => Model.SecondSemesterCourses[i].Course.Id)
+                                                        @Html.DisplayFor(model => Model.SecondSemesterCourses[i].Course.Name)
+                                                    </td>
+
+                                                    <td>
+                                                        <a href="~/Content/E/evideo.mp4" target = "_blank" class = "btn btn-danger">Watch Videos</a>
+                                                      </td>
+
+                                                    <td>
+                                                        <a href="~/Content/E/csharp_ebook.pdf" target="_blank" class="btn btn-danger">View E-Books</a>
+
+                                                     </td>
+
+
+                                                    @Html.HiddenFor(model => Model.SecondSemesterCourses[i].Semester.Id)
+                                                    @Html.HiddenFor(model => Model.SecondSemesterCourses[i].Mode.Id)
+                                                    @Html.HiddenFor(model => Model.SecondSemesterCourses[i].Id)
+                                                    @Html.HiddenFor(model => Model.SecondSemesterCourses[i].CourseRegistration.Id)
+                                                </tr>
+                                            }
+
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+
+       
+
+    }
+
+
+</div>
+
+
+

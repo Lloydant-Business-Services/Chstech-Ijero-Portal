@@ -1,0 +1,361 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5D84C95C-6E1A-4C0F-9B66-DED3EFD4A7DA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Abundance_Nk.Business</RootNamespace>
+    <AssemblyName>Abundance_Nk.Business</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DocumentFormat.OpenXml">
+      <HintPath>..\..\shekinah_raw\EnterpriseSchool.Web\bin\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EPPlus, Version=4.5.3.1, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.5.3.1\lib\net40\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="RazorEngine, Version=3.10.0.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
+      <HintPath>..\packages\RazorEngine.3.10.0\lib\net45\RazorEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net45\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.0.0\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.0.0\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc.ExpressionLinks, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Web.Mvc.ExpressionLinks.0.2.0.0\lib\net45\System.Web.Mvc.ExpressionLinks.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.0.0\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.0.0\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.0.0\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.0.0\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AbilityLogic.cs" />
+    <Compile Include="AbundanceMembershipProviderLogic.cs" />
+    <Compile Include="AbundanceRoleProvider.cs" />
+    <Compile Include="AcademicStandingLogic.cs" />
+    <Compile Include="AdmissionCriteriaForOLevelSubjectAlternativeLogic.cs" />
+    <Compile Include="AdmissionCriteriaForOLevelSubjectLogic.cs" />
+    <Compile Include="AdmissionCriteriaForOLevelTypeLogic.cs" />
+    <Compile Include="AdmissionCriteriaLogic.cs" />
+    <Compile Include="AdmissionListAuditLogic.cs" />
+    <Compile Include="AdmissionListBatchLogic.cs" />
+    <Compile Include="AdmissionListLogic.cs" />
+    <Compile Include="AdmissionListTypeLogic.cs" />
+    <Compile Include="AdmissionQuotaLogic.cs" />
+    <Compile Include="ApplicantClearanceLogic.cs" />
+    <Compile Include="ApplicantJambDetailAuditLogic.cs" />
+    <Compile Include="ApplicantLogic.cs" />
+    <Compile Include="ApplicantPreviousEducationLogic.cs" />
+    <Compile Include="ApplicantSponsorLogic.cs" />
+    <Compile Include="ApplicantStatusLogic.cs" />
+    <Compile Include="ApplicationFormLogic.cs" />
+    <Compile Include="ApplicationFormSettingLogic.cs" />
+    <Compile Include="ApplicationProgrammeFeeLogic.cs" />
+    <Compile Include="AppliedCourseAuditLogic.cs" />
+    <Compile Include="AppliedCourseLogic.cs" />
+    <Compile Include="BankBranchLogic.cs" />
+    <Compile Include="BankLogic.cs" />
+    <Compile Include="BloodGroupLogic.cs" />
+    <Compile Include="BusinessBaseLogic.cs" />
+    <Compile Include="CardPaymentLogic.cs" />
+    <Compile Include="ChangeOfCourseLogic.cs" />
+    <Compile Include="ComplainLogLogic.cs" />
+    <Compile Include="CountryLogic.cs" />
+    <Compile Include="CourseAllocationLogic.cs" />
+    <Compile Include="CourseEvaluationAnswerLogic.cs" />
+    <Compile Include="CourseEvaluationQuestionLogic.cs" />
+    <Compile Include="CourseLogic.cs" />
+    <Compile Include="CourseModeLogic.cs" />
+    <Compile Include="CourseRegistrationDetailAuditLogic.cs" />
+    <Compile Include="CourseRegistrationDetailLogic.cs" />
+    <Compile Include="CourseRegistrationLogic.cs" />
+    <Compile Include="CourseTypeLogic.cs" />
+    <Compile Include="CourseUnitLogic.cs" />
+    <Compile Include="CurrentSessionSemesterLogic.cs" />
+    <Compile Include="DeliveryServiceLogic.cs" />
+    <Compile Include="DeliveryServiceZoneLogic.cs" />
+    <Compile Include="DepartmentHeadLogic.cs" />
+    <Compile Include="DepartmentLogic.cs" />
+    <Compile Include="DepartmentOptionLogic.cs" />
+    <Compile Include="DisplayMessageLogic.cs" />
+    <Compile Include="DownloadFileActionResult.cs" />
+    <Compile Include="EAssignmentLogic.cs" />
+    <Compile Include="EAssignmentSubmissionLogic.cs" />
+    <Compile Include="EChatResponseLogic.cs" />
+    <Compile Include="EChatTopicLogic.cs" />
+    <Compile Include="EContentTypeLogic.cs" />
+    <Compile Include="ECourseContentDownloadLogic.cs" />
+    <Compile Include="ECourseLogic.cs" />
+    <Compile Include="EducationalQualificationLogic.cs" />
+    <Compile Include="EmailClient.cs" />
+    <Compile Include="EmailSenderLogic.cs" />
+    <Compile Include="EWalletPaymentLogic.cs" />
+    <Compile Include="ExcelManager.cs" />
+    <Compile Include="ExcelServiceManager.cs" />
+    <Compile Include="FacultyLogic.cs" />
+    <Compile Include="FacultyOfficerLogic.cs" />
+    <Compile Include="FeeDetailAuditLogic.cs" />
+    <Compile Include="FeeDetailLogic.cs" />
+    <Compile Include="FeeLogic.cs" />
+    <Compile Include="FeeSetupAuditLogic.cs" />
+    <Compile Include="FeeSetupFeeLogic.cs" />
+    <Compile Include="FeeSetUpLogic.cs" />
+    <Compile Include="FeeTypeLogic.cs" />
+    <Compile Include="GeneralAuditLogic.cs" />
+    <Compile Include="GenotypeLogic.cs" />
+    <Compile Include="GeoZoneLogic.cs" />
+    <Compile Include="HostelAllocationCountLogic.cs" />
+    <Compile Include="HostelAllocationCriteriaLogic.cs" />
+    <Compile Include="HostelAllocationLogic.cs" />
+    <Compile Include="HostelAmountLogic.cs" />
+    <Compile Include="HostelBlacklistLogic.cs" />
+    <Compile Include="HostelFeeLogic.cs" />
+    <Compile Include="HostelLogic.cs" />
+    <Compile Include="HostelRequestCountLogic.cs" />
+    <Compile Include="HostelRequestLogic.cs" />
+    <Compile Include="HostelRoomCornerLogic.cs" />
+    <Compile Include="HostelRoomLogic.cs" />
+    <Compile Include="HostelSeriesLogic.cs" />
+    <Compile Include="HostelTypeLogic.cs" />
+    <Compile Include="IEmailSender.cs" />
+    <Compile Include="IExcelManager.cs" />
+    <Compile Include="IExcelServiceManager.cs" />
+    <Compile Include="InfoBipSMS.cs" />
+    <Compile Include="InstitutionChoiceLogic.cs" />
+    <Compile Include="ITDurationLogic.cs" />
+    <Compile Include="JambRecordLogic.cs" />
+    <Compile Include="LibraryRegistrationLogic.cs" />
+    <Compile Include="ManualPaymentLogic.cs" />
+    <Compile Include="MaritalStatusLogic.cs" />
+    <Compile Include="MenuGroupLogic.cs" />
+    <Compile Include="MenuInRoleLogic.cs" />
+    <Compile Include="MenuLogic.cs" />
+    <Compile Include="ModeOfEntryLogic.cs" />
+    <Compile Include="ModeOfFinanceLogic.cs" />
+    <Compile Include="ModeOfStudyLogic.cs" />
+    <Compile Include="NextOfKinLogic.cs" />
+    <Compile Include="NotificationsLogic.cs" />
+    <Compile Include="OLevelResultAuditLogic.cs" />
+    <Compile Include="OLevelResultDetailAuditLogic.cs" />
+    <Compile Include="PaymentEtranzactLogic.cs" />
+    <Compile Include="PaymentEtranzactTypeLogic.cs" />
+    <Compile Include="PaymentScholarshipLogic.cs" />
+    <Compile Include="PaymentTerminalLogic.cs" />
+    <Compile Include="PaymentVerificationLogic.cs" />
+    <Compile Include="PersonAuditLogic.cs" />
+    <Compile Include="PostUtmeResultAuditLogic.cs" />
+    <Compile Include="PostUtmeResultLogic.cs" />
+    <Compile Include="ProgrammeFeeAmountLogic.cs" />
+    <Compile Include="ProposeAdmissionLogic.cs" />
+    <Compile Include="SecondPreviousEducationLogic.cs" />
+    <Compile Include="ProgrammeLevelLogic.cs" />
+    <Compile Include="PutmeResultLogic.cs" />
+    <Compile Include="RankingDataLogic.cs" />
+    <Compile Include="RemitaPayementProcessor.cs" />
+    <Compile Include="RemitaPaymentLogic.cs" />
+    <Compile Include="RemitaSettingsLogic.cs" />
+    <Compile Include="RemitaSplitItemLogic.cs" />
+    <Compile Include="ResultComputationLogic.cs" />
+    <Compile Include="ScratchCardLogic.cs" />
+    <Compile Include="ApplicantJambDetailLogic.cs" />
+    <Compile Include="LevelLogic.cs" />
+    <Compile Include="LocalGovernmentLogic.cs" />
+    <Compile Include="ModifyModelBaseLogic.cs" />
+    <Compile Include="NationalityLogic.cs" />
+    <Compile Include="OLevelExamSittingLogic.cs" />
+    <Compile Include="OLevelGradeLogic.cs" />
+    <Compile Include="OLevelResultDetailLogic.cs" />
+    <Compile Include="OLevelResultLogic.cs" />
+    <Compile Include="OLevelSubjectLogic.cs" />
+    <Compile Include="OLevelTypeLogic.cs" />
+    <Compile Include="OnlinePaymentLogic.cs" />
+    <Compile Include="PaymentLogic.cs" />
+    <Compile Include="PaymentModeLogic.cs" />
+    <Compile Include="PaymentTypeLogic.cs" />
+    <Compile Include="PersonLogic.cs" />
+    <Compile Include="PersonTypeLogic.cs" />
+    <Compile Include="PreviousEducationLogic.cs" />
+    <Compile Include="ProgrammeDepartmentLogic.cs" />
+    <Compile Include="ProgrammeLogic.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RelationshipLogic.cs" />
+    <Compile Include="ReligionLogic.cs" />
+    <Compile Include="ResultGradeLogic.cs" />
+    <Compile Include="RightLogic.cs" />
+    <Compile Include="RoleLogic.cs" />
+    <Compile Include="RoleRightLogic.cs" />
+    <Compile Include="SchoolLogic.cs" />
+    <Compile Include="SchoolTypeLogic.cs" />
+    <Compile Include="ScoreGradeLogic.cs" />
+    <Compile Include="SecurityQuestionLogic.cs" />
+    <Compile Include="SemesterLogic.cs" />
+    <Compile Include="Service References\eTranzactWebService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="SessionLogic.cs" />
+    <Compile Include="SessionSemesterLogic.cs" />
+    <Compile Include="SexLogic.cs" />
+    <Compile Include="ShortFallLogic.cs" />
+    <Compile Include="SpilloverStudentLogic.cs" />
+    <Compile Include="SponsorLogic.cs" />
+    <Compile Include="StaffDepartmentLogic.cs" />
+    <Compile Include="StaffLogic.cs" />
+    <Compile Include="StaffTypeLogic.cs" />
+    <Compile Include="StateGeoZoneLogic.cs" />
+    <Compile Include="StateLogic.cs" />
+    <Compile Include="StudentAcademicInformationLogic.cs" />
+    <Compile Include="StudentAuditLogic.cs" />
+    <Compile Include="StudentCategoryLogic.cs" />
+    <Compile Include="StudentDefermentLogic.cs" />
+    <Compile Include="StudentEmploymentInformationLogic.cs" />
+    <Compile Include="StudentExamRawScoreSheetNotRegisteredLogic.cs" />
+    <Compile Include="StudentExamRawScoreSheetResultLogic.cs" />
+    <Compile Include="StudentExtraYearLogic.cs" />
+    <Compile Include="StudentFinanceInformationLogic.cs" />
+    <Compile Include="StudentLevelLogic.cs" />
+    <Compile Include="StudentLogic.cs" />
+    <Compile Include="StudentMatricNumberAssignmentLogic.cs" />
+    <Compile Include="StudentMatricNumberGenerationAudit.cs" />
+    <Compile Include="StudentNdResultLogic.cs" />
+    <Compile Include="StudentPaymentAuditLogic.cs" />
+    <Compile Include="StudentPaymentLogic.cs" />
+    <Compile Include="StudentResultDetailLogic.cs" />
+    <Compile Include="StudentResultLogic.cs" />
+    <Compile Include="StudentResultStatusLogic.cs" />
+    <Compile Include="StudentResultTypeLogic.cs" />
+    <Compile Include="StudentSponsorLogic.cs" />
+    <Compile Include="StudentStatusLogic.cs" />
+    <Compile Include="StudentTypeLogic.cs" />
+    <Compile Include="StudentUpdateAuditLogic.cs" />
+    <Compile Include="TertiaryInstitutionLogic.cs" />
+    <Compile Include="TitleLogic.cs" />
+    <Compile Include="TranscriptClearanceStatusLogic.cs" />
+    <Compile Include="TranscriptRequestLogic.cs" />
+    <Compile Include="TranscriptStatusLogic.cs" />
+    <Compile Include="UserLogic.cs" />
+    <Compile Include="UtilityLogic.cs" />
+    <Compile Include="UtmeScreeningLogic.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Abundance_Nk.Data\Abundance_Nk.Data.csproj">
+      <Project>{fea042dd-f142-48bf-a88e-d8e716e49f6d}</Project>
+      <Name>Abundance_Nk.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Abundance_Nk.Model\Abundance_Nk.Model.csproj">
+      <Project>{a99e1bf1-a288-4c1f-95f0-7187ef1eba49}</Project>
+      <Name>Abundance_Nk.Model</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+    <None Include="Service References\eTranzactWebService\Abundance_Nk.Business.eTranzactWebService.queryPayoutletTransactionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\eTranzactWebService\Abundance_Nk.Business.eTranzactWebService.queryPayoutletTransactionResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\eTranzactWebService\QueryPayoutletTransactionService.wsdl" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\eTranzactWebService\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\eTranzactWebService\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\eTranzactWebService\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\eTranzactWebService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,52 @@
+﻿@using Abundance_Nk.Web.Models
+@model Abundance_Nk.Web.Areas.Admin.ViewModels.SupportViewModel
+@{
+    ViewBag.Title = "ManualPaymentList";
+    //Layout = "~/Areas/Admin/Views/Support/ManualPayment.cshtml";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+}
+
+@Html.ActionLink("Back", "ManualPayment", "Support", new { Area = "Admin" }, new { @class = "btn btn-success " })
+
+
+<h2>Manual Payment List</h2>
+
+@if (Model.ManualPayments.Count > 0 && Model.ManualPayments != null)
+{
+    <div class="panel-body">
+        <div class="col-md-12">
+            <h3 class="text-center">All Manual Approved Payment</h3>
+            <table class="table table-bordered table-hover table-striped" id="myTable">
+                <thead>
+                    <tr>
+                        <th>S/N</th>
+                        <th>FULL NAME</th>
+                        <th>FEE-TYPE</th>
+                        <th>SESSION</th>
+                        <th>INVOICE NO.</th>
+                        <th>AMOUNT</th>
+                        <th>APPROVER</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < @Model.ManualPayments.Count; i++)
+                    {
+                        int sn = i + 1;
+                        <tr>
+                            <td>@sn</td>
+                            <td>@Model.ManualPayments[i].Person.FullName.ToUpper()</td>
+                            <td>@Model.ManualPayments[i].FeeType.Name.ToUpper()</td>
+                            <td>@Model.ManualPayments[i].Session.Name.ToUpper()</td>
+                            <td>@Model.ManualPayments[i].InvoiceNumber.ToUpper()</td>
+                            <td>₦@string.Format("{0:0,0.00}", Model.ManualPayments[i].Amount)</td>
+                            <td>@Model.ManualPayments[i].User.Username.ToUpper()</td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+            <br />
+        </div>
+    </div>
+}

@@ -1,0 +1,66 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.MenuViewModel
+@{
+    ViewBag.Title = "AddMenuInRole";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+ 
+<div class="col-md-12">
+   
+    @if (TempData["Message"] != null)
+    { 
+        @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+    }
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">Add Menu For Role</h4>
+        </div>
+        <div class="panel-body">
+
+            @using (Html.BeginForm("AddMenuInRole", "Menu", new { Area = "Admin" }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        @Html.ValidationSummary(true)
+                       
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Menu.DisplayName, "Menu", new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(m => m.Menu.Id, (IEnumerable<SelectListItem>)ViewBag.Menu, new { @class = "form-control", @required = "required"})
+                                @Html.ValidationMessageFor(m => m.Menu.Id, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Role.Name, "Role", new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(m => m.Role.Id, (IEnumerable<SelectListItem>)ViewBag.Role, new { @class = "form-control", @required = "required" })
+                                @Html.ValidationMessageFor(m => m.Role.Id, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        @*<div class="form-group">
+                            @Html.LabelFor(m => m.RoleMenu.Activated, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(m => m.RoleMenu.Activated, new[] { new SelectListItem { Text = "True", Value = "1" }, new SelectListItem { Text = "False", Value = "0" } }, new { @class = "form-control", required = "required" })
+                               
+                                @Html.ValidationMessageFor(m => m.RoleMenu.Activated, null, new { @class = "text-danger" })
+                            </div>
+                        </div>*@
+
+                        <div class="form-group">
+                            <div class="col-md-offset-3 col-md-9">
+                                <input type="submit" value="Submit" class="btn btn-default" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+
+    </div>
+    
+    
+
+
+</div>

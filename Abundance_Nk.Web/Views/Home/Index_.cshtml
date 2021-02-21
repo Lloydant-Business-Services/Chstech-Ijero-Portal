@@ -1,0 +1,192 @@
+﻿@model Abundance_Nk.Web.Models.LoginViewModel
+@{
+    ViewBag.Title = "Home";
+    Layout = "~/Views/Shared/_NewThemeLayout.cshtml";
+}
+
+@section Scripts {
+
+    <link href="~/Content/sweetalert.css" rel="stylesheet" />
+    <script src="~/Scripts/sweetalert.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            //swal("Attention", "Students are mearnt to login using their matriculation or application number as username and default '1234567' as their password.\n " +
+            //        "Remember to change your password once you login to avoid compromise of your profile.", "warning");
+            
+        });
+        function showLoginTab(form) {
+
+            if (form === 2) {
+                $("#student").hide();
+                $("#staff").show();
+            } else {
+                $("#staff").hide();
+                $("#student").show();
+            }
+        }
+    </script>
+}
+
+<div class="col-md-12 bodi  m-0 p-0">
+    <div class="row" style="min-height: 510px;">
+
+        <div class="col-md-8 col-sm-12">
+            <div class="col-md-6">
+                <div class="card shadow p-4">
+                    <div class="card-body">
+                        <h5>Students Portal</h5>
+                        <div class="separator separator-primary"></div>
+                        “Preparing to succeed in an era of global
+                        uncertainty requires developing your intellect,
+                        building your character, and learning pratical
+                        capabilities”.
+                    </div>
+                </div>
+            </div>
+        </div>
+        @if (!Request.IsAuthenticated)
+        {
+            <div class="col-lg-4 col-md-6 col-sm-12 " id="pablo1">
+
+
+                <div class="card bg-warning-opacity p-4">
+                    @*<h5>LOG IN TO YOUR ACCOUNT</h5>*@
+
+                    <button class="btn btn-primary btn-sm" onclick="showLoginTab(1)" >Student Login</button> &nbsp;&nbsp;
+                    <button class="btn btn-primary btn-sm" onclick="showLoginTab(2)">Staff Login</button>
+
+                    <div id="student">
+
+                        <div class="separator01 separator-primary"></div>
+                        @using (Html.BeginForm("Login", "Account", new {Area = "Security", ReturnUrl = ViewBag.ReturnUrl}, FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.UserName, new {@class = "control-label"})
+                                    @Html.TextBoxFor(m => m.UserName, new {@class = "form-control", placeholder = "FPA/AC/16/***", required = "required", type = "text", id = "studentUsername"})
+                                    @Html.ValidationMessageFor(m => m.UserName)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    @Html.LabelFor(model => model.Password, new {@class = "control-label"})
+                                    @Html.PasswordFor(m => m.Password, new {@class = "form-control", placeholder = "*******", type = "password", required = "required", id = "studentPassword"})
+                                    @Html.ValidationMessageFor(m => m.Password)
+                                </div>
+                            </div>
+                            <div class="form-group pl-1 mt-5">
+                                <button class="btn btn-primary btn-block" type="submit">LOGIN</button>
+                            </div>
+                        }
+
+                    </div>
+
+                        <div id="staff" style="display: none">
+
+                            <div class="separator01 separator-primary"></div>
+                            @using (Html.BeginForm("Login", "Account", new { Area = "Security", ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        @Html.LabelFor(model => model.UserName, new { @class = "control-label" })
+                                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", placeholder = "Staff Name", required = "required", type = "text" })
+                                        @Html.ValidationMessageFor(m => m.UserName)
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        @Html.LabelFor(model => model.Password, new { @class = "control-label" })
+                                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "*******", type = "password", required = "required" })
+                                        @Html.ValidationMessageFor(m => m.Password)
+                                    </div>
+                                </div>
+                                <div class="form-group pl-1 mt-5">
+                                    <button class="btn btn-primary btn-block" type="submit">LOGIN</button>
+                                </div>
+                            }
+
+                        </div>
+
+                    
+                </div>
+
+
+            </div>
+        }
+    </div>
+
+</div>
+<div class="container-fluid Design1 m-0" style="min-height: 233px;">
+</div>
+<div class="container-fluid Design2 pt-5 pb-1">
+    <div class="row statement">
+        <div class="col-md-3 text-center">
+            <a href="#" class="Toplink">
+                <img src="~/Content/theme/assets/img/prospectiveStu.svg" class="mb-4" alt="prospective student" height="60" />
+                <h5>PROSPECTIVE STUDENT</h5>
+            </a>
+            <div class="card card-default p-4">
+                <div class="card-block p-0 text-left">
+                    To Apply for a programme
+                    you are required to
+                    generate an invoice.
+                    This should then be taken
+                    to any of the designated
+                    banks and make  payment
+                </div>
+                <button class="btn btn-primary btn-block">APPLCATION FORMS</button>
+            </div>
+        </div>
+
+        <div class="col-md-3 text-center">
+            <a href="#" class="Toplink">
+                <img src="~/Content/theme/assets/img/newStudent.svg" class="mb-4" alt="New student" height="60" />
+                <h5>FRESH MAN OR NEW STUDENT</h5>
+            </a>
+            <div class="card card-default p-4">
+                <div class="card-block p-0 text-left">
+                    To check your admission
+                    status, Pay acceptance
+                    fees &amp; school fees  or
+                    register your courses,
+                    click link below
+                </div>
+                <button class="btn btn-primary btn-block">NEW STUDENT GUIDE</button>
+            </div>
+        </div>
+
+        <div class="col-md-3 text-center">
+            <a href="#" class="Toplink">
+                <img src="~/Content/theme/assets/img/returningStu.svg" class="mb-4" alt="returning student" height="60" />
+                <h5>RETURNING STUDENT</h5>
+            </a>
+            <div class="card card-default p-4">
+                <div class="card-block p-0 text-left">
+                    Returning students can
+                    generate fees invoice,
+                    print receipts e.t.c
+                </div>
+                <button class="btn btn-primary btn-block">RETURNING STUDENT</button>
+            </div>
+        </div>
+
+
+        <div class="col-md-3 text-center">
+            <a href="#" class="Toplink">
+                <img src="~/Content/theme/assets/img/semesterResu.svg" class="mb-4" alt="SEMESTER RESULTS" height="60" />
+                <h5>SEMESTER RESULTS</h5>
+            </a>
+
+            <div class="card card-default p-4">
+                <div class="card-block p-0 text-left">
+                    To check Semester results
+                    status, please use the
+                    button below.
+                </div>
+                <button class="btn btn-primary btn-block">CHECK SEMESTER RESULT</button>
+            </div>
+        </div>
+    </div>
+</div>

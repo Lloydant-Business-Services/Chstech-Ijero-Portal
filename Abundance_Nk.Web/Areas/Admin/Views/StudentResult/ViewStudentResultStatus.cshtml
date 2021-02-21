@@ -1,0 +1,136 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.StudentResultViewModel
+@{
+    ViewBag.Title = "ViewStudentResultStatus";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script type="text/javascript">
+
+
+    function ActivateAll() {
+        if ($('#ActivateAllId').is(':checked')) {
+            $('.Activate').prop('checked', true);
+        }
+        else {
+            $('.Activate').prop('checked', false);
+        }
+    }
+
+</script>
+
+
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading panel-dark-head">
+                <h4>View Student Result Status</h4>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+
+                    @using (Html.BeginForm("ViewStudentResultStatus", "StudentResult", new { Area = "Admin" }, FormMethod.Post))
+                    {
+                        <div class="row">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Programme.Name, "Programme", new { @class = "col-md-3 control-label" })
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(m => m.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.Programme, new { @class = "form-control", @required = "required" })
+                                    @Html.ValidationMessageFor(m => m.Programme.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Level.Name, "Level", new { @class = "col-md-3 control-label" })
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(m => m.Level.Id, (IEnumerable<SelectListItem>)ViewBag.Level, new { @class = "form-control", @required = "required" })
+                                    @Html.ValidationMessageFor(m => m.Level.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-offset-3 col-md-9">
+                                    <input type="submit" value="Submit" class="btn btn-success" />
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+
+                </div>
+            </div>
+            <br />
+            <div class="panel-body">
+                <div class="col-md-12">
+
+
+                    @if (Model.StudentResultStatusList != null && Model.StudentResultStatusList.Count > 0)
+                    {
+                        <div class="panel panel-danger">
+                            <div class="panel-body">
+                                @using (Html.BeginForm("SaveEditedStudentResultStatus", "StudentResult", new { Area = "Admin" }, FormMethod.Post))
+                                {
+
+                                    <table class="table-bordered table-hover table-striped table-responsive table">
+                                        <tr>    
+                                            <th>
+                                                Department
+                                            </th>
+                                            <th>
+                                                <input type="checkbox" id="ActivateAllId" onclick="ActivateAll()" /> Approved
+                                            </th>
+                                            <th>
+                                                Delete
+                                            </th>
+                                        </tr>
+
+                                        @for (int i = 0; i < Model.StudentResultStatusList.Count; i++)
+                                        {
+                                            <tr>
+
+                                                @Html.HiddenFor(model => model.StudentResultStatusList[i].Id)
+                                                @Html.HiddenFor(model => model.StudentResultStatusList[i].Department.Id)
+                                                @Html.HiddenFor(model => model.Programme.Id)
+                                                @Html.HiddenFor(model => model.Level.Id)
+
+                                                <td>
+                                                    @Model.StudentResultStatusList[i].Department.Name
+                                                </td>
+                                                <td>
+                                                    @Html.CheckBoxFor(m => m.StudentResultStatusList[i].Activated, new { @type = "checkbox", @class = "Activate" })
+                                                </td>
+                                                <td>
+                                                    @Html.ActionLink("Delete", "ConfirmDeleteResultStatus", "StudentResult", new {Area = "Admin", rid = Model.StudentResultStatusList[i].Id}, new {@class = "btn btn-success "})
+                                                </td>
+                                            </tr>
+                                        }
+
+                                    </table>
+                                    <br />
+                                    <div class="form-group">
+                                        <div class="col-md-offset-3 col-md-9">
+                                            <input type="submit" value="Save" class="btn btn-success" />
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-1"></div>
+</div>

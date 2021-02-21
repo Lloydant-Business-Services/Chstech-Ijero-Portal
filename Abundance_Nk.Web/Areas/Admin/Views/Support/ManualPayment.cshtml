@@ -1,0 +1,615 @@
+﻿@using Abundance_Nk.Web.Models
+@model Abundance_Nk.Web.Areas.Admin.ViewModels.SupportViewModel
+@{
+    ViewBag.Title = "Manual Payment";
+    //Layout = "~/Areas/Admin/Views/Support/ManualPayment.cshtml";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+}
+
+<style>
+    #myImg {
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+        #myImg:hover {
+            opacity: 0.7;
+        }
+
+    .modalSpin {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 4444; /* Sit on top */
+        padding-top: 100px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.2); /* Black w/ opacity */
+    }
+
+    .modal-content-spin {
+        margin: auto;
+        margin-top: 120px;
+        display: block;
+        width: 60%;
+        max-width: 200px;
+        background-color: ghostwhite;
+        padding: 30px;
+        border-radius: 20px;
+    }
+
+    .modal-in-spin {
+        margin: auto;
+        margin-top: 15px;
+        display: block;
+        width: 60%;
+        max-width: 130px;
+        background-color: whitesmoke;
+        padding: 20px;
+        border-radius: 30px;
+        display: none
+    }
+
+    #caption {
+        margin: auto;
+        display: block;
+        width: 80%;
+        max-width: 500px;
+        text-align: center;
+        color: #ccc;
+        padding: 10px 0;
+        height: 150px;
+    }
+
+    .modal-content, #caption {
+        animation-name: zoom;
+        animation-duration: 0.6s;
+    }
+    /* The Close Button */
+    .close {
+        position: absolute;
+        top: 15px;
+        right: 35px;
+        color: #f1f1f1;
+        font-size: 40px;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .newLink{
+            color:ghostwhite!important
+        }
+</style>
+
+
+<script src="~/Content/theme/login/assets/js/core/jquery.3.2.1.min.js"></script>
+<!-- Bootstrap Core JavaScript -->
+<script src="~/Content/theme/login/assets/js/core/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+    var approvalCode;
+    var ivn;
+    var amount;
+    $(document).ready(function () {
+        $('#approveBtn').on('click', function () {
+            //$('#approveBtn').off('click');
+
+            approvalCode = $('#approveVal').val();
+            amount = $('#amount').val();
+            if (approvalCode == null || approvalCode == '') {
+                alert("Please, provide your Authorization Code")
+                return;
+            }
+            if (amount <= 0) {
+                alert("No Amount is Attached to this invoice")
+                return;
+            }
+            console.log(amount, ivn, approvalCode, "Info")
+            //var loading = "Loading...."
+            //$('#approveBtn').text(loading);
+            $("#spinnerModal").show();
+            ivn = $('#ivn').val();
+            manualAutomation();
+
+        })
+        $('#approveBtn2').on('click', function () {
+            //$('#approveBtn').off('click');
+            approvalCode = $('#approveVal2').val();
+            amount = $('#amount2').val();
+            if (approvalCode == null || approvalCode == '') {
+                alert("Please, provide your Authorization Code")
+                return;
+            }
+            if (amount <= 0) {
+                alert("No Amount is Attached to this invoice")
+                return;
+            }
+            console.log(amount, ivn, approvalCode, "Info")
+            //var loading = "Loading...."
+            //$('#approveBtn').text(loading);
+            $("#spinnerModal").show();
+            ivn = $('#ivn2').val();
+            manualAutomation();
+        })
+        $("#submit").on('click', function () {
+            var invNum = $('#invNum').val();
+            if (invNum == null || invNum == "" || invNum == " ") {
+                alert("Please enter Invoice number");
+                return false;
+            } else {
+                $("#spinnerModal").show();
+            }
+        })
+            function manualAutomation() {
+                    $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ApproveManualPayment", "Support")',
+                dataType: 'json',
+                data: { code: approvalCode, ivn: ivn, amount: amount },
+                success: function (result) {
+                    if (!result.IsError) {
+                        alert(result.Message);
+                        //$("#spinnerModal").hide();
+                        var url2 = '@Url.Action("ManualPayment", "Support")';
+                        window.location.href = url2;
+                        //$('#ivn').val('');
+                        //$('#invoiceDetail').hide();
+                    }
+                    else {
+                        alert(result.Message);
+                        //$("#spinnerModal").hide();
+                        var url = '@Url.Action("ManualPayment", "Support")';
+                        window.location.href = url;
+                    }
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve approval.' + result.Message);
+                }
+            });
+    };
+    });
+</script>
+
+
+<body>
+    <div id="spinnerModal" class="modalSpin">
+
+        <div>
+            <img class="modal-content-spin" id="img01" src="~/Content/Images/spinner.gif">
+        </div>
+
+    </div>
+    @*@if (ViewBag.SuccessMsg != null)
+        {
+            <div class="alert alert-dismissible" style="background-color:#11b77f; color:whitesmoke">
+                <h5>Operation was successful - @ViewBag.SuccessMsg <i class="fa fa-check-circle fa-1x"></i></h5>
+                <h4>@Model.studentLevel.Student.FirstName @Model.studentLevel.Student.LastName</h4>
+            </div>
+        }*@
+
+    @if (ViewBag.NotFound != null)
+    {
+        <div class="alert alert-dismissible" style="background-color:#11b77f; color:indianred">
+            <h5>@ViewBag.NotFound</h5>
+        </div>
+    }
+
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="col-sm-10">
+                <div class="btn btn-default">
+                    @Html.ActionLink("Back to Home", "Index", "Home", new { Area = "" }, null)
+
+                </div>
+                <div class="btn btn-success" style="background-color:#347AF0; color:ghostwhite; border:none">
+                    @Html.ActionLink("View Manual Payment List ", "ManualPaymentList", "Support", new { Area = "Admin" }, new { @class="newLink"})
+                    <i class="fa fa-eye" style="color:ghostwhite"></i>
+                </div>
+
+
+
+            </div>
+            <div class="col-md-12">
+               
+                <div>
+                    <p class="text-center"><h3>Staff Kids/Manual Payment</h3></p>
+
+
+                </div>
+                @*<div class="alert alert-success" style="background-color:aqua">Updated</div>*@
+
+                @if (TempData["Message"] != null)
+                {
+                    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+                }
+
+                @using (Html.BeginForm("ManualPayment", "Support", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+
+
+
+                    <div class="panel panel-default ">
+                        <div class="panel-body ">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <h4>Enter Payment Invoice Number</h4>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @*@Html.LabelFor(model => model.ApplicationFormNumber, new { @class = "col-sm-2 control-label " })*@
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(model => model.InvoiceNumber, new { @class = "form-control", @placeholder = "Enter Invoice No", @id = "invNum" })
+                                    @Html.ValidationMessageFor(model => model.InvoiceNumber, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-10">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-2"></div>
+                                <div class="col-sm-10">
+                                    <input class="btn btn-success mr5" onclick="LoaderFunc()" type="submit" name="submit" id="submit" value="Search" />
+                                    <div class="btn btn-default">
+                                        @Html.ActionLink("Back to Home", "Index", "Home", new { Area = "" }, null)
+
+                                    </div>
+                                
+
+
+
+                                </div>
+                            </div>
+
+
+                            @*<div>
+                                    <div>
+                                        <img class="modal-in-spin" id="img01" src="~/Areas/Security/spinner.gif">
+                                    </div>
+                                </div>*@
+                        </div>
+
+
+                        <!-- Spinner Modal -->
+
+                    </div>
+
+
+
+
+
+
+
+
+                    <!--All Payment table-->
+
+
+                }
+
+
+
+
+                @if (Model.studentLevel != null)
+                {
+                    <div class="panel panel-default" id="invoiceDetail">
+
+                        <div class="panel-body">
+
+                            <div class="col-md-12">
+                                <div class="col-md-12 text-center">
+                                    <h3>Invoice Detail</h3>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.Payment.InvoiceNumber, new { @class = "control-label" })
+                                            @Html.TextBoxFor(model => model.InvoiceNumber, new { @class = "form-control", @disabled = true, id = "ivn" })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.StudentPayment.Amount, new { @class = "control-label" })
+                                            @Html.TextBoxFor(model => model.RemitaPayment.TransactionAmount, new { @class = "form-control", @disabled = true, id = "amount" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <hr style="margin-top: 0" />
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.Student.LastName, new { @class = "control-label " })
+                                            @Html.TextBoxFor(model => model.studentLevel.Student.LastName, new { @class = "form-control", @disabled = true })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.Student.FirstName, new { @class = "control-label" })
+                                            @Html.TextBoxFor(model => model.studentLevel.Student.FirstName, new { @class = "form-control", @disabled = true })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.Student.OtherName, new { @class = "control-label" })
+                                            @Html.TextBoxFor(model => model.studentLevel.Student.OtherName, new { @class = "form-control", @disabled = true })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.studentLevel.Programme.Name, new { @class = "control-label" })
+                                            @Html.TextBoxFor(model => model.studentLevel.Programme.Name, new { @class = "form-control", @disabled = true })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.Student.Email, new { @class = "control-label" })
+                                            @Html.TextBoxFor(model => model.studentLevel.Student.Email, new { @class = "form-control", @disabled = true })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.Student.MobilePhone, new { @class = "control-label" })
+                                            @Html.TextBoxFor(model => model.studentLevel.Student.MobilePhone, new { @class = "form-control", @disabled = true })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.studentLevel.Department.Name, new { @class = "control-label" })
+                                            @Html.TextBoxFor(model => model.studentLevel.Department.Name, new { @class = "form-control", @disabled = true })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.StudentPayment.Level.Name, new { @class = "control-label" })
+                                            @Html.TextBoxFor(model => model.studentLevel.Level.Name, new { @class = "form-control", @disabled = true })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.Student.MatricNumber, new { @class = "control-label" })
+                                            @Html.TextBoxFor(model => model.studentLevel.Student.MatricNumber, new { @class = "form-control", @disabled = true })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.Payment.FeeType,"Fee Type", new { @class = "control-label" })
+                                            @Html.TextBoxFor(model => model.Payment.FeeType.Name, new { @class = "form-control", @disabled = true })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-md-12 ">
+                                    <div class="form-group">
+                                        <div class="col-md-6">
+                                            <button class="btn btn-primary btn-lg mr5" id="approveBtn">Approve</button>
+                                        </div>
+
+
+
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <label class="col-md-6">Authorization Code</label>
+                                                <input class="col-md-6" type="password" id="approveVal" />
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-1"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+
+                }
+
+                else if (Model.AppliedCourse != null)
+                {
+                    <div class="panel panel-default" id="invoiceDetail2">
+
+                        <div class="panel-body">
+
+                            <div class="col-md-12">
+                                <div class="col-md-12 text-center">
+                                    <h3>Invoice Detail</h3>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.Payment.InvoiceNumber, new { @class = "control-label" })
+                                            @Html.TextBoxFor(model => model.Payment.InvoiceNumber, new { @class = "form-control", @disabled = true, id = "ivn2" })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.Payment.Amount, new { @class = "control-label" })
+                                            @Html.TextBoxFor(model => model.RemitaPayment.TransactionAmount, new { @class = "form-control", @disabled = true, id = "amount2" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <hr style="margin-top: 0" />
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.ApplicationForm.Person.LastName, new { @class = "control-label " })
+                                            @Html.TextBoxFor(model => model.AppliedCourse.Person.LastName, new { @class = "form-control", @disabled = true })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.ApplicationForm.Person.FirstName, new { @class = "control-label" })
+                                            @Html.TextBoxFor(model => model.AppliedCourse.Person.FirstName, new { @class = "form-control", @disabled = true })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.ApplicationForm.Person.OtherName, new { @class = "control-label" })
+                                            @Html.TextBoxFor(model => model.AppliedCourse.Person.OtherName, new { @class = "form-control", @disabled = true })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.AppliedCourse.Programme.Name, new { @class = "control-label" })
+                                            @Html.TextBoxFor(model => model.AppliedCourse.Programme.Name, new { @class = "form-control", @disabled = true })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.AppliedCourse.Person.Email, new { @class = "control-label" })
+                                            @Html.TextBoxFor(model => model.AppliedCourse.Person.Email, new { @class = "form-control", @disabled = true })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.Student.MobilePhone, new { @class = "control-label" })
+                                            @Html.TextBoxFor(model => model.AppliedCourse.Person.MobilePhone, new { @class = "form-control", @disabled = true })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.AppliedCourse.Department.Name, new { @class = "control-label" })
+                                            @Html.TextBoxFor(model => model.AppliedCourse.Department.Name, new { @class = "form-control", @disabled = true })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.Payment.FeeType, "Fee Type", new { @class = "control-label" })
+                                            @Html.TextBoxFor(model => model.Payment.FeeType.Name, new { @class = "form-control", @disabled = true })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-md-12 ">
+                                    <div class="form-group">
+                                        <div class="col-md-6">
+                                            <button class="btn btn-primary btn-lg mr5" id="approveBtn2">Approve</button>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="row">
+                                                <label class="col-md-6">Authorization Code</label>
+                                                <input class="col-md-6" type="password" id="approveVal2" />
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-1"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                }
+
+
+
+                @*@if (Model.ManualPayments.Count > 0 && Model.ManualPayments != null)
+                    {
+                        <div class="panel-body">
+                            <div class="col-md-12">
+                                <h3 class="text-center">All Manual Approved Payment</h3>
+                                <table class="table table-bordered table-hover table-striped" id="myTable">
+                                    <thead>
+                                        <tr>
+                                            <th>S/N</th>
+                                            <th>FULL NAME</th>
+                                            <th>FEE-TYPE</th>
+                                            <th>SESSION</th>
+                                            <th>INVOICE NO.</th>
+                                            <th>AMOUNT</th>
+                                            <th>APPROVER</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (int i = 0; i < @Model.ManualPayments.Count; i++)
+                                        {
+                                            int sn = i + 1;
+                                            <tr>
+                                                <td>@sn</td>
+                                                <td>@Model.ManualPayments[i].Person.FullName.ToUpper()</td>
+                                                <td>@Model.ManualPayments[i].FeeType.Name.ToUpper()</td>
+                                                <td>@Model.ManualPayments[i].Session.Name.ToUpper()</td>
+                                                <td>@Model.ManualPayments[i].InvoiceNumber.ToUpper()</td>
+                                                <td>₦@string.Format("{0:0,0.00}", Model.ManualPayments[i].Amount)</td>
+                                                <td>@Model.ManualPayments[i].User.Username.ToUpper()</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+
+                                </table>
+                                <br />
+                            </div>
+                        </div>
+                    }*@
+
+
+
+
+
+
+                <br />
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+    @*<div id="spinnerModal" class="modalSpin">
+
+        <div>
+            <img class="modal-content-spin" id="img01" src="~/Content/Images/spinner.gif">
+        </div>
+
+    </div>*@
+
+    
+</body>

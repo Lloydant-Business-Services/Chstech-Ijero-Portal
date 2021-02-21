@@ -1,0 +1,139 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.HostelViewModel
+@{
+    ViewBag.Title = "CreateHostelAllocationCriteria";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+ 
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#Hostel").change(function () {
+            $("#Series").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetHostelSeries", "HostelAllocation")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#Hostel").val() },
+                // Get Selected Campus ID.
+                success: function (series) {
+                    $("#Series").append('<option value="' + 0 + '"> -- Select -- </option>');
+                    $.each(series, function (i, series) {
+
+                        $("#Series").append('<option value="' + series.Value + '">' +
+                             series.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve series.' + ex);
+                }
+            });
+            return false;
+        });
+
+        $("#Series").change(function() {
+            $("#Corner").empty();
+
+            if ($("#Hostel").val() !== "0" && $("#Series").val() !== "0") {
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetCorners", "HostelAllocation")', // Calling json method
+                    dataType: 'json',
+                    data: { id: $("#Series").val() },
+                    success: function(corners) {
+                        //$("#Corner").append('<option value="' + 0 + '"> -- Select -- </option>');
+                        $.each(corners, function(i, corners) { 
+                            $("#Corner").append('<option value="' + corners.Text + '">' +
+                                corners.Text + '</option>');
+                        });
+                    },
+                    error: function() {
+                        alert('Failed to retrieve corners.');
+                    }
+                });
+                
+            } else {
+                return false;
+            } 
+            return false;
+        });
+
+    })
+</script>
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading panel-dark-head">
+                <h4>Hostel Allocation Criteria</h4>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                     
+                    @using (Html.BeginForm("CreateHostelAllocationCriteria", "HostelAllocation", FormMethod.Post))
+                    {
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.HostelAllocationCriteria.Level.Name, new { @class = "control-label custom-text-black" })
+                                    @Html.DropDownListFor(model => model.HostelAllocationCriteria.Level.Id, (IEnumerable<SelectListItem>)ViewBag.LevelId, new { @class = "form-control", @required = "required" })
+                                    @Html.ValidationMessageFor(model => model.HostelAllocationCriteria.Level.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.HostelAllocationCriteria.Hostel.Name, new { @class = "control-label custom-text-black" })
+                                    @Html.DropDownListFor(model => model.HostelAllocationCriteria.Hostel.Id, (IEnumerable<SelectListItem>)ViewBag.HostelId, new { @class = "form-control", @id = "Hostel", @required = "required" })
+                                    @Html.ValidationMessageFor(model => model.HostelAllocationCriteria.Hostel.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.HostelAllocationCriteria.Series.Name, "Series/Floor",new { @class = "control-label custom-text-black" })
+                                    @Html.DropDownListFor(model => model.HostelAllocationCriteria.Series.Id, (IEnumerable<SelectListItem>)ViewBag.HostelSeriesId, new { @class = "form-control", @id = "Series", @required = "required" })
+                                    @Html.ValidationMessageFor(model => model.HostelAllocationCriteria.Series.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.HostelAllocationCriteria.Corner.Name, "Bed Space",new { @class = "control-label custom-text-black" })  
+                                    @Html.DropDownListFor(model => model.SelectedCorners, (MultiSelectList)ViewBag.CornerId, new { @class = "form-control", @multiple = "multiple", @id = "Corner", @required = "required" })
+                                    @Html.ValidationMessageFor(model => model.HostelAllocationCriteria.Corner.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    <input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="Create Criteria" />
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    
+                     
+                </div>
+            </div>
+        </div> 
+
+    </div>
+    <div class="col-md-1"></div>
+</div>

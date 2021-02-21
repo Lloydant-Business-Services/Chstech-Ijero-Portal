@@ -1,0 +1,95 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.UserViewModel
+
+@{
+    ViewBag.Title = "Add Staff";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section Scripts {
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+}
+<script>
+    $("#Role option[Value='5']").remove();
+</script>
+}
+
+@*<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<link href="~/Content/style.default.css" rel="stylesheet" />
+<link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />*@
+
+
+@if (TempData["Message"] != null)
+{
+    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+}
+
+@using (Html.BeginForm("CreateUser", "User", new { area = "Admin" }, FormMethod.Post))
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><i class="fa fa-fw fa-user"></i>Add Staff</h3>
+        </div>
+        <div class="panel-body">
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.User.Username, "Staff Name", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(model => model.User.Username, new { @class = "form-control", @placeholder = "Enter Staff Name", @required = "required" })
+                    @Html.ValidationMessageFor(model => model.User.Username, null, new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.User.Password, new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(model => model.User.Password, new { @class = "form-control", @placeholder = "Enter Password", @type = "password", @required = "required" })
+                    @Html.ValidationMessageFor(model => model.User.Password, null, new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.User.Email, "Email", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(model => model.User.Email, new { @class = "form-control", @placeholder = "Enter Email Address"})
+                    @Html.ValidationMessageFor(model => model.User.Email, null, new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                    @Html.LabelFor(model => model.User.Role.Id,"Role", new { @class = "col-sm-2 control-label " })
+                    <div class="col-sm-4">
+                        @Html.DropDownListFor(model => model.User.Role.Id, (IEnumerable<SelectListItem>)ViewBag.RoleList, new { @class = "form-control", @id = "Role" })
+                        @Html.ValidationMessageFor(model => model.User.Role.Id)
+                    </div>
+                </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.User.SecurityQuestion.Id,"Security Question", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-4">
+                    @Html.DropDownListFor(model => model.User.SecurityQuestion.Id, (IEnumerable<SelectListItem>)ViewBag.SecurityQuestionList, new { @class = "form-control", @required = "required" })
+                    @Html.ValidationMessageFor(model => model.User.SecurityQuestion.Id)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.User.SecurityAnswer,"Security Answer", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-4">
+                    @Html.TextBoxFor(model => model.User.SecurityAnswer, new { @class = "form-control", @required = "required" })
+                    @Html.ValidationMessageFor(model => model.User.SecurityAnswer)
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-10">
+                    <br /> <input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="Create" />
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+

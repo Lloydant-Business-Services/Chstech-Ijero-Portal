@@ -1,0 +1,53 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.DisplayMessageViewModel
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    @if (TempData["Message"] != null)
+    {
+        @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"]);
+    }
+</div>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"> Add New Display Message</h3>
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm())
+        {
+        @Html.AntiForgeryToken()
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+              
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.DisplayMessage.Message, htmlAttributes: new {@class = "control-label col-md-2"})
+                        <div class="col-md-6">
+                            @Html.EditorFor(model => model.DisplayMessage.Message, new {htmlAttributes = new {@class = "form-control", required = true }})
+                            @Html.ValidationMessageFor(model => model.DisplayMessage.Message, "", new {@class = "text-danger"})
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.DisplayMessage.Message, "Activated", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-6">
+                            @Html.CheckBoxFor(model => model.DisplayMessage.Activated, new { htmlAttributes = new { @class = "form-control", required = true } })
+                            @Html.ValidationMessageFor(model => model.DisplayMessage.Activated, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Add" class="btn btn-default" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

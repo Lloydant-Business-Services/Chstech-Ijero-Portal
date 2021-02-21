@@ -1,0 +1,158 @@
+﻿@model Abundance_Nk.Web.Areas.Applicant.ViewModels.PostJambViewModel
+
+@{
+    //Layout = null;
+}
+
+<div class="col-md-12 card p-5">
+    <div class="panel-heading">
+        <div style="font-size:x-large">O-Level Result</div>
+    </div>
+    <div class="panel-body">
+
+
+
+
+        <div class="row">
+            <div class="col-md-6 custom-text-black">
+                <h5>First Sitting</h5>
+                <hr class="no-top-padding" />
+
+                @if (Model.FirstSittingOLevelResult != null && !string.IsNullOrEmpty(Model.FirstSittingOLevelResult.ExamNumber) && Model.FirstSittingOLevelResult.ExamYear > 0)
+                {
+                    @Html.HiddenFor(model => model.FirstSittingOLevelResult.ScannedCopyUrl)
+                    @Html.HiddenFor(model => model.FirstSittingOLevelResult.Id)
+                    
+                <div>
+                    <div class="form-group margin-bottom-3">
+                        @Html.LabelFor(model => model.FirstSittingOLevelResult.Type.Id, "Type", new { @class = "control-label col-md-3 custom-text-black" })
+                        <div class="col-md-9 text-bold custom-text-black">
+                            @Html.TextBoxFor(model => model.FirstSittingOLevelResult.Type.Name, new { @class = "form-control olevel", @readonly = "readonly" })
+                        </div>
+                    </div>
+
+                    <div class="form-group margin-bottom-3">
+                        @Html.LabelFor(model => model.FirstSittingOLevelResult.ExamNumber, new { @class = "control-label col-md-3 custom-text-black" })
+                        <div class="col-md-9 text-bold custom-text-black">
+                            @Html.TextBoxFor(model => model.FirstSittingOLevelResult.ExamNumber, new { @class = "form-control olevel", @readonly = "readonly" })
+                        </div>
+                    </div>
+
+                    <div class="form-group margin-bottom-3">
+                        @Html.LabelFor(model => model.FirstSittingOLevelResult.ExamYear, new { @class = "control-label col-md-3 custom-text-black" })
+                        <div class="col-md-9 text-bold custom-text-black">
+                            @Html.TextBoxFor(model => model.FirstSittingOLevelResult.ExamYear, new { @class = "form-control", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-group margin-bottom-3">
+                        @Html.LabelFor(model => model.FirstSittingOLevelResult.ScratchCard, new { @class = "control-label col-md-3 custom-text-black" })
+                        <div class="col-md-9 text-bold custom-text-black">
+                            @Html.TextBoxFor(model => model.FirstSittingOLevelResult.ScratchCard, new { @class = "form-control olevel", @readonly = "readonly" })
+                        </div>
+                    </div>
+                </div>
+
+                <table class="table table-condensed table-responsive" style="background-color:whitesmoke">
+                    <tr>
+                        <th class="custom-text-black">
+                            Subject
+                        </th>
+                        <th class="custom-text-black">
+                            Grade
+                        </th>
+                        <th></th>
+                    </tr>
+
+                    @for (int i = 0; i < 9; i++)
+                    {
+                        <tr>
+                            <td class="custom-text-black">
+                                @Html.HiddenFor(model => model.FirstSittingOLevelResultDetails[i].Id)
+                                @Html.TextBoxFor(model => model.FirstSittingOLevelResultDetails[i].Subject.Name, new { @class = "form-control", @readonly = "readonly" })
+                            </td>
+                            <td class="custom-text-black">
+                                @Html.TextBoxFor(model => model.FirstSittingOLevelResultDetails[i].Grade.Name, new { @class = "form-control", @readonly = "readonly" })
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+}
+            </div>
+
+
+            <div class="col-md-6 custom-text-black">
+                <h5>Second Sitting</h5>
+                <hr class="no-top-padding" />
+
+                @if(Model.SecondSittingOLevelResult != null && !string.IsNullOrEmpty(Model.SecondSittingOLevelResult.ExamNumber) && Model.SecondSittingOLevelResult.ExamYear > 0)
+                {
+                    @Html.HiddenFor(model => model.SecondSittingOLevelResult.ScannedCopyUrl)
+                    @Html.HiddenFor(model => model.SecondSittingOLevelResult.Id)
+
+                <div>
+                    <div class="form-group margin-bottom-3">
+                        @Html.LabelFor(model => model.SecondSittingOLevelResult.Type.Id, "Type", new { @class = "control-label col-md-3 custom-text-black" })
+                        <div class="col-md-9 text-bold custom-text-black">
+
+                            @Html.TextBoxFor(model => model.SecondSittingOLevelResult.Type.Name, new { @class = "form-control", @readonly = "readonly" })
+                        </div>
+                    </div>
+
+                    <div class="form-group margin-bottom-3">
+                        @Html.LabelFor(model => model.SecondSittingOLevelResult.ExamNumber, new { @class = "control-label col-md-3 custom-text-black" })
+                        <div class="col-md-9 text-bold custom-text-black">
+
+                            @Html.TextBoxFor(model => model.SecondSittingOLevelResult.ExamNumber, new { @class = "form-control", @readonly = "readonly" })
+                        </div>
+                    </div>
+
+                    <div class="form-group margin-bottom-3">
+                        @Html.LabelFor(model => model.SecondSittingOLevelResult.ExamYear, new { @class = "control-label col-md-3 custom-text-black" })
+                        <div class="col-md-9 text-bold custom-text-black">
+                            @Html.TextBoxFor(model => model.SecondSittingOLevelResult.ExamYear, new { @class = "form-control", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="form-group margin-bottom-3">
+                        @Html.LabelFor(model => model.SecondSittingOLevelResult.ScratchCard, new { @class = "control-label col-md-3 custom-text-black" })
+                        <div class="col-md-9 text-bold custom-text-black">
+
+                            @Html.TextBoxFor(model => model.SecondSittingOLevelResult.ScratchCard, new { @class = "form-control", @readonly = "readonly" })
+                        </div>
+                    </div>
+                </div>
+
+
+                    <table class="table table-condensed table-responsive" style="background-color:whitesmoke">
+                        <tr>
+                            <th class="custom-text-black">
+                                Subject
+                            </th>
+                            <th class="custom-text-black">
+                                Grade
+                            </th>
+                            <th></th>
+                        </tr>
+
+                        @for (int i = 0; i < 9; i++)
+                        {
+                            <tr>
+                                <td class="custom-text-black">
+                                    @Html.HiddenFor(model => model.SecondSittingOLevelResultDetails[i].Id)
+                                    @Html.TextBoxFor(model => model.SecondSittingOLevelResultDetails[i].Subject.Name, new { @class = "form-control", @readonly = "readonly" })
+                                </td>
+                                <td class="custom-text-black">
+                                    @Html.TextBoxFor(model => model.SecondSittingOLevelResultDetails[i].Grade.Name, new { @class = "form-control", @readonly = "readonly" })
+                                </td>
+                            </tr>
+                        }
+
+                    </table>
+                }
+            </div>
+
+        </div>
+
+    </div>
+</div>
+

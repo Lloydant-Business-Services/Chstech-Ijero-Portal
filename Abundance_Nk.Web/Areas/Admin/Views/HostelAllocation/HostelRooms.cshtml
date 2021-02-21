@@ -1,0 +1,36 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.HostelViewModel
+@{
+    ViewBag.Title = "Hostel Rooms";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="row">
+    <div class="panel panel-default">
+        <div class="panel-heading panel-dark-head">
+            <h4>Hostel Rooms Setup</h4>
+        </div>
+        <div class="panel-body">
+            @using(Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.HostelSeries.Id,"Select Series"  ,new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(model => model.HostelSeries.Id,(IEnumerable<SelectListItem>)ViewBag.HostelSeriesId,new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.HostelSeries.Id,null,new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                  
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Create" class="btn btn-default" />
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+

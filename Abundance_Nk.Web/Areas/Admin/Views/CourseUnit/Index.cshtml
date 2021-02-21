@@ -1,0 +1,102 @@
+﻿@model IEnumerable<Abundance_Nk.Model.Entity.COURSE_UNIT>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Scripts {
+    <link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet"/>
+    @Scripts.Render("~/bundles/jquery")
+
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/file-upload/jquery-ui-1.9.2.min.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            $('#courseUnitTable').DataTable();
+
+        });
+    </script>
+}
+
+<h2>COURSE UNIT</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<div class="table-responsive">
+    <table class="table" id="courseUnitTable">
+        <thead>
+            <tr>
+                <th>
+                    <b>Minimum Unit</b>
+                </th>
+                <th>
+                    <b>Maximum Unit</b>
+                </th>
+                <th>
+                    <b>Session</b>
+                </th>
+                <th>
+                    <b>Programme</b>
+                </th>
+                <th>
+                    <b>Level</b>
+                </th>
+                <th>
+                    <b>Department</b>
+                </th>
+                <th>
+                    <b>Semester</b>
+                </th>
+                <th>
+                    <b>Option</b>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Minimum_Unit)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Maximum_Unit)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SESSION.Session_Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PROGRAMME.Programme_Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LEVEL.Level_Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DEPARTMENT.Department_Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SEMESTER.Semester_Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DEPARTMENT_OPTION.Department_Option_Name)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Course_Unit_Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Course_Unit_Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Course_Unit_Id })
+                </td>
+            </tr>
+        }
+        </tbody>
+
+        
+
+    </table>
+</div>
+

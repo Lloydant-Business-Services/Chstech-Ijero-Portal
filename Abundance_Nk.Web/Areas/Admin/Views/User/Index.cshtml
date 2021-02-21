@@ -1,0 +1,53 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.UserViewModel
+
+@{
+    ViewBag.Title = "Staff";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+@if (TempData["Message"] != null)
+{
+    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-fw fa-users"></i>Staff</h3>
+    </div>
+    <div class="panel-body">
+
+        <table class="table table-responsive table-bordered table-striped table-hover">
+            <tr>
+                <th>
+                    Staff Name
+                </th>
+                <th>
+                    View
+                </th>
+                <th>
+                    Edit
+                </th>
+            </tr>
+
+            @for (int i = 0; i < Model.Users.Count; i++)
+            {
+                <tr>
+                    <td class="col-lg-3 col-md-3 col-sm-3">
+                        @Model.Users[i].Username
+                    </td>
+                    <td>
+                        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> @Html.ActionLink("Details", "ViewUserDetails", new { id = Model.Users[i].Id })
+                        @*@Html.ActionLink("Delete", "Delete", new { id = Model.Users[i].Id })*@
+                    </td>
+                    <td>
+                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> @Html.ActionLink("Edit", "EditUser", new { id = Model.Users[i].Id })
+                    </td>
+                </tr>
+            }
+
+        </table>
+
+        </div>
+    </div>

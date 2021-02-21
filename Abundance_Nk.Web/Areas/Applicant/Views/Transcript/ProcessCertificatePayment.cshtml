@@ -1,0 +1,86 @@
+﻿@model Abundance_Nk.Web.Areas.Applicant.ViewModels.TranscriptViewModel
+@{
+    ViewBag.Title = "ProcessVerificationPayment";
+    Layout = "~/Views/Shared/_NewThemeLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<div class="row">
+    <div class="col-md-12">
+        <h2>
+            Verification/Collection
+            <span class="label label-default"> Request Form</span>
+        </h2>
+    </div>
+    <hr />
+</div>
+<form action="https://login.remita.net/remita/ecomm/init.reg" method="post">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="col-md-1"></div>
+            <div class="col-md-10">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <strong>Fullname</strong>
+                            <input id="payerName" name="payerName" type="text" class="form-control" value="@Model.StudentVerification.Remita.payerName" readonly="readonly" />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <strong>Phone No.</strong>
+                            <input id="payerPhone" name="payerPhone" type="text" class="form-control" value="@Model.StudentVerification.Remita.payerPhone" readonly="readonly" />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <strong>Email.</strong>
+                            <input id="payerEmail" name="payerEmail" type="text" class="form-control" value="@Model.StudentVerification.Remita.payerEmail" readonly="readonly" />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <strong>Amount</strong>
+                            <input id="amt" name="amt" type="text" class="form-control" value="@Model.StudentVerification.Remita.totalAmount" readonly="readonly" />
+                        </div>
+                    </div>
+                    <input id="merchantId" name="merchantId" value="@Model.StudentVerification.Remita.merchantId" type="hidden">
+                    <input id="serviceTypeId" name="serviceTypeId" value="@Model.StudentVerification.Remita.serviceTypeId" type="hidden">
+                    <input id="orderId" name="orderId" value="@Model.StudentVerification.Remita.orderId" type="hidden">
+                    <input id="hash" name="hash" value="@Model.StudentVerification.Remita.hash" type="hidden">
+                    <input id="responseurl" name="responseurl" value="@Model.StudentVerification.Remita.responseurl" type="hidden">
+
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input class="btn btn-success btn-lg mr5" type="submit"  value="Generate Payment Invoice" />
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                          
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+</form>

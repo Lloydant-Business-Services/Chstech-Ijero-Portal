@@ -1,0 +1,77 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.HostelViewModel
+@{
+    ViewBag.Title = "EditAllocationRequest";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading panel-dark-head">
+                <h4>Edit Hostel Allocation Request</h4>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+
+                    @using (Html.BeginForm("EditAllocationRequest", "HostelAllocation", FormMethod.Post))
+                    {
+                        @Html.HiddenFor(model => model.HostelRequest.Id)
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.HostelRequest.Level.Name, new {@class = "control-label custom-text-black"})
+                                    @Html.DropDownListFor(model => model.HostelRequest.Level.Id, (IEnumerable<SelectListItem>) ViewBag.Level, new {@class = "form-control", @required = "required"})
+                                    @Html.ValidationMessageFor(model => model.HostelRequest.Level.Id, null, new {@class = "text-danger"})
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.HostelRequest.Session.Name, new { @class = "control-label custom-text-black" })
+                                    @Html.DropDownListFor(model => model.HostelRequest.Session.Id, (IEnumerable<SelectListItem>)ViewBag.Session, new { @class = "form-control", @required = "required" })
+                                    @Html.ValidationMessageFor(model => model.HostelRequest.Session.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>  
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.HostelRequest.Approved, new { @class = "control-label custom-text-black" })
+                                    @Html.CheckBoxFor(m => m.HostelRequest.Approved, new { @type = "checkbox" })
+                                    @Html.ValidationMessageFor(model => model.HostelRequest.Approved, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                            
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    <input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="Update Request" />
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-1"></div>
+</div>
+

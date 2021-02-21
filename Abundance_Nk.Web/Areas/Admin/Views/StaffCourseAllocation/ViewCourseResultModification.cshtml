@@ -1,0 +1,63 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.StaffCourseAllocationViewModel
+@{
+    ViewBag.Title = "ViewCourseResultModification";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12">
+
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+        <div class="row">
+            @if (Model == null) { return; }
+            @if (Model != null && Model.ResultUpdates != null)
+            {
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+
+                            <div>
+                                Programme:  <b>@Model.ResultUpdates[0].Programme.ToUpper()</b> <br/>
+                                Department: <b>@Model.ResultUpdates[0].Department.ToUpper()</b> <br />
+                                Level:      <b>@Model.ResultUpdates[0].Level.ToUpper()</b> <br />
+                                Session:    <b>@Model.ResultUpdates[0].Session.ToUpper()</b> <br />
+                                Semester:   <b>@Model.ResultUpdates[0].Semester.ToUpper()</b> <br />
+                                Course Title: <b>@Model.ResultUpdates[0].CourseTitle.ToUpper()</b> <br />
+                                Course Code:  <b>@Model.ResultUpdates[0].CourseCode.ToUpper()</b> <br />
+                            </div>
+
+                            <table class="table table-bordered table-hover table-striped table-responsive">
+                                <tr>
+                                    <th>SN</th>
+                                    <th>Reg. Number</th>
+                                    <th>Last Modified</th>
+                                    <th>Modified By</th>
+                                    
+                                </tr>
+                                @for (int i = 0; i < Model.ResultUpdates.Count; i++)
+                                {
+                                    <tr>
+                                        <td>
+                                            @{var sn = i + 1; } <span>@sn</span>
+                                        </td>
+                                        <td>@Model.ResultUpdates[i].MatricNumber.ToUpper()</td>
+                                        <td>@Model.ResultUpdates[i].LastModifiedDate</td>
+                                        <td>@Model.ResultUpdates[i].StaffName</td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                    </div>
+            }
+        </div>
+
+    </div>
+</div>
+
+
+

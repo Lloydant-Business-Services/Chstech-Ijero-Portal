@@ -1,0 +1,234 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.UploadAdmissionViewModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="~/Scripts/file-upload/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="~/Scripts/file-upload/jquery-ui-1.9.2.min.js"></script>
+<script type="text/javascript" src="~/Scripts/file-upload/jquery.fileupload-ui.js"></script>
+<script type="text/javascript" src="~/Scripts/file-upload/jquery.fileupload.js"></script>
+<script type="text/javascript" src="~/Scripts/file-upload/jquery.iframe-transport.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.print.js"></script>
+
+<script type="text/javascript">
+    var jqXHRData;
+    $(document).ready(function () {
+
+        $("#divDepartmentOption").hide();
+        $("#AdmissionListDetail_Form_ProgrammeFee_Programme_Id").change(function () {
+
+            $("#AdmissionListDetail_Deprtment_Id").empty();
+
+            var selectedProgramme = $("#AdmissionListDetail_Form_ProgrammeFee_Programme_Id").val();
+            var programme = $("#AdmissionListDetail_Form_ProgrammeFee_Programme_Id").val();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartmentByProgrammeId")', // we are calling json method
+                dataType: 'json',
+                data: { id: programme },
+                success: function (departments) {
+                    $("#AdmissionListDetail_Deprtment_Id").append('<option value="' + 0 + '"> -- Select -- </option>');
+
+                    $.each(departments, function (i, department) {
+                        $("#AdmissionListDetail_Deprtment_Id").append('<option value="' + department.Value + '">' + department.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+        });
+
+
+
+        //Load Department Option
+        $("#AdmissionListDetail_Deprtment_Id").change(function () {
+
+            var department = $("#AdmissionListDetail_Deprtment_Id").val();
+            var programme = $("#AdmissionListDetail_Form_ProgrammeFee_Programme_Id").val();
+
+            $("#AdmissionListDetail_DepartmentOption_Id").empty();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartmentOptionByDepartment")', // we are calling json method
+                dataType: 'json',
+                data: { id: department, programmeid: programme },
+                success: function (departmentOptions) {
+                    //$("#hfDepartmentOptionExist").val(departmentOptions[0]);
+
+                    if (departmentOptions == "" || departmentOptions == null || departmentOptions == undefined) {
+                        $("#divDepartmentOption").hide();
+                    }
+                    else {
+                        $("#AdmissionListDetail_DepartmentOption_Id").append('<option value="' + 0 + '"> -- Select -- </option>');
+                        $.each(departmentOptions, function (i, Option) {
+                            $("#AdmissionListDetail_DepartmentOption_Id").append('<option value="' + Option.Value + '">' + Option.Text + '</option>');
+                        });
+                        if (programme > 2) {
+                            $("#divDepartmentOption").show();
+                        }
+
+                    }
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve department Options.' + ex);
+                }
+            });
+
+        })
+
+
+})
+</script>
+
+
+
+@*<div class="alert alert-success fade in nomargin">
+    <h3>@ViewBag.Title</h3>
+</div>*@
+
+<div class="panel panel-default">
+    <div class="panel-body">
+
+        <div class="col-md-12">
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+            <div>
+                <h4><p class="custom-text-black text-center ">VIEW ADMISSION LIST</p></h4>
+            </div>
+            @using (Html.BeginForm("UploadAdmission", "UploadAdmission/ViewAdmission", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+
+                <div class="panel panel-default ">
+                    <div class="panel-body ">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <cite><p class="custom-text-black"> Select the programme and department then click to view list</p></cite>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.CurrentSession.Id, new { @class = "control-label custom-text-black" })
+                                    @Html.DropDownListFor(model => model.CurrentSession.Id, (IEnumerable<SelectListItem>)ViewBag.SessionId, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.CurrentSession.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.AdmissionListType.Name, new { @class = "control-label custom-text-black" })
+                                    @Html.DropDownListFor(model => model.AdmissionListType.Id, (IEnumerable<SelectListItem>)ViewBag.AdmissionListTypeId, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.AdmissionListType.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.AdmissionListDetail.Form.ProgrammeFee.Programme.Id, new { @class = "control-label custom-text-black" })
+                                    @Html.DropDownListFor(model => model.AdmissionListDetail.Form.ProgrammeFee.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.ProgrammeId, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.AdmissionListDetail.Form.ProgrammeFee.Programme.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.AdmissionListDetail.Deprtment.Id, "Course", new { @class = "control-label custom-text-black" })
+                                    @Html.DropDownListFor(model => model.AdmissionListDetail.Deprtment.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentId, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.AdmissionListDetail.Deprtment.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div id="divDepartmentOption" class="form-group">
+                                    @Html.LabelFor(model => model.AdmissionListDetail.DepartmentOption.Id, "Course Option", new { @class = "control-label custom-text-black" })
+                                    @Html.DropDownListFor(model => model.AdmissionListDetail.DepartmentOption.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentOptionId, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.AdmissionListDetail.DepartmentOption.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                  </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <i class="glyphicon-upload"></i><input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="View List" />
+  </div>
+                            </div>
+
+                            
+
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+            }
+
+        </div>
+
+        @if (Model == null || Model.AdmissionList == null) { return; }
+
+        @if (Model != null && Model.AdmissionList != null)
+        {
+           
+                <div class="col-md-12">
+
+                    <table class="table table-bordered table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <th>SN</th>
+                                <th>@Html.ActionLink("Fullname", "Index", new { sortOrder = ViewBag.FullName, currentFilter = ViewBag.CurrentFilter })</th>
+                                <th>@Html.ActionLink("Application Number", "Index", new { sortOrder = ViewBag.Number, currentFilter = ViewBag.CurrentFilter })</th>
+                                <th>@Html.ActionLink("Applied Department", "Index", new { sortOrder = ViewBag.Number, currentFilter = ViewBag.CurrentFilter })</th>
+                                <th>@Html.ActionLink(" ", "Index", new { sortOrder = ViewBag.Number, currentFilter = ViewBag.CurrentFilter })</th>
+
+                            </tr>
+                        </thead>
+                        <tbody style="color:black;">
+                            @for (var itemIndex = 0; itemIndex < Model.AdmissionList.Count; itemIndex++)
+                            {
+                                <tr>
+                                    @{ int N = 0;}
+                                    <td>@{ N = itemIndex + 1; } @N</td>
+                                    <td>@Html.DisplayTextFor(m => m.AdmissionList[itemIndex].Form.Person.FullName)</td>
+                                    <td>@Html.DisplayTextFor(m => m.AdmissionList[itemIndex].Form.Number)</td>
+                                    <td>@Html.DisplayTextFor(m => m.AdmissionList[itemIndex].Deprtment.Name)</td>
+                                    <td>@Html.ActionLink("Edit",  "EditAdmittedStudentDepartment","UploadAdmission" ,new {Area ="Admin", id = Model.AdmissionList[itemIndex].Id }, null)</td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+
+                </div>
+
+            
+        }
+
+    </div>
+</div>

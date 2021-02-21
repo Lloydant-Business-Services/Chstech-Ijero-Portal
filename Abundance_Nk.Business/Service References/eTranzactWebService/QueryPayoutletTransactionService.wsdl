@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://ws.etz.com/" name="QueryPayoutletTransactionService" targetNamespace="http://ws.etz.com/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xs:schema targetNamespace="http://ws.etz.com/" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="queryPayoutletTransaction" type="tns:queryPayoutletTransaction" />
+      <xs:element name="queryPayoutletTransactionResponse" type="tns:queryPayoutletTransactionResponse" />
+      <xs:complexType name="queryPayoutletTransaction">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="terminalId" type="xs:string" />
+          <xs:element minOccurs="0" name="confirmationNo" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="queryPayoutletTransactionResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </types>
+  <message name="QueryPayoutletTransaction_queryPayoutletTransaction">
+    <part name="queryPayoutletTransaction" element="tns:queryPayoutletTransaction" />
+  </message>
+  <message name="QueryPayoutletTransaction_queryPayoutletTransactionResponse">
+    <part name="queryPayoutletTransactionResponse" element="tns:queryPayoutletTransactionResponse" />
+  </message>
+  <portType name="QueryPayoutletTransaction">
+    <operation name="queryPayoutletTransaction" parameterOrder="queryPayoutletTransaction">
+      <input message="tns:QueryPayoutletTransaction_queryPayoutletTransaction" />
+      <output message="tns:QueryPayoutletTransaction_queryPayoutletTransactionResponse" />
+    </operation>
+  </portType>
+  <binding name="QueryPayoutletTransactionBinding" type="tns:QueryPayoutletTransaction">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="queryPayoutletTransaction">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+  <service name="QueryPayoutletTransactionService">
+    <port name="QueryPayoutletTransactionPort" binding="tns:QueryPayoutletTransactionBinding">
+      <soap:address location="http://172.16.10.5:8080/WebService/QueryPayoutletTransaction" />
+    </port>
+  </service>
+</definitions>

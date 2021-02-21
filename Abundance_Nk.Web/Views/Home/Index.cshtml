@@ -1,0 +1,579 @@
+﻿@model Abundance_Nk.Web.Models.LoginViewModel
+@{
+                /**/
+
+                ViewBag.Title = "Home";
+                Layout = null;
+}
+<!doctype>
+<html lang="en">
+<head>
+    <title>CHSTECH | School Portal</title>
+    <style>
+        #myImg {
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+            #myImg:hover {
+                opacity: 0.7;
+            }
+
+        .modalSpin {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 4444; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        .modal-content-spin {
+            margin: auto;
+            margin-top: 120px;
+            display: block;
+            width: 60%;
+            max-width: 200px;
+            background-color: ghostwhite;
+            padding: 30px;
+            border-radius: 60px;
+        }
+
+        .modal-in-spin {
+            margin: auto;
+            margin-top: 15px;
+            display: block;
+            width: 60%;
+            max-width: 130px;
+            background-color: whitesmoke;
+            padding: 20px;
+            border-radius: 30px;
+            display: none
+        }
+
+        #caption {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+            color: #ccc;
+            padding: 10px 0;
+            height: 150px;
+        }
+
+        .modal-content, #caption {
+            animation-name: zoom;
+            animation-duration: 0.6s;
+        }
+        /* The Close Button */
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+            .close:hover,
+            .close:focus {
+                color: #bbb;
+                text-decoration: none;
+                cursor: pointer;
+            }
+
+        body {
+            font-family: Quicksand, sans-serif !important;
+        }
+    </style>
+
+
+
+    <!--     Fonts and icons     -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+    <!-- CSS Files -->
+    <link href="~/Content/theme/index/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/theme/index/assets/css/now-ui-kit.css" rel="stylesheet" />
+    <link href="~/Content/theme/index/assets/css/wfmi-style.css" rel="stylesheet" />
+    @*<link href="~/Content/theme/login/assets/css/custom-style.css" rel="stylesheet" />*@
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <script type="text/javascript" src="~/Content/theme/index/assets/js/core/jquery.3.2.1.min.js"></script>
+
+    <script type="text/javascript" src="~/Content/theme/index/assets/js/core/bootstrap.min.js"></script>
+
+    <script>
+        function showLoginTab(form) {
+            if (form === 2) {
+                $("#student").hide();
+                $("#staff").show();
+            } else {
+                $("#staff").hide();
+                $("#student").show();
+            }
+        }
+        $(document).ready(function () {
+            $("#loginBtn").on('click', function () {
+                var user = $('#studentUsername').val();
+                var password = $('#studentUserpassword').val();
+                if (user == null || user == "" || user == " ") {
+                    alert("Login Fields are empty!");
+                    return false;
+                } else {
+                    $("#spinnerModal").show();
+                }
+            })
+        })
+
+    </script>
+
+</head>
+<body>
+    <div id="spinnerModal" class="modalSpin">
+
+        <div>
+            <img class="modal-content-spin" id="img01" src="~/Content/Images/spinner.gif">
+        </div>
+
+    </div>
+    <div class="container-fluid"></div>
+    <div class="col-md-12 bodi  m-0 p-0">
+
+        <nav class="navbar navbar-toggleable-md navbar-expand-lg bg-primary p-0" color-on-scroll="500" style="background-color: #2f422f!important">
+            <div class=" pl-2" style="width:100%;">
+                <div class="row">
+
+                    <div class="col-md-3 col-sm-12">
+                        <div class="navbar-translate">
+                            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-bar bar1"></span>
+                                <span class="navbar-toggler-bar bar2"></span>
+                                <span class="navbar-toggler-bar bar3"></span>
+                            </button>
+                            <a class="navbar-brand ml-2" href="#">
+                                <b style="font-size: 18px">The College Of Health Sciences and Technology, Ijero-Ekiti &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+                                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b> 
+                                <img src="~/Content/images/chst.png" alt="logo" width="60px" height="60px">
+
+                            </a>
+                        </div>
+                    </div>
+                   
+
+                    <div class="col-md-9 col-sm-12 text-right pt-2">
+
+                        <div class="collapse navbar-collapse justify-content-end" id="navigation" data-nav-image="~/Content/theme/index/assets/img/blurred-image-1.jpg">
+
+                            <ul class="navbar-nav">
+
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"><span class="menu-title">APPLICANTS</span></a>
+
+                                    <ul class="dropdown-menu bg-primary" aria-labelledby="dropdown" style="color: #333 !important;">
+                                        <li class="dropdown-item">@Html.ActionLink("Generate Invoice", "FormInvoiceGeneration", "Form", new { Area = "Applicant" }, null)</li>
+                                        <li class="dropdown-item">@Html.ActionLink("Generate Reciept", "GenerateReciept", "Credential", new { Area = "Common" }, null)</li>
+
+                                        <li class="dropdown-item">@Html.ActionLink("Fill Application Form", "FillApplicationForm", "Form", new { Area = "Applicant" }, null)</li>
+                                        <li class="divider"></li>
+                                        <li class="dropdown-item">@Html.ActionLink("Check Admission Status", "CheckStatus", "Admission", new { Area = "Applicant" }, null)</li>
+                                        @*<li class="dropdown-item">@Html.ActionLink("Generate Invoice", "PostJambFormInvoiceGeneration", "Form", new { Area = "Applicant" }, null)</li>
+                                            <li class="dropdown-item">@Html.ActionLink("Fill Application Form", "PostJambProgramme", "Form", new { Area = "Applicant" }, null)</li>
+                                            <li class="divider"></li>
+                                            <li class="dropdown-item">@Html.ActionLink("Check Result", "Index", "PostUtmeResult", new { Area = "Applicant" }, null)</li>
+                                            <li class="dropdown-item">@Html.ActionLink("Search for PUTME Result", "MergeResult", "PostUtmeResult", new { Area = "Applicant" }, null)</li>
+                                            <li class="divider"></li>
+                                            <li class="dropdown-item">@Html.ActionLink("Check Admission Status", "CheckStatus", "Admission", new { Area = "Applicant" }, new { disabled = "disabled" })</li>
+                                            <li class="dropdown-item">@Html.ActionLink("Generate Change of Course Invoice", "GenerateChangeOfCourseInvoice", "Admission", new { Area = "Applicant" }, null)</li>
+                                            <li class="dropdown-item">@Html.ActionLink("Pay Change Of Course Fee", "ProcessChangeOfCourse", "Admission", new { Area = "Applicant" }, null)</li>
+                                            <li class="divider"></li>
+                                            <li class="dropdown-item">@Html.ActionLink("Request For Hostel Allocation", "CreateHostelRequest", "Hostel", new { Area = "Student" }, null)</li>
+                                            <li class="dropdown-item">@Html.ActionLink("Generate Hostel Allocation Invoice", "GenerateHostelInvoice", "Hostel", new { Area = "Student" }, null)</li>
+                                            <li class="dropdown-item">@Html.ActionLink("Pay Hostel Fee", "PayHostelFee", "Hostel", new { Area = "Student" }, null)</li>*@
+                                    </ul>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"><span class="menu-title">RETURNING STUDENT</span></a>
+
+                                    <ul class="dropdown-menu bg-primary" aria-labelledby="dropdown" style="color: #333 !important;">
+                                        @*<li>@Html.ActionLink("Generate Invoice", "Index", "Payment", new { Area = "Student" }, null)</li>
+                                            <li class="divider"></li>
+                                            <li>@Html.ActionLink("Session Registration", "Logon", "Registration", new { Area = "Student" }, null)</li>
+                                            <li class="divider"></li>
+                                            <li>@Html.ActionLink("Check Semester Result", "Check", "Result", new { Area = "Student" }, null)</li>
+                                            <li class="divider"></li>
+                                            <li>@Html.ActionLink("Request For Hostel Allocation", "CreateHostelRequest", "Hostel", new { Area = "Student" }, null)</li>
+                                            <li>@Html.ActionLink("Generate Hostel Allocation Invoice", "GenerateHostelInvoice", "Hostel", new { Area = "Student" }, null)</li>
+                                            <li>@Html.ActionLink("Pay Hostel Fee", "PayHostelFee", "Hostel", new { Area = "Student" }, null)</li>
+                                            <li class="divider"></li>
+                                            <li>@Html.ActionLink("Generate ShortFall Invoice", "GenerateShortFallInvoice", "Payment", new { Area = "Student" }, null)</li>
+                                            <li>@Html.ActionLink("Pay ShortFall Fee", "PayShortFallFee", "Payment", new { Area = "Student" }, null)</li>*@
+                                    </ul>
+                                </li>
+                                @*<li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"><span class="menu-title">Extra Year Stuents</span></a>
+                                        <ul class="dropdown-menu bg-primary" aria-labelledby="dropdown" style="color: #333 !important;">
+                                            <li>@Html.ActionLink("Generate Invoice", "Index", "ExtraYear", new { Area = "Student" }, null)</li>
+                                            <li class="divider"></li>
+                                            <li>@Html.ActionLink("Session Registration", "Step_3", "ExtraYear", new { Area = "Student" }, null)</li>
+                                        </ul>
+                                    </li>*@
+
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"><span class="menu-title">GRADUATE</span></a>
+
+                                    <ul class="dropdown-menu bg-primary" aria-labelledby="dropdown" style="color: #333 !important;">
+                                        <li>@Html.ActionLink("Transcript Request", "Index", "Transcript", new { type = "", Area = "Applicant" }, null)</li>
+                                        <li>@Html.ActionLink("Print Receipt", "PrintTranscriptReciept", "Transcript", new { type = "", Area = "Applicant" }, null)</li>
+                                        @*<li>@Html.ActionLink("Collection of Certificate", "Index", "Transcript", new { type = "Certificate Collection", Area = "Applicant" }, null)</li>
+        <li>@Html.ActionLink("Verification of Transcript", "Index", "Transcript", new { type = "Transcript Verification", Area = "Applicant" }, null)</li>
+        <li>@Html.ActionLink("Verification of Certificate", "Index", "Transcript", new { type = "Certificate Verification", Area = "Applicant" }, null)</li>
+        <li>@Html.ActionLink("WES Verification", "VerificationFees", "Transcript", new { feeTypeId = Utility.Encrypt("16"), Area = "Applicant" }, null)</li>
+        <li>@Html.ActionLink("Convocation Fee", "ConvocationFee", "Transcript", new { Area = "Applicant" }, null)</li>
+        <li>@Html.ActionLink("Convocation Fee Receipt", "PayConvocationFee", "Transcript", new { Area = "Applicant" }, null)</li>
+        <li><a href="#">Alumni</a></li>
+        <li><a href="#">Guide for Graduates</a></li>*@
+                                    </ul>
+                                </li>
+
+
+
+                            </ul>
+                            <div class="col-md-2 bg-warning hidden-md-down text-center pt-3" style="margin:-18px 0 -20px 0; background-color: #b72f9cfc!important;">
+                                <a class="nav-link" href="@Url.Action("Login","Account", new { Area = "Security" })">
+                                    <span class="navbar-text">
+
+                                        <p>LOGIN</p>
+
+                                    </span>
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </nav>
+
+        <!-- Image and text -->
+        <div style="background: rgba(255, 255, 255, 0.052); /* fallback for old browsers */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       background: -webkit-linear-gradient(to bottom, transparent, rgba(255, 255, 255, 1)); /* Chrome 10-25, Safari 5.1-6 */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 1)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ">
+
+
+
+
+            <div class="container p-0" style="box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.2);">
+                <div class="col-md-12">
+                    <div class="row mainHeight">
+                        <div class="col-md-8 col-sm-12">
+                            <div class="col-md-6">
+                                <div class="card shadow p-4">
+                                    <div class="card-body">
+                                        <h5>Students Portal</h5>
+                                        <div class="separator separator-primary"></div>
+                                        
+                                        Our vision is simple - produce health Professionals that will render health care Services in line with the global concept of Public health and environmental safety
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @if (!Request.IsAuthenticated)
+                        {
+                            <div class="col-lg-4 col-md-6 col-sm-12 " id="pablo1" style="display:none!important">
+
+
+                                <div class="card bg-warning-opacity p-4" style="background-color: rgb(53 48 53 / 51%) !important">
+                                    <h5>LOG IN TO YOUR ACCOUNT</h5>
+
+                                    @*<button class="btn btn-warning btn-sm" onclick="showLoginTab(1)">Student/Staff Login</button> &nbsp;&nbsp;*@
+                                    @*<button class="btn btn-warning btn-sm" onclick="showLoginTab(2)">Staff Login</button>*@
+
+                                    @*<div id="student">*@
+                                        <div>
+
+                                            <div class="separator01 separator-primary"></div>
+                                            @using (Html.BeginForm("Login", "Account", new { Area = "Security", ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+                                            {
+                                                @Html.AntiForgeryToken()
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        @Html.LabelFor(model => model.UserName, new { @class = "control-label" })
+                                                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", placeholder = "FPA/AC/16/***", required = "required", type = "text", id = "studentUsername" })
+                                                        @Html.ValidationMessageFor(m => m.UserName)
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        @Html.LabelFor(model => model.Password, new { @class = "control-label" })
+                                                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "*******", type = "password", required = "required", id = "studentPassword" })
+                                                        @Html.ValidationMessageFor(m => m.Password)
+                                                    </div>
+                                                </div>
+                                                <div class="form-group pl-1 mt-5">
+                                                    <button class="btn btn-warning btn-block" style="background-color: #ce1bbbc2!important;" type="submit" id="loginBtn" onclick="loginSpin()">LOGIN</button>
+                                                </div>
+                                            }
+
+                                        </div>
+
+                                        <div id="staff" style="display: none">
+
+                                            <div class="separator01 separator-primary"></div>
+                                            @using (Html.BeginForm("Login", "Account", new { Area = "Security", ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+                                            {
+                                                @Html.AntiForgeryToken()
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        @Html.LabelFor(model => model.UserName, new { @class = "control-label" })
+                                                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", placeholder = "Staff Name", required = "required", type = "text" })
+                                                        @Html.ValidationMessageFor(m => m.UserName)
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        @Html.LabelFor(model => model.Password, new { @class = "control-label" })
+                                                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "*******", type = "password", required = "required" })
+                                                        @Html.ValidationMessageFor(m => m.Password)
+                                                    </div>
+                                                </div>
+                                                <div class="form-group pl-1 mt-5">
+                                                    <button class="btn btn-warning btn-block" type="submit">LOGIN</button>
+                                                </div>
+                                            }
+
+                                        </div>
+
+
+                                    </div>
+
+
+                            </div>
+                        }
+                    </div>
+                </div>
+
+
+                <div class="container-fluid Design1 m-0">
+                </div>
+                <div class="container-fluid Design2 pt-5 pb-5 bg-white">
+                    <div class="row statement">
+                        <div class="col-md-3 text-center">
+                            <a href="#" class="Toplink">
+                                <img src="~/Content/theme/index/assets/img/prospectiveStu.svg" class="mb-4" alt="prospective student" height="60px" />
+                                <h5>PROSPECTIVE STUDENT</h5>
+                            </a>
+                            <div class="card card-primary p-4">
+                                <div class="card-block p-0 text-left">
+                                    To Apply for a programme
+                                    you are required to
+                                    generate an invoice.
+                                    This should then be taken
+                                    to any of the designated
+                                    banks and make payment
+                                </div>
+                                <button class="btn btn-primary btn-block">APPLCATION FORMS</button>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 text-center">
+                            <a href="#" class="Toplink">
+                                <img src="~/Content/theme/index/assets/img/newStudent.svg" class="mb-4" alt="New student" height="60px" />
+                                <h5>FRESH MAN OR NEW STUDENT</h5>
+                            </a>
+                            <div class="card card-primary p-4">
+                                <div class="card-block p-0 text-left">
+                                    To check your admission
+                                    status, Pay acceptance
+                                    fees &amp; school fees or
+                                    register your courses, a
+                                    click link below
+                                </div>
+                                <button class="btn btn-primary btn-block">NEW STUDENT GUIDE</button>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 text-center">
+                            <a href="#" class="Toplink">
+                                <img src="~/Content/theme/index/assets/img/returningStu.svg" class="mb-4" alt="returning student" height="60px" />
+                                <h5>RETURNING STUDENT</h5>
+                            </a>
+                            <div class="card card-primary p-4">
+                                <div class="card-block p-0 text-left">
+                                    Returning students can
+                                    generate fees invoice,
+                                    print receipts e.t.c
+                                </div>
+                                <button class="btn btn-primary btn-block">RETURNING STUDENT</button>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-3 text-center">
+                            <a href="#" class="Toplink">
+                                <img src="~/Content/theme/index/assets/img/semesterResu.svg" class="mb-4" alt="SEMESTER RESULTS" height="60px" />
+                                <h5>SEMESTER RESULTS</h5>
+                            </a>
+
+                            <div class="card card-primary p-4">
+                                <div class="card-block p-0 text-left">
+                                    To check Semester results
+                                    status, please use the
+                                    button below.
+                                </div>
+                                <button class="btn btn-primary btn-block">CHECK SEMESTER RESULT</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <div class="container-fluid pt-5 pb-5 Design3">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 col-sm-12 text-center">
+                        <img src="~/Content/theme/index/assets/img/call.svg" class=" text-right" alt="SEMESTER RESULTS" height="90px" />
+                    </div>
+
+                    <div class="col-md-7 col-sm-12 pt-1">
+                        <span class="font-1"><b>ARE YOU EXPERIENCING ANY DIFFICULTIES OR ISSUES?</b></span><br />
+                        <b>CALL:</b> 07088391544 or 090838920222<br />
+                        <b>EMAIL SUPPORT:</b> support@lloydant.com
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid blueBg">
+            <div class="row bg-primary-opacity" style="background-color: #2f422f!important;">
+
+                <div class="col-md-4 col-sm-12 text-white  pt-5 pb-4">
+                    <h5>EMPLOYEE EXTERNAL LINKS</h5>
+                    <div class="separator separator-primary"></div>
+                    <ul>
+                        <li>Administrative Guide</li>
+                        <li>Faculty &amp; Staff Help center</li>
+                        <li>Services</li>
+                    </ul>
+                </div>
+
+                <div class="col-md-4 col-sm-12 text-white  pt-5 pb-4">
+                    <h5>ACADEMIC EXTERNAL LINKS </h5>
+                    <div class="separator separator-primary"></div>
+                    <ul>
+                        <li>Explore Courses </li>
+                        <li>Student services center</li>
+                        <li>Explore Degrees</li>
+                    </ul>
+                </div>
+
+                <div class="col-md-4 col-sm-12 text-white  p-5">
+                    <h5 class="mb-0">COLLEGE OF HEALTH AND SCIENCE TECHNOLOGY</h5>
+                    <sub>IJERO-EKITI</sub>
+                    <br /><br />
+                    <h6>ABOUT</h6>
+                    College of Health and Science Technology
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid bg-primary line-1"></div>
+
+        <div class="container-fluid bg-primary p-1">
+            <div class="row">
+                <div class="col-md-8 col-sm-12">
+                    &copy; COLLEGE OF HEALTH AND SCIENCE TECHNOLOGY,<br>
+                    EKITI STATE.
+                </div>
+                <div class="col-md-4 col-sm-12 text-right">
+                    Powered by <img class="image" style="height: 30px; width: 30px" src="~/Content/images/lloydant.png" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!--Start of Tawk.to Script-->
+    <script type="text/javascript">
+        var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+        (function () {
+            var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+            s1.async = true;
+            s1.src = 'https://embed.tawk.to/5e1c9b0b7e39ea1242a465b4/1duhkkhqc';
+            s1.charset = 'UTF-8';
+            s1.setAttribute('crossorigin', '*');
+            s0.parentNode.insertBefore(s1, s0);
+        })();
+    </script>
+    <!--End of Tawk.to Script-->
+    <!-- Start of Smartsupp Live Chat script -->
+    @*<script type="text/javascript">
+            var _smartsupp = _smartsupp || {};
+            _smartsupp.key = "8d8c5c64fa82b02ea860a7f80d5a93c351259935";
+            //
+            _smartsupp.cookieDomain = '.97.74.6.243/fedpolyado';
+            _smartsupp.requireLogin = true;
+            // disable email
+            _smartsupp.loginEmailControl = false;
+            // append checkbox control to confirm something
+            _smartsupp.loginControls = [{
+                xtype: 'textinput',
+                name: 'number',
+                label: 'Phone',
+                required: true
+            }, {
+                xtype: 'textinput',
+                name: 'identifier',
+                label: 'Application / Matric No',
+                required: true
+            }];
+            window.smartsupp || (function (d) {
+                var s, c, o = smartsupp = function () { o._.push(arguments) }; o._ = [];
+                s = d.getElementsByTagName('script')[0]; c = d.createElement('script');
+                c.type = 'text/javascript'; c.charset = 'utf-8'; c.async = true;
+                c.src = '//www.smartsuppchat.com/loader.js'; s.parentNode.insertBefore(c, s);
+            })(document);
+        </script>*@
+    <!-- End of Smartsupp Live Chat script -->
+    @*<script>
+            // customize banner & logo
+            smartsupp('banner:set', 'bubble');
+            smartsupp('chat:avatar', '@Url.Content("~/Content/Images/livechat.png")');
+            // customize texts
+            smartsupp('chat:translate', {
+                online: {
+                    title: 'Support',
+                    infoTitle: 'LLOYDANT'
+                },
+                offline: {
+                    title: 'OFFLINE'
+                }
+            });
+            // customize colors
+            smartsupp('theme:colors', {
+                primary: '#990066',
+                banner: '#999999',
+                primaryText: '#ffffff'
+            });
+        </script>*@
+
+</body>
+</html>

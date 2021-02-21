@@ -1,0 +1,113 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.SupportViewModel
+@using GridMvc.Html
+@{
+    ViewBag.Title = "ResetStep";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<h2>Reset Step</h2>
+
+@using (Html.BeginForm("ResetStep", "Support", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+            <div class="col-md-12">
+                <div class="panel panel-default ">
+                    <div class="panel-body ">
+
+                        <div class="row">
+                            <div>
+                                @if (TempData["Message"] != null)
+                                {
+                                    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+                                }
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <h4>Reset Applicant Status</h4>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ApplicationForm.Number, new { @class = "col-sm-2 control-label " })
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(model => model.ApplicationForm.Number, new { @class = "form-control", @placeholder = "Enter Application No" })
+                                @Html.ValidationMessageFor(model => model.ApplicationForm.Number, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-10">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-10">
+                                <input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="View" />
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+}
+
+@if (Model.Applicants != null)
+{
+
+    using (Html.BeginForm("UpdateStep", "Support", FormMethod.Post))
+    {
+        @Html.HiddenFor(model => model.Applicants.ApplicationForm.Id)
+        @Html.HiddenFor(model => model.Applicants.ApplicationForm.Number)
+        @Html.HiddenFor(model => model.Applicants.ApplicationForm.ExamNumber)
+        @Html.HiddenFor(model => model.Applicants.ApplicationForm.SerialNumber)
+
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="col-md-12">
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Application Number</label>
+                        <div class="col-sm-10">
+                            @Html.DisplayFor(model => model.Applicants.ApplicationForm.Number, new { @class = "form-control", @placeholder = "Enter Other Names" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Full name</label>
+                        <div class="col-sm-10">
+                            @Html.DisplayFor(model => model.Applicants.ApplicationForm.Person.FullName, new { @class = "form-control", @placeholder = "Enter Mobile Number" })
+                        </div>
+                    </div>
+         
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Status</label>
+                        <div class="col-sm-10">
+                            @Html.DropDownListFor(model => model.Applicants.Status.Id, (IEnumerable<SelectListItem>)ViewBag.StatusId, new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-10">
+                            <input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="Update" />
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    }
+}

@@ -1,0 +1,158 @@
+﻿@using Abundance_Nk.Web.Models
+@model Abundance_Nk.Model.Model.PaymentHistory
+
+@{
+    Layout = "~/Areas/Student/Views/Shared/_NewThemeLayout.cshtml";
+    ViewBag.Title = "Invoice";
+}
+
+<div class="row custom-text-black">
+    <div class="col-md-3">
+        <div class="logopanel">
+            <h1><span style="color: #35925B">Generated Invoices</span></h1>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <ul class="leftmenu ">
+                    <li>
+                        <a href="#"><b>Instructions</b></a>
+                    </li>
+                </ul>
+
+                <ol>
+                    <li class="margin-bottom-7">The list of all the invoices generated is displayed on the invoice list.</li>
+                    <li class="margin-bottom-7">To reprint an invoice, click on the reprint button.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-9">
+            
+            <div class="shadow">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="col-md-12" style="font-size: 15pt; text-transform: uppercase">
+                                @Html.DisplayFor(model => model.Student.FullName)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group margin-bottom-0">
+                            <div class="col-md-4">
+                                @Html.LabelFor(model => model.Student.MatricNumber,new { @class = "control-label " })
+                            </div>
+                            <div class="col-md-8 ">
+                                @Html.HiddenFor(model => model.Student.MatricNumber)
+                                @Html.DisplayFor(model => model.Student.MatricNumber)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group margin-bottom-0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @if(Model != null && Model != null && Model.Payments != null && Model.Payments.Count > 0)
+                    {
+                        <div class="row">
+                            <div class="col-md-12">
+                                <b>Invoices</b>
+                                <div class="pull-right record-count-label">
+                                    <span class="caption">Total number</span><span class="badge">@Model.Payments.Count</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 ">
+
+                                <table class="table grid-table table-condensed grid-wrap table-head-alt mb30">
+                                    <thead>
+                                        <tr class="well grid-wrap" style="height: 35px; vertical-align: middle">
+
+                                            <th>
+                                                Session
+                                            </th>
+                                            <th>
+                                                Payment Type
+                                            </th>
+                                            <th>
+                                                Payment Mode
+                                            </th>
+                                            <th>
+                                                Invoice Number
+                                            </th>
+                                            <th>
+                                                Date
+                                            </th>
+                                            <th>
+                                            </th>
+                                        </tr>
+                                    </thead>
+
+                                    @for(int i = 0;i < Model.Payments.Count;i++)
+                                    {
+                                        <tr>
+
+                                            <td>
+                                               @Html.DisplayFor(modelItem => Model.Payments[i].SessionName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => Model.Payments[i].FeeTypeName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => Model.Payments[i].PaymentModeName)
+                                            </td>
+
+                                            <td>
+                                                @Html.DisplayFor(modelItem => Model.Payments[i].InvoiceNumber)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => Model.Payments[i].InvoiceGenerationDateStr)
+                                            </td>
+                                            <td>
+                                                @Html.ActionLink("Reprint", "Invoice", "Credential", new { Area = "Common", pmid = Utility.Encrypt(Model.Payments[i].PaymentId.ToString()) }, new { target = "_blank", @class="btn btn-danger" })
+                                            </td>
+                                        </tr>
+                                    }
+
+                                   
+                                </table>
+
+                                @*</div>*@
+                            </div>
+                        </div>
+
+                        <br />
+                        
+                    }
+                    else
+                    {
+                        <div>
+                            @if(TempData["Message"] != null)
+                            {
+                                @Html.Partial("_Message",TempData["Message"])
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+       
+    </div>
+</div>

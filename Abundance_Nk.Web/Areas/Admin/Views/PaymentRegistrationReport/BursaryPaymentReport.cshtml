@@ -1,0 +1,468 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.PaymentViewModel
+@{
+    ViewBag.Title = "BursaryPaymentReport";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jquery")
+
+    <link href="~/Scripts/DataTables-1.10.15/media/css/jquery.dataTables.css" rel="stylesheet" />
+    <script src="~/Scripts/DataTables-1.10.15/media/js/jquery.dataTables.js"></script>
+    <link href="~/Scripts/DataTables-1.10.15/extensions/Buttons/css/buttons.dataTables.css" rel="stylesheet" />
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Buttons/js/dataTables.buttons.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Buttons/js/buttons.colVis.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Responsive/js/dataTables.responsive.js"></script>
+    
+    <script src="~/Scripts/DataTables-1.10.15/buttons.flash.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/buttons.html5.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/buttons.print.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/jszip.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/pdfmake.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/vfs_fonts.js"></script>
+
+    <link href="~/Content/bootstrap-datepicker.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap-datepicker.js"></script>
+    <link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+    <script src="~/Scripts/file-upload/jquery-ui-1.9.2.min.js"></script>
+    <style>
+        .table_wrapper{
+            display:block;
+            overflow-x:auto;
+            white-space:nowrap;
+        }
+    </style>
+
+    <script type="text/javascript">
+
+        var breakdownDataTable;
+        var summaryDataTable;
+        var gatewayValue;
+        var exportableTitle;
+
+        $(document).ready(function () {
+
+            $('.date').datepicker({
+                dateFormat: "mm/dd/yy",
+                showOtherMonths: true,
+                selectOtherMonths: true,
+                autoclose: true,
+                changeMonth: true,
+                changeYear: true
+            });
+
+            gatewayValue = $("#remitaGateway").val();
+
+            //Programme Drop down Selected-change event
+            $("#programme").change(function () {
+            $("#department").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartments", "PaymentRegistrationReport")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#programme").val() },
+                // Get Selected Country ID.
+                success: function (departments) {
+                    $("#department").append('<option value="' + 0 + '">' +
+                            '-- Select Department --' + '</option>');
+                    $.each(departments, function (i, department) {
+                        $("#department").append('<option value="' + department.Value + '">' +
+                             department.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+            return false;
+        })
+            //$('input[type=radio][name=PaymentGateway]').change(function () {
+            //    if (this.value == 'Etranzact') {
+            //        $("#PaymentGateway").val('Etranzact');
+            //        gatewayValue = 'Etranzact';
+            //    }
+            //    else if (this.value == 'Remita') {
+            //        $("#PaymentGateway").val('Remita');
+            //        gatewayValue = 'Remita';
+            //    }
+            //});
+        });
+
+        function assignGateway(gatewayVal) {
+            if (gatewayVal == 1) {
+                gatewayValue = 'Remita';
+            }
+            else if (gatewayVal == 2) {
+                gatewayValue = 'Etranzact';
+            }
+        }
+
+        function showBreakdown(feeType) {
+
+            var dateFrom = $("#DateFrom").val();
+            var dateTo = $("#DateTo").val();
+            var gateway = gatewayValue;
+            var programme = $('#programme').val();
+            var dept = $('#department').val();
+            if (programme == null || programme == "") {
+                programme = 0;
+            }
+            if (dept == null || dept == "") {
+                dept = 0;
+            }
+
+            if (!dateFrom || !dateTo) {
+                alert("Kindly select date-range before proceeding.");
+                return;
+            }
+
+            if (!gateway) {
+                alert("Kindly select payment gateway before proceeding.");
+                return;
+            }
+
+            $("#breakdownDiv").fadeOut('slow');
+
+            if (breakdownDataTable != undefined) {
+                breakdownDataTable.destroy();
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetPaymentBreakdown", "PaymentRegistrationReport")',
+                traditional: true,
+                data: { gatewayString: gateway, dateFromString: dateFrom, dateToString: dateTo, feeTypeId: feeType, programme: programme, dept: dept },
+                beforeSend: function () {
+                    $("#loadSummary").show();
+                },
+                complete: function () {
+                    $("#loadSummary").hide();
+                },
+                success: function (result) {
+                    if (result[0] != undefined && result[0].IsError === false) {
+
+                        $("#breakdown").empty();
+
+                        for (i = 0; i < result.length; i++) {
+                            var sn = i + 1;
+                            $("#breakdown").append('<tr><td>' + sn + '</td><td>' + result[i].TransactionDate + '</td>' + '<td>' + result[i].MatricNumber + '</td>' + '<td>' + result[i].Name + '</td>' +
+                                '<td>' + result[i].Level + '</td>' + '<td>' + result[i].Department + '</td>' + '<td>' + result[i].Faculty + '</td>' + '<td>' + result[i].Programme + '</td>' +
+                                '<td>' + result[i].Session + '</td>' + '<td>' + result[i].InvoiceNumber + '</td>' + '<td>' + result[i].ConfirmationNumber + '</td><td>&#8358; ' + result[i].Amount + '</td></tr>');
+                        }
+                        if (programme > 0 && dept > 0) {
+                            $("#breakdownTableHeader").text($('#programme option:selected').text().toUpperCase() + "(" + $('#department option:selected').text().toUpperCase() + ")" + " " + result[0].FeeTypeName + " Transaction Listing From " + $("#DateFrom").val() + " through " + $("#DateTo").val());
+                        }
+                        if (programme > 0 && dept == 0) {
+                            $("#breakdownTableHeader").text($('#programme option:selected').text().toUpperCase() + " " + result[0].FeeTypeName + " Transaction Listing From " + $("#DateFrom").val() + " through " + $("#DateTo").val());
+                        }
+                        if (programme == 0 && dept == 0) {
+                            $("#breakdownTableHeader").text(result[0].FeeTypeName + " Transaction Listing From " + $("#DateFrom").val() + " through " + $("#DateTo").val());
+                        }
+                        breakdownDataTable = $('#breakdownTable').DataTable({
+                            dom: 'Bfrtip',
+                            ordering: true,
+                            buttons: [
+                                {
+                                    extend: 'copy',
+                                    exportOptions: {
+                                        columns: ':visible'
+                                    }
+
+
+                                },
+                                {
+                                    extend: 'csv',
+                                    exportOptions: {
+                                        columns: ':visible'
+                                    }
+
+
+                                },
+                                {
+                                    extend: 'excel',
+                                    exportOptions: {
+                                        columns: ':visible'
+                                    }
+
+
+                                },
+                                {
+                                    title:'Payment Report',
+                                    extend: 'pdf',
+                                    exportOptions: {
+                                        columns: ':visible',
+                                        header: true,
+                                        modifier: {
+                                            orientation: 'landscape'
+                                        }
+                                    },
+                                    orientation: 'landscape'
+
+                                },
+                                {
+                                    extend: 'print',
+                                    exportOptions: {
+                                        columns: ':visible'
+                                    }
+
+
+                                }, , 'colvis'
+                            ]
+                        });
+                        $("#summaryDiv").fadeOut('slow');
+                        $("#breakdownDiv").fadeIn('slow');
+
+                    } else {
+                        alert(result.Message);
+                    }
+                },
+                error: function (ex) {
+                    alert('Operation Failed.' + ex);
+                }
+            });
+        }
+
+        function showSummary() {
+
+            var dateFrom = $("#DateFrom").val();
+            var dateTo = $("#DateTo").val();
+            var gateway = gatewayValue;
+            var programme = $('#programme').val();
+            var dept = $('#department').val();
+            if (programme == null || programme=="") {
+                programme = 0;
+            }
+            if (dept == null || dept=="") {
+                dept = 0;
+            }
+            if (!dateFrom || !dateTo) {
+                alert("Kindly select date-range before proceeding.");
+                return;
+            }
+
+            if (!gateway) {
+                alert("Kindly select payment gateway before proceeding.");
+                return;
+            }
+
+            $("#summaryDiv").fadeOut('slow');
+            $("#breakdownDiv").fadeOut('slow');
+
+            if (summaryDataTable != undefined) {
+                summaryDataTable.destroy();
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetPaymentSummary", "PaymentRegistrationReport")',
+                traditional: true,
+                data: { gatewayString: gateway, dateFromString: dateFrom, dateToString: dateTo, programme: programme, dept: dept },
+                beforeSend: function () {
+                    $("#loadContinue").show();
+                },
+                complete: function () {
+                    $("#loadContinue").hide();
+                },
+                success: function (result) {
+                    if (result[0] != undefined && result[0].IsError === false) {
+
+                        $("#summary").empty();
+
+                        for (i = 0; i < result.length; i++) {
+                            var sn = i + 1;
+                            $("#summary").append('<tr><td>' + sn + '</td><td><a onclick="showBreakdown(' + result[i].FeeTypeId + ')">' + result[i].FeeTypeName + '</a></td>' +
+                                                    '<td>' + result[i].TotalCount + '</td><td>&#8358; ' + result[i].TotalAmount + '</td></tr>');
+                        }
+                        $("table #summary tr").last().after('<tr><td>' + '' + '</td><td>' + '<b>Total</b>' + '</td>' + '<td>' + '' + '</td>' + '<td><b>&#8358; ' + result[0].OverallAmount + '</b></td></tr>');
+
+                        //summaryDataTable = $('#summaryTable').DataTable();
+                        if (programme > 0 && dept > 0) {
+                            $("#summaryHeader").text($('#programme option:selected').text().toUpperCase() + "(" + $('#department option:selected').text().toUpperCase() + ")" + " " + result[0].FeeTypeName + " Transaction Listing From " + $("#DateFrom").val() + " through " + $("#DateTo").val());
+                        }
+                        if (programme > 0 && dept == 0) {
+                            $("#summaryHeader").text($('#programme option:selected').text().toUpperCase() + " " + result[0].FeeTypeName + " Transaction Listing From " + $("#DateFrom").val() + " through " + $("#DateTo").val());
+                        }
+                        if (programme == 0 && dept == 0) {
+                            $("#summaryHeader").text(result[0].FeeTypeName + " Transaction Listing From " + $("#DateFrom").val() + " through " + $("#DateTo").val());
+                        }
+
+                        //$("#summaryHeader").text("Transaction Listing From " + $("#DateFrom").val() + " through " + $("#DateTo").val());
+                        $("#summaryDiv").fadeIn('slow');
+
+                    } else {
+                        alert(result.Message);
+                    }
+                },
+                error: function (ex) {
+                    alert('Operation Failed.' + ex);
+                }
+            });
+        }
+
+        function showSummaryDiv() {
+            $("#summaryDiv").fadeIn('slow');
+            $("#breakdownDiv").fadeOut('slow');
+        }
+
+    </script>
+}
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-6">
+
+        <div class="row">
+            <h3 style="color:#990066">Payment Report</h3>
+            <hr style="color:#990066" />
+        </div>
+
+        <div class="row form-inline">
+            <div class="col-md-12">
+                @*@Html.RadioButtonFor(m => m.PaymentGateway, "Remita", new {id = "remitaGateway", Checked = "checked"}) Remita &nbsp;
+                @Html.RadioButtonFor(m => m.PaymentGateway, "Etranzact", new {id = "etranzactGateway", disabled = true}) Etranzact*@
+                
+                    <div class="form-group">
+                        <label class="radio-inline">
+                            <input type="radio" name="gateway" id="remitaGateway" checked="checked" value="Remita" onchange="assignGateway(1)"> Remita
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="gateway" id="eTranzactGateway" disabled="disabled" value="Etranzact" onchange="assignGateway(2)"> Etranzact
+                        </label>
+                    </div>
+                
+            </div>
+        </div>
+
+        <div style="border: 1px solid #990066;">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#dateRange" style="background-color: #990066; border-radius:10px !important; color:white">Select Transaction Range</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="dateRange" class="tab-pane fade in active">
+                    <br />
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group form-inline">
+                                @Html.LabelFor(model => model.DateFrom, "Start:", new { @class = "control-label col-md-2" })
+                                @Html.TextBoxFor(model => model.DateFrom, new { @class = "form-control col-md-6 date", placeholder = "From...", autocomplete = "off" })
+                                @Html.ValidationMessageFor(model => model.DateFrom)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group form-inline">
+                                @Html.LabelFor(model => model.DateTo, "End:", new { @class = "control-label col-md-2" })
+                                @Html.TextBoxFor(model => model.DateTo, new { @class = "form-control col-md-6 date", placeholder = "To", autocomplete = "off" })
+                                @Html.ValidationMessageFor(model => model.DateTo)
+                            </div>
+                        </div>
+                  
+                        <div class="col-md-8">
+                            <div class="form-group form-inline">
+                                @Html.LabelFor(model => model.ProgrammeId, "Programme:", new { @class = "control-label col-md-2" })
+                                @Html.DropDownListFor(model => model.ProgrammeId, (IEnumerable<SelectListItem>)ViewBag.ProgrammeId, new { @class = "form-control col-md-6 date", @id="programme" })
+                                @Html.ValidationMessageFor(model => model.ProgrammeId)
+                            </div>
+                        </div>
+              
+                        <div class="col-md-8">
+                            <div class="form-group form-inline">
+                                @Html.LabelFor(model => model.DeptId, "Department:", new { @class = "control-label col-md-2" })
+                                @Html.DropDownListFor(model => model.DeptId, (IEnumerable<SelectListItem>)ViewBag.DepartmentId, new { @class = "form-control col-md-6 date", @style = "min-width: 195px;", @id = "department" })
+                                @Html.ValidationMessageFor(model => model.DeptId)
+                            </div>
+                        </div>
+                  
+                        <div class="col-md-8">
+                            <div class="form-group form-inline">
+                                <div class="col-md-2"></div>
+                                <button type="button" class="btn btn-success" onclick="showSummary()" style="background-color:#990066;">CONTINUE</button> &nbsp;
+                                <span style="display: none" id="loadContinue"><img src="~/Content/Images/bx_loader.gif" /></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div style="background-color:#990066; width:100%; height:25px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-5"></div>
+</div>
+
+<div class="col-md-12" id="summaryDiv" style="margin-top:30px; display:none;">
+    <div class="col-md-1"></div>
+    <div class="col-md-8">
+
+        <div class="row table-responsive">
+            <div class="panel" style="border:1px solid #990066">
+                <div class="panel-heading" style="background-color:#990066">
+                    <h3 style="text-align: center; color:white;background-color:#990066;" id="summaryHeader"></h3>
+                </div>
+                <div class="panel-body table-responsive" style="text-align:center">
+                    <div class="pull-left"><span style="display: none" id="loadSummary"><img src="~/Content/Images/bx_loader.gif" /></span></div>
+                    <table class="table table-striped table-hover table-bordered" id="summaryTable">
+                        <thead>
+                            <tr>
+                                <th style="text-align:center">SN</th>
+                                <th style="text-align:center">COLLECTION TYPE</th>
+                                <th style="text-align:center">TOTAL COUNT</th>
+                                <th style="text-align:center">TOTAL AMOUNT</th>
+                            </tr>
+                        </thead>
+                        <tbody id="summary"></tbody>
+                    </table>
+
+                </div>
+                <div class="panel-footer" style="background-color:#990066">
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="col-md-12" id="breakdownDiv" style="margin-top:30px; border:1px solid #990066; display:none;">
+    <div class="row">
+        <div class="col-md-10">
+
+            <div class="row table-responsive">
+                <h4 style="color: #990066;" id="breakdownTableHeader"></h4>
+                <span><button type="button" class="btn btn-success" onclick="showSummaryDiv()" style="background-color:#990066;">BACK</button></span>
+                <hr style="background-color: #990066;" />
+                <table class="table table-striped table-hover table_wrapper" id="breakdownTable">
+                    <thead>
+                        <tr style="background-color: #990066;">
+                            <th style="color:white;">Sn</th>
+                            <th style="color:white;">Transaction Date</th>
+                            <th style="color:white;">Matric Number</th>
+                            <th style="color:white;">Name</th>
+                            <th style="color:white;">Level</th>
+                            <th style="color:white;">Department</th>
+                            <th style="color:white;">Faculty</th>
+                            <th style="color:white;">Programme</th>
+                            <th style="color:white;">Session</th>
+                            <th style="color:white;">Invoice Number</th>
+                            <th style="color:white;">Confirmation Number</th>
+                            <th style="color:white;">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody id="breakdown"></tbody>
+                </table>
+            </div>
+
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    
+    
+</div>

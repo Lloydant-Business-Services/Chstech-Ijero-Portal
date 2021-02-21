@@ -1,0 +1,132 @@
+﻿@model Abundance_Nk.Web.Areas.Student.ViewModels.ResultViewModel
+@{
+    ViewBag.Title = "Semester Result Login";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        $("#Session").change(function () {
+            
+            $("#Semester").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetSemester", "Result")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#Session").val() },
+                
+                success: function (semesters) {
+                    $("#Semester").append('<option value="' + 0 + '">' +
+                           '-- Select Semester --' + '</option>');
+                    $.each(semesters, function (i, semester) {
+                        $("#Semester").append('<option value="' + semester.Value + '">' +
+                             semester.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve semesters.' + ex);
+                }
+            });
+            return false;
+        })
+    })
+</script>
+
+<br />
+<div class="row">
+    <div class="col-md-4 " style="vertical-align: bottom">
+        <div class="panel panel-default well" style="height: 315px">
+            <div class="panel-body">
+
+            </div>
+        </div>
+    </div>
+
+    @if (TempData["Message"] != null)
+    {
+        @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+    }
+    
+    <div class="col-md-8">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>@ViewBag.Title</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <section id="loginForm">
+                    @using (Html.BeginForm("Check", "Result", new { Area = "Student" }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true)
+
+                        <h5>Please enter your <b>Matric. No.</b> below to check your result.</h5>
+                        <hr class="no-top-padding" />
+
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.MatricNumber, new {@class = "col-md-3 control-label"})
+                                    <div class="col-md-9">
+                                        @Html.TextBoxFor(m => m.MatricNumber, new {@class = "form-control", required = "required"})
+                                        @Html.ValidationMessageFor(m => m.MatricNumber, null, new {@class = "text-danger"})
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Session.Name, "Session", new { @class = "col-md-3 control-label " })
+                                    <div class="col-md-9">
+                                        @Html.DropDownListFor(model => model.Session.Id, (IEnumerable<SelectListItem>)ViewBag.Session, new { @class = "form-control", @id = "Session" , required = "required"})
+                                        @Html.ValidationMessageFor(model => model.Session.Id, null, new { @class = "text-danger" })
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Semester.Name, "Semester", new { @class = "col-md-3 control-label " })
+                                    <div class="col-md-9">
+                                        @Html.DropDownListFor(model => model.Semester.Id, (IEnumerable<SelectListItem>)ViewBag.Semester, new { @class = "form-control", @id = "Semester", required = "required" })
+                                        @Html.ValidationMessageFor(model => model.Semester.Id, null, new { @class = "text-danger" })
+                                    </div>
+
+                                </div>
+                                @*<div class="form-group">
+                                    @Html.LabelFor(m => m.ScratchCard.Pin, new { @class = "col-md-3 control-label" })
+                                    <div class="col-md-9">
+                                        @Html.PasswordFor(m => m.ScratchCard.Pin, new { @class = "form-control", required = "required" })
+                                        @Html.ValidationMessageFor(m => m.ScratchCard.Pin, null, new { @class = "text-danger" })
+                                    </div>
+                                </div>*@
+
+                                <div class="form-group">
+                                    <div class="col-md-offset-3 col-md-9">
+                                        <input type="submit" value="Submit" class="btn btn-default" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                @if (TempData["Message"] != null)
+                                {
+                                    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+                                }
+                            </div>
+                        </div>
+                    }
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+
+

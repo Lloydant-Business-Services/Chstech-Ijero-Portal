@@ -1,0 +1,104 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.NotificationsViewModel
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.4.1/css/buttons.dataTables.min.css">
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.flash.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.html5.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.print.min.js"></script>
+
+@section Scripts {
+
+    <link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+
+
+    @Scripts.Render("~/bundles/jquery")
+
+    @*<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+        <script src="~/Scripts/jquery-migrate-1.2.1.min.js"></script>
+        <script src="~/Scripts/prettify.js"></script>
+        <script src="~/Scripts/custom.js"></script>
+        <script src="~/Scripts/jquery.min.js"></script>
+        <script src="~/Scripts/responsive-tabs.js"></script>*@
+
+    <style>
+        .modal-backdrop.in {
+            z-index: 0 !important
+        }
+    </style>
+
+
+
+
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/file-upload/jquery-ui-1.9.2.min.js"></script>
+
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#processing").hide();
+
+            $('#example').DataTable({
+                dom: 'Bfrtip',
+                ordering: true,
+                retrieve: true,
+                buttons: [
+                    {
+                        extend: 'copy',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, , 'colvis'
+                ]
+            });
+        });
+
+        $("#btnSearch").click(function () {
+            $("#processing").show();
+        })
+        $("#downloadBtn").click(function () {
+            $("#processing").show();
+        })
+
+    </script>
+
+
+
+}
+
+<div class="row">
+    <h3>Notifications Setup</h3>
+
+</div>
+

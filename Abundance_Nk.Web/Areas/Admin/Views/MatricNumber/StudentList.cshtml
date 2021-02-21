@@ -1,0 +1,394 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.MatricNumberViewModel
+@{
+    ViewBag.Title = "StudentList";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+ 
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+
+    <link href="~/Scripts/DataTables-1.10.15/media/css/jquery.dataTables.css" rel="stylesheet"/>
+    <script src="~/Scripts/DataTables-1.10.15/media/js/jquery.dataTables.js"></script>
+    <link href="~/Scripts/DataTables-1.10.15/extensions/Buttons/css/buttons.dataTables.css" rel="stylesheet"/>
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Buttons/js/dataTables.buttons.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Buttons/js/buttons.colVis.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Responsive/js/dataTables.responsive.js"></script>
+    @*<script src="~/Scripts/dataTables.js"></script>
+        <link href="~/Content/dataTables.css" rel="stylesheet"/>*@
+
+    <script src="~/Scripts/DataTables-1.10.15/buttons.flash.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/buttons.html5.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/buttons.print.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/jszip.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/pdfmake.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/vfs_fonts.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            $.extend($.fn.dataTable.defaults, {
+                responsive: true
+            });
+
+            $('#myTable').DataTable({
+                dom: 'Bfrtip',
+                ordering: true,
+                buttons: [
+                    {
+                        extend: 'copy',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+
+
+                    },
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+
+
+                    },
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+
+
+                    },
+                    {
+                        extend: 'pdf',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+
+
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+
+
+                    },, 'colvis'
+                ]
+            });
+
+            $("#loading").hide();
+
+            $("#Programme").change(function() {
+
+                $("#Department").empty();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetDepartments", "MatricNumber")', // Calling json method
+                    dataType: 'json',
+                    data: { id: $("#Programme").val() },
+
+                    success: function(departments) {
+                        $("#Department").append('<option value="' + 0 + '">' +
+                            '-- Select Department --' + '</option>');
+                        $.each(departments, function(i, department) {
+                            $("#Department").append('<option value="' + department.Value + '">' +
+                                department.Text + '</option>');
+                        });
+                    },
+                    error: function(ex) {
+                        alert('Failed to retrieve departments.' + ex);
+                    }
+                });
+
+                $("#Level").empty();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetLevels", "MatricNumber")', // Calling json method
+                    dataType: 'json',
+                    data: { id: $("#Programme").val() },
+
+                    success: function(levels) {
+
+                        $("#Level").append('<option value="' + 0 + '">' +
+                            '-- Select Level --' + '</option>');
+                        $.each(levels, function(i, level) {
+                            $("#Level").append('<option value="' + level.Value + '">' +
+                                level.Text + '</option>');
+                        });
+                    },
+                    error: function(ex) {
+                        alert('Failed to retrieve Levels.' + ex);
+                    }
+                });
+
+                
+                $("#DepartmentOption").empty();
+                $("#DepartmentOptionDiv").hide();
+                var department = $("#Department").val();
+                var programme = $("#Programme").val();
+
+                if (department == undefined || programme == undefined) {
+                    $("#DepartmentOptionDiv").hide();
+                    return;
+                }
+
+                $("#DepartmentOption").empty();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetDepartmentOptionByDepartment", "MatricNumber")', // we are calling json method
+                    dataType: 'json',
+                    data: { id: department, programmeid: programme },
+                    success: function (departmentOptions) {
+
+                        if (departmentOptions == "" || departmentOptions == null || departmentOptions == undefined) {
+                            $("#DepartmentOptionDiv").hide();
+                        } else {
+                            $("#DepartmentOption").append('<option value="' + 0 + '"> -- Select -- </option>');
+                            $.each(departmentOptions, function (i, Option) {
+                                $("#DepartmentOption").append('<option value="' + Option.Value + '">' + Option.Text + '</option>');
+                            });
+                            if (programme > 2) {
+                                $("#DepartmentOptionDiv").show();
+                            }
+
+                        }
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve department Options.' + ex);
+                    }
+                });
+
+                return false;
+            });
+            $("#Department").change(function () {
+
+                var department = $("#Department").val();
+                var programme = $("#Programme").val();
+
+                if (department == undefined || programme == undefined) {
+                    $("#DepartmentOptionDiv").hide();
+                    return;
+                }
+
+                $("#DepartmentOption").empty();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetDepartmentOptionByDepartment", "MatricNumber")', // we are calling json method
+                    dataType: 'json',
+                    data: { id: department, programmeid: programme },
+                    success: function (departmentOptions) {
+
+                        if (departmentOptions == "" || departmentOptions == null || departmentOptions == undefined) {
+                            $("#DepartmentOptionDiv").hide();
+                        } else {
+                            $("#DepartmentOption").append('<option value="' + 0 + '"> -- Select -- </option>');
+                            $.each(departmentOptions, function (i, Option) {
+                                $("#DepartmentOption").append('<option value="' + Option.Value + '">' + Option.Text + '</option>');
+                            });
+                            if (programme > 2) {
+                                $("#DepartmentOptionDiv").show();
+                            }
+
+                        }
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve department Options.' + ex);
+                    }
+                });
+
+            });
+
+        });
+
+        function ButtonClick() {
+            $("#loading").hide();
+        }
+
+
+    </script>
+}
+
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading panel-dark-head">
+                <h4>Student List</h4>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+
+                    @using (Html.BeginForm("StudentList", "MatricNumber", new { area = "Admin" }, FormMethod.Post))
+                    {
+                                                
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Programme.Name, "Programme", new { @class = "col-sm-2 control-label " })
+                            <div class="col-sm-10">
+                                @Html.DropDownListFor(model => model.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.Programme, new { @class = "form-control", @id = "Programme", @required = "required" })
+                                @Html.ValidationMessageFor(model => model.Programme.Id, null, new { @class = "text-danger" })
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Department.Name, "Department", new {@class = "col-sm-2 control-label "})
+                            <div class="col-sm-10">
+                                @Html.DropDownListFor(model => model.Department.Id, (IEnumerable<SelectListItem>) ViewBag.Department, new {@class = "form-control", @id = "Department", @required = "required"})
+                                @Html.ValidationMessageFor(model => model.Department.Id, null, new {@class = "text-danger"})
+                            </div>
+
+                        </div>
+    <div id="DepartmentOptionDiv" style="display: none" class="form-group">
+        @Html.LabelFor(model => model.DepartmentOption.Name, "Course Option", new { @class = "col-sm-2 control-label " })
+        <div class="col-sm-10">
+            @Html.DropDownListFor(model => model.DepartmentOption.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentOption, new { @class = "form-control", @id = "DepartmentOption" })
+            @Html.ValidationMessageFor(model => model.DepartmentOption.Id, null, new { @class = "text-danger" })
+        </div>
+
+    </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Level.Name, "Level", new {@class = "col-sm-2 control-label "})
+                            <div class="col-sm-10">
+                                @Html.DropDownListFor(model => model.Level.Id, (IEnumerable<SelectListItem>)ViewBag.Level, new { @class = "form-control", @id = "Level" })
+                                @Html.ValidationMessageFor(model => model.Level.Id, null, new { @class = "text-danger" })
+                            </div>
+
+                        </div>
+                        
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Session.Name, "Session", new { @class = "col-sm-2 control-label " })
+                            <div class="col-sm-10">
+                                @Html.DropDownListFor(model => model.Session.Id, (IEnumerable<SelectListItem>)ViewBag.Session, new { @class = "form-control", @id = "Level", @required = "required" })
+                                @Html.ValidationMessageFor(model => model.Session.Id, null, new { @class = "text-danger" })
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-10">
+                                <input class="btn btn-success mr5" onclick="ButtonClick()" type="submit" name="submit" id="submit" value="Submit"/>
+                                <div id="loading" style="display: none">
+                                    <img src="@Url.Content("~/Content/Images/bx_loader.gif")" />
+                                    <span>Loading ...</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                    <br/>
+                    @if (Model.StudentModels != null && Model.StudentModels.Count > 0)
+                    {
+
+                        <div class="panel panel-danger">
+                            <div class="panel-body">
+                                <div class="table-responsive">
+                                    <table id="myTable" class="table-bordered table-hover table-striped table">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    SN
+                                                </th>
+                                                <th>
+                                                    Name
+                                                </th>
+                                                <th>
+                                                    Gender
+                                                </th>
+                                                <th>
+                                                    Phone
+                                                </th>
+                                                <th>
+                                                    Email
+                                                </th>
+                                                <th>
+                                                    Matric Number
+                                                </th>
+                                                <th>
+                                                    Programme
+                                                </th>
+                                                <th>
+                                                    Department
+                                                </th>
+                                                <th>
+                                                    Option
+                                                </th>
+                                                <th>
+                                                    Level
+                                                </th>
+                                                <th>
+                                                    Session
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @for (int i = 0; i < Model.StudentModels.Count; i++)
+                                            {
+                                                var SN = i + 1;
+                                                <tr>
+                                                    <td>
+                                                        @SN
+                                                    </td>
+                                                    <td>
+                                                        @Model.StudentModels[i].Name
+                                                    </td>
+                                                    <td>
+                                                        @Model.StudentModels[i].SexName
+                                                    </td>
+                                                    <td>
+                                                        @Model.StudentModels[i].MobilePhone
+                                                    </td>
+                                                    <td>
+                                                        @Model.StudentModels[i].Email
+                                                    </td>
+                                                    <td>
+                                                        @Model.StudentModels[i].MatricNumber
+                                                    </td>
+                                                    <td>
+                                                        @Model.StudentModels[i].ProgrammeName
+                                                    </td>
+                                                    <td>
+                                                        @Model.StudentModels[i].DepartmentName
+                                                    </td>
+                                                    <td>
+                                                        @Model.StudentModels[i].DepartmentOptionName
+                                                    </td>
+                                                    <td>
+                                                        @Model.StudentModels[i].LevelName
+                                                    </td>
+                                                    <td>
+                                                        @Model.StudentModels[i].SessionName
+                                                    </td>
+                                                </tr>
+
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-1"></div>
+</div>
+
+
+

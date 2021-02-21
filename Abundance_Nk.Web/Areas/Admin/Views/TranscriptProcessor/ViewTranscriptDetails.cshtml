@@ -1,0 +1,151 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.TranscriptProcessorViewModel
+@{
+    ViewBag.Title = "ViewTranscriptDetails";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+
+        @if (TempData["Message"] != null)
+        {
+            @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+        }
+
+        @using (Html.BeginForm("ViewTranscriptDetails", "TranscriptProcessor", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>
+                        View Transcript Details
+                    </h3>
+                </div>
+                <hr />
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.transcriptRequest.student.MatricNumber, "Matric Number:", new { @class = "control-label " })
+                                        @Html.TextBoxFor(model => model.transcriptRequest.student.MatricNumber, new { @class = "form-control", @required = "required" })
+                                        @Html.ValidationMessageFor(model => model.transcriptRequest.student.MatricNumber, null, new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <input class="btn btn-success btn-sm mr5" type="submit" name="submit" id="submit" value="View" />
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        }
+
+        @if (Model.transcriptRequests != null && Model.Person != null)
+        {
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                    <div class="col-md-12">
+
+                        @Html.HiddenFor(model => model.transcriptRequest.student.Id)
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="alert in nomargin">
+                                    <h3><b>TRANSCRIPT DETAILS</b></h3>
+                                </div>
+                            </div>
+                        </div>
+                                          
+                        <div class="row">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.transcriptRequests.FirstOrDefault().student.LastName, "Surname: ", new { @class = "control-label" })
+                                    @Html.DisplayFor(model => model.transcriptRequests.FirstOrDefault().student.LastName,new { @class = "form-control" })
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.transcriptRequests.FirstOrDefault().student.FirstName,"First Name: ",new { @class = "control-label" })
+                                    @Html.DisplayFor(model => model.transcriptRequests.FirstOrDefault().student.FirstName,new { @class = "form-control" })
+                                </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.transcriptRequests.FirstOrDefault().student.OtherName,"Other Name: ",new { @class = "control-label " })
+                                @Html.DisplayFor(model => model.transcriptRequests.FirstOrDefault().student.OtherName,new { @class = "form-control" })
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.transcriptRequests.FirstOrDefault().student.MatricNumber,"Matric Number: ",new { @class = "control-label " })
+                                @Html.DisplayFor(model => model.transcriptRequests.FirstOrDefault().student.MatricNumber,new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <table class="table table-responsive">
+                            <tr>
+                                <th>Destination Address</th>
+                                <th>Date Requested</th>
+                                <th>Destination Country</th>
+                                <th>Destination State</th>
+                                <th>Clearance Status</th>
+                                <th>Transcript Status</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+
+                            @for(int i = 0;i < Model.transcriptRequests.Count;i++)
+                            {
+                                <tr>
+                                    <td>@Model.transcriptRequests[i].DestinationAddress</td>
+                                    <td>@Model.transcriptRequests[i].DateRequested.ToShortDateString()</td>
+                                    <td>@Model.transcriptRequests[i].DestinationCountry.CountryName</td>
+                                    <td>@Model.transcriptRequests[i].DestinationState.Name</td>
+                                    @*<td>@Model.transcriptRequests[i].transcriptClearanceStatus.TranscriptClearanceStatusName</td>*@
+                                    <td>Processing</td>
+                                    <td>@Model.transcriptRequests[i].transcriptStatus.TranscriptStatusName</td>
+                                    <td>@Html.ActionLink("Edit","EditTranscriptDetails",new { controller = "TranscriptProcessor",area = "Admin",Id = @Model.transcriptRequests[i].Id },new { @class = "btn btn-success btn-sm" })</td>
+                                    <td>@Html.ActionLink("Delete","DeleteTranscriptDetails",new { controller = "TranscriptProcessor",area = "Admin",Id = @Model.transcriptRequests[i].Id },new { @class = "btn btn-success btn-sm" })</td>
+
+                                </tr>
+
+                            }
+
+                        </table>
+
+                     
+                    </div>
+                    
+                </div>
+                </div>
+        }
+
+
+    </div>
+
+    <div class="col-md-1"></div>
+</div>
+<div class="col-md-1"></div>
+<br />
+<br />
+<br />
+<br />
+<br/>

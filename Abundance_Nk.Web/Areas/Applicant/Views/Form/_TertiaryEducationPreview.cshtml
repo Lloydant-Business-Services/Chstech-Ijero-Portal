@@ -1,0 +1,144 @@
+﻿@model Abundance_Nk.Web.Areas.Applicant.ViewModels.PostJambViewModel
+
+@{
+    //Layout = null;
+}
+@Html.HiddenFor(model => model.PreviousEducation.Id)
+<div class="col-md-12 card p-5">
+    <div class="panel-heading">
+        <div style="font-size:x-large">Tertiary Education</div>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group margin-bottom-3">
+                    <div class="col-md-5">
+                        @Html.LabelFor(model => model.PreviousEducation.SchoolName)
+                    </div>
+                    <div class="col-md-7 text-bold custom-text-black">
+                        @Html.DisplayFor(model => model.PreviousEducation.SchoolName)
+                    </div>
+                </div>                
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group margin-bottom-3">
+                    <div class="col-md-5">
+                        @Html.LabelFor(model => model.PreviousEducation.Course)
+                    </div>
+                    <div class="col-md-7 text-bold custom-text-black">
+                        @Html.DisplayFor(model => model.PreviousEducation.Course)
+                    </div>
+                </div> 
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group margin-bottom-3">
+                    <div class="col-md-5">
+                        @Html.LabelFor(model => model.PreviousEducation.StartDate)
+                    </div>
+                    <div class="col-md-7 text-bold custom-text-black">
+                        @Html.DisplayFor(model => model.PreviousEducation.StartDate, "{0:dd/MM/yyyy}")
+                    </div>
+                </div> 
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group margin-bottom-3">
+                    <div class="col-md-5">
+                        @Html.LabelFor(model => model.PreviousEducation.EndDate)
+                    </div>
+                    <div class="col-md-7 text-bold custom-text-black">
+                        @Html.DisplayFor(model => model.PreviousEducation.EndDate, "{0:dd/MM/yyyy}")
+                    </div>
+                </div> 
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group margin-bottom-3">
+                    <div class="col-md-5">
+                        @Html.LabelFor(model => model.PreviousEducation.Qualification.Id)
+                    </div>
+                    <div class="col-md-7 text-bold custom-text-black">
+                        @Html.DisplayFor(model => model.PreviousEducation.Qualification.ShortName)
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group margin-bottom-3">
+                    <div class="col-md-5">
+                        @Html.LabelFor(model => model.PreviousEducation.ResultGrade.Id)
+                    </div>
+                    <div class="col-md-7 text-bold custom-text-black">
+                        @Html.DisplayFor(model => model.PreviousEducation.ResultGrade.LevelOfPass)
+                    </div>
+                </div> 
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group margin-bottom-3">
+                    <div class="col-md-5">
+                        @Html.LabelFor(model => model.PreviousEducation.ITDuration.Id)
+                    </div>
+                    <div class="col-md-7 text-bold custom-text-black">
+                        @Html.DisplayFor(model => model.PreviousEducation.ITDuration.Name)
+                    </div>
+                </div> 
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group margin-bottom-3">
+                    <div class="col-md-5">
+                        @Html.LabelFor(model => model.PreviousEducation.ITStartMonth)/@Html.LabelFor(model => model.PreviousEducation.ITStartYear)
+                    </div>
+                    <div class="col-md-7 text-bold custom-text-black">
+                        @Html.LabelFor(model => model.PreviousEducation.ITEndMonth)/@Html.LabelFor(model => model.PreviousEducation.ITEndYear)
+                    </div>
+                    @*<div class="col-md-5">
+            @Html.LabelFor(model => model.PreviousEducation.PreND)
+        </div>
+        <div class="col-md-7 text-bold">
+            @Html.DisplayFor(model => model.PreviousEducation.PreND)
+        </div>*@
+                </div> 
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group margin-bottom-3">
+                    @*<div class="col-md-5">
+                        @Html.LabelFor(model => model.PreviousEducation.PreNDYearFrom)
+                    </div>
+                    <div class="col-md-7 text-bold">
+                        @Html.DisplayFor(model => model.PreviousEducation.PreNDYearFrom)
+                    </div>*@
+                </div> 
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="form-group margin-bottom-3">
+                        @*<div class="col-md-5">
+                            @Html.LabelFor(model => model.PreviousEducation.PreNDYearTo)
+                        </div>
+                        <div class="col-md-7 text-bold">
+                            @Html.DisplayFor(model => model.PreviousEducation.PreNDYearTo)
+                        </div>*@
+                    </div> 
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+

@@ -1,0 +1,393 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.StudentCourseRegistrationViewModel
+@{
+    ViewBag.Title = "Update Student Data";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+
+    <script type="text/javascript" src="~/Scripts/jquery-2.1.3.js"></script>
+    <script type="text/javascript" src="~/Scripts/file-upload/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/file-upload/jquery-ui-1.9.2.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/file-upload/jquery.fileupload-ui.js"></script>
+    <script type="text/javascript" src="~/Scripts/file-upload/jquery.fileupload.js"></script>
+    <script type="text/javascript" src="~/Scripts/file-upload/jquery.iframe-transport.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.print.js"></script>
+
+    <link href="~/Content/bootstrap-datepicker.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap-datepicker.js"></script>
+
+    <script type="text/javascript">
+        var jqXHRData;
+
+        $(document).ready(function () {
+            var src = $('#passport').attr('src');
+            if (src == undefined) {
+                $('#passport').attr('src', '/Content/Images/default_avatar.png');
+            }
+            
+             initSimpleFileUpload();
+            $("#hl-start-upload").on('click', function () {
+                if (jqXHRData) {
+                    jqXHRData.submit();
+                }
+                return false;
+            });
+
+            $("#fu-my-simple-upload").on('change', function () {
+                $("#tbx-file-path").val(this.files[0].name);
+            });
+
+
+            function initSimpleFileUpload() {
+                'use strict';
+
+                $('#fu-my-simple-upload').fileupload({
+                    url: '@Url.Content("~/Admin/Student/UploadFile")',
+                    dataType: 'json',
+
+                    add: function (e, data) {
+                        jqXHRData = data
+                    },
+                    send: function (e) {
+                        $('#fileUploadProgress').show();
+                    },
+                    done: function (event, data) {
+                        if (data.result.isUploaded) {
+                            //alert("success");
+                        } else {
+                            $("#tbx-file-path").val("");
+                            alert(data.result.message);
+                        }
+
+                        $('#passport').attr('src', data.result.imageUrl);
+                        $('#fileUploadProgress').hide();
+                    },
+                    fail: function (event, data) {
+                        if (data.files[0].error) {
+                            alert(data.files[0].error);
+                        }
+                    }
+                })
+            }
+        });
+
+
+        function beginRequest() {
+            $("#busy").hide();
+        }
+
+        function endRequest(request, status) {
+            $("#busy").show();
+        }
+
+        document.querySelector("#fu-my-simple-upload").addEventListener("change", (e) => {
+            const previewImage = document.querySelector("#preview-image");
+            getUploadedFile(e, previewImage);
+        });
+
+        const getUploadedFile = (e, imageElementTopreview) => {
+            let files = e.target.files;
+            let file = files[0];
+
+            let reader = new FileReader();
+            reader.onload = (e) => setImagePreview(imageElementTopreview, reader.result)
+            reader.readAsDataURL(file);
+        }
+
+        const setImagePreview = (imageElement, dataURL) => imageElement.setAttribute("src", dataURL);
+    </script>
+}
+
+<div class="row">
+    <div class="col-md-12">
+        @using (Html.BeginForm("UpdateStudentData", "Student", FormMethod.Post))
+        {
+                        @Html.AntiForgeryToken()
+                        <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10">
+                        <div class="row">
+                            <div>
+                                @if (TempData["Message"] != null)
+                {
+                    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+                                }
+                @if (TempData["Action"] != null)
+                {
+                                    <div class="alert alert-dismissible alert-warning">
+                                        <button type="button" class="close" data-dismiss="alert">×</button>
+                                        <p>@TempData["Action"].ToString()</p>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <h3>Enter Matric Number</h3>
+                            <hr style="margin-top:0" />
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+
+                                            @Html.LabelFor(model => model.MatricNumber, new { @class = "control-label " })
+                                            @Html.TextBoxFor(model => model.MatricNumber, new { @class = "form-control", @required = "required", @autofocus = "autofocus" })
+                                            @Html.ValidationMessageFor(model => model.MatricNumber, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <input class="btn btn-success btn-lg mr5" type="submit" name="submit" id="submit" value="Search" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (Model.UpdateRegistration != null)
+        {
+            using (Html.BeginForm("UpdateStudentDataForm", "Student", FormMethod.Post, new
+            {
+                id = "update-student-data-form",
+                enctype = "multipart/form-data"
+                            }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="panel panel-default">
+                    <div class="panel-body" style="padding: 40px 90px;">
+                        <div class="col-md-1"></div>
+                        <div class="col-xs-12 col-md-12">
+                            <div class="row">
+                                <h3>Update Student Data</h3>
+                                <hr style="margin-top:0" />
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4>Student Bio Data</h4>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-bottom:20px;">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @if (!string.IsNullOrEmpty(Model.UpdateRegistration.ImageFile))
+                                             {
+                                                <div class="col-xs-12" style="width:150px;height:150px;border: 1px solid dotted;">
+                                                    <img src="@Url.Content(Model.UpdateRegistration.ImageFile)" id="preview-image" style="width:100%;height:100%;" />
+                                                </div>
+                                             }
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <div class="form-group row">
+                                                <label class="col-sm-6 col-form-label">Passport </label>
+                                                <div class="col-sm-12">
+                                                    <input class="form-control" type="file" id="fu-my-simple-upload" name="MyFile" placeholder="Passport">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12 col-xs-6">
+                                                <button type="button" name="hl-start-upload" id="hl-start-upload" class="btn btn-primary">Upload</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr />
+
+                                @Html.HiddenFor(model => Model.UpdateRegistration.PersonId)
+                                @Html.HiddenFor(model => Model.UpdateRegistration.ImageFile)
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.UpdateRegistration.FirstName, new { @class = "control-label " })
+                                            @Html.TextBoxFor(model => model.UpdateRegistration.FirstName, new { @class = "form-control", required = "required" })
+                                            @Html.ValidationMessageFor(model => model.UpdateRegistration.FirstName, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.UpdateRegistration.LastName, new { @class = "control-label " })
+                                            @Html.TextBoxFor(model => model.UpdateRegistration.LastName, new { @class = "form-control", required = "required" })
+                                            @Html.ValidationMessageFor(model => model.UpdateRegistration.LastName, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.UpdateRegistration.OtherName, new { @class = "control-label " })
+                                            @Html.TextBoxFor(model => model.UpdateRegistration.OtherName, new { @class = "form-control", required = "required" })
+                                            @Html.ValidationMessageFor(model => model.UpdateRegistration.OtherName, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.UpdateRegistration.DateOfBirth, new { @class = "control-label " })
+                                            @Html.TextBoxFor(model => model.UpdateRegistration.DateOfBirth, "{0:yyyy-MM-dd}", new { @class = "form-control", @type = "date" })
+                                            @Html.ValidationMessageFor(model => model.UpdateRegistration.DateOfBirth, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.UpdateRegistration.Sex, new { @class = "control-label" })
+                                                @Html.DropDownListFor(model => model.UpdateRegistration.Sex, (IEnumerable<SelectListItem>)ViewBag.Sexes, new { @class = "form-control", id = "select-sex", required = "required" })
+                                                @Html.ValidationMessageFor(model => model.UpdateRegistration.Sex)
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.UpdateRegistration.PhoneNumber, new { @class = "control-label" })
+                                                @Html.TextBoxFor(model => model.UpdateRegistration.PhoneNumber, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.UpdateRegistration.PhoneNumber)
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.UpdateRegistration.EmailAddress, new { @class = "control-label" })
+                                                @Html.TextBoxFor(model => model.UpdateRegistration.EmailAddress, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.UpdateRegistration.EmailAddress)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4>Personal Information</h4>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.UpdateRegistration.Nationality, new { @class = "control-label " })
+                                            @Html.DropDownListFor(model => model.UpdateRegistration.Nationality, (IEnumerable<SelectListItem>)ViewBag.Nationlities, new { @class = "form-control", id = "select-nationality" })
+                                            @Html.ValidationMessageFor(model => model.UpdateRegistration.Nationality, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.UpdateRegistration.HomeAddress, new { @class = "control-label " })
+                                            @Html.TextAreaFor(model => model.UpdateRegistration.HomeAddress, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.UpdateRegistration.HomeAddress, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.UpdateRegistration.StateId, new { @class = "control-label " })
+                                            @Html.DropDownListFor(model => model.UpdateRegistration.StateId, (IEnumerable<SelectListItem>)ViewBag.States, new { @class = "form-control", id = "select-nationality" })
+                                            @Html.ValidationMessageFor(model => model.UpdateRegistration.StateId, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.UpdateRegistration.ParentGuardian, new { @class = "control-label " })
+                                            @Html.TextBoxFor(model => model.UpdateRegistration.ParentGuardian, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.UpdateRegistration.ParentGuardian, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.UpdateRegistration.RelationshipId, new { @class = "control-label " })
+                                            @Html.DropDownListFor(model => model.UpdateRegistration.RelationshipId, (IEnumerable<SelectListItem>)ViewBag.Relationships, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.UpdateRegistration.RelationshipId, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col-xs-12">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4>Departmental Information</h4>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.UpdateRegistration.SchoolName, new { @class = "control-label " })
+                                            @Html.TextBoxFor(model => model.UpdateRegistration.SchoolName, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.UpdateRegistration.SchoolName, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.UpdateRegistration.HOD, new { @class = "control-label " })
+                                            @Html.DropDownListFor(model => model.UpdateRegistration.HOD, (IEnumerable<SelectListItem>)ViewBag.HOD, new { @class = "form-control", id = "select-nationality" })
+                                            @Html.ValidationMessageFor(model => model.UpdateRegistration.HOD, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.UpdateRegistration.DepartmentId, new { @class = "control-label " })
+                                            @Html.DropDownListFor(model => model.UpdateRegistration.DepartmentId, (IEnumerable<SelectListItem>)ViewBag.Departments, new { @class = "form-control", id = "select-department", required = "required", @disabled = "disabled" })
+                                            @Html.ValidationMessageFor(model => model.UpdateRegistration.DepartmentId, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.UpdateRegistration.LevelId, new { @class = "control-label " })
+                                            @Html.DropDownListFor(model => model.UpdateRegistration.LevelId, (IEnumerable<SelectListItem>)ViewBag.Levels, new { @class = "form-control", id = "select-level", required = "required", @disabled = "disabled" })
+                                            @Html.ValidationMessageFor(model => model.UpdateRegistration.LevelId, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    @*<div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.UpdateRegistration.SessionId, new { @class = "control-label " })
+                                            @Html.DropDownListFor(model => model.UpdateRegistration.SessionId, (IEnumerable<SelectListItem>)ViewBag.Sessions, new { @class = "form-control", id = "select-session", required = "required", @disabled= "disabled" })
+                                            @Html.ValidationMessageFor(model => model.UpdateRegistration.SessionId, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>*@
+
+                                    @*<div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.UpdateRegistration.Course, new { @class = "control-label " })
+                                                @Html.DropDownListFor(model => model.UpdateRegistration.Course, (IEnumerable<SelectListItem>)ViewBag.Courses, new { @class = "form-control", id = "select-course" })
+                                                @Html.ValidationMessageFor(model => model.UpdateRegistration.Course, null, new { @class = "text-danger" })
+                                            </div>
+                                        </div>*@
+
+                                </div>
+
+                                <div class="row">
+                                    <button class="btn btn-success btn-lg mr5 pull-right" type="submit" name="submit" id="submit"><i class="fa fa-pencil"></i> Save changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+
+    </div>
+</div>

@@ -1,0 +1,1350 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.ProgrammeSetUpViewModel
+@{
+    ViewBag.Title = "Programme Setup";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+@section Scripts{
+
+<link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+@Scripts.Render("~/bundles/jquery")
+
+<script src="~/Scripts/bootstrap.js"></script>
+<script src="~/Scripts/file-upload/jquery-ui-1.9.2.min.js"></script>
+
+    <link href="~/Content/sweetalert.css" rel="stylesheet"/>
+
+    <script src="~/Scripts/sweetalert.min.js"></script>
+
+
+
+    <script type="text/javascript">
+
+        var departmentDataTable;
+        var programmeDataTable;
+        var levelDataTable;
+        var sessionDataTable;
+        var facultyDataTable;
+        var departmentOptionDataTable;
+        var programmeDepartmentTable;
+        var sessionSemesterTable;
+        var roleTable;
+
+
+        $(document).ready(function () {
+            $(".Load").hide();
+            $("#departmentTable").hide();
+            $("#programmeDepartmentTable").hide();
+
+            PopulateSetupTables(1);
+            //PopulateSetupTables(2);
+            PopulateSetupTables(3);
+            PopulateSetupTables(4);
+            PopulateSetupTables(5);
+            PopulateSetupTables(6);
+            PopulateSetupTables(8);
+            PopulateSetupTables(9);
+            //PopulateSetupTables(7);
+
+        });
+
+        function populateRecords() {
+            var checkProgramme = "";
+            var checkSession = "";
+            var departmentOptionCheck = "";
+            var departmentCheck = "";
+            var registrationEndedCheck = "";
+
+            if ($('#programmeActivatedCreate').is(':checked')) {
+                checkProgramme = "True";
+            }
+            if ($('#currentSessionActivatedCreate').is(':checked')) {
+                checkSession = "True";
+            }
+            if ($('#departmentOptionActivatedCreate').is(':checked')) {
+                departmentOptionCheck = "True";
+            }
+            if ($('#departmentActivatedCreate').is(':checked')) {
+                departmentCheck = "True";
+            }
+            if ($('#registrationEndedCreate').is(':checked')) {
+                registrationEndedCheck = "True";
+            }
+
+            var valueArray = {
+                "id": $("#idEdit").val(),
+                "ProId": $("#programmeCreate").val(),
+                "programmeName": $("#programmeNameCreate").val(),
+                "programmeDescription": $("#programmeDescriptionCreate").val(),
+                "programmeShortName": $("#programmeShortNameCreate").val(),
+                "programmeActivated": checkProgramme,
+                "DepartmentId": $("#departmentCreate").val(),
+                "departmentName": $("#departmentNameCreate").val(),
+                "departmentCode": $("#departmentCodeCreate").val(),
+                "departmentOptionName": $("#departmentOptionNameCreate").val(),
+                "departmentOptionActivated": departmentOptionCheck,
+                "departmentActivated": departmentCheck,
+                "registrationEnded": registrationEndedCheck,
+                "levelName": $("#levelNameCreate").val(),
+                "levelDescription": $("#levelDescriptionCreate").val(),
+                "FacultyId": $("#facultyCreate").val(),
+                "sessionName": $("#sessionNameCreate").val(),
+                "facultyName": $("#facultyNameCreate").val(),
+                "facultyDescription": $("#facultyDescriptionCreate").val(),
+                "sessionActivated": checkSession,
+                "sequenceNumber": $("#sessionSemesterCreate").val(),
+                "semesterId": $("#semesterCreate").val(),
+                "sessionId": $("#sessionCreate").val(),
+                "roleName": $("#roleCreate").val(),
+                "roleDescription": $("#roleDescriptionCreate").val()
+            }
+
+            return valueArray;
+        }
+
+        function editRecord(id, setUpTableType) {
+            if (setUpTableType != null && setUpTableType > 0) {
+
+                var valueArray = populateRecords();
+                var myJson = JSON.stringify(valueArray);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("EditRecord")',
+                    dataType: 'json',
+                    data: { setUpTableType: setUpTableType, recordId: id, myRecordArray: myJson, action: "edit" },
+                    beforeSend: function () {
+                        $(".Load").show();
+                    },
+                    complete: function () {
+                        $(".Load").hide();
+                    },
+                    success: function (result) {
+                        if (result.IsError === false) {
+
+                            hideControls();
+
+                            $("#idEdit").val(result.Id);
+                            $("#idEdit").attr("readonly", "readonly");
+                            $("#idTextBox").show();
+
+                            switch (setUpTableType) {
+                                case 1:
+                                    $("#programmeNameCreate").val(result.ProgrammeName);
+                                    $("#programmeDescriptionCreate").val(result.ProgrammeDescription);
+                                    $("#programmeShortNameCreate").val(result.ProgrammeShortName);
+                                    $("#programmeActivatedCreate").val(result.ProgrammeActivated);
+
+                                    if (result.ProgrammeActivated === true) {
+                                        $('#programmeActivatedCreate').prop('checked', true);
+                                    } else {
+                                        $('#programmeActivatedCreate').prop('checked', false);
+                                    }
+
+                                    $("#editProgrammeHeader").show();
+                                    $("#btnSaveProgramme").show();
+                                    $("#ProgrammeNameTextBox").show();
+                                    $("#ProgrammeDescriptionTextBox").show();
+                                    $("#ProgrammeActivatedTextBox").show();
+                                    $("#ProgrammeShortNameTextBox").show();
+
+                                    break;
+                                case 2:
+                                    $("#departmentNameCreate").val(result.DepartmentName);
+                                    $("#departmentCodeCreate").val(result.DepartmentCode);
+                                    $("#facultyCreate").val(result.FacultyId);
+
+                                    if (result.DepartmentActivated === true) {
+                                        $('#departmentActivatedCreate').prop('checked', true);
+                                    } else {
+                                        $('#departmentActivatedCreate').prop('checked', false);
+                                    }
+
+                                    $("#editDepartmentHeader").show();
+                                    $("#btnSaveDepartment").show();
+                                    $("#departmentNameTextBox").show();
+                                    $("#departmentActivatedTextBox").show();
+                                    $("#departmentCodeTextBox").show();
+                                    $("#facultyTextBox").show();
+                                    break;
+                                case 3:
+                                    $("#levelNameCreate").val(result.LevelName);
+                                    $("#levelDescriptionCreate").val(result.LevelDescription);
+
+                                    $("#editLevelHeader").show();
+                                    $("#btnSaveLevel").show();
+                                    $("#levelNameTextBox").show();
+                                    $("#levelDescriptionTextBox").show();
+                                    break;
+                                case 4:
+                                    $("#sessionNameCreate").val(result.SessionName);
+                                    $("#currentSessionActivatedCreate").val(result.Activated);
+                                    if (result.SessionActivated === true) {
+                                        $('#currentSessionActivatedCreate').prop('checked', true);
+                                    }
+                                    else { $('#currentSessionActivatedCreate').prop('checked', false) }
+
+                                    $("#editSessionHeader").show();
+                                    $("#btnSaveSession").show();
+                                    $("#CurrentSessionNameTextBox").show();
+                                    $("#CurrentSessionActivatedTextBox").show();
+                                    break;
+                                case 5:
+                                    $("#facultyNameCreate").val(result.FacultyName);
+                                    $("#facultyDescriptionCreate").val(result.FacultyDescription);
+
+                                    $("#editFacultyHeader").show();
+                                    $("#btnSaveFaculty").show();
+                                    $("#FacultyNameTextBox").show();
+                                    $("#FacultyDescriptionTextBox").show();
+                                    break;
+                                case 6:
+
+                                    $("#departmentCreate").val(result.DepartmentId);
+                                    $("#departmentOptionNameCreate").val(result.DepartmentOptionName);
+                                    $("#departmentOptionActivatedCreate").val(result.DepartmentOptionActivated);
+
+                                    if (result.DepartmentOptionActivated === true) {
+                                        $('#departmentOptionActivatedCreate').prop('checked', true);
+                                    }
+                                    else { $('#departmentOptionActivatedCreate').prop('checked', false); }
+
+                                    $("#editDepartmentOptionHeader").show();
+                                    $("#btnSaveDepartmentOption").show();
+                                    $("#departmentOptionActivatedTextBox").show();
+                                    $("#departmentOptionNameTextBox").show();
+                                    $("#departmentTextBox").show();
+                                    break;
+                                case 7:
+
+                                    $("#departmentCreate").val(result.DepartmentId);
+                                    $("#programmeCreate").val(result.ProId);
+                                    $("#programmeDepartmentCreate").val(result.ProgrammedepartmentActivated);
+                                    if (result.Activated === true) {
+                                        $('#programmeDepartmentCreate').prop('checked', true);
+                                    }
+                                    else { $('#programmeDepartmentCreate').prop('checked', false) }
+
+
+
+                                    $("#editProgrammeDepartmentHeader").show();
+                                    $("#btnSaveProgrammeDepartment").show();
+                                    //$("#programmeDepartmentTextBox").show();
+                                    $("#departmentTextBox").show();
+                                    $("#programmeTextBox").show();
+
+                                    break;
+
+                                case 8:
+
+                                    $("#semesterCreate").val(result.SemesterId);
+                                    $("#sessionCreate").val(result.SessionId);
+                                    $("#sessionSemesterCreate").val(result.SequenceNumber);
+
+                                    if (result.RegistrationEnded === true) {
+                                        $('#registrationEndedCreate').prop('checked', true);
+                                    }
+                                    else { $('#registrationEndedCreate').prop('checked', false); }
+
+                                    $("#editSemesterSessionHeader").show();
+                                    $("#semesterSessionTextBox").show();
+                                    $("#registrationEndedTextBox").show();
+                                    $("#sessionTextBox").show();
+                                    $("#semesterTextBox").show();
+                                    $("#btnSaveSessionSemester").show();
+
+                                    break;
+                                case 9:
+                                    $("#createRoleHeader").show();
+                                    $("#btnSaveRole").show();
+
+                                    $("#roleCreate").val(result.RoleName);
+                                    $("#roleDescriptionCreate").val(result.RoleDescription);
+                                    $("#roleNameTextBox").show();
+                                    $("#roleDescriptionTextBox").show();
+
+
+                                    break;
+
+                                default:
+                                    break;
+                            }
+
+                            $('#createModal').modal('show');
+
+                        } else {
+                            alert(result.Message);
+                        }
+                    },
+                    error: function (ex) {
+                        alert('Edit failed.' + ex);
+                        $(".Load").hide();
+                        if (result == undefined) {
+
+                        } else {
+                            alert(result.IsError);
+                        }
+                    }
+                });
+
+            }
+        }
+
+
+        function showCreateModal(tableId) {
+
+            hideControls();
+
+
+            switch (tableId) {
+                case 1:
+                    $("#createProgrammeHeader").show();
+                    $("#btnCreateProgramme").show();
+                    $("#ProgrammeNameTextBox").show();
+                    $("#ProgrammeDescriptionTextBox").show();
+                    $("#ProgrammeActivatedTextBox").show();
+                    $("#ProgrammeShortNameTextBox").show();
+                    break;
+                case 2:
+                    $("#createDepartmentHeader").show();
+                    $("#btnCreateDepartment").show();
+                    $("#departmentNameTextBox").show();
+                    $("#departmentCodeTextBox").show();
+                    $("#departmentActivatedTextBox").show();
+                    $("#facultyTextBox").show();
+                    break;
+                case 3:
+                    $("#createLevelHeader").show();
+                    $("#btnCreateLevel").show();
+                    $("#levelNameTextBox").show();
+                    $("#levelDescriptionTextBox").show();
+                    break;
+                case 4:
+                    $("#createSessionHeader").show();
+                    $("#btnCreateSession").show();
+                    $("#CurrentSessionNameTextBox").show();
+                    $("#CurrentSessionActivatedTextBox").show();
+
+                    break;
+                case 5:
+                    $("#createFacultyHeader").show();
+                    $("#btnCreateFaculty").show();
+                    $("#FacultyNameTextBox").show();
+                    $("#FacultyDescriptionTextBox").show();
+
+                    break;
+
+                case 6:
+                    $("#createDepartmentOptionHeader").show();
+                    $("#btnCreateDepartmentOption").show();
+                    $("#departmentOptionActivatedTextBox").show();
+                    $("#departmentOptionNameTextBox").show();
+                    $("#departmentTextBox").show();
+                    break;
+                case 7:
+                    $("#departmentTextBox").show();
+                    $("#programmeTextBox").show();
+                    //$("#programmeDepartmentTextBox").show();
+                    $("#createProgrammeDepartmentHeader").show();
+                    $("#btnCreateProgrammeDepartment").show();
+                    //$("#programmeDepartmentTextBox").show();
+
+                    break;
+                case 8:
+                    $("#createSemesterSessionHeader").show();
+                    $("#btnCreateSessionSemester").show();
+                    $("#sessionTextBox").show();
+                    $("#semesterSessionTextBox").show();
+                    $("#semesterTextBox").show();
+                    $("#registrationEndedTextBox").show();
+
+                    break;
+                case 9:
+
+                    $("#createRoleHeader").show();
+                    $("#btnCreateRole").show();
+                    $("#roleNameTextBox").show();
+                    $("#roleDescriptionTextBox").show();
+
+
+                    break;
+                default:
+                    break;
+            }
+
+
+
+            $('#createModal').modal('show');
+
+        }
+
+        function hideControls() {
+
+
+            $("#idTextBox").hide();
+
+            $("#createLevelHeader").hide();
+            $("#editLevelHeader").hide();
+            $("#levelTextBox").hide();
+            $("#btnCreateLevel").hide();
+            $("#levelNameTextBox").hide();
+            $("#levelDescriptionTextBox").hide();
+            $("#btnSaveLevel").hide();
+
+            $("#createSessionHeader").hide();
+            $("#editSessionHeader").hide();
+            $("#sessionTextBox").hide();
+            $("#btnCreateSession").hide();
+            $("#CurrentSessionNameTextBox").hide();
+            $("#CurrentSessionActivatedTextBox").hide();
+            $("#btnSaveSession").hide();
+
+            $("#createProgrammeHeader").hide();
+            $("#editProgrammeHeader").hide();
+            $("#ProgrammeNameTextBox").hide();
+            $("#btnCreateProgramme").hide();
+            $("#ProgrammeDescriptionTextBox").hide();
+            $("#ProgrammeActivatedTextBox").hide();
+            $("#ProgrammeShortNameTextBox").hide();
+            $("#programmeTextBox").hide();
+            $("#btnSaveProgramme").hide();
+
+            $("#createDepartmentHeader").hide();
+            $("#editDepartmentHeader").hide();
+            $("#departmentTextBox").hide();
+            $("#departmentNameTextBox").hide();
+            $("#departmentCodeTextBox").hide();
+            $("#facultyTextBox").hide();
+            $("#departmentActivatedTextBox").hide();
+            $("#btnCreateDepartment").hide();
+            $("#btnSaveDepartment").hide();
+
+            $("#createFacultyHeader").hide();
+            $("#editFacultyHeader").hide();
+            $("#btnCreateFaculty").hide();
+            $("#FacultyNameTextBox").hide();
+            $("#FacultyDescriptionTextBox").hide();
+            $("#btnSaveFaculty").hide();
+
+            $("#createDepartmentOptionHeader").hide();
+            $("#editDepartmentOptionHeader").hide();
+            $("#departmentOptionTextBox").hide();
+            $("#btnCreateDepartmentOption").hide();
+            $("#departmentOptionActivatedTextBox").hide();
+            $("#departmentOptionNameTextBox").hide();
+            $("#btnSaveDepartmentOption").hide();
+
+
+            $("#createProgrammeDepartmentHeader").hide();
+            $("#editProgrammeDepartmentHeader").hide();
+            $("#btnCreateProgrammeDepartment").hide();
+            $("#btnSaveProgrammeDepartment").hide();
+            //$("#programmeDepartmentTextBox").hide();
+
+
+
+
+            $("#createSemesterSessionHeader").hide();
+            $("#editSemesterSessionHeader").hide();
+            $("#btnCreateSessionSemester").hide();
+            $("#btnSaveSessionSemester").hide();
+            $("#semesterSessionTextBox").hide();
+            $("#registrationEndedTextBox").hide();
+            $("#semesterTextBox").hide();
+
+            $("#createRoleHeader").hide();
+            $("#editRoleHeader").hide();
+            $("#btnCreateRole").hide();
+            $("#btnSaveRole").hide();
+            $("#roleNameTextBox").hide();
+            $("#roleDescriptionTextBox").hide();
+
+
+        }
+
+        function createRecord(setUpTableType) {
+            if (setUpTableType != null && setUpTableType > 0) {
+
+                var valueArray = populateRecords();
+                var myJson = JSON.stringify(valueArray);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("CreateRecord")',
+                    dataType: 'json',
+                    data: { setUpTableType: setUpTableType, myRecordArray: myJson },
+                    beforeSend: function () {
+                        $(".Load").show();
+                    },
+                    complete: function () {
+                        $(".Load").hide();
+                    },
+                    success: function (result) {
+                        if (result.IsError === false) {
+
+                            swal("Good job", "Record created successfully", "success");
+                            //alert('Record created successfully');
+
+                            switch (setUpTableType) {
+                                case 1:
+                                    programmeDataTable.destroy();
+                                    break;
+                                case 2:
+                                    departmentDataTable.destroy();
+                                    break;
+                                case 3:
+                                    levelDataTable.destroy();
+                                    break;
+                                case 4:
+                                    sessionDataTable.destroy();
+                                    break;
+                                case 5:
+                                    facultyDataTable.destroy();
+                                    break;
+                                case 6:
+                                    departmentOptionDataTable.destroy();
+                                    break;
+                                case 7:
+                                    programmeDepartmentTable.destroy();
+                                    break;
+
+                                case 8:
+                                    sessionSemesterTable.destroy();
+                                    break;
+
+                                case 9:
+                                    roleTable.destroy();
+                                    break;
+
+                                default:
+                                    break;
+                            }
+
+                            $('#createModal').modal('hide');
+                            //$(".modal-body input").val("");
+                            PopulateSetupTables(setUpTableType, null, null);
+                        } else {
+                            $('#createModal').modal('hide');
+                            swal("Error", result.Message, "error");
+                            //alert(result.Message);
+                        }
+                    },
+                    error: function (ex) {
+                        $('#createModal').modal('hide');
+                        swal("Error", 'Create failed.' + ex, "error");
+                        //alert('Create failed.' + ex);
+                    }
+                });
+
+            }
+        }
+
+
+        function saveRecord(setUpTableType) {
+            if (setUpTableType != null && setUpTableType > 0) {
+
+                var valueArray = populateRecords();
+                var myJson = JSON.stringify(valueArray);
+                var id = 0;
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("EditRecord")',
+                    dataType: 'json',
+                    data: { setUpTableType: setUpTableType, recordId: id, myRecordArray: myJson, action: "save" },
+                    beforeSend: function () {
+                        $(".Load").show();
+                    },
+                    complete: function () {
+                        $(".Load").hide();
+                    },
+                    success: function (result) {
+                        if (result.IsError === false) {
+                            swal("Good Job", result.Message, "success");
+                            //alert(result.Message);
+
+                            switch (setUpTableType) {
+                                case 1:
+                                    programmeDataTable.destroy();
+                                    break;
+                                case 2:
+                                    departmentDataTable.destroy();
+                                    break;
+                                case 3:
+                                    levelDataTable.destroy();
+                                    break;
+                                case 4:
+                                    sessionDataTable.destroy();
+                                    break;
+                                case 5:
+                                    facultyDataTable.destroy();
+                                    break;
+                                case 6:
+                                    departmentOptionDataTable.destroy();
+                                    break;
+                                case 7:
+                                    programmeDepartmentTable.destroy();
+                                    break;
+                                case 8:
+                                    sessionSemesterTable.destroy();
+                                    break;
+                                case 9:
+                                    roleTable.destroy();
+                                    break;
+                                default:
+                                    break;
+                            }
+
+                            $('#createModal').modal('hide');
+                            //$(".modal-body input").val("");
+                            PopulateSetupTables(setUpTableType, null, null);
+                        } else {
+                            $('#createModal').modal('hide');
+                            swal("Error", result.Message, "error");
+                            //alert(result.Message);
+                        }
+                    },
+                    error: function (ex) {
+                        $('#createModal').modal('hide');
+                        swal("Error", 'Save operation failed.' + ex, "error");
+                        //alert('Save operation failed.' + ex);
+                    }
+                });
+
+            }
+        }
+
+        function deleteRecord(id, setUpTableType) {
+            if (setUpTableType != null && setUpTableType > 0) {
+
+                //var deleteConfirmation = confirm("Confirm Delete!");
+                swal({
+                    title: "Are you sure?",
+                    text: "Your will not be able to recover this record!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonClass: "btn-danger",
+                    confirmButtonText: "Yes, delete it!",
+                    closeOnConfirm: false
+                    },
+                    function () {
+
+                            $.ajax({
+                                type: 'POST',
+                                url: '@Url.Action("DeleteRecord")',
+                                dataType: 'json',
+                                data: { setUpTableType: setUpTableType, recordId: id },
+                                beforeSend: function () {
+                                    $(".Load").show();
+                                },
+                                complete: function () {
+                                    $(".Load").hide();
+                                },
+                                success: function (result) {
+                                    if (result.IsError === false) {
+
+                                        swal("Good job", 'Record was deleted.', "success");
+                                        //alert('Record was deleted.');
+
+                                        switch (setUpTableType) {
+                                            case 1:
+                                                programmeDataTable.destroy();
+                                                break;
+                                            case 2:
+                                                departmentDataTable.destroy();
+                                                break;
+                                            case 3:
+                                                levelDataTable.destroy();
+                                                break;
+                                            case 4:
+                                                sessionDataTable.destroy();
+                                                break;
+                                            case 5:
+                                                facultyDataTable.destroy();
+                                                break;
+                                            case 6:
+                                                departmentOptionDataTable.destroy();
+                                                break;
+                                            case 7:
+                                                programmeDepartmentTable.destroy();
+                                                break;
+                                            case 8:
+                                                sessionSemesterTable.destroy();
+                                                break;
+                                            case 9:
+                                                roleTable.destroy();
+                                                break;
+                                            default:
+                                                break;
+                                        }
+
+                                        PopulateSetupTables(setUpTableType, null, null);
+                                    } else {
+                                        swal("Error", result.Message, "error");
+                                        //alert(result.Message);
+                                    }
+                                },
+                                error: function (ex) {
+                                    swal("Error", "Delete failed" + ex, "error");
+                                    //alert('Delete failed.' + ex);
+                                }
+                            });
+                    });
+
+               
+            } else {
+                swal("Error", "Parameter was not set!", "error");
+                //alert('Parameter was not set!');
+            }
+        }
+
+        function populateDepartment() {
+            PopulateSetupTables(2);
+            $("#departmentTable").show();
+
+        }
+        function populateProgrammeDepartment() {
+            PopulateSetupTables(7);
+            $("#programmeDepartmentTable").show();
+
+        }
+
+        $('#createModal').on('hidden.bs.modal', function () {
+            $('.modal-body').find("input,textarea,select").val('').end();
+
+        });
+
+        function PopulateSetupTables(setUpTableType) {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("PopulateSetupTables", "ProgrammeSetUp")',
+                traditional: true,
+                data: { setUpTableType: setUpTableType },
+                beforeSend: function () {
+                    $(".Load").show();
+                },
+                complete: function () {
+                    $(".Load").hide();
+                },
+                success: function (result) {
+                    if (result[0].IsError === false) {
+                        var i;
+                        switch (setUpTableType) {
+                            case 1:
+
+                                $("#programmeSetting").empty();
+
+                                for (i = 0; i < result.length; i++) {
+                                    result[i].index = result[i].Id;
+                                    $("#programmeSetting").append('<tr><td>' + result[i].Id + '</td>' + '<td>' + result[i].ProgrammeName + '</td>' + '<td>' + result[i].ProgrammeDescription + '</td>' + '<td>' + result[i].ProgrammeActivated + '</td>' + ' <td><input onclick="editRecord(' + result[i].Id + ', 1)" class="btn btn-sm btn-success editTableRow" value="Edit" type="button" /></td>' + ' <td><input onclick="deleteRecord(' + result[i].Id + ', 1)" class="btn btn-sm btn-success removeTableRow" value="Delete" type="button" /></td></tr>');
+
+                                }
+
+
+                                programmeDataTable = $('#programmeTable').DataTable();
+                                break;
+                            case 2:
+
+                                $("#departmentSetting").empty();
+
+                                for (i = 0; i < result.length; i++) {
+                                    result[i].index = result[i].Id;
+                                    $("#departmentSetting").append('<tr><td>' + result[i].Id + '</td>' + '<td>' + result[i].DepartmentName + '</td>' + '<td>' + result[i].DepartmentCode + '</td>' + '<td>' + result[i].DepartmentActivated + '</td>' + '<td>' + result[i].FacultyName + '</td>' + '<td>' + '<td><input onclick="editRecord(' + result[i].Id + ', 2)" class="btn btn-sm btn-success editTableRow" value="Edit" type="button" /></td>' + ' <td><input onclick="deleteRecord(' + result[i].Id + ', 2)" class="btn btn-sm btn-success removeTableRow"  value="Delete" type="button" /></td></tr>');
+
+                                }
+
+
+
+                                departmentDataTable = $('#departmentTable').DataTable();
+
+                                break;
+                            case 3:
+
+                                $("#LevelSetting").empty();
+
+                                for (i = 0; i < result.length; i++) {
+                                    result[i].index = result[i].Id;
+                                    $("#LevelSetting").append('<tr><td>' + result[i].Id + '</td>' + '<td>' + result[i].LevelName + '</td>' + '<td>' + result[i].LevelDescription + '</td>' + '<td><input onclick="editRecord(' + result[i].Id + ', 3)" class="btn btn-sm btn-success editTableRow" value="Edit" type="button" /></td>' + ' <td><input onclick="deleteRecord(' + result[i].Id + ', 3)" class="btn btn-sm btn-success removeTableRow" disabled = "disabled" value="Delete" type="button" /></td></tr>');
+
+                                }
+
+                                //$("#levelDelete").attr("disabled", true);
+                                levelDataTable = $('#levelTable').DataTable();
+                                break;
+                            case 4:
+
+                                $("#sessionSetting").empty();
+
+                                for (i = 0; i < result.length; i++) {
+                                    result[i].index = result[i].Id;
+                                    $("#sessionSetting").append('<tr><td>' + result[i].Id + '</td>' + '<td>' + result[i].SessionName + '</td>' + '<td>' + result[i].SessionActivated + '</td>' + '<td><input onclick="editRecord(' + result[i].Id + ', 4)" class="btn btn-sm btn-success editTableRow" value="Edit" type="button" /></td>' + ' <td><input onclick="deleteRecord(' + result[i].Id + ', 4)" class="btn btn-sm btn-success removeTableRow" disabled = "disabled"  value="Delete" type="button" /></td></tr>');
+                                    //$("#sessionDelete").attr("disabled", true);
+                                }
+
+
+                                sessionDataTable = $('#sessionTable').DataTable();
+                                break;
+                            case 5:
+
+                                $("#facultySetting").empty();
+
+                                for (i = 0; i < result.length; i++) {
+                                    result[i].index = result[i].Id;
+                                    $("#facultySetting").append('<tr><td>' + result[i].Id + '</td>' + '<td>' + result[i].FacultyName + '</td>' + '<td>' + result[i].FacultyDescription + '</td>' + '<td><input onclick="editRecord(' + result[i].Id + ', 5)" class="btn btn-sm btn-success editTableRow" value="Edit" type="button" /></td>' + ' <td><input onclick="deleteRecord(' + result[i].Id + ', 5)" class="btn btn-sm btn-success removeTableRow" value="Delete" type="button" /></td></tr>');
+
+                                }
+
+
+                                facultyDataTable = $('#facultyTable').DataTable();
+                                break;
+
+                            case 6:
+
+                                $("#departmentOptionSetting").empty();
+
+                                for (i = 0; i < result.length; i++) {
+                                    result[i].index = result[i].Id;
+                                    $("#departmentOptionSetting").append('<tr><td>' + result[i].Id + '</td>' + '<td>' + result[i].DepartmentOptionName + '</td>' + '<td>' + result[i].DepartmentName + '</td>' + '<td>' + result[i].DepartmentOptionActivated + '</td>' + '<td><input onclick="editRecord(' + result[i].Id + ', 6)" class="btn btn-sm btn-success editTableRow" value="Edit" type="button" /></td>' + ' <td><input onclick="deleteRecord(' + result[i].Id + ', 6)" class="btn btn-sm btn-success removeTableRow" value="Delete" type="button" /></td></tr>');
+
+                                }
+
+
+                                departmentOptionDataTable = $('#departmentOptionTable').DataTable();
+                                break;
+
+                            case 7:
+
+                                $("#programmeDepartmentSetting").empty();
+
+                                for (i = 0; i < result.length; i++) {
+                                    result[i].index = result[i].Id;
+                                    $("#programmeDepartmentSetting").append('<tr><td>' + result[i].Id + '</td>' + '<td>' + result[i].ProgrammeName + '</td>' + '<td>' + result[i].DepartmentName + '</td>' + '<td><input onclick="editRecord(' + result[i].Id + ', 7)" class="btn btn-sm btn-success editTableRow" value="Edit" type="button" /></td>' + ' <td><input onclick="deleteRecord(' + result[i].Id + ', 7)" class="btn btn-sm btn-success removeTableRow" value="Delete" type="button" /></td></tr>');
+
+                                }
+
+                                programmeDepartmentTable = $('#programmeDepartmentTable').DataTable();
+                                break;
+                            case 8:
+
+                                $("#sessionSemesterSetting").empty();
+
+                                for (i = 0; i < result.length; i++) {
+                                    result[i].index = result[i].Id;
+                                    $("#sessionSemesterSetting").append('<tr><td>' + result[i].Id + '</td>' + '<td>' + result[i].SesmesterName + '</td>' + '<td>' + result[i].SessionName + '</td>' + '<td>' + result[i].SequenceNumber + '</td>' + '<td>' + result[i].RegistrationEnded + '</td>' + '<td><input onclick="editRecord(' + result[i].Id + ', 8)" class="btn btn-sm btn-success editTableRow" value="Edit" type="button" /></td>' + ' <td><input onclick="deleteRecord(' + result[i].Id + ', 8)" class="btn btn-sm btn-success removeTableRow" disabled = "disabled"  value="Delete" type="button" /></td></tr>');
+
+                                }
+
+                                sessionSemesterTable = $('#sessionSemesterTable').DataTable();
+                                break;
+
+                            case 9:
+
+                                $("#roleSetting").empty();
+
+                                for (i = 0; i < result.length; i++) {
+                                    result[i].index = result[i].Id;
+                                    $("#roleSetting").append('<tr><td>' + result[i].Id + '</td>' + '<td>' + result[i].RoleName + '</td>' + '<td>' + result[i].RoleDescription + '</td>' + '<td><input onclick="editRecord(' + result[i].Id + ', 9)" class="btn btn-sm btn-success editTableRow" value="Edit" type="button" /></td>' + ' <td><input onclick="deleteRecord(' + result[i].Id + ', 9)" class="btn btn-sm btn-success removeTableRow" value="Delete" type="button" /></td></tr>');
+
+                                }
+
+                                roleTable = $('#roleTable').DataTable();
+                                break;
+                                
+                            default:
+                                break;
+
+                        }
+                    } else {
+                        swal("Error", result.Message, "error");
+                        //alert(result.Message);
+                    }
+                },
+                error: function (ex) {
+                    swal("Error", "Operation Failed." + ex, "error");
+                    //alert('Operation Failed.' + ex);
+                }
+
+            });
+        }
+    </script>
+}
+<br />
+
+<div>
+    @if (TempData["Message"] != null)
+    {
+        @Html.Partial("_Message", TempData["Message"])
+    }
+</div>
+<br/>
+
+@*<style>
+    #panorama {
+        width: 600px;
+        height: 400px;
+    }
+</style>*@
+
+@*<iframe width="600" height="400" allowfullscreen style="border-style:none;" src="https://cdn.pannellum.org/2.3/pannellum.htm?panorama=https://pannellum.org/images/alma.jpg"></iframe>*@
+@*<link rel="stylesheet" href="https://cdn.pannellum.org/2.3/pannellum.css" />
+<script type="text/javascript" src="https://cdn.pannellum.org/2.3/pannellum.js"></script>
+<div id="panorama"></div>
+<script>
+    pannellum.viewer('panorama', {
+        "type": "equirectangular",
+        "panorama": "/Content/me3.jpeg",
+        "autoLoad": true
+    });
+</script>*@
+<div class="col-md-12">
+
+<div class="alert alert-success fade in nomargin">
+    <h2 style="text-align: center">Setup Page &nbsp; <span class="Load"><img src="~/Content/Images/bx_loader.gif" /></span> </h2>
+</div>
+<hr/>
+
+<div class="row">
+    <div class="col-md-6 table-responsive">
+        <div class="alert alert-danger fade in nomargin">
+            <h3 style="text-align: center">Programme</h3>
+        </div>
+
+
+        <hr/>
+        <table class="table table-striped table-hover" id="programmeTable">
+            <thead>
+            <tr>
+                <th>Programme Id</th>
+                <th>Programme Name</th>
+                <th>Programme Description</th>
+                <th>Activated</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody id="programmeSetting"></tbody>
+        </table>
+        <button id="programmeSettingCreate" class="btn btn-success" onclick="showCreateModal(1)"><i class="fa fa-plus"> Add</i></button>
+    </div>
+    <div class="col-md-6 table-responsive">
+        <div class="alert alert-danger fade in nomargin">
+            <h3 style="text-align: center">Faculty</h3>
+        </div>
+
+
+        <hr/>
+        <table class="table table-striped table-hover" id="facultyTable">
+            <thead>
+            <tr>
+                <th> Faculty Id</th>
+                <th>Faculty Name</th>
+                <th>Faculty Description</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody id="facultySetting"></tbody>
+        </table>
+        <button id="facultySettingcreate" class="btn btn-success" onclick="showCreateModal(5)"><i class="fa fa-plus"> Add</i></button>
+    </div>
+
+</div>
+<br/>
+<div class="row">
+    <div class="col-md-6 table-responsive">
+
+        <div class="alert alert-danger fade in nomargin">
+            <h3 style="text-align: center">Level</h3>
+        </div>
+
+        <hr/>
+        <table class="table table-striped table-hover" id="levelTable">
+            <thead>
+            <tr>
+                <th> Level Id</th>
+                <th>Level Name</th>
+                <th>Level Description</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody id="LevelSetting"></tbody>
+        </table>
+        <button id="levelSettingCreate" class="btn btn-success" onclick="showCreateModal(3)"><i class="fa fa-plus"> Add</i></button>
+    </div>
+    <div class="col-md-6 table-responsive">
+        <div class="alert alert-danger fade in nomargin">
+            <h3 style="text-align: center">Session</h3>
+        </div>
+
+        <hr/>
+        <table class="table table-striped table-hover" id="sessionTable">
+            <thead>
+            <tr>
+                <th> Session Id</th>
+                <th>Session Name</th>
+                <th>Activated</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody id="sessionSetting"></tbody>
+        </table>
+        <button id="sessioSettingcreate" class="btn btn-success" onclick="showCreateModal(4)"><i class="fa fa-plus"> Add</i></button>
+    </div>
+</div>
+<br/>
+<div class="row">
+    <div class="col-md-6 table-responsive">
+        <div class="alert alert-danger fade in nomargin">
+            <h3 style="text-align: center">Department</h3>
+        </div>
+
+        <div style="text-align: right"> &nbsp;<span class="Load"><img src="~/Content/Images/bx_loader.gif" /></span> <button onclick="populateDepartment()" class="btn btn-success">Populate </button>
+        </div>
+        <hr/>
+        <table class="table table-striped table-hover" id="departmentTable">
+            <thead>
+            <tr>
+                <th> Department Id</th>
+                <th>Department Name</th>
+                <th>Department Code</th>
+                <th>Activated</th>
+                <th>Faculty Name</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody id="departmentSetting"></tbody>
+        </table>
+        <button id="depatrtmentSettingCreate" class="btn btn-success" onclick="showCreateModal(2)"><i class="fa fa-plus"> Add</i></button>
+    </div>
+
+    <div class="col-md-6 table-responsive">
+        <div class="alert alert-danger fade in nomargin">
+            <h3 style="text-align: center">Department Option</h3>
+        </div>
+
+        <hr/>
+        <table class="table table-striped table-hover" id="departmentOptionTable">
+            <thead>
+            <tr>
+                <th> Department Option Id</th>
+                <th>Department Option Name</th>
+                <th>Department Name</th>
+                <th>Activated</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody id="departmentOptionSetting"></tbody>
+        </table>
+        <button id="departmentOptionSettingcreate" class="btn btn-success" onclick="showCreateModal(6)"><i class="fa fa-plus"> Add</i></button>
+    </div>
+</div>
+<br/>
+<div class="row">
+    <div class="col-md-6 table-responsive">
+        <div class="alert alert-danger fade in nomargin">
+            <h3 style="text-align: center"> Programme Department</h3>
+        </div>
+
+        <div style="text-align: right">
+            &nbsp; <span class="Load"><img src="~/Content/Images/bx_loader.gif" /></span> <button onclick="populateProgrammeDepartment()" class="btn btn-success">Populate </button>
+        </div>
+        <hr/>
+        <table class="table table-striped table-hover" id="programmeDepartmentTable">
+            <thead>
+            <tr>
+                <th>Programme Department Id</th>
+                <th>Programme Name</th>
+                <th>Department Name</th>
+
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody id="programmeDepartmentSetting"></tbody>
+        </table>
+        <button id="programmeDepartmentSettingcreate" class="btn btn-success" onclick="showCreateModal(7)"><i class="fa fa-plus"> Add</i></button>
+    </div>
+    <div class="col-md-6 table-responsive">
+        <div class="alert alert-danger fade in nomargin">
+            <h3 style="text-align: center">Session Semester</h3>
+        </div>
+
+        <hr/>
+        <table class="table table-striped table-hover" id="sessionSemesterTable">
+            <thead>
+            <tr>
+                <th>Session Semester Id</th>
+                <th>Session Name</th>
+                <th>Semester Name</th>
+                <th>Sequence Number</th>
+                <th>Registration Closed</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody id="sessionSemesterSetting"></tbody>
+        </table>
+        <button id="sessionSemesterSettingcreate" class="btn btn-success" onclick="showCreateModal(8)"><i class="fa fa-plus"> Add</i></button>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-md-6 table-responsive">
+            <div class="alert alert-danger fade in nomargin">
+                <h3 style="text-align: center">Role</h3>
+            </div>
+
+            <hr/>
+            <table class="table table-striped table-hover" id="roleTable">
+                <thead>
+                <tr>
+                    <th>Role Id</th>
+                    <th>Role Name</th>
+                    <th>Role Description</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody id="roleSetting"></tbody>
+            </table>
+            <button id="roleSettingcreate" class="btn btn-success" onclick="showCreateModal(9)"><i class="fa fa-plus"> Add</i></button>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="modal fade" role="dialog" id="createModal" style="z-index: 1000000">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 style="display: none" id="createProgrammeHeader" class="modal-title">Create Programme</h4>
+
+                <h4 style="display: none" id="editProgrammeHeader" class="modal-title">Edit Programme</h4>
+
+                <h4 style="display: none" id="createDepartmentHeader" class="modal-title">Create Department</h4>
+
+                <h4 style="display: none" id="editDepartmentHeader" class="modal-title">Edit Department </h4>
+
+                <h4 style="display: none" id="createLevelHeader" class="modal-title">Create Level</h4>
+
+                <h4 style="display: none" id="editLevelHeader" class="modal-title">Edit Level</h4>
+
+                <h4 style="display: none" id="createSessionHeader" class="modal-title">Create Session</h4>
+
+                <h4 style="display: none" id="editSessionHeader" class="modal-title">Edit Session</h4>
+
+                <h4 style="display: none" id="createFacultyHeader" class="modal-title">Create Faculty</h4>
+
+                <h4 style="display: none" id="editFacultyHeader" class="modal-title">Edit Faculty</h4>
+
+                <h4 style="display: none" id="createDepartmentOptionHeader" class="modal-title">Create Department Option</h4>
+
+                <h4 style="display: none" id="editDepartmentOptionHeader" class="modal-title">Edit Department Option</h4>
+
+                <h4 style="display: none" id="createProgrammeDepartmentHeader" class="modal-title">Create Programme Department </h4>
+
+                <h4 style="display: none" id="editProgrammeDepartmentHeader" class="modal-title">Edit Programme Department </h4>
+
+                <h4 style="display: none" id="createSemesterSessionHeader" class="modal-title">Create Session Semester </h4>
+
+                <h4 style="display: none" id="editSemesterSessionHeader" class="modal-title">Edit Session Semester </h4>
+
+                <h4 style="display: none" id="createRoleHeader" class="modal-title">Create Role </h4>
+
+                <h4 style="display: none" id="editRoleHeader" class="modal-title">Edit Role </h4>&nbsp;
+
+                <span class="Load"><img src="~/Content/Images/bx_loader.gif" /></span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" style="display: none" id="idTextBox">
+                    @Html.LabelFor(model => model.Id, "ID:", new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.Id, new { @class = "form-control", id = "idEdit" })
+                    @Html.ValidationMessageFor(model => model.Id)
+                </div>
+                <div class="form-group" style="display: none" id="programmeTextBox">
+                    @Html.LabelFor(model => model.programme.Id, "Programme:", new { @class = "control-label" })
+                    @Html.DropDownListFor(model => model.programme.Id, (IEnumerable<SelectListItem>)ViewBag.ProgrammeId, new { @class = "form-control", id = "programmeCreate" })
+                    @Html.ValidationMessageFor(model => model.programme.Id)
+                </div>
+                <div class="form-group" style="display: none" id="ProgrammeNameTextBox">
+                    @Html.LabelFor(model => model.programme.Name, "Programme Name:", new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.programme.Name, new { @class = "form-control", id = "programmeNameCreate" })
+                    @Html.ValidationMessageFor(model => model.programme.Name)
+                </div>
+                <div class="form-group" style="display: none" id="ProgrammeDescriptionTextBox">
+                    @Html.LabelFor(model => model.programme.Description, "Programme Description:", new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.programme.Description, new { @class = "form-control", id = "programmeDescriptionCreate" })
+                    @Html.ValidationMessageFor(model => model.programme.Description)
+                </div>
+                <div class="form-group" style="display: none" id="ProgrammeShortNameTextBox">
+                    @Html.LabelFor(model => model.programme.ShortName, "Short Name:", new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.programme.ShortName, new { @class = "form-control", id = "programmeShortNameCreate" })
+                    @Html.ValidationMessageFor(model => model.programme.ShortName)
+                </div>
+                <div class="form-group" style="display: none" id="ProgrammeActivatedTextBox">
+                    @Html.LabelFor(model => model.programme.Activated, "Activated:", new { @class = "control-label" })
+                    @Html.CheckBoxFor(model => model.Activated, new { @class = "form-control", id = "programmeActivatedCreate" })
+                    @Html.ValidationMessageFor(model => model.programme.Activated)
+                </div>
+                <div class="form-group" style="display: none" id="sessionTextBox">
+                    @Html.LabelFor(model => model.Session.Id, "Session:", new { @class = "control-label" })
+                    @Html.DropDownListFor(model => model.Session.Id, (IEnumerable<SelectListItem>)ViewBag.SessionId, new { @class = "form-control", id = "sessionCreate" })
+                    @Html.ValidationMessageFor(model => model.Session.Id)
+                </div>
+                <div class="form-group" style="display: none" id="CurrentSessionNameTextBox">
+                    @Html.LabelFor(model => model.Session.Name, "Session:", new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.Session.Name, new { @class = "form-control", id = "sessionNameCreate", placeholder = "Session(eg. 2016/2017)" })
+                    @Html.ValidationMessageFor(model => model.Session.Name)
+                </div>
+                <div class="form-group" style="display: none" id="CurrentSessionActivatedTextBox">
+                    @Html.LabelFor(model => model.Session.Activated, "Activated:", new { @class = "control-label" })
+                    @Html.CheckBoxFor(model => model.Activated, new { @class = "form-control", id = "currentSessionActivatedCreate" })
+                    @Html.ValidationMessageFor(model => model.Session.Activated)
+                </div>
+                <div class="form-group" style="display: none" id="departmentTextBox">
+                    @Html.LabelFor(model => model.Department.Id, "Department:", new { @class = "control-label" })
+                    @Html.DropDownListFor(model => model.Department.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentId, new { @class = "form-control", id = "departmentCreate" })
+                    @Html.ValidationMessageFor(model => model.Department.Id)
+                </div>
+
+
+                <div class="form-group" style="display: none" id="departmentNameTextBox">
+                    @Html.LabelFor(model => model.Department.Name, "Department Name:", new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.Department.Name, new { @class = "form-control", id = "departmentNameCreate" })
+                    @Html.ValidationMessageFor(model => model.Department.Name)
+                </div>
+                <div class="form-group" style="display: none" id="departmentCodeTextBox">
+                    @Html.LabelFor(model => model.Department.Code, "Department Code:", new {@class = "control-label"})
+                    @Html.TextBoxFor(model => model.Department.Code, new {@class = "form-control", id = "departmentCodeCreate"})
+                    @Html.ValidationMessageFor(model => model.Department.Code)
+                </div>
+                <div class="form-group" style="display: none" id="departmentActivatedTextBox">
+                    @Html.LabelFor(model => model.Department.Active, "Activated:", new { @class = "control-label" })
+                    @Html.CheckBoxFor(model => model.Activated, new { @class = "form-control", id = "departmentActivatedCreate" })
+                    @Html.ValidationMessageFor(model => model.Department.Active)
+                </div>
+                @*<div class="form-group" style="display: none" id="departmentOptionTextBox">
+                        @Html.LabelFor(model => model.DepartmentOption.Id, "DepartmentOption:", new { @class = "control-label" })
+                        @Html.DropDownListFor(model => model.DepartmentOption.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentOptionId, new { @class = "form-control", id = "departmentOptionCreate" })
+                        @Html.ValidationMessageFor(model => model.DepartmentOption.Id)
+                    </div>*@
+                <div class="form-group" style="display: none" id="departmentOptionNameTextBox">
+                    @Html.LabelFor(model => model.DepartmentOption.Name, "DepartmentOption Name:", new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.DepartmentOption.Name, new { @class = "form-control", id = "departmentOptionNameCreate" })
+                    @Html.ValidationMessageFor(model => model.DepartmentOption.Name)
+                </div>
+                <div class="form-group" style="display: none" id="departmentOptionActivatedTextBox">
+                    @Html.LabelFor(model => model.DepartmentOption.Activated, "Activated:", new {@class = "control-label"})
+                    @Html.CheckBoxFor(model => model.Activated, new {@class = "form-control", id = "departmentOptionActivatedCreate"})
+                    @Html.ValidationMessageFor(model => model.DepartmentOption.Activated)
+                </div>
+                
+                <div class="form-group" style="display: none" id="levelTextBox">
+                    @Html.LabelFor(model => model.level.Id, "Level:", new { @class = "control-label" })
+                    @Html.DropDownListFor(model => model.level.Id, (IEnumerable<SelectListItem>)ViewBag.levelId, new { @class = "form-control", id = "levelCreate" })
+                    @Html.ValidationMessageFor(model => model.level.Id)
+                </div>
+                <div class="form-group" style="display: none" id="levelNameTextBox">
+                    @Html.LabelFor(model => model.level.Name, "Level Name:", new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.level.Name, new { @class = "form-control", id = "levelNameCreate" })
+                    @Html.ValidationMessageFor(model => model.level.Name)
+                </div>
+                <div class="form-group" style="display: none" id="levelDescriptionTextBox">
+                    @Html.LabelFor(model => model.level.Description, "Level Description:", new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.level.Description, new { @class = "form-control", id = "levelDescriptionCreate" })
+                    @Html.ValidationMessageFor(model => model.level.Description)
+                </div>
+                <div class="form-group" style="display: none" id="facultyTextBox">
+                    @Html.LabelFor(model => model.Faculty.Id, "Faculty:", new { @class = "control-label" })
+                    @Html.DropDownListFor(model => model.Faculty.Id, (IEnumerable<SelectListItem>)ViewBag.FacultyId, new { @class = "form-control", id = "facultyCreate" })
+                    @Html.ValidationMessageFor(model => model.Faculty.Id)
+                </div>
+
+                <div class="form-group" style="display: none" id="FacultyNameTextBox">
+                    @Html.LabelFor(model => model.Faculty.Name, "Faculty Name:", new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.Faculty.Name, new { @class = "form-control", id = "facultyNameCreate" })
+                    @Html.ValidationMessageFor(model => model.Faculty.Name)
+                </div>
+                <div class="form-group" style="display: none" id="FacultyDescriptionTextBox">
+                    @Html.LabelFor(model => model.Faculty.Description, "Faculty Description:", new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.Faculty.Description, new { @class = "form-control", id = "facultyDescriptionCreate" })
+                    @Html.ValidationMessageFor(model => model.Faculty.Description)
+                </div>
+
+                <div class="form-group" style="display: none" id="semesterTextBox">
+                    @Html.LabelFor(model => model.Semester.Id, "Semester:", new { @class = "control-label" })
+                    @Html.DropDownListFor(model => model.Semester.Id, (IEnumerable<SelectListItem>)ViewBag.SemesterId, new { @class = "form-control", id = "semesterCreate" })
+                    @Html.ValidationMessageFor(model => model.Semester.Id)
+                </div>
+                <div class="form-group" style="display: none" id="semesterSessionTextBox">
+                    @Html.LabelFor(model => model.SessionSemester.SequenceNumber, "Sequence Number:", new {@class = "control-label"})
+                    @Html.TextBoxFor(model => model.SessionSemester.SequenceNumber, new {@class = "form-control", id = "sessionSemesterCreate"})
+                    @Html.ValidationMessageFor(model => model.SessionSemester.SequenceNumber)
+                </div>
+                <div class="form-group" style="display: none" id="registrationEndedTextBox">
+                    @Html.LabelFor(model => model.SessionSemester.RegistrationEnded, "Activated:", new { @class = "control-label" })
+                    @Html.CheckBoxFor(model => model.Activated, new { @class = "form-control", id = "registrationEndedCreate" })
+                    @Html.ValidationMessageFor(model => model.SessionSemester.RegistrationEnded)
+                </div>
+                <div class="form-group" style="display: none" id="roleNameTextBox">
+                    @Html.LabelFor(model => model.Role.Name, "Role Name:", new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.Role.Name, new { @class = "form-control", id = "roleCreate" })
+                    @Html.ValidationMessageFor(model => model.Role.Name)
+                </div>
+                <div class="form-group" style="display: none" id="roleDescriptionTextBox">
+                    @Html.LabelFor(model => model.Role.Description, "Role Description:", new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.Role.Description, new { @class = "form-control", id = "roleDescriptionCreate" })
+                    @Html.ValidationMessageFor(model => model.Role.Description)
+                </div>
+
+            </div>
+            <div class="modal-footer form-group">
+                <span style="display: none" class="Load"><img src="~/Content/Images/bx_loader.gif" /></span>
+
+                <button style="display: none" type="button" id="btnCreateProgramme" class="btn btn-success fa fa-plus" onclick="createRecord(1)">Create Programme</button>
+
+                <button style="display: none" type="button" id="btnSaveProgramme" class="btn btn-success" onclick="saveRecord(1)">Save Programme</button>
+
+                <button style="display: none" type="button" id="btnCreateDepartment" class="btn btn-success fa fa-plus" onclick="createRecord(2)">Create Department</button>
+
+                <button style="display: none" type="button" id="btnSaveDepartment" class="btn btn-success" onclick="saveRecord(2)">Save Department</button>
+
+                <button style="display: none" type="button" id="btnCreateLevel" class="btn btn-success fa fa-plus" onclick="createRecord(3)">Create Level</button>
+
+                <button style="display: none" type="button" id="btnSaveLevel" class="btn btn-success" onclick="saveRecord(3)">Save Level</button>
+
+                <button style="display: none" type="button" id="btnCreateSession" class="btn btn-success fa fa-plus" onclick="createRecord(4)">Create Session</button>
+
+                <button style="display: none" type="button" id="btnSaveSession" class="btn btn-success" onclick="saveRecord(4)">Save Session</button>
+
+                <button style="display: none" type="button" id="btnCreateFaculty" class="btn btn-success fa fa-plus" onclick="createRecord(5)">Create Faculty</button>
+
+                <button style="display: none" type="button" id="btnSaveFaculty" class="btn btn-success" onclick="saveRecord(5)">Save Faculty</button>
+
+                <button style="display: none" type="button" id="btnCreateDepartmentOption" class="btn btn-success fa fa-plus" onclick="createRecord(6)">Create Department Option</button>
+
+                <button style="display: none" type="button" id="btnSaveDepartmentOption" class="btn btn-success" onclick="saveRecord(6)">Save Department Option</button>
+
+                <button style="display: none" type="button" id="btnCreateProgrammeDepartment" class="btn btn-success fa fa-plus" onclick="createRecord(7)">Create Programme Department</button>
+
+                <button style="display: none" type="button" id="btnSaveProgrammeDepartment" class="btn btn-success" onclick="saveRecord(7)">Save Programme Department</button>
+
+                <button style="display: none" type="button" id="btnCreateSessionSemester" class="btn btn-success fa fa-plus" onclick="createRecord(8)">Create Session Semester</button>
+
+                <button style="display: none" type="button" id="btnSaveSessionSemester" class="btn btn-success" onclick="saveRecord(8)">Save Session Semester </button>
+
+                <button style="display: none" type="button" id="btnCreateRole" class="btn btn-success fa fa-plus" onclick="createRecord(9)">Create Role</button>
+
+                <button style="display: none" type="button" id="btnSaveRole" class="btn btn-success" onclick="saveRecord(9)">Save Role </button>
+
+                <button type="button" class="btn btn-danger" onclick="clearModal()" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

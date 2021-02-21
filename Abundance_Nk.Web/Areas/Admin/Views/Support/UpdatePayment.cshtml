@@ -1,0 +1,162 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.SupportViewModel
+
+@{
+    ViewBag.Title = "UpdatePayment";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+@if (TempData["Message"] != null)
+{
+    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div style="font-size:x-large">Update Payment</div>
+            </div>
+            <div class="panel-body">
+
+
+
+                @using (Html.BeginForm("UpdatePayment", "Support", new { area = "Admin" }, FormMethod.Post))
+                {
+                    <div class="row">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.PaymentEtranzact.ConfirmationNo, "Confirmation Order", htmlAttributes: new {@class = "control-label col-md-2"})
+                            <div class="col-md-6">
+                                @Html.TextBoxFor(model => model.PaymentEtranzact.ConfirmationNo, new {@class = "form-control", @placeholder = "Enter Confirmation Order", @required = "required"})
+                                @Html.ValidationMessageFor(model => model.PaymentEtranzact.ConfirmationNo, "", new {@class = "text-danger"})
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.FeeType.Id, "Fee Type", htmlAttributes: new {@class = "control-label col-md-2"})
+                            <div class="col-md-6">
+                                @Html.DropDownListFor(model => model.FeeType.Id, (IEnumerable<SelectListItem>) ViewBag.FeeTypeId, new {@class = "form-control"})
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Session.Id, "Session", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-6">
+                                @Html.DropDownListFor(model => model.Session.Id, (IEnumerable<SelectListItem>)ViewBag.Session, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Submit" class="btn btn-success mr5" />
+                            </div>
+                        </div>
+                    </div>
+                }
+
+
+
+            </div>
+
+        </div>
+
+        @if (Model == null || Model.PaymentEtranzact == null) { return; }
+        @if (Model.PaymentEtranzact.ConfirmationNo != null &&  Model.PaymentEtranzact.ReceiptNo != null )
+        {
+            
+            using (Html.BeginForm("SavePayment", "Support", new { area = "Admin" }, FormMethod.Post))
+            {
+                
+               @Html.HiddenFor(model=>model.PaymentEtranzact.BankCode)
+            @Html.HiddenFor(model => model.PaymentEtranzact.BranchCode)
+            @Html.HiddenFor(model => model.PaymentEtranzact.ConfirmationNo)
+            @Html.HiddenFor(model => model.PaymentEtranzact.ReceiptNo)
+            @Html.HiddenFor(model => model.PaymentEtranzact.TransactionAmount)
+            @Html.HiddenFor(model => model.PaymentEtranzact.TransactionDate)
+            @Html.HiddenFor(model => model.PaymentEtranzact.TransactionDescription)
+            @Html.HiddenFor(model => model.PaymentEtranzact.Used)
+            @Html.HiddenFor(model => model.PaymentEtranzact.PaymentCode)
+            @Html.HiddenFor(model => model.PaymentEtranzact.Terminal)
+            @Html.HiddenFor(model => model.Session.Id)
+                <div class="row">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.PaymentEtranzact.ReceiptNo, "Receipt Number", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.PaymentEtranzact.ReceiptNo, new { @class = "form-control", @placeholder = "Receipt Number",@disabled="disabled" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.PaymentEtranzact.ConfirmationNo, "Confirmation Order", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.PaymentEtranzact.ConfirmationNo, new { @class = "form-control", @placeholder = "Confirmation Order Number", @disabled = "disabled" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.PaymentEtranzact.CustomerID, "Invoice Number", htmlAttributes: new {@class = "control-label col-md-2"})
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.PaymentEtranzact.CustomerID, new {@class = "form-control", @placeholder = "Enter Invocie Number"})
+                        </div>
+                    </div>
+                    @if (User.Identity.Name == "joy.obianaba@lloydant.com")
+                    {
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.PaymentEtranzact.TransactionAmount, "Amount Paid", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-6">
+                                @Html.TextBoxFor(model => model.PaymentEtranzact.TransactionAmount, new { @class = "form-control", @placeholder = ""})
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.PaymentEtranzact.TransactionAmount, "Amount Paid", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-6">
+                                @Html.TextBoxFor(model => model.PaymentEtranzact.TransactionAmount, new { @class = "form-control", @placeholder = "", @disabled = "disabled" })
+                            </div>
+                        </div>
+                    }
+                   
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.PaymentEtranzact.BankCode, "Bank Code", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.PaymentEtranzact.BankCode, new { @class = "form-control", @placeholder = "", @disabled = "disabled" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.PaymentEtranzact.BranchCode, "Branch Code", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.PaymentEtranzact.BranchCode, new { @class = "form-control", @placeholder = "", @disabled = "disabled" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.PaymentEtranzact.CustomerName, "Customer Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.PaymentEtranzact.CustomerName, new { @class = "form-control", @placeholder = "" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.PaymentEtranzact.CustomerAddress, "Customer Addess", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(model => model.PaymentEtranzact.CustomerAddress, new { @class = "form-control", @placeholder = "" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Save" class="btn btn-success mr5" />
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+

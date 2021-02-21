@@ -1,0 +1,63 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.ClearanceViewModel
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "VerifyApplicant";
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+
+    <script>
+        $(document).ready(function() {
+            $("#load").hide();
+
+        });
+
+        function buttonClick() {
+            $("#load").showClearFilterButton();
+        }
+
+    </script>
+}
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+
+        @if (TempData["Message"] != null)
+        {
+            <div>
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            </div>
+        }
+
+        @using (Html.BeginForm("VerifyApplicant", "Clearance", FormMethod.Post))
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4><i class="fa fa-adjust"> Verify Applicant</i></h4>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ApplicationNumber, "Application Number:", new { @class = "col-sm-2 control-label " })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(model => model.ApplicationNumber, new { @class = "form-control", @required = "required" })
+                            @Html.ValidationMessageFor(model => model.ApplicationNumber, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-10">
+                            <input class="btn btn-success mr5" onclick="buttonClick()" type="submit" name="submit" id="submit" value="Submit"/>
+                            <span id="load"><img src="@Url.Content("~/Content/Images/bx_loader.gif")" /></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        }
+
+    </div>
+    <div class="col-md-1"></div>
+</div>

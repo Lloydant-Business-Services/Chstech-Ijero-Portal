@@ -1,0 +1,62 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.HostelViewModel
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading panel-dark-head">
+                <h4>Hostel Type Details</h4>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+
+                    <div>
+                        <h5>HOSTEL TYPE</h5>
+                        <hr />
+                        <dl class="dl-horizontal">
+                            <dt>
+                                @Html.DisplayName("Hostel Type Name:")
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.HostelType.Hostel_Type_Name)
+                            </dd>
+                            <br/>    
+
+                            <dt>
+                                @Html.DisplayName("Hostel Type Description:")
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.HostelType.Hostel_Type_Description)
+                            </dd>
+                            <br />
+                           
+                        </dl>
+                    </div>
+                    <p>
+                        @Html.ActionLink("Edit", "EditHostelType", new { id = Model.HostelType.Hostel_Type_Id }, new { @class = "btn btn-success" }) |
+                        @Html.ActionLink("Back to List", "ViewHostelTypes", "", new { @class = "btn btn-success" })
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-1"></div>
+</div>
+
+

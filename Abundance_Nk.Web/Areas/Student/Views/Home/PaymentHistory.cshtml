@@ -1,0 +1,169 @@
+﻿@using Abundance_Nk.Web.Models
+@model Abundance_Nk.Model.Model.PaymentHistory
+
+@{
+    Layout = "~/Areas/Student/Views/Shared/_NewThemeLayout.cshtml";
+    ViewBag.Title = "Index";
+}
+
+@*<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<script src="~/Scripts/jquery-migrate-1.2.1.min.js"></script>
+<script src="~/Scripts/prettify.js"></script>
+<script src="~/Scripts/custom.js"></script>*@
+
+@*<script src="~/Scripts/jquery.min.js"></script>
+<script src="~/Scripts/responsive-tabs.js"></script>*@
+
+
+<div class="row custom-text-black">
+    <div class="col-md-3">
+        <div class="logopanel">
+            <h1><span style="color: #35925B">All Payments</span></h1>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <ul class="leftmenu ">
+                    <li>
+                        <a href="#"><b>Instructions</b></a>
+                    </li>
+                </ul>
+
+                <ol>
+                    <li class="margin-bottom-7">The list of all payment made is displayed on the payment list</li>
+                    <li class="margin-bottom-7">To print payment receipt or invoice, click on item (first column) on payment list, a pop menu will appear with two links (invoice and receipt). Click on any one of your choice to print it</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-9">
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+
+            <div class="shadow">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="col-md-12" style="font-size: 15pt; text-transform: uppercase">
+                                @Html.DisplayFor(model => model.Student.FullName)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group margin-bottom-0">
+                            <div class="col-md-4">
+                                @Html.LabelFor(model => model.Student.MatricNumber,new { @class = "control-label " })
+                            </div>
+                            <div class="col-md-8 ">
+                                @Html.HiddenFor(model => model.Student.MatricNumber)
+                                @Html.DisplayFor(model => model.Student.MatricNumber)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group margin-bottom-0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @if(Model != null && Model != null && Model.Payments != null && Model.Payments.Count > 0)
+                    {
+                        <div class="row">
+                            <div class="col-md-12">
+                                <b>Payments</b>
+                                <div class="pull-right record-count-label">
+                                    <span class="caption">No of Payment</span><span class="badge">@Model.Payments.Count</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 ">
+
+                                <table class="table grid-table table-condensed grid-wrap table-head-alt mb30">
+                                    <thead>
+                                        <tr class="well grid-wrap" style="height: 35px; vertical-align: middle">
+
+                                            <th>
+                                                Item
+                                            </th>
+                                            <th>
+                                                Bank
+                                            </th>
+                                            <th>
+                                                Invoice No
+                                            </th>
+                                            <th>Session</th>
+                                            <th>
+                                                Confirmation Order No
+                                            </th>
+                                            <th style="text-align: right">
+                                                Amount (₦)
+                                            </th>
+                                        </tr>
+                                    </thead>
+
+                                    @for(int i = 0;i < Model.Payments.Count;i++)
+                                    {
+                                        <tr>
+
+                                            <td>
+                                               @Html.DisplayFor(modelItem => Model.Payments[i].FeeTypeName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => Model.Payments[i].BankName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => Model.Payments[i].InvoiceNumber)
+                                            </td>
+                                            <td>@Html.DisplayFor(modelItem=>Model.PaymentLists[i].Session.Name)</td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => Model.Payments[i].ConfirmationOrderNumber)
+                                            </td>
+                                            <td style="text-align: right">
+                                                @Html.DisplayFor(modelItem => Model.Payments[i].Amount)
+                                            </td>
+                                            <td>
+                                                @Html.ActionLink("Print Receipt", "Receipt", "Credential", new { Area = "Common", pmid = Model.Payments[i].PaymentId }, new { target = "_blank", @class="btn btn-danger" })
+                                            </td>
+                                        </tr>
+                                    }
+
+                                   
+                                </table>
+
+                                @*</div>*@
+                            </div>
+                        </div>
+
+                        <br />
+
+                      
+                    }
+                    else
+                    {
+                        <div>
+                            @if(TempData["Message"] != null)
+                            {
+                                @Html.Partial("_Message",TempData["Message"])
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+       
+    </div>
+</div>

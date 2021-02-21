@@ -1,0 +1,72 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.HostelViewModel
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading panel-dark-head">
+                <h4>Edit Hostel Type</h4>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    
+                    @using (Html.BeginForm("EditHostelType", "Hostel", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-horizontal">
+                            <h5>HOSTEL TYPE</h5>
+                            <hr />
+                            @Html.ValidationSummary(true)
+                            @Html.HiddenFor(model => model.HostelType.Hostel_Type_Id)
+                           
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.HostelType.Hostel_Type_Name, "Hostel Type Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.HostelType.Hostel_Type_Name, new {@required = "required"})
+                                    @Html.ValidationMessageFor(model => model.HostelType.Hostel_Type_Name)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.HostelType.Hostel_Type_Description, "Hostel Description", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.HostelType.Hostel_Type_Description)
+                                    @Html.ValidationMessageFor(model => model.HostelType.Hostel_Type_Description)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <input type="submit" value="Save" class="btn btn-default" />
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <div>
+                        @Html.ActionLink("Back to List", "ViewHostelTypes", "",new { @class = "btn btn-success" })
+                    </div>
+                      
+                </div>
+            </div>
+        </div>
+    </div> 
+    <div class="col-md-1"></div>
+</div>
+
+
+                    

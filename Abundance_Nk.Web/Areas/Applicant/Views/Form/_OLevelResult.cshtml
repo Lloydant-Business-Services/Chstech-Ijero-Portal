@@ -1,0 +1,244 @@
+﻿@model Abundance_Nk.Web.Areas.Applicant.ViewModels.PostJambViewModel
+
+@{
+    //Layout = null;
+}
+
+<div class="col-md-12 card p-5">
+    <div class="panel-heading">
+        <div style="font-size:x-large">O-Level Result</div>
+    </div>
+    <div class="panel-body">
+        <div class="row" id="divOLevel">
+            <div class="col-md-6 custom-text-black">
+                <h5>First Sitting</h5>
+                <hr class="no-top-padding" />
+                @Html.HiddenFor(model => model.FirstSittingOLevelResult.Id)
+                <div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.FirstSittingOLevelResult.Type.Id, "Type", new { @class = "control-label col-md-3" })
+                        <div class="col-md-9">
+                            @Html.DropDownListFor(model => model.FirstSittingOLevelResult.Type.Id, (IEnumerable<SelectListItem>)ViewBag.FirstSittingOLevelTypeId, new { @class = "form-control olevel" })
+                            @Html.ValidationMessageFor(model => model.FirstSittingOLevelResult.Type.Id)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.FirstSittingOLevelResult.ExamNumber, new { @class = "control-label col-md-3" })
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(model => model.FirstSittingOLevelResult.ExamNumber, new { @class = "form-control olevel" })
+                            @Html.ValidationMessageFor(model => model.FirstSittingOLevelResult.ExamNumber)
+                        </div>
+                    </div>
+
+                    <div class="form-group ">
+                        @Html.LabelFor(model => model.FirstSittingOLevelResult.ExamYear, new { @class = "control-label col-md-3" })
+                        <div class="col-md-9">
+                            @Html.DropDownListFor(model => model.FirstSittingOLevelResult.ExamYear, (IEnumerable<SelectListItem>)ViewBag.FirstSittingExamYearId, new { @class = "form-control olevel" })
+                            @Html.ValidationMessageFor(model => model.FirstSittingOLevelResult.ExamYear)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.FirstSittingOLevelResult.ScratchCard, new { @class = "control-label col-md-3" })
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(model => model.FirstSittingOLevelResult.ScratchCard, new { @class = "form-control olevel" })
+                            @Html.ValidationMessageFor(model => model.FirstSittingOLevelResult.ScratchCard)
+                        </div>
+                    </div>
+                </div>
+
+<table class="table table-condensed table-responsive" style="background-color:whitesmoke">
+    <tr>
+        <th>
+            Subject
+        </th>
+        <th>
+            Grade
+        </th>
+        <th></th>
+    </tr>
+
+    @for (int i = 0; i < 9; i++)
+                    {
+                    <tr>
+                        <td>
+                            @Html.HiddenFor(model => model.FirstSittingOLevelResultDetails[i].Id)
+                            @Html.HiddenFor(model => model.FirstSittingOLevelResultDetails[i].Subject.Name)
+                            @Html.DropDownListFor(model => model.FirstSittingOLevelResultDetails[i].Subject.Id, (IEnumerable<SelectListItem>)ViewData["FirstSittingOLevelSubjectId" + i], new { @class = "form-control olevel" })
+
+                        </td>
+<td>
+
+    @Html.HiddenFor(model => model.FirstSittingOLevelResultDetails[i].Grade.Name)
+@Html.DropDownListFor(model => model.FirstSittingOLevelResultDetails[i].Grade.Id, (IEnumerable<SelectListItem>)ViewData["FirstSittingOLevelGradeId" + i], new { @class = "form-control olevel" })
+
+</td>
+</tr>
+                    }
+
+</table>
+</div>
+
+            <div class="col-md-6 custom-text-black">
+        <h5>Second Sitting</h5>
+        <hr class="no-top-padding" />
+        @Html.HiddenFor(model => model.SecondSittingOLevelResult.Id)
+        <div>
+            <div class="form-group">
+
+                @Html.LabelFor(model => model.SecondSittingOLevelResult.Type.Id, "Type", new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.DropDownListFor(model => model.SecondSittingOLevelResult.Type.Id, (IEnumerable<SelectListItem>)ViewBag.SecondSittingOLevelTypeId, new { @class = "form-control olevel" })
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.SecondSittingOLevelResult.ExamNumber, new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.SecondSittingOLevelResult.ExamNumber, new { @class = "form-control olevel" })
+                </div>
+            </div>
+
+            <div class="form-group ">
+                @Html.LabelFor(model => model.SecondSittingOLevelResult.ExamYear, new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.DropDownListFor(model => model.SecondSittingOLevelResult.ExamYear, (IEnumerable<SelectListItem>)ViewBag.SecondSittingExamYearId, new { @class = "form-control olevel" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.SecondSittingOLevelResult.ScratchCard, new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.TextBoxFor(model => model.SecondSittingOLevelResult.ScratchCard, new { @class = "form-control olevel" })
+                </div>
+            </div>
+        </div>
+
+    <table class="table table-condensed table-responsive" style="background-color:whitesmoke">
+        <tr>
+            <th>
+                Subject
+            </th>
+            <th>
+                Grade
+            </th>
+            <th></th>
+        </tr>
+
+        @for (int i = 0; i < 9; i++)
+                        {
+                        <tr>
+                            <td>
+                                @Html.HiddenFor(model => model.SecondSittingOLevelResultDetails[i].Id)
+                                @Html.HiddenFor(model => model.SecondSittingOLevelResultDetails[i].Subject.Name)
+                                @Html.DropDownListFor(model => model.SecondSittingOLevelResultDetails[i].Subject.Id, (IEnumerable<SelectListItem>)ViewData["SecondSittingOLevelSubjectId" + i], new { @class = "form-control olevel" })
+
+                            </td>
+    <td>
+        @Html.HiddenFor(model => model.SecondSittingOLevelResultDetails[i].Grade.Name)
+    @Html.DropDownListFor(model => model.SecondSittingOLevelResultDetails[i].Grade.Id, (IEnumerable<SelectListItem>)ViewData["SecondSittingOLevelGradeId" + i], new { @class = "form-control olevel" })
+    </td>
+    </tr>
+                        }
+
+    </table>
+    </div>
+</div>
+</div>
+</div>
+
+<div class="col-md-12 card p-5">
+    <div class="panel-heading">
+        <div style="font-size:x-large">O-LEVEL Credentials</div>
+    </div>
+    <div class="panel-body">
+        <div class="row ">
+            <div class="col-md-6 ">
+                <div class="panel-body">
+                    <h4>First Sitting Result Scanned Copy</h4>
+                    <div class="row">
+                        <div>
+                            <img id="scannedCredential1" src="@Model.FirstSittingOLevelResult.ScannedCopyUrl" alt="" style="max-width:150px" />
+                        </div>
+                    </div>
+
+                    <div class="row padding-bottom-5">
+                        <div class="col-md-6 ">
+                            @Html.HiddenFor(model => model.FirstSittingOLevelResult.ScannedCopyUrl,new { id = "hfCredentialUrl",name = "hfCredentialUrl" })
+                            <input type="text" id="crx-file-path" readonly="readonly" />
+                        </div>
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(m => m.MyCredentialFileFirstSitting,new { id = "cu-credential-simple-upload",type = "file",style = "color:transparent;" })
+                        </div>
+                    </div>
+
+                    <div class="row padding-bottom-10">
+                        <div class="col-md-12">
+                            <input class="btn btn-default btn-metro" type="button" name="cr-start-upload" id="cr-start-upload" value="Upload Credential" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="fileUploadProgress2" style="display:none">
+                                <img src="@Url.Content("~/Content/Images/bx_loader.gif")" />
+                                <span>Uploading ...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="col-md-6 ">
+                <div class="panel-body">
+                    <h4>Second Sitting Result Scanned Copy</h4>
+                    <div class="row">
+                        <div>
+                            <img id="scannedCredential2" src="@Model.SecondSittingOLevelResult.ScannedCopyUrl" alt="" style="max-width:150px" />
+                        </div>
+                    </div>
+
+                    <div class="row padding-bottom-5">
+                        <div class="col-md-6 ">
+                            @Html.HiddenFor(model => model.SecondSittingOLevelResult.ScannedCopyUrl,new { id = "hfCredentialUrl2",name = "hfCredentialUrl2" })
+                            <input type="text" id="crx-file-path2" readonly="readonly" />
+                        </div>
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(m => m.MyCredentialFileSecondSitting,new { id = "cu-credential-simple-upload2",type = "file",style = "color:transparent;" })
+                        </div>
+                    </div>
+
+                    <div class="row padding-bottom-10">
+                        <div class="col-md-12">
+                            <input class="btn btn-default btn-metro" type="button" name="cr-start-upload2" id="cr-start-upload2" value="Upload Credential" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="fileUploadProgress3" style="display:none">
+                                <img src="@Url.Content("~/Content/Images/bx_loader.gif")" />
+                                <span>Uploading ...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <blockquote>
+                    <i class="fa fa-quote-left"></i>
+                    <p>
+                        To upload your o-level result, scan and save the result  in the computer file
+                        system. Click on the Choose File button shown above to display the file dialog box. Select
+                        the passport file from the saved location. Then click on the Upload Passport button above to upload your passport to the system.
+                    </p>
+                  </blockquote>
+            </div>
+        </div>
+    </div>
+</div>

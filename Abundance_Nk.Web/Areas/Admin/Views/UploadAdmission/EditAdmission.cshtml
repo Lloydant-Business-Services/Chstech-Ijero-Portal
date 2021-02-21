@@ -1,0 +1,206 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.UploadAdmissionViewModel
+@{   
+    ViewBag.Title = "EditAdmission";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="~/Scripts/file-upload/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="~/Scripts/file-upload/jquery-ui-1.9.2.min.js"></script>
+<script type="text/javascript" src="~/Scripts/file-upload/jquery.iframe-transport.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.print.js"></script>
+
+<script type="text/javascript">
+    
+    $(document).ready(function() {
+
+        $("#ProgrammeId").change(function() {
+
+            $("#DepartmentId").empty();
+
+            var programme = $("#ProgrammeId").val();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartmentByProgrammeId")', // we are calling json method
+                dataType: 'json',
+                data: { id: programme },
+                success: function(departments) {
+                    $("#DepartmentId").append('<option value="' + 0 + '"> -- Select -- </option>');
+
+                    $.each(departments, function(i, department) {
+                        $("#DepartmentId").append('<option value="' + department.Value + '">' + department.Text + '</option>');
+                    });
+                },
+                error: function(ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+        });
+    });
+
+    function DeactivateAll() {
+        if ($('#DeactivateAllId').is(':checked')) {
+            $('.Deactivate').prop('checked', true);
+        }
+        else {
+            $('.Deactivate').prop('checked', false);
+        }
+    }
+    function ActivateAll() {
+        if ($('#ActivateAllId').is(':checked')) {
+            $('.Activate').prop('checked', true);
+        }
+        else {
+            $('.Activate').prop('checked', false);
+        }
+    }
+
+</script>
+
+
+<div class="panel panel-default">
+    <div class="panel-body">
+
+        <div class="col-md-12">
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+            <div>
+                <h4><p class="custom-text-black text-center ">Edit Admission List</p></h4>
+            </div>
+            @using (Html.BeginForm("EditAdmission", "UploadAdmission", FormMethod.Post))
+            {
+
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+
+                <div class="panel panel-default ">
+                    <div class="panel-body "> 
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.AdmissionListDetail.Form.ProgrammeFee.Programme.Id, "Programme", new { @class = "control-label custom-text-black" })
+                                    @Html.DropDownListFor(model => model.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.ProgrammeId, new { @class = "form-control", @required = "required", @id = "ProgrammeId" })
+                                    @Html.ValidationMessageFor(model => model.Programme.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.AdmissionListDetail.Deprtment.Id, "Department ", new { @class = "control-label custom-text-black" })
+                                    @Html.DropDownListFor(model => model.Department.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentId, new { @class = "form-control", @required = "required", @id = "DepartmentId" })
+                                    @Html.ValidationMessageFor(model => model.AdmissionListDetail.Deprtment.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.CurrentSession.Id, new { @class = "control-label custom-text-black" })
+                                    @Html.DropDownListFor(model => model.CurrentSession.Id, (IEnumerable<SelectListItem>)ViewBag.SessionId, new { @class = "form-control", @required = "required" })
+                                    @Html.ValidationMessageFor(model => model.CurrentSession.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-10">
+                                <input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="Edit" />
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+
+        </div>
+
+        @if (Model == null || Model.AdmiissionLists == null) { return; }
+
+        @if (Model != null && Model.AdmiissionLists != null)
+        {
+                using (Html.BeginForm("SaveEditedAdmission", "UploadAdmission", FormMethod.Post))
+                {
+
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+
+                @Html.HiddenFor(model => model.CurrentSession.Id)
+                @Html.HiddenFor(model => model.Programme.Id)
+                @Html.HiddenFor(model => model.Department.Id)
+
+                <div class="col-md-12">
+
+                    <table class="table table-bordered table-hover table-striped table-responsive">
+                        <thead>
+                            <tr>
+                                <th>SN</th>
+                                <th>Fullname</th>
+                                <th>Application Number</th>
+                                <th>Applied Department</th>
+                                <th>Status</th>
+                                <th>
+                                    <input type="checkbox" id="DeactivateAllId" onclick="DeactivateAll()"/> Deactivate
+                                </th>
+                                <th>
+                                    <input type="checkbox" id="ActivateAllId" onclick="ActivateAll()" /> Activate
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody style="color:black;">
+                            @{ int N = 0;}
+                            @for (var itemIndex = 0; itemIndex < Model.AdmiissionLists.Count; itemIndex++)
+                            {
+                                @Html.HiddenFor(model => model.AdmiissionLists[itemIndex].Id)
+
+                                <tr>
+                                    @{ N = itemIndex + 1; }
+                                    <td>@N</td>
+                                    <td>@Html.DisplayTextFor(m => m.AdmiissionLists[itemIndex].Form.Person.FullName)</td>
+                                    <td>@Html.DisplayTextFor(m => m.AdmiissionLists[itemIndex].Form.Number)</td>@Html.HiddenFor(m => m.AdmiissionLists[itemIndex].Form.Number)
+                                    <td>@Html.DisplayTextFor(m => m.AdmiissionLists[itemIndex].Deprtment.Name)</td>
+                                    <td>@if (Model.AdmiissionLists[itemIndex].Activated.Value == true)
+                                        {<p>Active</p>}
+                                        else
+                                        {<p>Not Active</p>}
+                                    </td>
+                                    <td>
+                                        @Html.CheckBoxFor(m => m.AdmiissionLists[itemIndex].Deactivated, new {@type = "checkbox", @class = "Deactivate"})
+                                    </td>
+                                    <td>
+                                        @Html.CheckBoxFor(m => m.AdmiissionLists[itemIndex].ActivateAlt, new { @type = "checkbox", @class = "Activate" })
+                                    </td>
+                                </tr>
+
+                            }
+
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-10">
+                        <input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="Save" />
+
+                    </div>
+                </div>
+
+                }
+            
+        }
+
+    </div>
+</div>

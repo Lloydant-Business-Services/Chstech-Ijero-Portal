@@ -1,0 +1,90 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.UploadAdmissionViewModel
+@using GridMvc.Html
+@{
+    ViewBag.Title = "SearchAdmittedStudents";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@if (TempData["UpdateFailure"] != null)
+{
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong>@TempData["UpdateFailure"]</strong>
+    </div>
+}
+@if (TempData["UpdateSuccess"] != null)
+{
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong>@TempData["UpdateSuccess"]</strong>
+    </div>
+}
+@if (TempData["Action"] != null)
+{
+    <div class="alert alert-warning alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong>@TempData["Action"]</strong>
+    </div>
+}
+@using (Html.BeginForm("SearchAdmittedStudents", "UploadAdmission", new { area = "Admin" }, FormMethod.Post))
+{
+    <div class="col-md-12">
+        <div class="form-group" style="color:black">
+            <h4>Enter Application Number or Exam Number</h4>
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.Label("Application No / Exam No", new { @class = "col-sm-2 control-label " })
+        <div class="col-sm-10">
+            @Html.TextBoxFor(model => model.SearchString, new { @class = "form-control", @placeholder = "Enter Application No / Enter Exam No" })
+            @Html.ValidationMessageFor(model => model.SearchString, null, new { @class = "text-danger" })
+        </div>
+
+    </div>
+    <div class="form-group">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-10">
+            <input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="Search" />
+
+        </div>
+    </div>
+
+}
+@if (Model == null || Model.AdmissionList.Count() <= 0) { return; }
+@if (Model != null && Model.AdmissionList.Count > 0)
+{
+
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            @Html.Grid(Model.AdmissionList).Columns(columns =>
+{
+    columns.Add()
+        .Encoded(false)
+        .Sanitized(false)
+        .RenderValueAs(d =>
+            @<div style="width:41px">Edit
+                <a href="@Url.Action("EditAdmittedStudentDepartment", new { id = d.Id })" title="Edit">
+                    <img src="@Url.Content("~/Content/Images/edit_icon.png")" alt="Edit" />
+                </a>
+
+            </div>);
+
+    columns.Add(f => f.Form.Person.FullName).Titled("Student Name");
+    columns.Add(f => f.Form.Number).Titled("Application Number");
+    columns.Add(f => f.Programme.Name).Titled("Programme");
+    columns.Add(f => f.Deprtment.Name).Titled("Department");
+    columns.Add(f => f.Deprtment.Faculty.Name).Titled("Faculty");
+    columns.Add(f => f.DepartmentOption.Name).Titled("Department Option");
+    columns.Add(f => f.Activated).Titled("Enabled");
+
+}).WithPaging(15)
+        </div>
+    </div>
+
+
+
+}
+   
+
+

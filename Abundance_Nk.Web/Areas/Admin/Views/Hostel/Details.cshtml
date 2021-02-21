@@ -1,0 +1,97 @@
+﻿@model Abundance_Nk.Model.Entity.HOSTEL
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading panel-dark-head">
+                <h4>Hostel Details</h4>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+
+                    <div>
+                        <h5>HOSTEL</h5>
+                        <hr />
+                        <dl class="dl-horizontal">
+                            <dt>
+                                @Html.DisplayName("Hostel Name:")
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.Hostel_Name)
+                            </dd>
+                            <br/>    
+
+                            <dt>
+                                @Html.DisplayName("Hostel Capacity:")
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.Capacity)
+                            </dd>
+                            <br />
+
+                            <dt>
+                                @Html.DisplayName("Hostel Description:")
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.Description)
+                            </dd>
+                            <br />
+
+                            <dt>
+                                @Html.DisplayName("Date Added:")
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.Date_Entered)
+                            </dd>
+                            <br />
+
+                            <dt>
+                                @Html.DisplayName("Activated:")
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.Activated)
+                            </dd>
+                            <br />
+
+                            <dt>
+                                @Html.DisplayName("Hostel Type:")
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.HOSTEL_TYPE.Hostel_Type_Name)
+                            </dd>
+
+                        </dl>
+                    </div>
+                    <p>
+                        @Html.ActionLink("Edit", "Edit", new { id = Model.Hostel_Id }, new { @class = "btn btn-success" }) |
+                        @Html.ActionLink("Back to List", "Index", "", new { @class = "btn btn-success" })
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-1"></div>
+</div>
+
+

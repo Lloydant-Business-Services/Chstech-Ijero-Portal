@@ -1,0 +1,313 @@
+﻿@model Abundance_Nk.Web.Areas.Applicant.ViewModels.PostJambViewModel
+
+@{
+    Layout = "~/Views/Shared/_NewThemeLayout.cshtml";
+}
+
+@if (TempData["Message"] != null)
+{
+    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+}
+
+@if (Model == null || Model.Person == null || Model.AppliedCourse == null) { return; }
+
+
+@*<link href="~/Content/bootstrap.css" rel="stylesheet" />*@
+@*<link href="~/Content/style.default.css" rel="stylesheet" />*@
+@*<link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />*@
+
+@section Scripts {
+    @*@Scripts.Render("~/bundles/jquery")*@
+    <script src="~/Scripts/jquery.print.js"></script>
+    <script type="text/javascript">
+        $("#aPrint").on('click', function () {
+            $(".printable").print();
+            return false;
+        });
+    </script>
+}
+
+<div id="printable" class="printable">
+
+    <table class="table alert alert-success" style="border:1px solid #906">
+        <tr>
+            <td><img class="pull-left" src="@Url.Content("~/Content/Images/chst.png")" width="100px" height="100px" alt="" /></td>
+            <td colspan="2">
+                <center>
+                    <h3>
+                        <strong>COLLEGE OF HEALTH AND SCIENCE TECHNOLOGY, IJERO-EKITI</strong>
+                    </h3>
+                    <p>
+                        P.M.B 7788, Ijero-Ekiti, Ekiti State
+                    </p>
+                </center>
+            </td>
+            <td><img class="pull-right" src="@Url.Content('~' + Model.Person.ImageFileUrl)" width="100px" height="100px" alt="" /></td>
+        </tr>
+    </table>
+    @*<div class="col-md-12 " >
+            <div class="col-md-2">
+                <div class="pull-left">
+
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <center>
+
+                </center>
+            </div>
+
+            <div class="col-md-2">
+                <div class="pull-right">
+
+                </div>
+            </div>
+        </div>*@
+
+    <br />
+
+    @if (Model.Programme.Id == 1)
+    {
+        <center>
+            @*<h2> <p class="custom-text-black">@Model.Session.Name POST UTME SCREENING RESULT</p></h2>*@
+            <h2> <p class="custom-text-black">@Model.Session.Name SCREENING</p></h2>
+        </center>
+    }
+    else
+    {
+        <center>
+            <h2> <p class="custom-text-black">Acknowledgment Slip For @Model.Session.Name Session Admission </p></h2>
+        </center>
+    }
+
+    <hr class="no-top-padding" />
+
+
+
+    @if (Model.Programme.Id == 1)
+    {
+        <table class="table table-bordered" style="font-size: 11px;">
+            <tr>
+                <td colspan="2"><b>Application Number: @Model.ApplicationFormNumber</b></td>
+                <td colspan="2"><b>Application Date: @Model.ApplicationForm.DateSubmitted.ToLongDateString() </b></td>
+            </tr>
+            <tr></tr>
+            <tr>
+                <td><b>UTME REG. NO.:</b></td>
+                <td><b>@Model.ApplicantJambDetail.JambRegistrationNumber</b></td>
+                <td><b></b></td>
+                <td><b></b></td>
+            </tr>
+            <tr>
+                <td><b>FULL NAME:</b></td>
+                <td><b>@Model.Person.FullName</b></td>
+                <td><b></b></td>
+                <td><b></b></td>
+            </tr>
+            <tr>
+                <td><b>LGA.:</b></td>
+                <td><b>@Model.Person.LocalGovernment.Name</b></td>
+                <td><b>SEX:</b></td>
+                <td><b>@Model.Person.Sex.Name</b></td>
+            </tr>
+            <tr>
+                <td><b>EMAIL ADDRESS:</b></td>
+                <td><b>@Model.Person.Email</b></td>
+                <td><b>PHONE NUMBER:</b></td>
+                <td><b>@Model.Person.MobilePhone</b></td>
+            </tr>
+            <tr>
+                <td colspan="4"><h3>SELECTED COURSES</h3></td>
+            </tr>
+            <tr>
+                <td><b>Choice of Course:</b></td>
+                <td colspan="2"><b>@Model.AppliedCourse.Department.Name</b></td>
+                <td><b></b></td>
+            </tr>
+            <tr>
+                <td><b>UTME SCORE:</b></td>
+                <td colspan="2">
+                    <b>
+                        @Model.ApplicantJambDetail.Subject1.Name (@Model.ApplicantJambDetail.Subject1Score),
+                        @Model.ApplicantJambDetail.Subject2.Name (@Model.ApplicantJambDetail.Subject2Score),
+                        @Model.ApplicantJambDetail.Subject3.Name (@Model.ApplicantJambDetail.Subject3Score),
+                        @Model.ApplicantJambDetail.Subject4.Name (@Model.ApplicantJambDetail.Subject4Score)
+                    </b>
+                </td>
+                <td><b>UTME Score Total: @Model.ApplicantJambDetail.JambScore</b></td>
+            </tr>
+            <tr>
+                <td colspan="4"><h3>SCREENING DETAILS</h3></td>
+            </tr>
+            <tr>
+                <td colspan="4">5 Result loaded from @Model.NumberOfOLevelSitting sitting.</td>
+            </tr>
+            <tr>
+                <td colspan="4">@Model.NumberOfOLevelSubjects subjects with points: @Model.RankedSubjects</td>
+            </tr>
+            <tr>
+                @if (Model.RankingData != null)
+                {
+                    <td colspan="4">Converted 5 subjects total points: @Model.RankingData.OLevelRawScore</td>
+                }
+                else
+                {
+                    <td></td>
+                }
+            </tr>
+            <tr>
+
+                @if (Model.RankingData != null)
+                {
+                    <td colspan="4">Converted UTME Score: @Model.RankingData.JambRawScore</td>
+                }
+                else
+                {
+                    <td></td>
+                }
+            </tr>
+            <tr>
+                @if (Model.RankingData != null)
+                {
+                    <td colspan="4">FINAL AGGREGATE SCORE: 60% OF UTME + 40% OF O'LEVEL SCREENING = @Model.RankingData.Total</td>
+                }
+                else
+                {
+                    <td></td>
+                }
+
+            </tr>
+            <tr></tr>
+            <tr>
+                <td colspan="4">ANALYSIS FOR CHOICE OF COURSE: @Model.AppliedCourse.Department.Name</td>
+            </tr>
+            <tr></tr>
+            <tr>
+                <td colspan="4">5 O'LEVEL SELECTED: @Model.SelectedOLevelSubjects</td>
+            </tr>
+            <tr></tr>
+            <tr>
+                <td colspan="4"><h3><u>INFORMATION TO CANDIDATES</u></h3></td>
+            </tr>
+            <tr>
+                <td colspan="4">Only candidates who participated in the screening exercise will be considered for admission into the Polytechnic.</td>
+            </tr>
+            <tr>
+                <td colspan="4">NOTE: FEDERAL POLYTECHNIC ADO-EKITI WILL NOT TOLERATE ANY FORM OF EXAMINATION MALPRACTICE AND FALSIFICATION OF RESULTS.</td>
+            </tr>
+            <tr></tr>
+            <tr>
+                <td colspan="2">
+                    <p>..............................................</p>
+                    <p>APPLICANT SIGNATURE/DATE.</p>
+                </td>
+            </tr>
+
+        </table>
+
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-md-12 custom-text-black" style="text-align:justify">
+                <br />
+                Dear @Model.Person.FullName,
+                @if (Model.Programme.Id == 1 || Model.Programme.Id == 2)
+                {
+
+                    <p>
+                        I hereby acknowledge the receipt of your application with Application No. <b>@Model.ApplicationFormNumber</b> for admission to this Polytechnic for a course of
+                        study leading to <b>@Model.Programme.ShortName (@Html.DisplayFor(model => model.AppliedCourse.Department.Name))</b>.
+                        Please print your Acknowledgment for record purposes.
+                    </p>
+                }
+                else
+                {
+                    //if (Model.ApplicationForm.Rejected == false)
+                    //{
+                    if (Model.AppliedCourse.Option != null)
+                    {
+                        <p>
+                            I hereby acknowledge the receipt of your application with Application No. <b>@Model.ApplicationFormNumber</b> for admission to this Polytechnic for a course of
+                            study leading to <b>@Model.Programme.ShortName (@Html.DisplayFor(model => model.AppliedCourse.Department.Name) - @Html.DisplayFor(model => model.AppliedCourse.Option.Name))</b>.
+                            Please print your Acknowledgment and Screening Slip by clicking on appropriate button below.
+                        </p>
+                    }
+                    else
+                    {
+                        <p>
+                            I hereby acknowledge the receipt of your application with Application No. <b>@Model.ApplicationFormNumber</b> for admission to this Polytechnic for a course of
+                            study leading to <b>@Model.Programme.ShortName (@Html.DisplayFor(model => model.AppliedCourse.Department.Name))</b>.
+                            Please print your Acknowledgment and Screening Slip by clicking on appropriate button below.
+                        </p>
+                    }
+                    @*}
+                        else
+                        {
+                            <p>
+                                I regret to inform you that your application into the polytechnic was declined because you failed to meet the entry requirements for the applied course.<br />
+
+                                <cite>Reject Reason : @Model.ApplicationForm.RejectReason</cite>
+
+                            </p>
+
+                        }*@
+                }
+
+
+            </div>
+        </div>
+    }
+
+    @if (Model.Programme.Id == 1)
+    {
+
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-md-12 custom-text-black">
+                <br />
+                
+                @*<img src=@Url.Content("~/Content/Images/uRegistrar_signature.jpg") alt="" style="max-height: 50px" />*@
+                <img src=@Url.Content("~/Content/Images/registrar_sign.png") alt="" style="max-height: 50px" />
+                <br />
+                <h5>F. B. Akintola</h5>
+                <p>For: Registrar</p>
+            </div>
+        </div>
+        <hr class="no-top-padding" />
+    }
+
+</div>
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-actions no-color">
+            <div class="card " style="padding-top:0px">
+                <button id="aPrint" class="btn btn-white btn-lg "><i class="fa fa-print mr5"></i> Print Slip</button>
+
+                @*@if (Model.Programme.Id == 1 || Model.Programme.Id == 2)
+                    {
+                        @Html.ActionLink("Print Screening Slip","ExamSlip",null,new { @class = "btn btn-white btn-lg ",target = "_blank" })
+                    }
+                    else
+                    {
+                        if (Model.ApplicationForm.Rejected == false)
+                        {
+                            @Html.ActionLink("Print Screening Slip", "ExamSlip", null, new { @class = "btn btn-white btn-lg", target = "_blank" })
+                        }
+                        else
+                        {
+                            @Html.ActionLink("Fill Another Form", "FillApplicationForm", null, new { @class = "btn btn-white btn-lg" })
+                        }
+                    }*@
+
+                <a class="btn btn-white btn-lg " href="http://www.fedpolyado.edu.ng/"><i class="fa fa-home mr5"></i>Back to Home</a>
+            </div>
+        </div>
+    </div>
+</div>

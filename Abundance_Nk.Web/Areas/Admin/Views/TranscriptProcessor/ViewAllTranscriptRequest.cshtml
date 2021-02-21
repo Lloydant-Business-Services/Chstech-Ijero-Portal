@@ -1,0 +1,215 @@
+﻿@model Abundance_Nk.Web.Areas.Applicant.ViewModels.TranscriptViewModel
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.4.1/css/buttons.dataTables.min.css">
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.flash.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.html5.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.print.min.js"></script>
+
+@section Scripts {
+
+    <link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+
+
+    @Scripts.Render("~/bundles/jquery")
+
+    
+
+    <style>
+        .modal-backdrop.in {
+            z-index: 0 !important
+        }
+
+        .btn-primary {
+            background: #5b796e !important
+        }
+    </style>
+
+
+
+
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/file-upload/jquery-ui-1.9.2.min.js"></script>
+
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+
+            $('#example').DataTable({
+                dom: 'Bfrtip',
+                ordering: true,
+                retrieve: true,
+                buttons: [
+                    {
+                        extend: 'copy',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, , 'colvis'
+                ]
+            });
+        });
+    </script>
+
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h4>This interface basically presents the Transcript Officer with a detailed and wholistic list of Transcript Requests</h4>
+                <p>
+                    Whether pending or completed
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+
+       
+        <div>
+
+            
+            @if (Model != null && Model.TranscriptRequests != null && Model.TranscriptRequests.Count > 0)
+            {
+
+                <div style="width:100%; align-content:flex-end">
+
+                </div>
+              
+                <br />
+
+               
+
+                <table id="example" class="display nowrap table-responsive" style="width:100%">
+                    <thead>
+                        <tr class="well" style="height:35px; vertical-align:middle">
+                            <th>
+                                SN
+                            </th>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Email
+                            </th>
+                            <th>
+                               Matriculation Number
+                            </th>
+                            <th>
+                                Payment Status
+                            </th>
+                          
+                            <th>
+                                Date Requested
+                            </th>
+                            
+                         
+                        </tr>
+                    </thead>
+
+
+                    @for (int i = 0; i < Model.TranscriptRequests.Count; i++)
+                    {
+                        var sn = i + 1;
+                        <tr>
+                            <td>
+                                @sn
+                            </td>
+                            <td>
+                                @Model.TranscriptRequests[i].student.FullName.ToUpper()
+                            </td>
+                            
+                               @if (!String.IsNullOrEmpty(Model.TranscriptRequests[i].Email))
+                               {
+                                  <td>@Model.TranscriptRequests[i].Email</td>
+                               }
+                               else
+                               {
+                                   <td>-</td>
+                               }
+                            <td>
+                                @Model.TranscriptRequests[i].student.MatricNumber
+                            </td>
+                            <td>
+                               @Model.TranscriptRequests[i].transcriptStatus.TranscriptStatusName
+                            </td>
+                            @*<td>
+                                @Model.TranscriptRequests[i].transcriptClearanceStatus.TranscriptClearanceStatusName
+                            </td>*@
+                            <td>
+                                @Model.TranscriptRequests[i].DateRequested
+                            </td>
+                           
+
+                          
+                        </tr>
+                    }
+
+
+
+                </table>
+            }
+
+
+
+        </div>
+    </div>
+
+
+</div>
+
+<!-- Modal Small -->
+<div class="modal fade" id="modal-reject" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Reject Applicant</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="remark" class="form-control col-md-2" placeholder="Reject Reason..." />
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="rejectApplicant()" class="btn btn-primary btn-sm">Save</button>
+                <button type="button" class="btn btn-dark btn-sm" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

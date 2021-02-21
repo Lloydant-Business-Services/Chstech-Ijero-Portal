@@ -1,0 +1,1002 @@
+﻿@model Abundance_Nk.Web.Areas.Student.ViewModels.RegistrationViewModel
+
+@{
+    //Layout = null;
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+@*<link href="~/Content/bootstrap-theme.css" rel="stylesheet" />
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<link href="~/Content/bootstrap-override.css" rel="stylesheet" />
+<link href="~/Content/style.default.css" rel="stylesheet" />
+<link href="~/Content/misc.css" rel="stylesheet" />*@
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#submit').attr('disabled', 'disabled');
+
+            $('#checkboxDefault').click(function () {
+                if ($(this).is(':checked')) {
+                    $('#submit').removeAttr('disabled');
+                } else {
+
+                    $('#submit').attr('disabled', 'disabled');
+                }
+            });
+        });
+
+    </script>
+
+}
+
+<div class="row">
+
+    <div class="col-md-12 card p-5">
+        <div class="panel-body">
+            <div class="col-md-12">
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12 ">
+                                <div class="col-md-1"></div>
+                                <div class="col-md-10">
+                                    <div>
+                                        @if (TempData["Message"] != null)
+                                        {
+                                            @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+                                        }
+                                    </div>
+
+                                    @using (Html.BeginForm())
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        @Html.ValidationSummary(true)
+
+                                        <center>
+
+                                            <div class="alert alert-success fade in nomargin">
+                                                <h2>
+                                                    <b>@Model.StudentLevel.Programme.Name</b>
+                                                </h2>
+                                                <p>Kindly fill all the fields provided in this form before clicking the Submit button</p>
+                                            </div>
+
+                                            <br />
+                                        </center>
+
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <div style="font-size: x-large">Student Personal Information</div>
+
+
+
+                                                @if (Model.Student != null && Model.Student.Id > 0)
+                                                {
+                                                    @Html.HiddenFor(model => model.Student.Id)
+                                                }
+
+                                                @if (Model.StudentLevel.DepartmentOption != null && Model.StudentLevel.DepartmentOption.Id > 0)
+                                                {
+                                                    @Html.HiddenFor(model => model.StudentLevel.DepartmentOption.Id)
+                                                    @Html.HiddenFor(model => model.StudentLevel.DepartmentOption.Name)
+                                                }
+
+                                                @Html.HiddenFor(model => model.Programme.Id)
+                                                @Html.HiddenFor(model => model.Programme.Name)
+                                                @Html.HiddenFor(model => model.Programme.ShortName)
+
+                                                @Html.HiddenFor(model => model.StudentLevel.Programme.Id)
+                                                @Html.HiddenFor(model => model.StudentLevel.Programme.Name)
+                                                @Html.HiddenFor(model => model.StudentLevel.Department.Id)
+                                                @Html.HiddenFor(model => model.StudentLevel.Department.Name)
+                                                @Html.HiddenFor(model => model.StudentLevel.Department.Faculty.Id)
+                                                @Html.HiddenFor(model => model.StudentLevel.Department.Faculty.Name)
+
+                                                @Html.HiddenFor(model => model.Person.Id)
+                                                @Html.HiddenFor(model => model.Payment.Id)
+
+                                                @Html.HiddenFor(model => model.Person.DateEntered)
+                                                @Html.HiddenFor(model => model.Person.FullName)
+
+                                                @Html.HiddenFor(model => model.PreviousEducation.Id)
+                                                @Html.HiddenFor(model => model.StudentEmploymentInformation.Id)
+                                                @Html.HiddenFor(model => model.StudentAlreadyExist)
+                                            </div>
+
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <img src="@Url.Content('~' + Model.Person.ImageFileUrl)" alt=" " style="max-width: 150px" />
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        <div class="row">
+                                           
+
+                                            <div class="col-md-6">
+                                                <div class="form-group margin-bottom-0">
+                                                    <div class="col-md-4">
+                                                        @Html.LabelFor(model => model.Student.Title.Id, new {@class = "control-label "})
+                                                    </div>
+                                                    <div class="col-md-8 ">
+                                                        @Html.DisplayFor(model => model.Student.Title.Name)
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group margin-bottom-0">
+                                                    <div class="col-md-4">
+                                                        @Html.LabelFor(model => model.Person.LastName, new {@class = "control-label "})
+                                                    </div>
+                                                    <div class="col-md-8 ">
+                                                        @Html.DisplayFor(model => model.Person.LastName)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group margin-bottom-0">
+                                                    <div class="col-md-4">
+                                                        @Html.LabelFor(model => model.Person.FirstName, new {@class = "control-label "})
+                                                    </div>
+                                                    <div class="col-md-8 ">
+                                                        @Html.DisplayFor(model => model.Person.FirstName)
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group margin-bottom-0">
+                                                    <div class="col-md-4">
+                                                        @Html.LabelFor(model => model.Person.OtherName, new {@class = "control-label "})
+                                                    </div>
+                                                    <div class="col-md-8 ">
+                                                        @Html.DisplayFor(model => model.Person.OtherName)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group margin-bottom-0">
+                                                    <div class="col-md-4">
+                                                        @Html.LabelFor(model => model.Person.Sex.Id, new {@class = "control-label "})
+                                                    </div>
+                                                    <div class="col-md-8 ">
+                                                        @Html.DisplayFor(f => f.Person.Sex.Name)
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group margin-bottom-0">
+                                                    <div class="col-md-4">
+                                                        @Html.LabelFor(model => model.Student.MaritalStatus.Id, new {@class = "control-label "})
+                                                    </div>
+                                                    <div class="col-md-8 ">
+                                                        @Html.DisplayFor(f => f.Student.MaritalStatus.Name)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group margin-bottom-0">
+                                                    <div class="col-md-4">
+                                                        @Html.LabelFor(model => model.Person.DateOfBirth, new {@class = "control-label "})
+                                                    </div>
+                                                    <div class="col-md-8 ">
+                                                        @Html.DisplayFor(model => model.Person.DateOfBirth, "{0:dd/MM/yyyy}", new {@class = "form-control datepicker"})
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group margin-bottom-0">
+                                                    <div class="col-md-4">
+                                                        @Html.LabelFor(model => model.Person.Religion.Id, new {@class = "control-label "})
+                                                    </div>
+                                                    <div class="col-md-8 ">
+                                                        @Html.DisplayFor(model => model.Person.Religion.Name)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group margin-bottom-0">
+                                                    <div class="col-md-4">
+                                                        @Html.LabelFor(model => model.Person.State.Id, new {@class = "control-label "})
+                                                    </div>
+                                                    <div class="col-md-8 ">
+                                                        @Html.DisplayFor(model => model.Person.State.Name)
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group margin-bottom-0">
+                                                    <div class="col-md-4">
+                                                        @Html.LabelFor(model => model.Person.LocalGovernment.Id, new {@class = "control-label "})
+                                                    </div>
+                                                    <div class="col-md-8 ">
+                                                        @Html.DisplayFor(model => model.Person.LocalGovernment.Name)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group margin-bottom-0">
+                                                    <div class="col-md-4">
+                                                        @Html.LabelFor(model => model.Person.HomeTown, new {@class = "control-label "})
+                                                    </div>
+                                                    <div class="col-md-8 ">
+                                                        @Html.DisplayFor(model => model.Person.HomeTown)
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group margin-bottom-0">
+                                                    <div class="col-md-4">
+                                                        @Html.LabelFor(model => model.Person.MobilePhone, new {@class = "control-label "})
+                                                    </div>
+                                                    <div class="col-md-8 ">
+                                                        @Html.DisplayFor(model => model.Person.MobilePhone)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group margin-bottom-0">
+                                                    <div class="col-md-4">
+                                                        @Html.LabelFor(model => model.Student.SchoolContactAddress, new {@class = "control-label "})
+                                                    </div>
+                                                    <div class="col-md-8 ">
+                                                        @Html.DisplayFor(model => model.Student.SchoolContactAddress)
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group margin-bottom-0">
+                                                    <div class="col-md-4">
+                                                        @Html.LabelFor(model => model.Student.BloodGroup.Id, new {@class = "control-label "})
+                                                    </div>
+                                                    <div class="col-md-8 ">
+                                                        @Html.DisplayFor(model => model.Student.BloodGroup.Name)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group margin-bottom-0">
+                                                    <div class="col-md-4">
+                                                        @Html.LabelFor(model => model.Student.Genotype.Id, new {@class = "control-label "})
+                                                    </div>
+                                                    <div class="col-md-8 ">
+                                                        @Html.DisplayFor(model => model.Student.Genotype.Name)
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group margin-bottom-0">
+                                                    <div class="col-md-4">
+                                                        @Html.LabelFor(model => model.Person.Email, new {@class = "control-label "})
+                                                    </div>
+                                                    <div class="col-md-8 ">
+                                                        @Html.DisplayFor(model => model.Person.Email)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        </div>
+                                        </div>
+
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <div style="font-size: x-large">Student Academic Details</div>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group margin-bottom-0">
+                                                            <div class="col-md-4">
+                                                                @Html.LabelFor(model => model.StudentAcademicInformation.ModeOfEntry.Id)
+                                                            </div>
+                                                            <div class="col-md-8 ">
+                                                                @Html.DisplayFor(model => model.StudentAcademicInformation.ModeOfEntry.Name)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group margin-bottom-0">
+                                                            <div class="col-md-4">
+                                                                @Html.LabelFor(model => model.StudentAcademicInformation.ModeOfStudy.Id, new { @class = "control-label " })
+                                                            </div>
+                                                            <div class="col-md-8 ">
+                                                                @Html.DisplayFor(model => model.StudentAcademicInformation.ModeOfStudy.Name)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group margin-bottom-0">
+                                                            <div class="col-md-4">
+                                                                @Html.LabelFor(model => model.StudentLevel.Programme.Id, new { @class = "control-label " })
+                                                            </div>
+                                                            <div class="col-md-8 ">
+                                                                @Html.DisplayFor(model => model.StudentLevel.Programme.Name)
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group margin-bottom-0">
+                                                            <div class="col-md-4">
+                                                                @Html.LabelFor(model => model.StudentLevel.Department.Faculty.Id, new { @class = "control-label " })
+                                                            </div>
+                                                            <div class="col-md-8 ">
+                                                                @Html.DisplayFor(model => model.StudentLevel.Department.Faculty.Name)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group margin-bottom-0">
+                                                            <div class="col-md-4">
+                                                                @Html.Label("Department", new { @class = "control-label " })
+                                                            </div>
+                                                            <div class="col-md-8 ">
+                                                                @Html.DisplayFor(model => model.StudentLevel.Department.Name)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group margin-bottom-0">
+                                                            <div class="col-md-4">
+                                                                @Html.Label("Course of Study", new { @class = "control-label " })
+                                                            </div>
+                                                            <div class="col-md-8 ">
+                                                                @Html.DisplayFor(model => model.StudentLevel.DepartmentOption.Name)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group margin-bottom-0">
+                                                            <div class="col-md-4">
+                                                                @Html.LabelFor(model => model.Student.Type.Id, new { @class = "control-label " })
+                                                            </div>
+                                                            <div class="col-md-8 ">
+                                                                @Html.DisplayFor(model => model.Student.Category.Name)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group margin-bottom-0">
+                                                            <div class="col-md-4">
+                                                                @Html.LabelFor(model => model.Student.Status.Id, new { @class = "control-label " })
+                                                            </div>
+                                                            <div class="col-md-8 ">
+                                                                @Html.DisplayFor(model => model.Student.Type.Name)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group margin-bottom-0">
+                                                            <div class="col-md-4">
+                                                                @Html.LabelFor(model => model.Student.MatricNumber, new { @class = "control-label " })
+                                                            </div>
+                                                            <div class="col-md-8 ">
+                                                                @Html.DisplayFor(model => model.Student.MatricNumber)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        @*<div class="form-group margin-bottom-0">
+                                                                <div class="col-md-4">
+                                                                    @Html.LabelFor(model => model.ApplicantJambDetail.JambRegistrationNumber, new { @class = "control-label" })
+                                                                </div>
+                                                                <div class="col-md-8 text-bold">
+                                                                    @Html.DisplayFor(model => model.ApplicantJambDetail.JambRegistrationNumber)
+                                                                </div>
+                                                            </div>*@
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group margin-bottom-0">
+                                                            <div class="col-md-4">
+                                                                @Html.LabelFor(model => model.StudentAcademicInformation.YearOfAdmission, new { @class = "control-label " })
+                                                            </div>
+                                                            <div class="col-md-8 ">
+                                                                @Html.DisplayFor(model => model.StudentAcademicInformation.YearOfAdmission)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group margin-bottom-0">
+                                                            <div class="col-md-4">
+                                                                @Html.LabelFor(model => model.StudentAcademicInformation.YearOfGraduation, new { @class = "control-label " })
+                                                            </div>
+                                                            <div class="col-md-8 ">
+                                                                @Html.DisplayFor(model => model.StudentAcademicInformation.YearOfGraduation)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group margin-bottom-0">
+                                                            <div class="col-md-4">
+                                                                @Html.LabelFor(model => model.StudentAcademicInformation.Level.Id, new { @class = "control-label " })
+                                                            </div>
+                                                            <div class="col-md-8 ">
+                                                                @Html.DisplayFor(model => model.StudentAcademicInformation.Level.Name)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+                                        </div>
+
+
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <div style="font-size: x-large">Student Finance Details</div>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group margin-bottom-0">
+                                                            <div class="col-md-4">
+                                                                @Html.LabelFor(model => model.StudentFinanceInformation.Mode.Id, new { @class = "control-label " })
+                                                            </div>
+                                                            <div class="col-md-8 ">
+                                                                @Html.DisplayFor(model => model.StudentFinanceInformation.Mode.Name)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group margin-bottom-0">
+                                                            <div class="col-md-4">
+                                                                @Html.LabelFor(model => model.StudentFinanceInformation.ScholarshipTitle, new { @class = "control-label " })
+                                                            </div>
+                                                            <div class="col-md-8 ">
+                                                                @Html.DisplayFor(model => model.StudentFinanceInformation.ScholarshipTitle)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <div style="font-size: x-large">Next of Kin Details</div>
+                                            </div>
+                                            <div class="panel-body">
+
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group margin-bottom-0">
+                                                            <div class="col-md-4">
+                                                                @Html.LabelFor(model => model.NextOfKin.Name, new { @class = "control-label " })
+                                                            </div>
+                                                            <div class="col-md-8 ">
+                                                                @Html.DisplayFor(model => model.NextOfKin.Name)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group margin-bottom-0">
+                                                            <div class="col-md-4">
+                                                                @Html.LabelFor(model => model.NextOfKin.ContactAddress, new { @class = "control-label " })
+                                                            </div>
+                                                            <div class="col-md-8 ">
+                                                                @Html.DisplayFor(model => model.NextOfKin.ContactAddress)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group margin-bottom-0">
+                                                            <div class="col-md-4">
+                                                                @Html.LabelFor(model => model.NextOfKin.Relationship.Id, new { @class = "control-label " })
+                                                            </div>
+                                                            <div class="col-md-8 ">
+                                                                @Html.DisplayFor(model => model.NextOfKin.Relationship.Name)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group margin-bottom-0">
+                                                            <div class="col-md-4">
+                                                                @Html.LabelFor(model => model.NextOfKin.MobilePhone, new { @class = "control-label " })
+                                                            </div>
+                                                            <div class="col-md-8 ">
+                                                                @Html.DisplayFor(model => model.NextOfKin.MobilePhone, new { @class = "form-control applicant" })
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <div style="font-size: x-large">Sponsor Details</div>
+                                            </div>
+                                            <div class="panel-body">
+
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group margin-bottom-0">
+                                                            <div class="col-md-4">
+                                                                @Html.LabelFor(model => model.StudentSponsor.Name, new { @class = "control-label " })
+                                                            </div>
+                                                            <div class="col-md-8 ">
+                                                                @Html.DisplayFor(model => model.StudentSponsor.Name)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group margin-bottom-0">
+                                                            <div class="col-md-4">
+                                                                @Html.LabelFor(model => model.StudentSponsor.ContactAddress, new { @class = "control-label " })
+                                                            </div>
+                                                            <div class="col-md-8 ">
+                                                                @Html.DisplayFor(model => model.StudentSponsor.ContactAddress)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group margin-bottom-0">
+                                                            <div class="col-md-4">
+                                                                @Html.LabelFor(model => model.StudentSponsor.Relationship.Id, new { @class = "control-label " })
+                                                            </div>
+                                                            <div class="col-md-8 ">
+                                                                @Html.DisplayFor(model => model.StudentSponsor.Relationship.Name)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group margin-bottom-0">
+                                                            <div class="col-md-4">
+                                                                @Html.LabelFor(model => model.StudentSponsor.MobilePhone, new { @class = "control-label " })
+                                                            </div>
+                                                            <div class="col-md-8 ">
+                                                                @Html.DisplayFor(model => model.StudentSponsor.MobilePhone)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group margin-bottom-0">
+                                                            <div class="col-md-4">
+                                                                @Html.LabelFor(model => model.StudentSponsor.Email, new { @class = "control-label " })
+                                                            </div>
+                                                            <div class="col-md-8 ">
+                                                                @Html.DisplayFor(model => model.StudentSponsor.Email)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        if (Model.StudentLevel.Programme.Id == 3 || Model.StudentLevel.Programme.Id == 4)
+                                        {
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <div style="font-size: x-large">Student Other Details</div>
+                                                </div>
+                                                <div class="panel-body">
+
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group margin-bottom-0">
+                                                                <div class="col-md-4">
+                                                                    @Html.LabelFor(model => model.PreviousEducation.SchoolName, new { @class = "control-label " })
+                                                                </div>
+                                                                <div class="col-md-8 ">
+                                                                    @Html.DisplayFor(model => model.PreviousEducation.SchoolName)
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group margin-bottom-0">
+                                                                <div class="col-md-4">
+                                                                    <div>Institution Enrollment Date</div>
+                                                                </div>
+                                                                <div class="col-md-8 ">
+                                                                    @Html.DisplayFor(model => model.PreviousEducation.StartDate, "{0:dd/MM/yyyy}")
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group margin-bottom-0">
+                                                                <div class="col-md-4">
+                                                                    @Html.LabelFor(model => model.PreviousEducation.EndDate)
+                                                                </div>
+                                                                <div class="col-md-8 ">
+                                                                    @Html.DisplayFor(model => model.PreviousEducation.EndDate, "{0:dd/MM/yyyy}")
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group margin-bottom-0">
+                                                                <div class="col-md-4">
+                                                                    @Html.LabelFor(model => model.StudentEmploymentInformation.PlaceOfLastEmployment, new { @class = "control-label " })
+                                                                </div>
+                                                                <div class="col-md-8 ">
+                                                                    @Html.DisplayFor(model => model.StudentEmploymentInformation.PlaceOfLastEmployment)
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group margin-bottom-0">
+                                                                <div class="col-md-4">
+                                                                    Last Employment Start Date
+                                                                </div>
+                                                                <div class="col-md-8 ">
+                                                                    @Html.DisplayFor(model => model.StudentEmploymentInformation.StartDate, "{0:dd/MM/yyyy}")
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group margin-bottom-0">
+                                                                <div class="col-md-4">
+                                                                    Last Employment End Date
+                                                                </div>
+                                                                <div class="col-md-8 ">
+                                                                    @Html.DisplayFor(model => model.StudentEmploymentInformation.EndDate, "{0:dd/MM/yyyy}")
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        }
+
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <div style="font-size: x-large">O-Level Result</div>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <h5>First Sitting</h5>
+                                                        <hr class="no-top-padding" />
+
+                                                        <div>
+                                                            <div class="form-group margin-bottom-0">
+                                                                @Html.LabelFor(model => model.FirstSittingOLevelResult.Type.Id, "Type", new { @class = "control-label col-md-3" })
+                                                                <div class="col-md-9 ">
+                                                                    @Html.DisplayFor(model => model.FirstSittingOLevelResult.Type.Name)
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group margin-bottom-0">
+                                                                @Html.LabelFor(model => model.FirstSittingOLevelResult.ExamNumber, new { @class = "control-label col-md-3" })
+                                                                <div class="col-md-9 ">
+                                                                    @Html.DisplayFor(model => model.FirstSittingOLevelResult.ExamNumber)
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="form-group margin-bottom-0">
+                                                                @Html.LabelFor(model => model.FirstSittingOLevelResult.ExamYear, new { @class = "control-label col-md-3" })
+                                                                <div class="col-md-9 ">
+                                                                    @Html.DisplayFor(model => model.FirstSittingOLevelResult.ExamYear)
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <table class="table table-condensed table-responsive" style="background-color: whitesmoke">
+                                                            <tr>
+                                                                <th>
+                                                                    Subject
+                                                                </th>
+                                                                <th>
+                                                                    Grade
+                                                                </th>
+                                                                <th></th>
+                                                            </tr>
+
+                                                            @for (int i = 0; i < 9; i++)
+                                                            {
+                                                                if (Model.FirstSittingOLevelResultDetails[i].Subject != null)
+                                                                {
+                                                                    <tr>
+                                                                        <td>
+                                                                            @Html.DisplayFor(model => model.FirstSittingOLevelResultDetails[i].Subject.Name)
+                                                                        </td>
+                                                                        <td>
+                                                                            @Html.DisplayFor(model => model.FirstSittingOLevelResultDetails[i].Grade.Name)
+                                                                        </td>
+                                                                    </tr>
+                                                                }
+
+                                                                @*<tr>
+                                                                        <td>
+                                                                            @Html.DisplayFor(model => model.FirstSittingOLevelResultDetails[i].Subject.Name)
+                                                                        </td>
+                                                                        <td>
+                                                                            @Html.DisplayFor(model => model.FirstSittingOLevelResultDetails[i].Grade.Name)
+                                                                        </td>
+                                                                    </tr>*@
+                                                            }
+
+                                                        </table>
+
+                                                    </div>
+
+
+                                                    <div class="col-md-6">
+                                                        <h5>Second Sitting</h5>
+                                                        <hr class="no-top-padding" />
+
+                                                        @if (Model.SecondSittingOLevelResult != null && !string.IsNullOrEmpty(Model.SecondSittingOLevelResult.ExamNumber) && Model.SecondSittingOLevelResult.ExamYear > 0)
+                                                        {
+                                                            <div>
+                                                                <div class="form-group margin-bottom-0">
+                                                                    @Html.LabelFor(model => model.SecondSittingOLevelResult.Type.Id, "Type", new { @class = "control-label col-md-3" })
+                                                                    <div class="col-md-9 ">
+
+                                                                        @Html.DisplayFor(model => model.SecondSittingOLevelResult.Type.Name)
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="form-group margin-bottom-0">
+                                                                    @Html.LabelFor(model => model.SecondSittingOLevelResult.ExamNumber, new { @class = "control-label col-md-3" })
+                                                                    <div class="col-md-9 ">
+
+                                                                        @Html.DisplayFor(model => model.SecondSittingOLevelResult.ExamNumber)
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="form-group margin-bottom-0">
+                                                                    @Html.LabelFor(model => model.SecondSittingOLevelResult.ExamYear, new { @class = "control-label col-md-3" })
+                                                                    <div class="col-md-9 ">
+                                                                        @Html.DisplayFor(model => model.SecondSittingOLevelResult.ExamYear)
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+
+                                                            <table class="table table-condensed table-responsive" style="background-color: whitesmoke">
+                                                                <tr>
+                                                                    <th>
+                                                                        Subject
+                                                                    </th>
+                                                                    <th>
+                                                                        Grade
+                                                                    </th>
+                                                                    <th></th>
+                                                                </tr>
+
+                                                                @for (int i = 0; i < 9; i++)
+                                                                {
+                                                                    if (Model.SecondSittingOLevelResultDetails[i].Subject != null)
+                                                                    {
+                                                                        <tr>
+                                                                            <td>
+                                                                                @Html.DisplayFor(model => model.SecondSittingOLevelResultDetails[i].Subject.Name)
+                                                                            </td>
+                                                                            <td>
+                                                                                @Html.DisplayFor(model => model.SecondSittingOLevelResultDetails[i].Grade.Name)
+                                                                            </td>
+                                                                        </tr>
+                                                                    }
+
+                                                                    @*<tr>
+                                                                            <td>
+                                                                                @Html.DisplayFor(model => model.SecondSittingOLevelResultDetails[i].Subject.Name)
+                                                                            </td>
+                                                                            <td>
+                                                                                @Html.DisplayFor(model => model.SecondSittingOLevelResultDetails[i].Grade.Name)
+                                                                            </td>
+                                                                        </tr>*@
+                                                                }
+
+                                                            </table>
+                                                        }
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        if (Model.StudentLevel.Programme.Id == 3 || Model.StudentLevel.Programme.Id == 4)
+                                        {
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <div style="font-size: x-large">National Diploma Result</div>
+                                                </div>
+                                                <div class="panel-body">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group margin-bottom-0">
+                                                                <div class="col-md-4">
+                                                                    @Html.LabelFor(model => model.PreviousEducation.SchoolName, new { @class = "control-label" })
+                                                                </div>
+                                                                <div class="col-md-8 ">
+                                                                    @Html.DisplayFor(model => model.PreviousEducation.SchoolName)
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group margin-bottom-0">
+                                                                <div class="col-md-4">
+                                                                    @Html.LabelFor(model => model.PreviousEducation.ResultGrade.Id, new { @class = "control-label" })
+                                                                </div>
+                                                                <div class="col-md-8 ">
+                                                                    @Html.DisplayFor(model => model.PreviousEducation.ResultGrade.LevelOfPass)
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group margin-bottom-0">
+                                                                <div class="col-md-4">
+                                                                    @Html.LabelFor(model => model.StudentNdResult.DateAwarded, new { @class = "control-label " })
+                                                                </div>
+                                                                <div class="col-md-8 ">
+                                                                    @Html.DisplayFor(model => model.StudentNdResult.DateAwarded, "{0:dd/MM/yyyy}")
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group margin-bottom-0">
+                                                                <div class="col-md-4">
+                                                                    @Html.LabelFor(model => model.StudentLevel.Department.Id, new { @class = "control-label" })
+                                                                </div>
+                                                                <div class="col-md-8 ">
+                                                                    @Html.DisplayFor(model => model.StudentLevel.Department.Name)
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <div style="font-size: x-large">Declaration</div>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <blockquote>
+                                                            @*<i class="fa fa-quote-left"></i>*@
+                                                            <p>
+                                                                I hereby acknowledge by ticking this check box that if it is discovered at any time that I do not possess any of the qualifications which I claim
+                                                                I have obtained, I will be expelled from the Polytechnic and shall not be re-admitted for the same or any other programme, even if I have upgraded my previous qualifications or possess additional qualifications.
+                                                            </p>
+                                                        </blockquote>
+
+                                                        <div class="ckbox ckbox-default">
+                                                            <input type="checkbox" id="checkboxDefault" />
+                                                            <label for="checkboxDefault"><b style="font-size: 13pt">I Agree</b></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-actions no-color">
+                                            <button class="btn btn-white btn-lg" type="submit" name="submit" id="submit"><i class="fa fa-save mr5"></i> Submit</button>
+                                            @Html.ActionLink("Back to Form", "Form", new { sid = Model.Person.Id, pid = Model.StudentLevel.Programme.Id }, new { @class = "btn btn-white btn-lg mr5" })
+                                            <div id="busy" style="display: none">Processing ...</div>
+                                        </div>
+
+                                        <br />
+
+                                        <div>
+                                            @if (TempData["Message"] != null)
+                                            {
+                                                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+                                            }
+                                        </div>
+
+                                    }
+                                </div>
+                                <div class="col-md-1"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

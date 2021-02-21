@@ -1,0 +1,120 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.StudentCourseRegistrationViewModel
+@{
+    ViewBag.Title = "ViewConfirmedpayments";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div>
+    @if (TempData["Message"] != null)
+    {
+        @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+    }
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">View Confirmed payments</h4>
+    </div>
+    <div class="panel-body">
+
+        @using (Html.BeginForm("ViewConfirmedpayments", "StudentCourseRegistration", new { Area = "Admin" }, FormMethod.Post))
+        {
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @Html.ValidationSummary(true)
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Student.MatricNumber, "Matric Number: ", new { @class = "col-md-3 control-label" })
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(m => m.Student.MatricNumber, new { @class = "form-control", @required = "required" })
+                            @Html.ValidationMessageFor(m => m.Student.Id, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-3 col-md-9">
+                            <input type="submit" value="Submit" class="btn btn-success" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+
+    <br />
+    <div class="panel-body">
+        <div class="col-md-12">
+
+
+            @if (Model.PaymentEtranzacts != null && Model.PaymentEtranzacts.Count > 0)
+            {
+                <div class="panel panel-danger">
+                    <div class="panel-body">
+
+                        <table class="table-bordered table-hover table-striped table-responsive table">
+                            <tr>
+                                <th>
+                                    Name
+                                </th>
+                                <th>
+                                    Confirmation Order Number
+                                </th>
+                                <th>
+                                    Amount
+                                </th>
+                                <th>
+                                    Invoice Number
+                                </th>
+                                <th>
+                                    FeeType
+                                </th>
+                                <th>
+                                    Session
+                                </th>
+                                <th>
+                                    Edit
+                                </th>
+                            </tr>
+
+                            @for (int i = 0; i < Model.PaymentEtranzacts.Count; i++)
+                            {
+                                <tr>
+
+                                    @Html.HiddenFor(model => model.PaymentEtranzacts[i].Payment.Payment.Id)
+
+                                    <td>
+                                        @Model.PaymentEtranzacts[i].Payment.Payment.Person.FullName
+                                    </td>
+                                    <td>
+                                        @Model.PaymentEtranzacts[i].ConfirmationNo
+                                    </td>
+                                    <td>
+                                        @Model.PaymentEtranzacts[i].TransactionAmount
+                                    </td>
+                                    <td>
+                                        @Model.PaymentEtranzacts[i].Payment.Payment.InvoiceNumber
+                                    </td>
+                                    <td>
+                                        @Model.PaymentEtranzacts[i].Payment.Payment.FeeType.Name
+                                    </td>
+                                    <td>
+                                        @Model.PaymentEtranzacts[i].Payment.Payment.Session.Name
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink("Edit", "EditConfirmedPayment", "StudentCourseRegistration", new { Area = "Admin", pid = Model.PaymentEtranzacts[i].Payment.Payment.Id }, new { @class = "btn btn-success " })
+                                    </td>
+                                </tr>
+                            }
+
+                        </table>
+
+                    </div>
+                </div>
+
+            }
+
+        </div>
+    </div>
+
+</div>

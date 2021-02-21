@@ -1,0 +1,46 @@
+﻿@model Abundance_Nk.Model.Model.Invoice
+
+@{
+    Layout = null;
+}
+
+<script src="~/Scripts/jquery-2.1.3.js"></script>
+<script src="~/Scripts/jquery.print.js"></script>
+
+<script src="~/Scripts/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            alert("");
+            window.print();
+        });
+
+    </script>
+    
+
+@if (TempData["Message"] != null)
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <br />
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            </div>
+        </div>
+    </div>
+}
+
+@if(Model != null )
+{
+    @Html.Partial("_Invoice", Model)
+}
+
+
+@*@using (Html.BeginForm("Invoice", "Admission", FormMethod.Get, new { target = "_blank" }))
+{
+    if(Model != null )
+    {
+        @Html.Partial("_Invoice", Model)
+    }
+}*@
+

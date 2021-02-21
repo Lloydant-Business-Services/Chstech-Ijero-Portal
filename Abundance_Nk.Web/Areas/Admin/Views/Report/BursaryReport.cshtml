@@ -1,0 +1,38 @@
+﻿
+@{
+    ViewBag.Title = "BursaryReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+    <script src="~/Scripts/responsive-tabs.js"></script>
+
+    <script type="text/javascript">
+               function resizeIframe(obj) {
+            obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+        }
+    </script>
+}
+
+<div style="color:black">
+    <h3>
+        Bursary Report
+    </h3>
+</div>
+
+<div class="alert alert-dismissible alert-success">
+    <p>
+        <b> Bursary Report </b> displays an exportable and printable report of the students that have school fees.
+    </p>
+</div>
+
+<iframe src="@Url.Content("~/Reports/Presenter/BursaryReport.aspx?sessionId=" + (string)ViewBag.sessionId + "&levelId=" + (string)ViewBag.levelId + "&progId=" + (string)ViewBag.progId + "&deptId=" + (string)ViewBag.deptId + "&feeTypeId=" + (string)ViewBag.feeTypeId + "&paymentModeId=" + (string)ViewBag.paymentModeId)" style="width:100%; " frameborder="0" scrolling="no" id="iframe" onload='javascript:resizeIframe(this);'></iframe>
+
+
+<br />
+

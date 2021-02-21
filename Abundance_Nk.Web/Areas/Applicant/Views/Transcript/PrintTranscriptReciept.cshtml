@@ -1,0 +1,75 @@
+﻿@{
+    ViewBag.Title = "Print Receipt";
+    Layout = "~/Views/Shared/_NewThemeLayout.cshtml";
+}
+
+<div>
+    @if (TempData["Message"] != null)
+    {
+        @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+    }
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>
+            Print Receipt
+        </h2>
+    </div>
+    <hr />
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+
+            @using (Html.BeginForm("PrintTranscriptReciept", "Transcript", FormMethod.Post, new { id = "frmIndex", enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+
+                <div class="row">
+                    <h4>Enter your payment RRR and click the generate button to generate receipt</h4>
+                    <hr style="margin-top:0" />
+                    <div class="col-md-12">
+
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                    <label class="form-control">RRR</label>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input class="form-control" type="text" name="rrr" maxlength="12" min="12" required />
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <input class="btn btn-success btn-lg mr5" type="submit" name="submit" id="submit" value="Generate" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <br />
+            }
+
+        </div>
+
+    </div>
+    <div class="col-md-1"></div>
+</div>

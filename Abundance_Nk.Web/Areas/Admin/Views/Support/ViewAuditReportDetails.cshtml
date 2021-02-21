@@ -1,0 +1,67 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.SupportViewModel
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+@*<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<link href="~/Content/style.default.css" rel="stylesheet" />
+<link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />*@
+
+<div class="container">
+    <div class=" row-dashboard">
+
+        <table class="table table-bordered">
+
+            <thead>
+                <tr>
+                    <th>@Html.ActionLink("Surname", "ViewAuditReport", new { sortOrder = ViewBag.Department, currentFilter = ViewBag.CurrentFilter })</th>
+                    <th>@Html.ActionLink("First name", "ViewAuditReport", new { sortOrder = ViewBag.Programme, currentFilter = ViewBag.CurrentFilter })</th>
+                    <th>@Html.ActionLink("Middle Name", "ViewAuditReport", new { sortOrder = ViewBag.Minimum, currentFilter = ViewBag.CurrentFilter })</th>
+                    <th>@Html.ActionLink("Email ", "ViewAuditReport", new { sortOrder = ViewBag.Date, currentFilter = ViewBag.CurrentFilter })</th>
+                    <th>@Html.ActionLink("Mobile Number ", "ViewAuditReport", new { sortOrder = ViewBag.Date, currentFilter = ViewBag.CurrentFilter })</th>
+                    <th>@Html.ActionLink("Old Surname", "ViewAuditReport", new { sortOrder = ViewBag.Department, currentFilter = ViewBag.CurrentFilter })</th>
+                    <th>@Html.ActionLink("Old First name", "ViewAuditReport", new { sortOrder = ViewBag.Programme, currentFilter = ViewBag.CurrentFilter })</th>
+                    <th>@Html.ActionLink("Old Middle Name", "ViewAuditReport", new { sortOrder = ViewBag.Minimum, currentFilter = ViewBag.CurrentFilter })</th>
+                    <th>@Html.ActionLink("Old Email ", "ViewAuditReport", new { sortOrder = ViewBag.Date, currentFilter = ViewBag.CurrentFilter })</th>
+                    <th>@Html.ActionLink("Old Mobile Number ", "ViewAuditReport", new { sortOrder = ViewBag.Date, currentFilter = ViewBag.CurrentFilter })</th>
+
+                </tr>
+            </thead>
+            <tbody style="color:black;">
+               
+                    <tr>
+                        <td>@Model.personAuditDetails.LastName</td>
+                        <td>@Model.personAuditDetails.FirstName</td>
+                        <td>@Model.personAuditDetails.OtherName</td>
+                        <td>@Model.personAuditDetails.Email</td>
+                        <td>@Model.personAuditDetails.MobilePhone</td>
+                        <td>@Model.personAuditDetails.OldLastName</td>
+                        <td>@Model.personAuditDetails.OldFirstName</td>
+                        <td>@Model.personAuditDetails.OldOtherName</td>
+                        <td>@Model.personAuditDetails.OldEmail</td>
+                        <td>@Model.personAuditDetails.OldMobilePhone</td>
+                   </tr>
+
+
+
+
+              
+
+            </tbody>
+
+
+        </table>
+
+       
+
+    </div>
+    <div class="row">
+        @Html.ActionLink("Back", "ViewAuditReport")
+
+
+    </div>
+   
+
+</div>

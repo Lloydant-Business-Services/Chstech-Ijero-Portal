@@ -1,0 +1,138 @@
+﻿@using Abundance_Nk.Web.Models
+@using Microsoft.AspNet.Identity
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        #sidebar-wrapper {
+            /*background: #8c388c !important;*/
+            font-size: 13px !important;
+            /*background: #a540a3 !important;*/
+            /*background: linear-gradient(to right, #8a3a87, #bb46b8) !important;*/
+            background: linear-gradient(to right, #9c199a, #81287e) !important;
+
+            /*font-family: Varela Round, sans-serif !important;*/
+            font-family: Quicksand, sans-serif !important;
+        }
+
+        body {
+            font-family: Quicksand, sans-serif !important;
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>@ViewBag.Title - </title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <!-- Bootstrap Core CSS -->
+    <link href="~/Content/dataTables.css" rel="stylesheet" />
+    <link href="~/Scripts/DataTables-1.10.15/media/css/dataTables.bootstrap.css" rel="stylesheet" />
+
+    <link href="~/Content/sbCss/bootstrap.min.css" rel="stylesheet" />
+    <!-- Custom CSS -->
+    <link href="~/Content/sbCss/sb-admin.css" rel="stylesheet" />
+    <!-- Morris Charts CSS -->
+    <link href="~/Content/sbCss/plugins/morris.css" rel="stylesheet" />
+    <!-- Custom Fonts -->
+    <link href="~/Content/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/select2.css" rel="stylesheet" />
+
+</head>
+<body>
+    <div class="container-fluid">
+        @RenderBody()
+        <!-- Navigation -->
+        <!-- /#page-wrapper -->
+    </div>
+    <!-- /#wrapper -->
+    <!-- jQuery -->
+    <script src="~/Content/js/jquery.js"></script>
+    <script src="~/Content/Select2.min.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="~/Content/js/bootstrap.min.js"></script>
+    <!-- Morris Charts JavaScript -->
+    @*<script src="~/Content/js/plugins/morris/raphael.min.js"></script>
+        <script src="~/Content/js/plugins/morris/morris.min.js"></script>
+        <script src="~/Content/js/plugins/morris/morris-data.js"></script>*@
+
+    <!-- Start of Smartsupp Live Chat script -->
+    <script type="text/javascript">
+       
+            $(document).ready(function () {
+                if ($(".searchable-dropdown-class").length > 0)
+            $('.searchable-dropdown-class').select2();
+        });
+
+
+        var _smartsupp = _smartsupp || {};
+        _smartsupp.key = "8d8c5c64fa82b02ea860a7f80d5a93c351259935";
+
+        //
+        _smartsupp.cookieDomain = '.97.74.6.243/fedpolyado';
+        _smartsupp.requireLogin = true;
+        // disable email
+        _smartsupp.loginEmailControl = false;
+        // append checkbox control to confirm something
+        _smartsupp.loginControls = [{
+            xtype: 'textinput',
+            name: 'number',
+            label: 'Phone',
+            required: true
+        }, {
+            xtype: 'textinput',
+            name: 'identifier',
+            label: 'Application / Matric No',
+            required: true
+        }];
+
+        window.smartsupp || (function (d) {
+            var s, c, o = smartsupp = function () { o._.push(arguments) }; o._ = [];
+            s = d.getElementsByTagName('script')[0]; c = d.createElement('script');
+            c.type = 'text/javascript'; c.charset = 'utf-8'; c.async = true;
+            c.src = '//www.smartsuppchat.com/loader.js'; s.parentNode.insertBefore(c, s);
+        })(document);
+
+
+    </script>
+    <!-- End of Smartsupp Live Chat script -->
+    <script>
+        // customize banner & logo
+        smartsupp('banner:set', 'bubble');
+        smartsupp('chat:avatar', '@Url.Content("~/Content/Images/livechat.png")');
+
+        // customize texts
+        smartsupp('chat:translate', {
+            online: {
+                title: 'Support',
+                infoTitle: 'LLOYDANT'
+            },
+            offline: {
+                title: 'OFFLINE'
+            }
+        });
+
+        // customize colors
+        smartsupp('theme:colors', {
+            primary: '#990066',
+            banner: '#999999',
+            primaryText: '#ffffff'
+        });
+    </script>
+
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+    @RenderSection("Scripts", required: false)
+
+</body>
+</html>

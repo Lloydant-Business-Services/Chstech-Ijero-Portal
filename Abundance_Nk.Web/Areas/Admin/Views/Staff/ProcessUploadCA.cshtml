@@ -1,0 +1,64 @@
+﻿
+@{
+    ViewBag.Title = "ProcessUploadCA";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>ProcessUploadCA</h2>
+@if(Model == null || Model.resultFormatList == null)
+{
+    return;
+}
+<br />
+
+<div class="panel-body">
+    <div class="alert alert-warning alert-dismissable"><h4>Endeavor to Cross Check Fields and Verify the excel data uploaded. Click the save button below the sheet after verification</h4></div>
+    <br />
+
+    @if(Model != null && Model.resultFormatList.Count > 0)
+    {
+        <table class="table table-responsive table-striped">
+            <tr>
+                <th>
+                    S/N
+                </th>
+                <th>
+                    MATRIC NUMBER
+                </th>
+                <th>
+                    CA/EXAM
+                </th>
+            </tr>
+            @for(int i = 0;i < Model.resultFormatList.Count;i++)
+            {
+                <tr>
+                    @*<td>
+                            @Model.resultFormatList[i].SN
+                        </td>*@
+                    <td>
+                        @{var sn = i + 1; } <span>@sn</span>
+                    </td>
+                    <td>
+                        @Model.resultFormatList[i].MATRICNO
+                    </td>
+                    <td>
+                        @Model.resultFormatList[i].EX_CA
+                    </td>
+                </tr>
+            }
+        </table>
+        <br />
+        <div class="form-group" style="text-align:center">
+
+            <div class="col-sm-10 pull-left">
+                @Html.ActionLink("Save Upload","ProcessUploadCA",new { controller = "staff",area = "Admin" },new { @class = "btn btn-success mr5" })
+            </div>
+        </div>
+    }
+</div>
+
+
+
+
+
+

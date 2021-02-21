@@ -1,0 +1,246 @@
+﻿@using Abundance_Nk.Web.Models
+@using Microsoft.AspNet.Identity
+<!doctype>
+<html lang="en">
+<head>
+    <title>CHSTECH Ijero-Ekiti | Application</title>
+    <!--     Fonts and icons     -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+    <!-- CSS Files -->
+    <link href="~/Content/theme/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/theme/assets/css/now-ui-kit.css" rel="stylesheet" />
+    <link href="~/Content/theme/assets/css/wfmi-style.css" rel="stylesheet" />
+    <link href="~/Content/theme/assets/css/Custom.css" rel="stylesheet" />
+    <link href="~/Content/theme/assets/smartwizard/css/smart_wizard.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <style>
+        body {
+            font-family: Quicksand, sans-serif !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid"></div>
+<div class="col-md-12 bodi1  m-0 p-0">
+       
+    <nav class="navbar navbar-toggleable-md navbar-expand-lg bg-primary p-0" color-on-scroll="500" style="background-color: #2f422f!important; z-index:999!important">
+        <div class=" pl-2" style="width:100%;">
+            <div class="row">
+                <div class="col-md-3 col-sm-12">
+                    <div class="navbar-translate">
+                        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-bar bar1"></span>
+                            <span class="navbar-toggler-bar bar2"></span>
+                            <span class="navbar-toggler-bar bar3"></span>
+                        </button>
+                        <a class="navbar-brand ml-2" href="#">
+                            @*<img src="~/Content/images/school_logo.jpg" alt="logo">*@
+                            <b style="font-size: 18px">The College Of Health Sciences and Technology, Ijero-Ekiti</b>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-md-9 col-sm-12 text-right pt-2">
+                    <div class="collapse navbar-collapse justify-content-end" id="navigation" data-nav-image="~/Content/theme/index/assets/img/blurred-image-1.jpg">
+                        <ul class="navbar-nav">
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"><span class="menu-title">APPLICANTS</span></a>
+
+                                <ul class="dropdown-menu bg-primary" aria-labelledby="dropdown" style="color: #333 !important;">
+                                    <li class="dropdown-item">@Html.ActionLink("Generate Invoice", "FormInvoiceGeneration", "Form", new { Area = "Applicant" }, null)</li>
+                                    <li class="dropdown-item">@Html.ActionLink("Generate Reciept", "GenerateReciept", "Credential", new { Area = "Common" }, null)</li>
+
+                                    <li class="dropdown-item">@Html.ActionLink("Fill Application Form", "FillApplicationForm", "Form", new { Area = "Applicant" }, null)</li>
+                                    <li class="divider"></li>
+
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"><span class="menu-title">RETURNING STUDENT</span></a>
+
+                                <ul class="dropdown-menu bg-primary" aria-labelledby="dropdown" style="color: #333 !important;">
+                                    @*<li>@Html.ActionLink("Generate Invoice", "Index", "Payment", new { Area = "Student" }, null)</li>
+                                    *@
+                                </ul>
+                            </li>
+
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"><span class="menu-title">GRADUATE</span></a>
+
+                                <ul class="dropdown-menu bg-primary" aria-labelledby="dropdown" style="color: #333 !important;">
+                                    <li>@Html.ActionLink("Transcript Request", "Index", "Transcript", new { type = "", Area = "Applicant" }, null)</li>
+                                    <li>@Html.ActionLink("Print Receipt", "PrintTranscriptReciept", "Transcript", new { type = "", Area = "Applicant" }, null)</li>
+
+                                </ul>
+                            </li>
+
+
+
+                        </ul>
+                        <div class="col-md-2 bg-warning hidden-md-down text-center pt-3" style="margin:-18px 0 -20px 0; background-color: #b72f9cfc!important;">
+                            <a class="nav-link" href="@Url.Action("Login","Account", new { Area = "Security" })">
+                                <span class="navbar-text">
+
+                                    <p>LOGIN</p>
+
+                                </span>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </nav>
+
+    
+    <div class="clearfix"></div>
+    <div id="wapper">
+        <div class="container" >
+            <div class="col-md-12 card p-5">
+                @RenderBody()
+            </div>
+        </div>
+           
+        &nbsp;&nbsp;&nbsp;
+        <br />
+        <br />
+        <br />
+        <br />
+        <div class="clearfix"></div>
+        <div class="container-fluid pt-5 pb-5 Design2">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 col-sm-12 text-center">
+                        <img src="~/Content/theme/assets/img/call.svg" class=" text-right" alt="Support Lines" height="90" />
+                    </div>
+
+                    <div class="col-md-7 col-sm-12 pt-1">
+                        <span class="font-1"><b>ARE YOU EXPERIENCING ANY DIFFICULTIES OR ISSUES?</b></span><br />
+                        <b>CALL:</b> 07088391544 or 090838920222<br />
+                        <b>EMAIL SUPPORT:</b> support@lloydant.com
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            
+        <div class="clearfix"></div>
+        <div class="container-fluid bg-warning line-1"></div>
+
+        <div class="container-fluid bg-primary p-1" style="background-color: #2f422f!important;">
+            <div class="row">
+                <div class="col-md-8 col-sm-12">
+                    &copy; COLLEGE OF HEALTH AND SCIENCE TECHNOLOGY IJERO-EKITI,<br>
+                    EKITI STATE.
+                </div>
+                <div class="col-md-4 col-sm-12 text-right">
+                    Powered by <img class="image" style="height: 30px; width: 30px" src="~/Content/images/lloydant.png" />
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+<script type="text/javascript" src="~/Content/theme/assets/js/core/jquery.3.2.1.min.js"></script>
+<script type="text/javascript" src="~/Content/theme/assets/js/core/tether.min.js"></script>
+<script type="text/javascript" src="~/Content/theme/assets/js/core/bootstrap.min.js"></script>
+
+<script type="text/javascript" src="~/Content/theme/assets/js/plugins/bootstrap-datepicker.js"></script>
+<script type="text/javascript" src="~/Content/theme/assets/js/plugins/bootstrap-switch.js"></script>
+<script type="text/javascript" src="~/Content/theme/assets/js/plugins/moment.min.js"></script>
+<script type="text/javascript" src="~/Content/theme/assets/js/plugins/nouislider.min.js"></script>
+<script type="text/javascript" src="~/Content/theme/assets/smartwizard/js/jquery.smartWizard.js"></script>
+@*<script type="text/javascript" src="~/Content/theme/assets/js/app.js"></script>*@
+<script type="text/javascript" src="~/Content/theme/assets/js/now-ui-kit.js"></script>
+<script type="text/javascript" src="~/Content/theme/assets/js/vendor.js"></script>
+
+<!-- Start of Smartsupp Live Chat script -->
+@*<script type="text/javascript">
+
+
+    var _smartsupp = _smartsupp || {};
+    _smartsupp.key = "8d8c5c64fa82b02ea860a7f80d5a93c351259935";
+
+    //
+    _smartsupp.cookieDomain = '.97.74.6.243/fedpolyado';
+    _smartsupp.requireLogin = true;
+    // disable email
+    _smartsupp.loginEmailControl = false;
+    // append checkbox control to confirm something
+    _smartsupp.loginControls = [{
+        xtype: 'textinput',
+        name: 'number',
+        label: 'Phone',
+        required: true
+    }, {
+        xtype: 'textinput',
+        name: 'identifier',
+        label: 'Application / Matric No',
+        required: true
+    }];
+
+    window.smartsupp || (function (d) {
+        var s, c, o = smartsupp = function () { o._.push(arguments) }; o._ = [];
+        s = d.getElementsByTagName('script')[0]; c = d.createElement('script');
+        c.type = 'text/javascript'; c.charset = 'utf-8'; c.async = true;
+        c.src = '//www.smartsuppchat.com/loader.js'; s.parentNode.insertBefore(c, s);
+    })(document);
+
+
+</script>*@
+<!-- End of Smartsupp Live Chat script -->
+@*<script>
+    // customize banner & logo
+    smartsupp('banner:set', 'bubble');
+    smartsupp('chat:avatar', '@Url.Content("~/Content/Images/livechat.png")');
+
+    // customize texts
+    smartsupp('chat:translate', {
+        online: {
+            title: 'Support',
+            infoTitle: 'LLOYDANT'
+        },
+        offline: {
+            title: 'OFFLINE'
+        }
+    });
+
+    // customize colors
+    smartsupp('theme:colors', {
+        primary: '#990066',
+        banner: '#999999',
+        primaryText: '#ffffff'
+    });
+</script>*@
+    <!--Start of Tawk.to Script-->
+    <script type="text/javascript">
+        var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+        (function () {
+            var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+            s1.async = true;
+            s1.src = 'https://embed.tawk.to/5e1c9b0b7e39ea1242a465b4/1duhkkhqc';
+            s1.charset = 'UTF-8';
+            s1.setAttribute('crossorigin', '*');
+            s0.parentNode.insertBefore(s1, s0);
+        })();
+    </script>
+    <!--End of Tawk.to Script-->
+</body>
+@RenderSection("scripts", required: false)
+</html>
+
+
+

@@ -1,0 +1,247 @@
+﻿@model Abundance_Nk.Web.Areas.Applicant.ViewModels.PostJambViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<link href="~/Content/style.default.css" rel="stylesheet" />
+<link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    <script type="text/javascript">
+        $("#aPrint").on('click', function () {
+            $(".printable").print();
+            return false;
+        });
+    </script>
+}
+
+
+<div >
+    <div class="printable">
+        <br />
+
+        <div class="alert alert-success fade in" style="border:1px solid green">
+            <div>
+                <table style="margin-bottom:7px">
+                 
+                    <tr>
+                        <td style="padding-right:7px"><img src="@Url.Content("~/Content/Images/212Newt.fw.png")" width="100px" height="100px" alt="" /></td>
+                        <td>
+                            <h3><strong>THE FEDERAL POLYTECHNIC, ADO-EKITI</strong></h3>
+                            <p>
+                                P.M.B. 5153, ADO, EKITI STATE.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+
+
+        <br />
+
+        <h2><p class="custom-text-black">Screening Slip For @Model.Session.Name Session Admission </h2>
+
+        <hr class="no-top-padding" />
+        <dl class="dl-horizontal">
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+
+            @if (Model == null) { return; }
+
+            <dt>
+
+            </dt>
+            <dd>
+                <div class="row ">
+                    <div class="col-md-12 custom-text-black">
+                        @*<img src="@Model.Person.ImageFileUrl" alt="" style="max-height:150px" />*@
+                        <img src="@Url.Content('~' + Model.Person.ImageFileUrl)" alt="" style="max-height:150px" />
+
+                    </div>
+                </div>
+            </dd>
+            <br />
+            <dt class="space-bottom custom-text-black">
+                @Html.DisplayNameFor(model => model.Person.FullName)
+            </dt>
+            <dd class="space-bottom custom-text-black">
+                @Html.DisplayFor(model => model.Person.FullName)
+            </dd>
+
+            <dt class="space-bottom custom-text-black">
+                Application Number
+            </dt>
+            <dd class="space-bottom custom-text-black">
+                @Model.ApplicationFormNumber
+            </dd>
+            <dt class="space-bottom custom-text-black">
+                Screening Number
+            </dt>
+            <dd class="space-bottom custom-text-black">
+                @Model.ApplicationForm.ExamNumber
+            </dd>
+            @if (Model.ApplicantJambDetail != null)
+            {
+                if (Model.ApplicantJambDetail.JambRegistrationNumber != null)
+                {
+                    <dt class="space-bottom custom-text-black">
+                        UTME No
+                    </dt>
+                    <dd class="space-bottom custom-text-black">
+                        @Model.ApplicantJambDetail.JambRegistrationNumber
+                    </dd>
+                }
+            }
+          
+          
+
+            <dt class="space-bottom custom-text-black">
+                @Html.DisplayNameFor(model => model.AppliedCourse.Department.Name)
+            </dt>
+            <dd class="space-bottom custom-text-black">
+                @Html.DisplayFor(model => model.AppliedCourse.Department.Name)
+            </dd>
+
+            <dt class="space-bottom custom-text-black">
+                @Html.DisplayNameFor(model => model.ApplicationFormSetting.ExamDate)
+            </dt>
+            @if (Model.AppliedCourse.Programme.Id == 1)
+            {
+                 <dd class="space-bottom custom-text-black">
+                     To be announced shortly
+                </dd>
+            }
+            else if (Model.AppliedCourse.Programme.Id == 2)
+            {
+                switch (Model.AppliedCourse.Department.Id)
+                {
+                    case 17:
+                        <dd class="space-bottom custom-text-black">
+                            Monday, August 14th<br/>
+                        </dd>
+                        break;
+                    case 8:
+                    <dd class="space-bottom custom-text-black">
+                        Monday, August 14th<br />
+                    </dd>
+                        break;
+                    case 27:
+                    <dd class="space-bottom custom-text-black">
+                        Monday, August 14th<br />
+                    </dd>
+                        break;
+                    case 20:
+                    <dd class="space-bottom custom-text-black">
+                        Monday, August 14th<br />
+                    </dd>
+                        break;
+                    case 7:
+                    <dd class="space-bottom custom-text-black">
+                        Tuesday, August 15th<br />
+                    </dd>
+                        break;
+                    case 9:
+                    <dd class="space-bottom custom-text-black">
+                        Tuesday, August 15th<br />
+                    </dd>
+                        break;
+                    case 15:
+                    <dd class="space-bottom custom-text-black">
+                        Tuesday, August 15th<br />
+                    </dd>
+                        break;
+                    case 1:
+                    <dd class="space-bottom custom-text-black">
+                        Tuesday, August 15th<br />
+                    </dd>
+                        break;
+                    case 23:
+                    <dd class="space-bottom custom-text-black">
+                        Tuesday, August 15th<br />
+                    </dd>
+                        break;
+                    case 3:
+                    <dd class="space-bottom custom-text-black">
+                        Wednesday, August 16th<br />
+                    </dd>
+                        break;
+                    case 5:
+                    <dd class="space-bottom custom-text-black">
+                        Wednesday, August 16th<br />
+                    </dd>
+                        break;
+                    case 13:
+                    <dd class="space-bottom custom-text-black">
+                        Wednesday, August 16th<br />
+                    </dd>
+                        break;
+                    case 18:
+                    <dd class="space-bottom custom-text-black">
+                        Wednesday, August 16th<br />
+                    </dd>
+                        break;
+                }
+
+            }
+            else if (Model.AppliedCourse.Programme.Id == 3)
+            {
+                   <dd class="space-bottom custom-text-black">
+                       To be announced shortly
+                </dd>
+            }
+            else if (Model.AppliedCourse.Programme.Id == 4)
+            {
+                   <dd class="space-bottom custom-text-black">
+                     August 18th 2016
+                </dd>
+            }
+            <dt class="space-bottom custom-text-black">
+                @Html.DisplayNameFor(model => model.ApplicationFormSetting.ExamVenue)
+            </dt>
+            <dd class="space-bottom custom-text-black">
+                @Html.DisplayFor(model => model.ApplicationFormSetting.ExamVenue)
+            </dd>
+
+            <dt class="space-bottom custom-text-black">
+                @Html.DisplayNameFor(model => model.ApplicationFormSetting.ExamTime)
+            </dt>
+            <dd class="space-bottom custom-text-black">
+                @Html.DisplayFor(model => model.ApplicationFormSetting.ExamTime)
+            </dd>
+
+        </dl>
+        <div>
+            <blockquote>
+                <i class="fa fa-quote-left"></i>
+                <p>
+                     Kindly come with this printout, your acknowledgment slip  and a <b>2B Pencil</b> on the date of
+                    screening. Good luck !
+                </p>
+            </blockquote>
+        </div>
+
+        <hr />
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-actions no-color">
+                <div class="panel " style="padding-top:0px">
+                    <button id="aPrint" class="btn btn-white btn-lg "><i class="fa fa-print mr5"></i> Print Slip</button>
+                    @Html.ActionLink("Fill Another Form", "PostJambProgramme", null, new { @class = "btn btn-white btn-lg " })
+                    <a class="btn btn-white btn-lg " href="#"><i class="fa fa-home mr5"></i>Back to Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

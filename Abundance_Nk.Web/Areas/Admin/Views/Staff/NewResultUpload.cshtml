@@ -1,0 +1,318 @@
+﻿@using Abundance_Nk.Model.Model
+@model Abundance_Nk.Web.Areas.Admin.ViewModels.StaffViewModel
+@{
+    ViewBag.Title = "NewResultUpload";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@if(TempData["Message"] != null)
+{
+    @Html.Partial("_Message",(Abundance_Nk.Model.Model.Message)TempData["Message"])
+}
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        function populateCourses() {
+            $("#Course").empty();
+            var values = new Array();
+            //vals = [$("#Department").val(), $("#Level").val(), $("#Semester").val()];
+            values[0] = $("#Department").val();
+            values[1] = $("#Level").val();
+            values[2] = $("#Semester").val();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetCourses", "StaffCourseAllocation")', // Calling json method
+                traditional: true,
+                data: { ids: values },
+                // Get Selected Country ID.
+                success: function (courses) {
+
+                    $.each(courses, function (i, course) {
+                        $("#Course").append('<option value="' + course.Value + '">' +
+                             course.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve courses.' + ex);
+                }
+            });
+
+        }
+        //Programme Drop down Selected-change event
+        $("#Programme").change(function () {
+            if ($("#Department").val() > 0 && $("#Level").val() > 0 && $("#Semester").val() > 0) {
+                populateCourses();
+            }
+            $("#Department").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartments", "StaffCourseAllocation")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#Programme").val() },
+                // Get Selected Country ID.
+                success: function (departments) {
+                    $("#Department").append('<option value="' + 0 + '">' +
+                            '-- Select Department --' + '</option>');
+                    $.each(departments, function (i, department) {
+                        $("#Department").append('<option value="' + department.Value + '">' +
+                             department.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+            return false;
+        })
+        //Session Drop down Selected change event
+        $("#Session").change(function() {
+            if ($("#Department").val() > 0 && $("#Level").val() > 0 && $("#Semester").val() > 0) {
+                populateCourses();
+            }
+
+            $("#Semester").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetSemester", "StaffCourseAllocation")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#Session").val() },
+                // Get Selected Country ID.
+                success: function(semesters) {
+                    $("#Semester").append('<option value="' + 0 + '">' +
+                        '-- Select Semester --' + '</option>');
+                    $.each(semesters, function(i, semester) {
+                        $("#Semester").append('<option value="' + semester.Value + '">' +
+                            semester.Text + '</option>');
+                    });
+                },
+                error: function(ex) {
+                    alert('Failed to retrieve semesters.' + ex);
+                }
+            });
+            return false;
+        });
+        $("#Department").change(function () {
+            if ($("#Department").val() > 0 && $("#Level").val() > 0 && $("#Semester").val() > 0) {
+                populateCourses();
+            }
+        });
+        $("#Session").change(function () {
+            if ($("#Department").val() > 0 && $("#Level").val() > 0 && $("#Semester").val() > 0) {
+                populateCourses();
+            }
+        });
+        $("#Semester").change(function () {
+            if ($("#Department").val() > 0 && $("#Level").val() > 0 && $("#Semester").val() > 0) {
+                populateCourses();
+            }
+        });
+        $("#Level").change(function () {
+            if ($("#Department").val() > 0 && $("#Level").val() > 0 && $("#Semester").val() > 0) {
+                populateCourses();
+            }
+
+        });
+
+
+
+
+    });
+</script>
+
+@using (Html.BeginForm("NewResultUpload", "Staff", new { area = "Admin" }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><i class="fa fa-fw fa-upload"></i>Upload Result</h3>
+        </div>
+        <div class="panel-body">
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Programme.Name, "Programme", new {@class = "col-sm-2 control-label "})
+                <div class="col-sm-10">
+                    @Html.DropDownListFor(model => model.Programme.Id, (IEnumerable<SelectListItem>) ViewBag.Programme, new {@class = "form-control", @id = "Programme"})
+                    @Html.ValidationMessageFor(model => model.Programme.Id, null, new {@class = "text-danger"})
+                </div>
+
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Department.Name, "Department", new {@class = "col-sm-2 control-label "})
+                <div class="col-sm-10">
+                    @Html.DropDownListFor(model => model.Department.Id, (IEnumerable<SelectListItem>) ViewBag.Department, new {@class = "form-control", @id = "Department"})
+                    @Html.ValidationMessageFor(model => model.Department.Id, null, new {@class = "text-danger"})
+                </div>
+
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Level.Name, "Level", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.DropDownListFor(model => model.Level.Id, (IEnumerable<SelectListItem>)ViewBag.Level, new { @class = "form-control", @id = "Level" })
+                    @Html.ValidationMessageFor(model => model.Level.Id, null, new { @class = "text-danger" })
+                </div>
+
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Session.Name,"Session",new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.DropDownListFor(model => model.Session.Id,(IEnumerable<SelectListItem>)ViewBag.Session,new { @class = "form-control",@id = "Session" })
+                    @Html.ValidationMessageFor(model => model.Session.Id,null,new { @class = "text-danger" })
+                </div>
+
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Semester.Name, "Semester", new {@class = "col-sm-2 control-label "})
+                <div class="col-sm-10">
+                    @Html.DropDownListFor(model => model.Semester.Id, (IEnumerable<SelectListItem>) ViewBag.Semester, new {@class = "form-control", @id = "Semester"})
+                    @Html.ValidationMessageFor(model => model.Semester.Id, null, new {@class = "text-danger"})
+                </div>
+
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Course.Name, "Course", new {@class = "col-sm-2 control-label "})
+                <div class="col-sm-10">
+                    @Html.DropDownListFor(model => model.Course.Id, (IEnumerable<SelectListItem>)ViewBag.Course, new { @class = "form-control", @id = "Course" })
+                    @Html.ValidationMessageFor(model => model.Course.Id, null, new {@class = "text-danger"})
+                </div>
+
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.StudentResultType.Name, "Result Type", new {@class = "col-sm-2 control-label "})
+                <div class="col-sm-10">
+                    @Html.DropDownListFor(model => model.StudentResultType.Id, (IEnumerable<SelectListItem>) ViewBag.ResultType, new {@class = "form-control", @id = "ResultType"})
+                    @Html.ValidationMessageFor(model => model.StudentResultType.Id, null, new {@class = "text-danger"})
+                </div>
+
+            </div>
+
+            <div class="col-md-12">
+                <div class="col-md-2"></div>
+                <input type="file" title="Upload Result" id="file" name="file" class="form-control"/> 
+            </div>
+            <br/>
+            <br />
+
+            <div class="form-group">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-10">
+                    <input class="btn btn-success mr5 " type="submit" name="submit" id="submit" value="Upload" />
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+}
+@*@if (Model == null || Model.resultFormatList == null)
+{
+    return;
+}*@
+<br/>
+
+@if (Model != null && Model.resultFormatList != null)
+{
+    <div class="panel-body">
+        <div class="alert alert-warning alert-dismissable"><h4>Endeavor to Cross Check Fields and Verify the excel data uploaded. Click the save button below the sheet after verification</h4></div>
+        <br />
+
+        @if (Model != null && Model.resultFormatList.Count > 0)
+        {
+            <table class="table table-responsive table-striped">
+                <tr>
+                    <th>
+                        S/N
+                    </th>
+                    <th>
+                        MATRIC NUMBER
+                    </th>
+                    <th>
+                        CA/EXAM
+                    </th>
+                </tr>
+                @for (int i = 0; i < Model.resultFormatList.Count; i++)
+                {
+                    <tr>
+                        @*<td>
+                                @Model.resultFormatList[i].SN
+                            </td>*@
+                        <td>
+                            @{var sn = i + 1; } <span>@sn</span>
+                        </td>
+                        <td>
+                            @Model.resultFormatList[i].MATRICNO
+                        </td>
+                        <td>
+                            @Model.resultFormatList[i].EX_CA
+                        </td>
+                    </tr>
+                }
+            </table>
+            <br />
+            <div class="form-group" style="text-align:center">
+
+                <div class="col-sm-10 pull-left">
+                    @Html.ActionLink("Save Upload", "SaveNewUploadedResult", new { controller = "staff", area = "Admin" }, new { @class = "btn btn-success mr5" })
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@if (Model != null && Model.FailedResultFormatList != null)
+{
+    <div class="panel-body">
+        <div class="alert alert-warning alert-dismissable"><h4>The following results failed.</h4></div>
+        <br />
+
+        @if (Model != null && Model.FailedResultFormatList.Count > 0)
+        {
+            <table class="table table-responsive table-striped">
+                <tr>
+                    <th>
+                        S/N
+                    </th>
+                    <th>
+                        MATRIC NUMBER
+                    </th>
+                    <th>
+                        CA/EXAM
+                    </th>
+                    <th>
+                        REASON
+                    </th>
+                </tr>
+                @for (int i = 0; i < Model.FailedResultFormatList.Count; i++)
+                {
+                    <tr>
+                        @*<td>
+                                @Model.resultFormatList[i].SN
+                            </td>*@
+                        <td>
+                            @{var sn = i + 1; } <span>@sn</span>
+                        </td>
+                        <td>
+                            @Model.FailedResultFormatList[i].MATRICNO
+                        </td>
+                        <td>
+                            @Model.FailedResultFormatList[i].EX_CA
+                        </td>
+                        @if (@Model.FailedResultFormatList[i].ResultSpecialCaseMessages != null)
+                        {
+                            <td>
+                                @Model.FailedResultFormatList[i].ResultSpecialCaseMessages.SpecialCaseMessage
+                            </td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                        
+                    </tr>
+                }
+            </table>
+        }
+    </div>
+}
+
+

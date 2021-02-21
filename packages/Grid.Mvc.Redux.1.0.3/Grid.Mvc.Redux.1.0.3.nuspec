@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Grid.Mvc.Redux</id>
+    <version>1.0.3</version>
+    <title>Grid.Mvc.Redux</title>
+    <authors>evogel</authors>
+    <owners>evogel</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Enhancements to the Grid.Mvc ASP.NET MVC grid component.</description>
+    <summary>Enhancements to the Grid.Mvc ASP.NET MVC grid component.</summary>
+    <releaseNotes>Added Tool Tip support for grid headers.</releaseNotes>
+  </metadata>
+</package>

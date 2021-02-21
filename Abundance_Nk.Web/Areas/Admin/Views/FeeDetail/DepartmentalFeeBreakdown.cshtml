@@ -1,0 +1,234 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.FeeDetailViewModel
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+        @if (TempData["Message"] != null)
+        {
+            @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+        }
+
+        <div class="panel panel-default">
+            <div class="panel-heading"><h4>Departmental Fee Breakdown</h4></div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.CurrentSession.Id, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.DropDownListFor(model => model.CurrentSession.Id, (IEnumerable<SelectListItem>)ViewBag.Sessions, new { @class = "form-control", @placeholder = "Select Session" })
+                                @Html.ValidationMessageFor(model => model.CurrentSession.Id)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.feeType.Id, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.DropDownListFor(model => model.feeType.Id, (IEnumerable<SelectListItem>)ViewBag.FeeTypes, new { @class = "form-control", @placeholder = "Select Fee Type" })
+                                @Html.ValidationMessageFor(model => model.feeType.Id)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Programme.Id, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.DropDownListFor(model => model.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.Programmes, new { @class = "form-control", @placeholder = "Select Programme" })
+                                @Html.ValidationMessageFor(model => model.Programme.Id)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Department.Id, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.DropDownListFor(model => model.Department.Id, (IEnumerable<SelectListItem>)ViewBag.Departments, new { @class = "form-control", @placeholder = "Select Department" })
+                                @Html.ValidationMessageFor(model => model.Department.Id)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.level.Id, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.DropDownListFor(model => model.level.Id, (IEnumerable<SelectListItem>)ViewBag.Levels, new { @class = "form-control", @placeholder = "Select Level" })
+                                @Html.ValidationMessageFor(model => model.level.Id)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.PaymentMode.Id, new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.DropDownListFor(model => model.PaymentMode.Id, (IEnumerable<SelectListItem>)ViewBag.Modes, new { @class = "form-control", @placeholder = "Select Payment Mode" })
+                                @Html.ValidationMessageFor(model => model.PaymentMode.Id)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="col-md-4 col-md-offset-1">
+                            <button type="button" class="btn btn-default" id="btnSubmit"> Submit</button>
+                            <span style="display:none" id="progress"><img src="~/Content/Images/bx_loader.gif" width="20px" height="20px" /></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-body" id="tblBreakdown" style="display:none">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-condensed">
+                        <thead>
+                            <tr>
+                                <th>SN</th>
+                                <th>Item Name</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tblBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-1"></div>
+</div>
+
+
+<script type="text/javascript">
+   
+    window.onload = function () {
+
+        document.getElementById('Programme_Id').addEventListener('change', programmeChangeListener);
+        document.getElementById('btnSubmit').addEventListener('click', buttonClickedListener);
+    }
+
+
+    function buttonClickedListener() {
+        $("#btnSubmit").hide();
+        $("#progress").show();
+
+        $("#tblBreakdown").hide("slow");
+
+        var sesId = $("#CurrentSession_Id").val();
+        var feeTypeId = $("#feeType_Id").val();
+        var progId = $("#Programme_Id").val();
+        var deptId = $("#Department_Id").val();
+        var levelId = $("#level_Id").val();
+        var modeId = $("#PaymentMode_Id").val();
+
+        if (sesId && feeTypeId && progId && deptId && levelId && modeId) {
+
+            var data = [sesId, feeTypeId, progId, deptId, levelId, modeId];
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartmentFeeBreakdown", "FeeDetail")', // Calling json method
+                dataType: 'json',
+                data: { data: data },
+                success: function(result) {
+                    if (!result.IsError) {
+
+                        $("#tblBody").empty();
+
+                        var totalAmount = 0;
+
+                        if (result.Fees && result.Fees.length > 0) {
+                            for (var i = 0; i < result.Fees.length; i++) {
+                                $("#tblBody").append('<tr><td>' + (i + 1) + '</td> <td>' + result.Fees[i].Name + '</td><td>N' + result.Fees[i].Amount.toFixed(2) + '</td></tr>');
+
+                                totalAmount += result.Fees[i].Amount;
+                            }
+
+                            $("#tblBody").append('<tr><td></td> <td><b>Total</b></td><td>N' + totalAmount.toFixed(2) + '</td></tr>');
+
+                            $("#tblBreakdown").show("slow");
+                        }
+                        else {
+                            alert("Fee is empty");
+                        }
+                    }
+                    else {
+                        alert("Something went wrong! " + result.Message);
+                    }
+
+                    $("#btnSubmit").show();
+                    $("#progress").hide();
+                },
+                error: function(ex) {
+                    alert('Failed to retrieve departments.' + ex);
+
+                    $("#btnSubmit").show();
+                    $("#progress").hide();
+                }
+            });
+
+        }
+        else {
+            $("#btnSubmit").show();
+            $("#progress").hide();
+        }
+    }
+
+    function programmeChangeListener() {
+
+        $("#Department_Id").empty();
+        var programmeId = $("#Programme_Id").val();
+
+        if (!programmeId) {
+            return;
+        }
+
+         $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetDepartments", "Courses")', // Calling json method
+            dataType: 'json',
+            data: { id: programmeId },
+            success: function(departments) {
+                $("#Department_Id").append('<option value="' + 0 + '">' + '-- Select Department --' + '</option>');
+
+                $.each(departments, function(i, department) {
+                    $("#Department_Id").append('<option value="' + department.Value + '">' + department.Text + '</option>');
+                });
+            },
+            error: function(ex) {
+                alert('Failed to retrieve departments.' + ex);
+            }
+        });
+
+        $("#level_Id").empty();
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetLevels", "Courses")', // Calling json method
+            dataType: 'json',
+            data: { id: programmeId},
+            success: function (levels) {
+                $("#level_Id").append('<option value="' + 0 + '">' + '-- Select Level --' + '</option>');
+
+                $.each(levels, function (i, level) {
+                    $("#level_Id").append('<option value="' + level.Value + '">' + level.Text + '</option>');
+                });
+            },
+            error: function (ex) {
+                alert('Failed to retrieve levels.' + ex);
+            }
+        });
+    }
+</script>
+

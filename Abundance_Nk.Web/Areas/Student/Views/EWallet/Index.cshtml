@@ -1,0 +1,157 @@
+﻿@using Abundance_Nk.Model.Model
+@using Abundance_Nk.Web.Models
+@model Abundance_Nk.Web.Areas.Student.ViewModels.EWalletViewModel
+@{
+    ViewBag.Title = "E-Wallet";
+}
+
+<link rel="stylesheet" href="~/Content/sweetalert.css" />
+<script type="text/javascript" src="~/Scripts/jquery-2.1.3.min.js"></script>
+<script type="text/javascript" src="~/Scripts/sweetalert.min.js"></script>
+
+<script type="text/javascript">
+        $(document).ready(function () {
+            swal("Attention!", "NB: You cannot use installmental payment once you have started depositing to your e-wallet.");
+        });
+
+</script>
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+        <div class="row">
+            <div class="col-md-12">
+                @if (TempData["Message"] != null)
+                {
+                    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+                }
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                @Html.ActionLink("Fund Wallet", "GenerateInvoice", new { controller = "EWallet", area = "Student" }, new { @class = "btn btn-primary" })
+            </div>
+        </div>
+        <br />
+        <br />
+
+        @if (Model.EWalletPayments != null && Model.EWalletPayments.Count > 0)
+        {
+            List<int> distinctSessionIds = Model.EWalletPayments.Select(e => e.Session.Id).Distinct().ToList();
+
+            for (int i = 0; i < distinctSessionIds.Count; i++)
+            {
+                int currentSessionId = distinctSessionIds[i];
+                List<EWalletPayment> payments = Model.EWalletPayments.Where(s => s.Session.Id == currentSessionId).ToList();
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <b>@payments.FirstOrDefault().Session.Name Academic Year</b>
+                        <div class="pull-left record-count-label">
+                            <label class="caption">Number of Payment Invoice:</label>&nbsp;
+                            <span class="badge" style="background-color: gray; border-radius: 2px !important; color: white !important;">@payments.Count</span>&nbsp;<br />
+
+                            <label class="caption">Successful Payments:</label>&nbsp;
+                            <span class="badge" style="background-color: gray; border-radius: 2px !important; color: white !important">@payments.Count(p => p.PaymentStatus)</span>&nbsp;<br />
+
+                            <span class="caption">Wallet Ballance:</span>&nbsp;
+                            <span class="badge" style="background-color: gray; border-radius: 2px !important; color: white !important; font-size: 20px !important;">@payments.Where(p => p.PaymentStatus).Sum(p => p.Amount).ToString("n")</span>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                if (payments.Any(p => p.PaymentStatus))
+                {
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.ActionLink("Overall Receipt", "SessionReceipt", "EWallet", new { Area = "Student", sessionId = @payments[0].Session.Id }, new { @class = "btn btn-primary", target = "_blank" })
+                        </div>
+                    </div>
+                }
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4>Deposit Records</h4>
+                        <div class="table-responsive " style="font-size: 9pt">
+                            <table class="table table-condensed table-bordered grid-table table-head-alt mb30">
+                                <thead>
+                                    <tr class="well" style="height: 35px; vertical-align: middle">
+
+                                        <th>
+                                            Invoice Number
+                                        </th>
+                                        <th>
+                                            Payment Pin
+                                        </th>
+                                        <th>
+                                            Amount
+                                        </th>
+                                        <th>
+                                            Date Generated
+                                        </th>
+                                        <th>
+                                            Status
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+
+                                @for (int j = 0; j < payments.Count; j++)
+                                {
+                                    <tr>
+                                        <td>
+                                            @payments[j].Payment.InvoiceNumber
+                                        </td>
+
+                                        <td>
+                                            @payments[j].RRR
+                                        </td>
+
+                                        <td class="unit">
+                                            @payments[j].Amount.ToString("n")
+                                        </td>
+
+                                        <td>
+                                            @payments[j].Payment.DatePaid.ToLongDateString()
+                                        </td>
+                                        @if (payments[j].PaymentStatus)
+                                        {
+                                            <td>Paid</td>
+                                        }
+                                        else
+                                        {
+                                            <td>Not Paid</td>
+                                        }
+                                        <td>
+                                            @Html.ActionLink("Reprint Invoice", "Invoice", "EWallet", new { Area = "Student", paymentId = Utility.Encrypt(payments[j].Payment.Id.ToString()) }, new { target = "_blank" }) &nbsp;
+                                            @if (payments[j].PaymentStatus)
+                                            {
+                                                @Html.ActionLink("Print Receipt", "Receipt", "EWallet", new { Area = "Student", paymentId = @payments[j].Payment.Id }, new { target = "_blank" })
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-md-12">
+                    <h5>No Deposit record found. Fund wallet using the "Fund Wallet" button.</h5> <br />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <span class="caption">Wallet Ballance: </span>&nbsp;
+                    <span class="badge" style="background-color: gray; border-radius: 2px !important; color: white !important; font-size: 20px !important;">N0.00</span>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="col-md-1"></div>
+</div>

@@ -1,0 +1,726 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.FeeDetailViewModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<link href="~/Scripts/style.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-2.1.3.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<script src="~/Scripts/multiselect.js"></script>
+<link href="~/Content/sweetalert.css" rel="stylesheet" />
+<script src="~/Scripts/sweetalert.min.js"></script>
+<script type="text/javascript">
+    var jqConflict = jQuery.noConflict();
+    var feeIds = [];
+    var editedfeeIds = [];
+    var deptIds = [];
+    jqConflict(document).ready(function () {
+        $('#applyFeeSetup').hide();
+        $('#editFeeSetup').hide();
+        $('#showModal').on('click', function () {
+            loadFees();
+        })
+        jqConflict('#multiselect').multiselect();
+        jqConflict('#deptmultiselect').multiselect();
+        jqConflict('#editmultiselect').multiselect();
+        jqConflict('#createFeeSetup').on('click', function () {
+            feeSetup();
+        })
+        jqConflict('#saveFeeDetail').on('click', function () {
+            saveToFeeDetail();
+        })
+        jqConflict('#saveEditFeeDetail').on('click', function () {
+            editFeeSetup();
+        })
+
+
+    })
+    function loadFees() {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("FetchFees", "FeeDetail")', // Calling json method
+                    dataType: 'json',
+                    data: {},
+                    success: function (fees) {
+                        if (fees != null) {
+                            $.each(fees,
+                                function (i, fee) {
+                                    $("#multiselect").append('<option value="' +
+                                        fee.Value +
+                                        '">' +
+                                        fee.Text +
+                                        '</option>');
+                                });
+                        }
+
+                    },
+                    error: function(ex) {
+                        alert('Failed to retrieve fees.' + ex);
+                    }
+                });
+    }
+    function feeSetup() {
+        var feeSetupName = $('#setupName').val();
+        var feeTypeId = $('#feetype').find('option:selected').val();
+        var sessionId = $('#session').find('option:selected').val();
+        var paymentmodeId = $('#paymentmode').find('option:selected').val();
+        if (feeSetupName != null && feeTypeId > 0 && sessionId > 0 && paymentmodeId > 0) {
+            var feeSetUpDetails = feeSetupDetail();
+            var feeSetUpArrayRecord = JSON.stringify(feeSetUpDetails);
+            var feeIds = selectedFees();
+            var feeArrayRecord = JSON.stringify(feeIds);
+                        $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("AddFeeSetup", "FeeDetail")', // Calling json method
+                    dataType: 'json',
+                    data: { feeSetUpArrayRecord: feeSetUpArrayRecord, feeArrayRecord: feeArrayRecord},
+                    success: function (result) {
+                        if (!result.IsError) {
+                            swal("Operation Successful", result.Message, "success");
+                            location.reload();
+                        }
+                    },
+                    error: function(ex) {
+                        alert('Failed to retrieve fees.' + ex);
+                    }
+                });
+        }
+        else {
+            swal("Operation Info", "Provide All the Needed Details", "success");
+        }
+
+    }
+        function editFeeSetup() {
+            var feeSetupName = $('#editsetupName').val();
+            var feeTypeId = $('#editfeetypeId').find('option:selected').val();
+            var sessionId = $('#editsessionId').find('option:selected').val();
+            var paymentmodeId = $('#editpaymentmodeId').find('option:selected').val();
+        if (feeSetupName != null && feeTypeId > 0 && sessionId > 0 && paymentmodeId > 0) {
+            var feeSetUpDetails = editFeeSetupDetail();
+            var feeSetUpArrayRecord = JSON.stringify(feeSetUpDetails);
+            var feeIds = selectedEditedFees();
+            var feeArrayRecord = JSON.stringify(feeIds);
+                        $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("SaveEditFeeSetup", "FeeDetail")', // Calling json method
+                    dataType: 'json',
+                    data: { feeSetUpArrayRecord: feeSetUpArrayRecord, feeArrayRecord: feeArrayRecord},
+                    success: function (result) {
+                        if (!result.IsError) {
+                            swal("Operation Successful", result.Message, "success");
+                            location.reload();
+                        }
+                    },
+                    error: function(ex) {
+                        alert('Failed to retrieve fees.' + ex);
+                    }
+                });
+        }
+        else {
+            swal("Operation Info", "Provide All the Needed Details", "success");
+        }
+
+    }
+    function feeSetupDetail() {
+        var feeSetupName = $('#addSetupName').val();
+        var feeTypeId = $('#feetype').find('option:selected').val();
+        var sessionId = $('#session').find('option:selected').val();
+        var paymentmodeId = $('#paymentmode').find('option:selected').val();
+        if ($('#activate').is(':checked'))  {
+            var activate = "on";
+        }
+        else {
+            var activate = "off";
+        }
+        //var activate = $('#activate').val();
+
+        var returnFeeSetupDetail = {
+            'FeeTypeId': feeTypeId,
+            'FeeSetupName': feeSetupName,
+            'Activated': activate,
+            'PaymentModeId': paymentmodeId,
+            'SessionId': sessionId
+
+        }
+        return returnFeeSetupDetail;
+        }
+    function editFeeSetupDetail() {
+        var feeSetupId = $('#editfeeSetupId').val();
+        var feeSetupName = $('#editsetupName').val();
+        var feeTypeId = $('#editfeetypeId').find('option:selected').val();
+        var sessionId = $('#editsessionId').find('option:selected').val();
+        var paymentmodeId = $('#editpaymentmodeId').find('option:selected').val();
+        if ($('#editactivate').is(':checked')) {
+            var activate = "on";
+        }
+        else {
+            var activate = "off";
+        }
+
+
+        var returnFeeSetupDetail = {
+            'FeeTypeId': feeTypeId,
+            'FeeSetupName': feeSetupName,
+            'Activated': activate,
+            'PaymentModeId': paymentmodeId,
+            'SessionId': sessionId,
+            'FeeSetUpId': feeSetupId
+
+        }
+        return returnFeeSetupDetail;
+    }
+    function selectedFees() {
+        $("#multiselect_to > option").each(function () {
+            feeIds.push(this.value);
+        });
+
+        return feeIds;
+    }
+    function selectedDepts() {
+        $("#deptmultiselect_to > option").each(function () {
+            deptIds.push(this.value);
+        });
+
+        return deptIds;
+    }
+    function selectedEditedFees() {
+        $("#editmultiselect_to > option").each(function () {
+
+            editedfeeIds.push(this.value);
+        });
+
+        return editedfeeIds;
+    }
+    function applyClickFuntion(e) {
+        feeSetUpId = e;
+        $('#editFeeSetup').hide();
+        if (feeSetUpId > 0) {
+                                    $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("ApplyFeeSetUp", "FeeDetail")', // Calling json method
+                    dataType: 'json',
+                    data: { feeSetUpId: feeSetUpId},
+
+                    success: function (result) {
+                        if (!result.IsError && result.FeeSetup!=null) {
+                            $('#applyFeeSetup').show();
+                            getDepartments();
+                            $('#setupName').val(result.FeeSetup.FeeSetUpName);
+                            $('#feetypeId').val(result.FeeSetup.FeeType.Name);
+                            $('#paymentModeId').val(result.FeeSetup.PaymentMode.Name);
+                            $('#amount').val(result.FeeSetup.Amount);
+                            $('#sessionId').val(result.FeeSetup.Session.Name);
+                            $('#feeSetupId').val(result.FeeSetup.FeeSetupId);
+
+                        }
+                    },
+                    error: function(ex) {
+                        alert('Failed to retrieve fees.' + ex);
+                    }
+                });
+        }
+    }
+        function editClickFuntion(e) {
+            feeSetUpId = e;
+            $('#applyFeeSetup').hide();
+
+        if (feeSetUpId > 0) {
+                                    $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("EditFeeSetup", "FeeDetail")', // Calling json method
+                    dataType: 'json',
+                    data: { setupId: feeSetUpId},
+
+                    success: function (result) {
+                        if (!result.IsError && result.FeeSetup!=null) {
+
+                            getRegisteredFees();
+                            getunRegisteredFees();
+                            $('#editsetupName').val(result.FeeSetup.FeeSetUpName);
+                            $('#editfeetypeId').val(result.FeeSetup.FeeType.Id);
+                            $('#editpaymentmodeId').val(result.FeeSetup.PaymentMode.Id);
+                            $('#editamount').val(result.FeeSetup.Amount);
+                            $('#editsessionId').val(result.FeeSetup.Session.Id);
+                            $('#editfeeSetupId').val(result.FeeSetup.FeeSetupId);
+                            if (result.FeeSetup.Activated == true) {
+                                $('#editactivate').prop('checked', true);
+                            }
+                            else {
+                                $('#editactivate').prop('checked', true);
+                            }
+
+                            $('#editFeeSetup').show();
+
+                        }
+                    },
+                    error: function(ex) {
+                        alert('Failed to retrieve fees.' + ex);
+                    }
+                });
+        }
+    }
+        function getRegisteredFees() {
+            $("#editmultiselect_to option").remove()
+         $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetFeeIdBy", "FeeDetail")', // Calling json method
+                    dataType: 'json',
+                    data: { setUpId:feeSetUpId},
+                    success: function (fees) {
+                        if (fees != null) {
+                            $.each(fees,
+                                function (i, fee) {
+                                    $("#editmultiselect_to").append('<option value="' +
+                                        fee.Value +
+                                        '">' +
+                                        fee.Text +
+                                        '</option>');
+                                });
+                        }
+
+                    },
+                    error: function(ex) {
+                        alert('Failed to retrieve fees.' + ex);
+                    }
+                });
+        }
+            function getunRegisteredFees() {
+                $("#editmultiselect option").remove()
+         $.ajax({
+            type: 'POST',
+            url: '@Url.Action("UnRegisteredFees", "FeeDetail")', // Calling json method
+                    dataType: 'json',
+                    data: { setUpId:feeSetUpId},
+                    success: function (fees) {
+                        if (fees != null) {
+                            $.each(fees,
+                                function (i, fee) {
+                                    $("#editmultiselect").append('<option value="' +
+                                        fee.Value +
+                                        '">' +
+                                        fee.Text +
+                                        '</option>');
+                                });
+                        }
+
+                    },
+                    error: function(ex) {
+                        alert('Failed to retrieve fees.' + ex);
+                    }
+                });
+    }
+            function getDepartments() {
+                $("#deptmultiselect option").remove()
+         $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetDepartments", "FeeDetail")', // Calling json method
+                    dataType: 'json',
+                    data: {},
+                    success: function (departments) {
+                        if (departments != null) {
+                            $.each(departments,
+                                function (i, department) {
+                                    $("#deptmultiselect").append('<option value="' +
+                                        department.Value +
+                                        '">' +
+                                        department.Text +
+                                        '</option>');
+                                });
+                        }
+
+                    },
+                    error: function(ex) {
+                        alert('Failed to retrieve departments.' + ex);
+                    }
+                });
+    }
+    function saveToFeeDetail() {
+        var setupId = $('#feeSetupId').val();
+        var programmeId = $('#programmeId').find('option:selected').val();
+        var levelId = $('#levelId').find('option:selected').val();
+        if (setupId > 0 && programmeId > 0 && levelId > 0) {
+            var deptIds= selectedDepts();
+            var deptArrayRecord = JSON.stringify(deptIds);
+                             $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("SaveToFeeDetail", "FeeDetail")', // Calling json method
+                    dataType: 'json',
+                    data: { setupId: setupId, programmeId: programmeId, levelId: levelId, deptArrayRecord: deptArrayRecord},
+                    success: function (result) {
+                        if (!result.IsError) {
+                            swal("Operation Successful", result.Message, "success");
+                            location.reload();
+                        }
+                    },
+                    error: function(ex) {
+                        alert('Failed to retrieve fees.' + ex);
+                    }
+                });
+        }
+        else {
+            swal("Operation Info", "Provide All the Needed Details", "success");
+        }
+
+    }
+
+</script>
+<style>
+    .modal-dialog {
+        z-index: 999 !important;
+    }
+
+    .modal-backdrop.in, .modal-backdrop {
+        z-index: -999999999;
+    }
+</style>
+
+
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+            <div class="col-md-12">
+                <div class="row">
+                    <div>
+                        @if (TempData["Message"] != null)
+                        {
+                            @Html.Partial("_Message", TempData["Message"])
+                        }
+                    </div>
+                </div>
+
+                @using (Html.BeginForm())
+            {
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <h3>View Fees</h3>
+                        <hr style="margin-top: 0" />
+                        <div class="col-md-12">
+
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.feeDetail.FeeType.Id, "FeeType", new { @class = "control-label " })
+                                        @Html.DropDownListFor(model => model.feeDetail.FeeType.Id, (IEnumerable<SelectListItem>)ViewBag.FeeTypes, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.feeDetail.FeeType.Id, null, new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.feeDetail.Session.Id, "Session", new { @class = "control-label" })
+                                        @Html.DropDownListFor(model => model.feeDetail.Session.Id, (IEnumerable<SelectListItem>)ViewBag.Sessions, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.feeDetail.Session.Id, null, new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <div class="col-md-offset-8 col-md-10">
+                                            <label>&nbsp;</label><br />
+                                            <input type="submit" value="View" class="btn btn-primary pull-left" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <br /><div>
+                    <!-- Button trigger modal -->
+                    <button type="button" id="showModal" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+                        ADD
+                    </button>
+                </div>
+                @if (Model.FeeSetups != null)
+            {
+                    <div class="row">
+                        <h4>Fee Details</h4>
+
+                        <!-- Table -->
+                        <table class="table table table-bordered table-hover table-striped">
+
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>SETUPNAME NAME</th>
+                                    <th>Payment Mode</th>
+                                    <th>Amount</th>
+                                    <th>Edit</th>
+                                    <th>Apply</th>
+                                </tr>
+                            </thead>
+                            <tbody style="color: black;">
+                                @for (int i = 0; i < Model.FeeSetups.Count; i++)
+                                {
+                                    <tr>
+                                        <td>@Model.FeeSetups[i].FeeSetupId</td>
+                                        <td>@Model.FeeSetups[i].FeeSetUpName</td>
+                                        <td>@Model.FeeSetups[i].PaymentMode.Name</td>
+                                        <td>@Model.FeeSetups[i].Amount</td>
+                                        <td> <input type="button" class="btn btn-success " onclick="editClickFuntion(@Model.FeeSetups[i].FeeSetupId)" value="Edit" /></td>
+                                        <td> <input type="button" class="btn btn-success " onclick="applyClickFuntion(@Model.FeeSetups[i].FeeSetupId)" value="Apply" /></td>
+                                        @Html.HiddenFor(model => model.FeeSetups[i].FeeSetupId)
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                <br />
+            </div>
+        </div>
+    </div>
+    <!--Show For Apply FeeSetup-->
+    <div id="applyFeeSetup">
+        <div class="col-md-12">
+            <div class="row">
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>FeeSetup Name</label>
+                        <input type="text" id="setupName" class="form-control" disabled />
+                        <input type="hidden" id="feeSetupId" class="form-control" disabled />
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Fee Type</label>
+                        <input type="text" id="feetypeId" class="form-control" disabled />
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Payment Mode</label>
+                        <input type="text" id="paymentModeId" class="form-control" disabled />
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Amount</label>
+                        <input type="text" id="amount" class="form-control" disabled />
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Session</label>
+                        <input type="text" id="sessionId" class="form-control" disabled />
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Programme</label>
+                        @Html.DropDownListFor(model => model.feeDetail.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.Programmes, new { @class = "form-control", id = "programmeId" })
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Level</label>
+                        @Html.DropDownListFor(model => model.feeDetail.Level.Id, (IEnumerable<SelectListItem>)ViewBag.Levels, new { @class = "form-control", id = "levelId" })
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="col-md-12">
+            <div class="row">
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <select name="from" id="deptmultiselect" class="form-control" size="20" multiple="multiple"></select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <button type="button" id="deptmultiselect_rightAll" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+                        <button type="button" id="deptmultiselect_rightSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                        <button type="button" id="deptmultiselect_leftSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                        <button type="button" id="deptmultiselect_leftAll" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
+                    </div>
+                </div>
+
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <select name="to" id="deptmultiselect_to" class="form-control" size="20" multiple="multiple"></select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+
+
+                <button class="btn btn-primary pull-right" id="saveFeeDetail">Save</button>
+            </div>
+
+        </div>
+    </div>
+    <div id="editFeeSetup">
+        <div class="col-md-12">
+            <div class="row">
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>FeeSetup Name</label>
+                        <input type="text" id="editsetupName" class="form-control" />
+                        <input type="hidden" id="editfeeSetupId" class="form-control" disabled />
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Fee-Type</label>
+                        @Html.DropDownListFor(model => model.feeDetail.FeeType.Id, (IEnumerable<SelectListItem>)ViewBag.FeeTypes, new { @class = "form-control", id = "editfeetypeId" })
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Payment Mode</label>
+                        @Html.DropDownListFor(model => model.feeDetail.PaymentMode.Id, (IEnumerable<SelectListItem>)ViewBag.Paymentmodes, new { @class = "form-control", id = "editpaymentmodeId" })
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Amount</label>
+                        <input type="text" id="editamount" class="form-control" disabled />
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Activate</label> <br />
+                        <input type="checkbox" id="editactivate" />
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Session</label>
+                        @Html.DropDownListFor(model => model.feeDetail.Session.Id, (IEnumerable<SelectListItem>)ViewBag.Sessions, new { @class = "form-control", id = "editsessionId" })
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="col-md-12">
+            <div class="row">
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <select name="from" id="editmultiselect" class="form-control" size="20" multiple="multiple"></select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <button type="button" id="editmultiselect_rightAll" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+                        <button type="button" id="editmultiselect_rightSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                        <button type="button" id="editmultiselect_leftSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                        <button type="button" id="editmultiselect_leftAll" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
+                    </div>
+                </div>
+
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <select name="to" id="editmultiselect_to" class="form-control" size="20" multiple="multiple"></select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+
+
+                <button class="btn btn-primary pull-right" id="saveEditFeeDetail">Save</button>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document" style="z-index: 999999999999999999 !important;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">FEE SETUP</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="col-md-12">
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>FeeType</label>
+                                    @Html.DropDownListFor(model => model.feeDetail.FeeType.Id, (IEnumerable<SelectListItem>)ViewBag.FeeTypes, new { @class = "form-control", id = "feetype" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Session</label>
+                                    @Html.DropDownListFor(model => model.feeDetail.Session.Id, (IEnumerable<SelectListItem>)ViewBag.Sessions, new { @class = "form-control", id = "session" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Activate</label> <br />
+                                    <input type="checkbox" id="activate" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Payment Mode</label>
+                                    @Html.DropDownListFor(model => model.feeDetail.PaymentMode.Id, (IEnumerable<SelectListItem>)ViewBag.Paymentmodes, new { @class = "form-control", id = "paymentmode" })
+                                </div>
+                            </div>
+                            <br />
+                            <div class="clearfix"></div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>FeeSetup Name</label>
+                                    <input type="text" id="addSetupName" class="form-control" />
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-xs-5">
+                        <select name="from" id="multiselect" class="form-control" size="8" multiple="multiple" style="overflow-x:scroll" ;></select>
+                    </div>
+                    <div class="col-xs-2">
+                        <button type="button" id="multiselect_rightAll" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+                        <button type="button" id="multiselect_rightSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                        <button type="button" id="multiselect_leftSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                        <button type="button" id="multiselect_leftAll" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
+                    </div>
+                    <div class="col-xs-5">
+                        <select name="to" id="multiselect_to" class="form-control" size="8" multiple="multiple" style="overflow-x:scroll;"></select>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <br />
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="createFeeSetup">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

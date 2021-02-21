@@ -1,0 +1,279 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.AdmissionQuotaViewModel
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.4.1/css/buttons.dataTables.min.css">
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.flash.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.html5.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.print.min.js"></script>
+
+@section Scripts {
+
+    <link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+
+    @Scripts.Render("~/bundles/jquery")
+
+    @*<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+        <script src="~/Scripts/jquery-migrate-1.2.1.min.js"></script>
+        <script src="~/Scripts/prettify.js"></script>
+        <script src="~/Scripts/custom.js"></script>
+        <script src="~/Scripts/jquery.min.js"></script>
+        <script src="~/Scripts/responsive-tabs.js"></script>*@
+
+
+
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/file-upload/jquery-ui-1.9.2.min.js"></script>
+
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#example').DataTable({
+                dom: 'Bfrtip',
+                ordering: true,
+                retrieve: true,
+                buttons: [
+                    {
+                        extend: 'copy',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, , 'colvis'
+                ]
+            });
+        });
+    </script>
+
+
+
+
+
+
+
+    <script type="text/javascript">
+        var person = null;
+        let proposeArr = [];
+        var dept = "";
+        var programme = "";
+
+
+
+
+
+        function selectApplicant() {
+            //let proposeArr = []
+            dept = $("#selectedDepartment").val();
+            programme = $("#selectedProgramme").val();
+            sessionSelect = $("#selectedSession").val();
+
+            const form = typeof window !== "undefined" ? document.querySelectorAll("input[name=applicant]") : [];
+
+
+            for (let a of form) {
+                if (a.checked) proposeArr.push(a.value)
+            }
+
+            setTimeout(() => {
+                console.log(proposeArr, "Proposed Applicants")
+                //console.log(proposeArr, dept, programme "Proposed Applicants")
+            }, 1000)
+
+        }
+
+
+        $("#btnSend").click(function () {
+
+
+        });
+
+
+
+    </script>
+}
+@if (TempData["Message"] != null)
+{
+    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h4>This interface allows Admission Ofiicer Set Quota for number of students to be admitted into a particular, Programme/Department</h4>
+                <p>
+                    When a Quota is set, applicants intended for admission would not exceed the set quota.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            @Html.ActionLink("View Set Quotas", "ViewQuota", new { Controller = "AdmissionProcessing" }, new { @class = "btn btn-primary" })
+        </div>
+    </div>
+    <div class="col-md-12">
+
+        @using (Html.BeginForm("SetAdmissionQuota", "AdmissionProcessing", new { area = "Admin" }, FormMethod.Post))
+        {
+            <div class="container mt-3">
+
+                <div class="card card-shadow p-4">
+                    <h2>Set Admission Quota</h2>
+
+
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+                    @*@Html.HiddenFor(model => model.staffDetail.Id)*@
+
+
+                    <div class="col-md-12">
+                        <hr style="margin-top: 0" />
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="row">
+
+
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Programme, new { @class = "control-label" })
+                                @Html.DropDownListFor(model => model.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.ProgrammeSelectlist, new { @class = "form-control" })
+                                @*@Html.ValidationMessageFor(model => model.staffDetail.MaritalStatus.Id, null, new { @class = "text-danger" })*@
+                            </div>
+                        </div><!-- form-group -->
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Department, new { @class = "control-label" })
+                                @Html.DropDownListFor(model => model.Department.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentSelectList, new { @class = "form-control" })
+                                @*@Html.ValidationMessageFor(model => model.staffDetail.Religion.Id, null, new { @class = "text-danger" })*@
+                            </div>
+                        </div><!-- form-group -->
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Session, new { @class = "control-label" })
+                                @Html.DropDownListFor(model => model.Session.Id, (IEnumerable<SelectListItem>)ViewBag.SessionSelectList, new { @class = "form-control" })
+                                @*@Html.ValidationMessageFor(model => model.staffDetail.Religion.Id, null, new { @class = "text-danger" })*@
+                            </div>
+                        </div><!-- form-group -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Quota, new { @class = "control-label" })
+                                @Html.TextBoxFor(model => model.Quota, new { @class = "form-control", @type = "text" })
+                                @*@Html.ValidationMessageFor(model => model.staffDetail.MobilePhone, null, new { @class = "text-danger" })*@
+                            </div>
+                        </div><!-- form-group -->
+
+
+
+                    </div>
+                    <!-- row -->
+                    <!-- row -->
+                    <div class="row">
+                        <div class="col-md-1"></div>
+                        <div class="col-sm-10 ">
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <input class="btn btn-success btn-lg mr5" type="submit" name="submit" id="submit" value="Save" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+
+                </div>
+            </div>
+
+
+        }
+        <div>
+            <div>
+                <span id="processing" style="display:none"><img width="30px" height="30px" src="@Url.Content("~/Content/Images/bx_loader.gif")" /></span>
+            </div>
+            <div style="width:100%; align-content:flex-end">
+
+            </div>
+
+            <br />
+
+            <!-- The Modal -->
+            <div class="modal fade" id="myModal">
+                <div class="modal-dialog" style="z-index:99999">
+                    <div class="modal-content">
+
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">
+                                @*Modal Heading*@
+                            </h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            Confirm Selected Applicants for Admission?
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-success" id="btnSend" data-dismiss="modal">Confirm</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+        </div>
+    </div>
+
+
+</div>
+

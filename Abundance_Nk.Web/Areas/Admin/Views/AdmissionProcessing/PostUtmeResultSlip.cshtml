@@ -1,0 +1,101 @@
+﻿@model Abundance_Nk.Model.Model.PostUtmeResult
+
+@{
+    ViewBag.Title = "PUTME RESULT SLIP";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>PUTME Result Slip</title>
+</head>
+<body>
+    <div class="alert alert-success fade in" style="border:1px solid green">
+        <div>
+            <table style="margin-bottom:7px">
+                <tr>
+                    <td style="padding-right:7px"><img src="@Url.Content("~/Content/Images/school_logo.jpg")" alt="" /></td>
+                    <td>
+                        <h3><strong>THE FEDERAL POLYTECHNIC, ADO-EKITI</strong></h3>
+                        @*<p>
+                            P.M.B. 50, ILARO, OGUN STATE.
+                        </p>*@
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <br />
+
+    <div> 
+        <h2>PUTME Result Slip</h2>
+        <hr class="no-top-padding" />
+
+        <div class="row">
+            <div class="col-md-12" style="text-align:justify">
+                <br />
+                <p>
+                    Dear @Html.DisplayFor(model => model.Fullname),
+                </p>
+
+                <p>
+                    We are happy to announce that your result for the past PUTME are as follows;
+                    <div class="panel panel-default">
+
+                        <div class="panel-body">
+                            <table class="table table-responsive table-condensed ">
+                                <thead>
+                                    <tr>
+                                        <td>Course</td>
+                                        <td>Score</td>
+                                        <td>Remarks</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>ENGLISH</td>
+                                        <td>@Html.DisplayFor(model => model.Eng)</td>
+                                        <td>--</td>
+                                    </tr>
+                                    <tr>
+                                        <td>@Html.DisplayFor(model => model.Sub2)</td>
+                                        <td>@Html.DisplayFor(model => model.Scr2)</td>
+                                        <td>--</td>
+                                    </tr>
+                                    <tr>
+                                        <td>@Html.DisplayFor(model => model.Sub3)</td>
+                                        <td>@Html.DisplayFor(model => model.Scr3)</td>
+                                        <td>--</td>
+                                    </tr>
+                                    <tr>
+                                        <td>@Html.DisplayFor(model => model.Sub4)</td>
+                                        <td>@Html.DisplayFor(model => model.Scr4)</td>
+                                        <td>--</td>
+                                    </tr>
+                                 
+                                </tbody>
+                            </table>
+                            <br />
+                            Your Total Score is <strong> @Html.DisplayFor(model => model.Total)</strong> and your Jamb Registration Number/Application Number is <strong> @Html.DisplayFor(model => model.Result.Regno)</strong>
+                        </div>
+                    </div>
+            </p>
+
+        </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <h5>C.O.A Adeosun</h5>
+                <br />
+                <p>Registrar</p>
+            </div>
+        </div>
+
+
+    </div>
+</body>
+</html>

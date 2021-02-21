@@ -1,0 +1,111 @@
+﻿@model IEnumerable<Abundance_Nk.Model.Entity.NEWS>
+@using GridMvc.Html
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>News</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+
+@Html.Grid(Model).Columns(columns =>
+{
+    columns.Add()
+               .Encoded(false)
+               .Sanitized(false)
+               .RenderValueAs(d =>
+                @<div style="width:65px">
+                    <a href="@Url.Action("Edit", new { id = d.News_Id })" title="Edit">
+                        <img src="@Url.Content("~/Content/Images/edit_icon.png")" alt="Edit" />
+                    </a>
+
+                    <a href="@Url.Action("Details", new { id = d.News_Id })" title="Details">
+                        <img src="@Url.Content("~/Content/Images/list_icon3.png")" alt="Details" />
+                    </a>
+
+                    <a href="@Url.Action("Delete", new { id = d.News_Id })" title="Delete">
+                        <img src="@Url.Content("~/Content/Images/delete_icon.png")" alt="Delete" />
+                    </a>
+                </div>);
+
+    columns.Add(f => f.Title).Titled("Title");
+    columns.Add(f => f.Description).Titled("Description");
+    columns.Add(f => f.Venue).Titled("Venue");
+    columns.Add(f => f.Date).Titled("Date").Format("{0:d}");
+}).WithPaging(25)
+
+
+
+
+
+
+
+
+
+@*<div class="table-responsive">
+    <table class="table">
+        <tr>
+            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Image_Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Venue)
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td >
+                    <div style="width:65px">
+
+                        <a href="@Url.Action("Edit", new { id = item.News_Id })">
+                            <img src="@Url.Content("~/Content/Images/edit_icon.png")" alt="Edit" />
+                        </a>
+
+                        <a href="@Url.Action("Details", new { id = item.News_Id })">
+                            <img src="@Url.Content("~/Content/Images/details_icon.png")" alt="Details" />
+                        </a>
+
+                        <a href="@Url.Action("Delete", new { id = item.News_Id })">
+                            <img src="@Url.Content("~/Content/Images/delete_icon.png")" alt="Delete" />
+                        </a>
+                    </div>
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+              
+                <td>
+                    @Html.DisplayFor(modelItem => item.Image_Title)
+                </td>
+              
+                <td>
+                    @Html.DisplayFor(modelItem => item.Venue)
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>*@

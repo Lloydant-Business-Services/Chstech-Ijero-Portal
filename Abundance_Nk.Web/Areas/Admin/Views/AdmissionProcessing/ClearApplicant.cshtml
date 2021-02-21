@@ -1,0 +1,421 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.AdmissionProcessingViewModel
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@*@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+}*@
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<script src="~/Scripts/jquery-migrate-1.2.1.min.js"></script>
+@*<link href="~/Content/pretty-menu.css" rel="stylesheet" />*@
+<script src="~/Scripts/prettify.js"></script>
+<script src="~/Scripts/custom.js"></script>
+
+
+<script src="~/Scripts/jquery.min.js"></script>
+<script src="~/Scripts/responsive-tabs.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#buttons").hide();
+
+        $('#divDisabledDetails').show();
+        $('#divDetails').hide();
+
+        //BindSelectAll();
+        BindSelectOne();
+
+        $('#btnAccept').prop('disabled', true);
+        $('#btnReject').prop('disabled', true);
+
+        $("#btnAccept").click(function () {
+            checkedIds = $(".ckb").filter(":checked").map(function () {
+                return this.id;
+            });
+
+            var rejected = false;
+            var selectedSession = $("#Session_Id").val();
+            if (selectedSession == "" || undefined) {
+                alert("No Session selected! Please select Session.");
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("AcceptOrReject", "AdmissionProcessing")",
+                traditional: true,
+                data: { ids: checkedIds.toArray(), sessionId: selectedSession, isRejected: rejected },
+                beforeSend: function () {
+                    $("#processing").show();
+                },
+                complete: function () {
+                    $("#processing").hide();
+                },
+                success: SuccessFunc,
+                error: ErrorFunc,
+            })
+
+            function SuccessFunc(data, status) {
+                $("#data").html(data);
+                //BindSelectAll();
+                BindSelectOne();
+            }
+
+            function ErrorFunc() {
+                alert("Operation failed!");
+            }
+        });
+
+        $("#btnReject").click(function () {
+            checkedIds = $(".ckb").filter(":checked").map(function () {
+                return this.id;
+            });
+
+            var rejected = true;
+            var selectedSession = $("#Session_Id").val();
+            if (selectedSession == "" || undefined) {
+                alert("No Session selected! Please select Session.");
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("AcceptOrReject", "AdmissionProcessing")",
+                traditional: true,
+                data: { ids: checkedIds.toArray(), sessionId: selectedSession, isRejected: rejected },
+                beforeSend: function () {
+                    $("#processing").show();
+                },
+                complete: function () {
+                    $("#processing").hide();
+                },
+                success: SuccessFunc,
+                error: ErrorFunc,
+            })
+
+            function SuccessFunc(data, status) {
+                $("#data").html(data);
+                //BindSelectAll();
+                BindSelectOne();
+            }
+
+            function ErrorFunc() {
+                alert("Operation failed!");
+            }
+        });
+
+        $("#find").click(function () {
+            if ($("#rdYesRadio").is(':checked')) {
+                rejected = true;
+            }
+            else {
+                rejected = false;
+            }
+
+            var session = $("#Session_Id").val();
+            if (session == "" || undefined) {
+                alert("No Session selected! Please select Session.");
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("FindBy", "AdmissionProcessing")",
+                traditional: true,
+                data: { sessionId: session, isRejected: rejected },
+                beforeSend: function () {
+                    $("#loading").show();
+                },
+                complete: function () {
+                    $("#loading").hide();
+                },
+                success: SuccessFunc,
+                error: ErrorFunc,
+            });
+
+            function SuccessFunc(data) {
+                $("#data").html(data);
+                $("#buttons").show();
+                //BindSelectAll();
+                BindSelectOne();
+            }
+
+            function ErrorFunc() {
+                alert("Operation failed!");
+            }
+        });
+
+        //function BindSelectAll() {
+        //    if ($("#rdYesRadio").is(':checked')) {
+        //        rejected = true;
+        //    }
+        //    else {
+        //        rejected = false;
+        //    }
+
+        //    $("#selectAll").click(function (event) {
+
+
+        //        if (this.checked) {
+        //            $(".ckb").each(function () {
+        //                this.checked = true;
+
+        //                if (rejected) {
+        //                    $('#btnAccept').prop('disabled', false);
+        //                    $('#btnReject').prop('disabled', true);
+        //                }
+        //                else {
+        //                    $('#btnReject').prop('disabled', false);
+        //                    $('#btnAccept').prop('disabled', true);
+        //                }
+
+        //            });
+
+        //            $('#divDisabledDetails').hide();
+        //            $('#divDetails').show();
+        //        }
+        //        else {
+        //            $(".ckb").each(function () {
+        //                this.checked = false;
+        //                $('#btnAccept').prop('disabled', true);
+        //                $('#btnReject').prop('disabled', true);
+        //            });
+
+        //            $('#divDisabledDetails').show();
+        //            $('#divDetails').hide();
+        //        }
+        //    });
+        //}
+
+        function BindSelectOne() {
+            $(".ckb").click(function (event) {
+
+                if (this.checked) {
+                    $('#divDisabledDetails').hide();
+                    $('#divDetails').show();
+
+                    checkedIds = $(".ckb").filter(":checked").map(function () {
+                        return this.id;
+                    });
+
+                    $('#txtApplicationFormNumber').val(checkedIds[0]);
+                    $("#hfApplicationFormNumber").val(checkedIds[0]);
+                    alert($("#hfApplicationFormNumber").val());
+                }
+                else {
+                    $('#divDisabledDetails').show();
+                    $('#divDetails').hide();
+                }
+            });
+        }
+
+        $('.mnu').click(function (e) {
+            e.preventDefault();
+
+            $('#vwViewDetails').submit();
+
+            //alert('wow!');
+        })
+
+
+    });
+
+
+
+</script>
+
+
+@*<h3>
+    Clear Applicant
+</h3>*@
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3>This interface enables Admission Officer to Clear Applicant</h3>
+                    <p>
+                        Kindly enter Applicant's Application Number in the field provided below and Click the Search button. The system will search and display
+                        the Applicant's detail if he/she has completed the Admission process.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+
+                <div class="panel panel-default">
+                    <div class="panel-body ">
+                        <div class="form-inline ">
+                            <div class="form-group">
+                                <span style="font-size:11pt">Please enter Application Number</span>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.TextBoxFor(m => m.Session.Name, new { @class = "form-control", @placeholder = "Enter Application Number" })
+                                <button class="btn btn-default btn-metro mr5" type="button" name="btnSearch" id="btnSearch" value="Search">Search</button>
+                            </div>
+
+                            <div class="form-group">
+                                <div id="loading" style="display:none">
+                                    <img src="@Url.Content("~/Content/Images/bx_loader.gif")" />
+                                    <span>Loading ...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+
+                    @if (Model != null && Model.Applicants.Count > 0)
+                    {
+                        <table class="table table-condensed table-responsive grid-table table-head-alt mb30">
+                            <thead>
+                                <tr class="well" style="height:35px; vertical-align:middle">
+                                    <th>
+                                        @Html.CheckBox("selectAll")
+                                    </th>
+                                    <th>
+                                        Links
+                                    </th>
+                                    <th>
+                                        Form Number
+                                    </th>
+                                    <th>
+                                        Name
+                                    </th>
+                                    <th>
+                                        Reject Reason
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            @foreach (var item in Model.Applicants)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.CheckBox(" ", false, new { @class = "ckb", id = item.ApplicationForm.Id })
+                                    </td>
+                                    <td>
+                                        <ul class="nav navbar-nav2 ">
+                                            <li class="dropdown">
+                                                <a style="padding:1px; " class="dropdown-toggle" data-toggle="dropdown" href="#">View Details<span></span></a>
+                                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                                    <li>@Html.ActionLink("Application Form", "ApplicationForm", "AdmissionProcessing", new { Area = "Admin", fid = item.ApplicationForm.Id }, new { target = "_blank", style = "line-height:5px; font-size:10pt; margin-bottom:5px" })</li>
+                                                    <li>@Html.ActionLink("PUTME Result Slip", "Index", "PostUtmeResult", new { Area = "Applicant", fid = item.ApplicationForm.Id }, new { target = "_blank", style = "line-height:5px; font-size:10pt; margin-bottom:5px" })</li>
+
+                                                    <li class="divider"></li>
+
+                                                    <li>@Html.ActionLink("Admission Letter", "AdmissionLetter", "Admission", new { Area = "Applicant", fid = item.ApplicationForm.Id }, new { target = "_blank", style = "line-height:5px; font-size:10pt; margin-bottom:5px" })</li>
+
+                                                    <li class="divider"></li>
+
+                                                    <li>@Html.ActionLink("Acceptance Receipt", "Receipt", "Admission", new { Area = "Applicant", ivn = item.ApplicationForm.Id }, new { target = "_blank", style = "line-height:5px; font-size:10pt; margin-bottom:5px" })</li>
+                                                    <li>@Html.ActionLink("School Fees Receipt", "Receipt", "Admission", new { Area = "Applicant", ivn = item.ApplicationForm.Id }, new { target = "_blank", style = "line-height:5px; font-size:10pt; margin-bottom:5px" })</li>
+
+                                                    <li class="divider"></li>
+
+                                                    <li>@Html.ActionLink("Student Form", "StudentForm", "AdmissionProcessing", new { Area = "Admin", fid = item.ApplicationForm.Id }, new { target = "_blank", style = "line-height:5px; font-size:10pt; margin-bottom:5px" })</li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </td>
+
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ApplicationForm.Number)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Person.FullName)
+                                    </td>
+                                    <td>
+
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+
+                        @*</div>*@
+                    }
+
+                </div>
+            }
+        </div>
+
+
+    @*<div class="col-md-3">
+        @using (Html.BeginForm("ViewDetails", "AdmissionProcessing", FormMethod.Post, new { id = "vwViewDetails", target = "_blank" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+
+            @Html.Hidden("hfApplicationFormNumber", null, new { id = "hfApplicationFormNumber" })
+
+            <div class="panel panel-default">
+                <div id="divDetails" class="panel-body">
+                    <ul class="leftmenu">
+                        <li>
+                            <a href="#gettingstarted">View Applicant's Details</a>
+                            <ul class="children">
+                                <li class="mnu">@Html.ActionLink("Application Form", "Index", "PersonType", new { Area = "Admin", mid = 1 } )</li>
+                                <li class="mnu">@Html.ActionLink("PUTME Result Slip", "Index", "StudentType", new { Area = "Admin", mid = 2 })</li>
+                                <li class="mnu">@Html.ActionLink("Admission Notification", "Index", "Religion", new { Area = "Admin", mid = 3 })</li>
+                                <li class="mnu">@Html.ActionLink("Acceptance Receipt", "Index", "Relationship", new { Area = "Admin", mid = 4 })</li>
+                                <li class="mnu">@Html.ActionLink("Admission Letter", "Index", "FeeType", new { Area = "Admin", mid = 5 })</li>
+                                <li class="mnu">@Html.ActionLink("School Fees Receipt", "Index", "PaymentType", new { Area = "Admin", mid = 6 })</li>
+                                <li class="mnu">@Html.ActionLink("Bio Data form", "Index", "PaymentMode", new { Area = "Admin", mid = 7 }, new { target = "_blank" })</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <input type="submit" />
+                <div id="divDisabledDetails" class="panel-body">
+                    <ul class="leftmenu">
+                        <li>
+                            <a class="disabledChildren">View Applicant's Details</a>
+                            <ul class="disabledChildren">
+                                <li><a style="color:lightgray">Application Form</a></li>
+                                <li><a style="color:lightgray">PUTME Result Slip</a></li>
+                                <li><a style="color:lightgray">Admission Notification</a></li>
+                                <li><a style="color:lightgray">Acceptance Receipt</a></li>
+                                <li><a style="color:lightgray">Admission Letter</a></li>
+                                <li><a style="color:lightgray">School Fees Receipt</a></li>
+                                <li><a style="color:lightgray">Bio Data form</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        }
+
+    </div>*@
+
+
+</div>
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />

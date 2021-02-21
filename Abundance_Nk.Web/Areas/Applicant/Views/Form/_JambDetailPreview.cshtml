@@ -1,0 +1,94 @@
+﻿@model Abundance_Nk.Web.Areas.Applicant.ViewModels.PostJambViewModel
+
+@{
+    //Layout = null;
+}
+
+<div class="col-md-12 card p-5">
+    <div class="panel-heading">
+        <div style="font-size:x-large">UTME Details/Mode of Reference</div>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-6 custom-text-black">
+                <div class="form-group margin-bottom-3">
+                     @Html.LabelFor(model => model.ApplicantJambDetail.JambRegistrationNumber)
+                    @Html.TextBoxFor(model => model.ApplicantJambDetail.JambRegistrationNumber, new { @class = "form-control", @readonly = "readonly" })
+                   
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group margin-bottom-3">
+                     @Html.LabelFor(model => model.ApplicantJambDetail.JambScore)
+                      @Html.TextBoxFor(model => model.ApplicantJambDetail.JambScore, new { @class = "form-control", @readonly = "readonly" })
+                   
+                </div> 
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group margin-bottom-3">
+                    @Html.LabelFor(model => model.ApplicantJambDetail.InstitutionChoice.Id)
+                   @Html.TextBoxFor(model => model.ApplicantJambDetail.InstitutionChoice.Name, new { @class = "form-control", @readonly = "readonly" })
+                   
+                </div> 
+
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group margin-bottom-3">
+                   @Html.Label("English")
+                    @Html.TextBoxFor(model => model.ApplicantJambDetail.Subject1.Name, new { @class = "form-control", @readonly = "readonly" })
+                   
+                </div>
+
+            </div>
+        </div>  
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group margin-bottom-3">
+                    @Html.LabelFor(model => model.ApplicantJambDetail.Subject2)
+                    @Html.TextBoxFor(model => model.ApplicantJambDetail.Subject2.Name, new { @class = "form-control", @readonly = "readonly" })
+                    
+                </div>
+
+            </div>
+            
+            <div class="col-md-6">
+                <div class="form-group margin-bottom-3">
+                   @Html.LabelFor(model => model.ApplicantJambDetail.Subject3)
+                    @Html.TextBoxFor(model => model.ApplicantJambDetail.Subject3.Name, new { @class = "form-control", @readonly = "readonly" })
+                   
+                </div>
+
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group margin-bottom-3">
+                     @Html.LabelFor(model => model.ApplicantJambDetail.Subject4)
+                   @Html.TextBoxFor(model => model.ApplicantJambDetail.Subject4.Name, new { @class = "form-control", @readonly = "readonly" })
+                   
+                </div>
+
+            </div>
+            
+            <div class="col-md-6">
+                <div class="form-group margin-bottom-3">
+                    
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+

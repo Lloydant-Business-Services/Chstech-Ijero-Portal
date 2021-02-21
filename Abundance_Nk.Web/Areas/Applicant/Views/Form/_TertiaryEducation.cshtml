@@ -1,0 +1,119 @@
+﻿@model Abundance_Nk.Web.Areas.Applicant.ViewModels.PostJambViewModel
+
+@{
+    //Layout = null;
+}
+
+<div class="col-md-12 card p-5">
+    <div class="panel-heading">
+        <div style="font-size:x-large">Tertiary Education</div>
+    </div>
+    @Html.HiddenFor(model => model.PreviousEducation.Id)
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PreviousEducation.SchoolName, new { @class = "control-label " })
+                    @Html.TextBoxFor(model => model.PreviousEducation.SchoolName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.PreviousEducation.SchoolName)
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PreviousEducation.Course, new { @class = "control-label " })
+                    @Html.TextBoxFor(model => model.PreviousEducation.Course, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.PreviousEducation.Course)
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="form-inline">
+                        
+                        <div class="form-inline" style="color:black">Start Date <span id="spSDate" style="color:green; font-weight:bold; display:none">...Loading</span></div>
+
+                        @Html.DropDownListFor(model => model.PreviousEducation.StartYear.Id, (IEnumerable<SelectListItem>)ViewBag.PreviousEducationStartYearId, new { @class = "form-control" })
+                        @Html.DropDownListFor(model => model.PreviousEducation.StartMonth.Id, (IEnumerable<SelectListItem>)ViewBag.PreviousEducationStartMonthId, new { @class = "form-control" })
+                        @Html.DropDownListFor(model => model.PreviousEducation.StartDay.Id, (IEnumerable<SelectListItem>)ViewBag.PreviousEducationStartDayId, new { @class = "form-control" })
+
+                        <div>
+                            <div class="form-group">
+                                @Html.ValidationMessageFor(model => model.PreviousEducation.StartYear.Id)
+                                @Html.ValidationMessageFor(model => model.PreviousEducation.StartMonth.Id)
+                                @Html.ValidationMessageFor(model => model.PreviousEducation.StartDay.Id)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="form-inline">
+                        <div class="form-inline" style="color:black">End Date <span id="spEDate" style="color:green; font-weight:bold; display:none">...Loading</span></div>
+
+                        @Html.DropDownListFor(model => model.PreviousEducation.EndYear.Id, (IEnumerable<SelectListItem>)ViewBag.PreviousEducationEndYearId, new { @class = "form-control" })
+                        @Html.DropDownListFor(model => model.PreviousEducation.EndMonth.Id, (IEnumerable<SelectListItem>)ViewBag.PreviousEducationEndMonthId, new { @class = "form-control" })
+                        @Html.DropDownListFor(model => model.PreviousEducation.EndDay.Id, (IEnumerable<SelectListItem>)ViewBag.PreviousEducationEndDayId, new { @class = "form-control" })
+
+                        <div>
+                            <div class="form-group">
+                                @Html.ValidationMessageFor(model => model.PreviousEducation.EndYear.Id)
+                                @Html.ValidationMessageFor(model => model.PreviousEducation.EndMonth.Id)
+                                @Html.ValidationMessageFor(model => model.PreviousEducation.EndDay.Id)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PreviousEducation.Qualification.Id, new { @class = "control-label " })
+                    @Html.DropDownListFor(model => model.PreviousEducation.Qualification.Id, (IEnumerable<SelectListItem>)ViewBag.QualificationId, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.PreviousEducation.Qualification.Id)
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PreviousEducation.ResultGrade.Id, new { @class = "control-label" })
+                    @Html.DropDownListFor(model => model.PreviousEducation.ResultGrade.Id, (IEnumerable<SelectListItem>)ViewBag.ResultGradeId, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.PreviousEducation.ResultGrade.Id)
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PreviousEducation.ITDuration.Id, new { @class = "control-label " })
+                    @Html.DropDownListFor(model => model.PreviousEducation.ITDuration.Id, (IEnumerable<SelectListItem>)ViewBag.ITDurationId, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.PreviousEducation.ITDuration.Id)
+                </div>
+            </div>
+
+            <div class="col-md-6">
+            </div>
+        </div>
+
+        @*<div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                    </div>
+                </div>
+            </div>*@
+
+
+    </div>
+</div>

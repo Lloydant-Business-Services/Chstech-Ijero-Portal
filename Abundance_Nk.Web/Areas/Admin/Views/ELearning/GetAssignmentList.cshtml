@@ -1,0 +1,209 @@
+﻿
+@using Abundance_Nk.Web.Models
+@model Abundance_Nk.Web.Areas.Admin.ViewModels.ELearningViewModel
+@{
+                /**/
+
+                /**/
+
+                /**/
+
+                /**/
+
+                ViewBag.Title = "Class Assignment List";
+                Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@if (TempData["Message"] != null)
+{
+    @Html.Partial("_Message", TempData["Message"])
+}
+
+@section Scripts {
+
+
+    <link href="~/Scripts/DataTables-1.10.15/media/css/jquery.dataTables.css" rel="stylesheet" />
+    <script src="~/Scripts/DataTables-1.10.15/media/js/jquery.dataTables.js"></script>
+    <link href="~/Scripts/DataTables-1.10.15/extensions/Buttons/css/buttons.dataTables.css" rel="stylesheet" />
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Buttons/js/dataTables.buttons.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Buttons/js/buttons.colVis.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Responsive/js/dataTables.responsive.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/buttons.flash.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/buttons.html5.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/buttons.print.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/jszip.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/pdfmake.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/vfs_fonts.js"></script>
+
+
+    <script type="text/javascript">
+
+
+        $(document).ready(function () {
+            $.extend($.fn.dataTable.shadows, {
+                responsive: false
+            });
+
+            $("#attendanceTable").DataTable({
+                dom: 'Bfrtip',
+                ordering: true,
+                buttons: [
+                    {
+                        extend: 'copy',
+                        exportOptions: {
+                            columns: ':visible',
+                            modifier: {
+                                orientation: 'landscape'
+                            }
+                        },
+                        orientation: 'landscape'
+
+
+                    },
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                            columns: ':visible',
+                            modifier: {
+                                orientation: 'landscape'
+                            }
+                        },
+                        orientation: 'landscape'
+
+                    },
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: ':visible',
+                            modifier: {
+                                orientation: 'landscape'
+                            }
+                        },
+                        orientation: 'landscape'
+
+
+                    },
+                    {
+                        extend: 'pdf',
+                        exportOptions: {
+                            columns: ':visible',
+                            header: true,
+                            modifier: {
+                                orientation: 'landscape'
+                            }
+
+
+
+                        },
+                        orientation: 'landscape'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: ':visible',
+                            modifier: {
+                                orientation: 'landscape'
+                            }
+                        },
+                        orientation: 'landscape'
+
+
+                    }, , 'colvis'
+                ]
+            });
+        })
+    </script>
+
+    <style>
+        .btn-success {
+            color: #1cc88a;
+            background-color: transparent;
+            border: 2px solid #eee;
+            border-radius: 3px !important;
+        }
+
+        .btn-danger {
+            color: #ca2819;
+            background-color: transparent;
+            border: 2px solid #eee;
+            border-radius: 3px !important;
+        }
+    </style>
+}
+<br />
+
+<div class="container">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table-bordered table-hover table-striped  table" id="attendanceTable">
+                <thead>
+                    <tr class="table-head-alt text-center">
+                        <th colspan="7" style="font-weight:600"> @Model.eAssignment.Course.Code - @Model.eAssignment.Course.Name</th>
+                    </tr>
+                    <tr lass="table-head-alt text-center">
+                        <th colspan="7" style="font-weight:400"></th>
+                    </tr>
+                    <tr>
+                        <th>S/N</th>
+                        <th>
+                            Student Name
+                        </th>
+                        <th>
+                            Matric Number
+                        </th>
+                        <th>
+                            Submitted?
+                        </th>
+                        <th>Date of Submission</th>
+                        <th>
+                            Score
+                        </th>
+                        <th>
+                            Remark
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @for (int i = 0; i < Model.EAssignmentClassList.Count; i++)
+                    {
+                        var sn = i + 1;
+                        <tr>
+                            <td>@sn</td>
+                            <td>
+                                @Model.EAssignmentClassList[i].CourseRegistrationDetail.CourseRegistration.Student.FullName
+                            </td>
+                            <td>
+                                @Model.EAssignmentClassList[i].CourseRegistrationDetail.CourseRegistration.Student.MatricNumber
+                            </td>
+                            @if (Model.EAssignmentClassList[i].IsSubmission)
+                            {
+                                <td>Yes</td>
+                                <td>
+                                    @Model.EAssignmentClassList[i].EAssignmentSubmission.DateSubmitted
+                                </td>
+                                <td>
+                                    @Model.EAssignmentClassList[i].EAssignmentSubmission.Score
+                                </td>
+                                <td>
+                                    @Model.EAssignmentClassList[i].EAssignmentSubmission.Remarks
+                                </td>
+                            }
+                            else
+                            {
+                                <td>No</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            }
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

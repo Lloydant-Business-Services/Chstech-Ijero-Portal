@@ -1,0 +1,231 @@
+﻿@model Abundance_Nk.Web.Areas.Applicant.ViewModels.TranscriptViewModel
+
+@{
+    Layout = "~/Views/Shared/_NewThemeLayout.cshtml";
+}
+<head>
+  
+
+    <style>
+        body {
+            font-family: Quicksand, sans-serif !important;
+        }
+        #myImg {
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+            #myImg:hover {
+                opacity: 0.7;
+            }
+
+        .modalSpin {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 4444; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        .modal-content-spin {
+            margin: auto;
+            margin-top: 120px;
+            display: block;
+            width: 60%;
+            max-width: 200px;
+            background-color: ghostwhite;
+            padding: 30px;
+            border-radius: 60px;
+        }
+
+        .modal-in-spin {
+            margin: auto;
+            margin-top: 15px;
+            display: block;
+            width: 60%;
+            max-width: 130px;
+            background-color: whitesmoke;
+            padding: 20px;
+            border-radius: 30px;
+            display: none
+        }
+
+        #caption {
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+            color: #ccc;
+            padding: 10px 0;
+            height: 150px;
+        }
+
+        .modal-content, #caption {
+            animation-name: zoom;
+            animation-duration: 0.6s;
+        }
+        /* The Close Button */
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+            .close:hover,
+            .close:focus {
+                color: #bbb;
+                text-decoration: none;
+                cursor: pointer;
+            }
+    </style>
+
+</head>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="~/Content/font-awesome/css/font-awesome.min.css">
+<div class="row">
+    <div class="col-md-12">
+        @if (Model.RequestType == null)
+        {
+            <h2>
+                Transcript Request <span class="label label-default"> Search</span>
+            </h2>
+        }
+        @if (Model.RequestType == "Certificate Collection")
+        {
+            <h2>
+                Certificate Collection <span class="label label-default"> Search</span>
+            </h2>
+        }
+        @if (Model.RequestType == "Transcript Verification")
+        {
+            <h2>
+                Transcript Verification <span class="label label-default"> Search</span>
+            </h2>
+        }
+        @if (Model.RequestType == "Certificate Verification")
+        {
+            <h2>
+                Certificate Verification <span class="label label-default"> Search</span>
+            </h2>
+        }
+        @if (Model.RequestType == "Convocation Fee")
+        {
+            <h2>
+                Convocation Fee <span class="label label-default"> Search</span>
+            </h2>
+        }
+        @if (Model.RequestType == "Transcript_Request")
+        {
+            <h4>
+                Transcript Request
+            </h4>
+            <hr/>
+        }
+        
+    </div>
+    <hr/>
+</div>
+
+<div class="panel panel-default">
+        <div class="panel-body">
+            <div class="col-md-1"></div>
+            <div class="col-md-10">
+
+                @if (TempData["Message"] != null)
+                {
+                    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+                }
+
+                @using (Html.BeginForm("IndexAlt", "Transcript", FormMethod.Post, new { id = "frmIndex", enctype = "multipart/form-data" }))
+               {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+
+                    <div class="row">
+                        <p>Enter your matric Number and click on the search button to retrieve your details</p>
+                        <hr style="margin-top:0" />
+                        <div class="col-md-12">
+
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.transcriptRequest.student.MatricNumber, new { @class = "control-label " })
+                                        @Html.TextBoxFor(model => model.transcriptRequest.student.MatricNumber, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.transcriptRequest.student.MatricNumber, null, new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                           @if (Model.transcriptRequest.student != null)
+                           {
+                            <div class="col-md-8">
+                                <div class="well well-sm">
+                                    <div class="form-group">
+                                        
+                                        <br />
+                                        @if (Model.transcriptRequest.payment == null)
+                                        {
+                                            @Html.ActionLink(Model.transcriptRequest.student.FullName + " - " + Model.transcriptRequest.student.MatricNumber + " >> Click to continue", "Request", "Transcript", new { sid = Model.transcriptRequest.student.Id }, new { @class = "btn btn-danger btn-sm", target = "_blank" })
+                                        }
+                                        else
+                                        {
+                                            @Html.ActionLink(Model.transcriptRequest.student.FullName + " - " + Model.transcriptRequest.student.MatricNumber + " >> Click to check status", "TranscriptPayment", "Transcript", new { tid = Model.transcriptRequest.Id }, new { @class = "btn btn-danger btn-sm", target = "_blank" })
+                                        }
+                                       </div>
+                                </div>
+                            </div>
+                           }
+                                    
+                          
+                           
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <input class="btn btn-success btn-lg mr5" onclick="TestingFunc()" type="submit" name="submit" id="submit" value="Search" />
+                                        </div> 
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <br />
+                }
+
+  </div>
+
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+
+<div id="spinnerModal" class="modalSpin">
+
+    <div>
+        <img class="modal-content-spin" id="img01" src="~/Content/Images/spinner.gif">
+    </div>
+
+</div>
+<script type="text/javascript">
+     function TestingFunc() {
+            $('#spinnerModal').modal('show');
+        }
+</script>

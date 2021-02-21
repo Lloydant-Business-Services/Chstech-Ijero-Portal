@@ -1,0 +1,92 @@
+﻿body {
+}
+
+ .space-bottom {
+        padding-bottom:7px;
+    }
+
+.confirm-delete-text {
+    font-size: 18px;
+    color: red;
+    font-family: inherit;
+    font-weight: 500;
+    line-height: 1.1;
+}
+
+ .align-right {
+        text-align: right;
+    }
+ .record-count-label
+ {
+    font-size: 11pt;
+    text-align: right;
+ }
+ .record-count-label .caption
+ {
+    font-size: 9pt;
+    margin-right:5px;
+ }
+ .no-top-padding
+ {
+     margin-top: 0px; 
+     padding-top: 0px;
+ }
+
+ .form-control-long {
+   -moz-border-radius: 3px;
+   -webkit-border-radius: 3px;
+   border-radius: 3px;
+   padding: 1px;
+   height: auto;
+   -moz-box-shadow: none;
+   -webkit-box-shadow: none;
+   box-shadow: none;
+   font-size: 13px;
+}
+
+ .text-bold
+ {
+     font-weight:bold;
+ }
+ .margin-bottom-0
+ {
+     margin-bottom:0px;
+ }
+ .margin-bottom-3
+ {
+     margin-bottom:3px;
+ }
+
+ .margin-bottom-5
+ {
+     margin-bottom:5px;
+ }
+
+ .padding-bottom-3
+ {
+     padding-bottom:3px;
+ }
+
+ .padding-bottom-5
+ {
+     padding-bottom:5px;
+ }
+ .padding-bottom-10
+ {
+     padding-bottom:10px;
+ }
+ ul.nav li.dropdown:hover ul.dropdown-menu{ 
+     display: block; 
+ }
+
+ .row hr {
+    height: 1px;
+    color: #9ef59e;
+    background-color: #9ef59e;
+    border: none;
+}
+
+
+
+ 
+

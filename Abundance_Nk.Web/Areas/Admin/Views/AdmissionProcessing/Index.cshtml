@@ -1,0 +1,345 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.AdmissionProcessingViewModel
+
+@{
+    //Layout = null;
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+}
+
+
+@*@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+   
+    }*@
+<script src="~/Scripts/jquery.min.js"></script>
+<script src="~/Scripts/responsive-tabs.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#buttons").hide();
+
+        BindSelectAll();
+        BindSelectOne();
+
+        $('#btnAccept').prop('disabled', true);
+        $('#btnReject').prop('disabled', true);
+
+        $("#btnAccept").click(function () {
+            checkedIds = $(".ckb").filter(":checked").map(function () {
+                return this.id;
+            });
+
+            var rejected = false;
+            var selectedSession = $("#Session_Id").val();
+            if (selectedSession == "" || undefined) {
+                alert("No Session selected! Please select Session.");
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("AcceptOrReject", "AdmissionProcessing")",
+                traditional: true,
+                data: { ids: checkedIds.toArray(), sessionId: selectedSession, isRejected: rejected },
+                beforeSend: function () {
+                    $("#processing").show();
+                },
+                complete: function () {
+                    $("#processing").hide();
+                },
+                success: SuccessFunc,
+                error: ErrorFunc,
+            })
+
+            function SuccessFunc(data, status) {
+                $("#data").html(data);
+                BindSelectAll();
+                BindSelectOne();
+            }
+
+            function ErrorFunc() {
+                alert("Operation failed!");
+            }
+        });
+
+        $("#btnReject").click(function () {
+            checkedIds = $(".ckb").filter(":checked").map(function () {
+                return this.id;
+            });
+
+            var rejected = true;
+            var selectedSession = $("#Session_Id").val();
+            if (selectedSession == "" || undefined) {
+                alert("No Session selected! Please select Session.");
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("AcceptOrReject", "AdmissionProcessing")",
+                traditional: true,
+                data: { ids: checkedIds.toArray(), sessionId: selectedSession, isRejected: rejected },
+                beforeSend: function () {
+                    $("#processing").show();
+                },
+                complete: function () {
+                    $("#processing").hide();
+                },
+                success: SuccessFunc,
+                error: ErrorFunc,
+            })
+
+            function SuccessFunc(data, status) {
+                $("#data").html(data);
+                BindSelectAll();
+                BindSelectOne();
+            }
+
+            function ErrorFunc() {
+                alert("Operation failed!");
+            }
+        });
+
+        $("#find").click(function () {
+            if ($("#rdYesRadio").is(':checked')) {
+                rejected = true;
+            }
+            else {
+                rejected = false;
+            }
+
+            var session = $("#Session_Id").val();
+            if (session == "" || undefined) {
+                alert("No Session selected! Please select Session.");
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("FindBy", "AdmissionProcessing")",
+                traditional: true,
+                data: { sessionId: session, isRejected: rejected },
+                beforeSend: function () {
+                    $("#loading").show();
+                },
+                complete: function () {
+                    $("#loading").hide();
+                },
+                success: SuccessFunc,
+                error: ErrorFunc,
+            });
+
+            function SuccessFunc(data) {
+                $("#data").html(data);
+                $("#buttons").show();
+                BindSelectAll();
+                BindSelectOne();
+            }
+
+            function ErrorFunc() {
+                alert("Operation failed!");
+            }
+        });
+
+        function BindSelectAll() {
+            if ($("#rdYesRadio").is(':checked')) {
+                rejected = true;
+            }
+            else {
+                rejected = false;
+            }
+
+            $("#selectAll").click(function (event) {
+                if (this.checked) {
+                    $(".ckb").each(function () {
+                        this.checked = true;
+
+                        if (rejected) {
+                            $('#btnAccept').prop('disabled', false);
+                            $('#btnReject').prop('disabled', true);
+                        }
+                        else {
+                            $('#btnReject').prop('disabled', false);
+                            $('#btnAccept').prop('disabled', true);
+                        }
+
+                    });
+                }
+                else {
+                    $(".ckb").each(function () {
+                        this.checked = false;
+                        $('#btnAccept').prop('disabled', true);
+                        $('#btnReject').prop('disabled', true);
+                    });
+                }
+            });
+        }
+
+        function BindSelectOne() {
+            if ($("#rdYesRadio").is(':checked')) {
+                rejected = true;
+            }
+            else {
+                rejected = false;
+            }
+
+            $(".ckb").click(function (event) {
+
+                if (!this.checked) {
+                    $('#selectAll').removeAttr('checked');
+                    var count = $("[type='checkbox']:checked").length;
+
+                    if (count > 0) {
+                        if (rejected) {
+                            $('#btnAccept').prop('disabled', false);
+                            $('#btnReject').prop('disabled', true);
+                        }
+                        else {
+                            $('#btnReject').prop('disabled', false);
+                            $('#btnAccept').prop('disabled', true);
+                        }
+                    }
+                    else {
+                        $('#btnAccept').prop('disabled', true);
+                        $('#btnReject').prop('disabled', true);
+                    }
+                }
+                else {
+                    //$('#btnAccept').prop('disabled', false);
+                    if (rejected) {
+                        $('#btnAccept').prop('disabled', false);
+                        $('#btnReject').prop('disabled', true);
+                    }
+                    else {
+                        $('#btnReject').prop('disabled', false);
+                        $('#btnAccept').prop('disabled', true);
+                    }
+                }
+            });
+        }
+    });
+
+    (function ($) {
+        fakewaffle.responsiveTabs(['xs', 'sm']);
+    })(jQuery);
+
+    $('#myTab a').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+    });
+
+    function resizeIframe(obj) {
+        obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+    }
+
+
+</script>
+
+<div style="color:black">
+    <h3>
+        Admission Processing
+    </h3>
+</div>
+  
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    
+    <ul class="nav nav-tabs responsive" id="myTab">
+        <li class="test-class active"><a class="deco-none misc-class" href="#how-to" data-toggle="tab">@*<span class="glyphicon glyphicon-cog"></span>*@ Accept / Reject Application</a></li>
+        @*<li><a class="deco-none" href="#source" data-toggle="tab">Clear Applicant</a></li>*@
+    </ul>
+
+    <div class="tab-content responsive">
+        <div class="tab-pane active" id="how-to">
+            <br />
+           
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 >This interface enables users to view, Accept or Reject Application.</h3>
+                    <p><b>Users can Accept or Reject Application Form by simple selecting an Academic Session, Accepted or Rejected from the drop dowm and options respectively. Then click the Find button to search. The search result is displayed in a tabular format below. Users can Accept an Application by selecting the appropriate application and click the Accept button below.</b></p>
+                </div>
+            </div>
+             
+
+                <div class="panel panel-default">
+
+                    <div class="panel-body ">
+                        <div class="form-inline ">
+                            <div class="form-group">
+                                <span style="font-size:11pt">Academic Session</span>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.DropDownListFor(m => m.Session.Id, (IEnumerable<SelectListItem>)ViewBag.SessionId, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Session.Id)
+                            </div>
+
+                            <div class="form-group">
+                                <div class="rdio rdio-default">
+                                    @Html.RadioButton("Rejected", false, new { id = "rdNoRadio" })
+                                    <label for="rdNoRadio">Accepted</label>
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+                                <div class="rdio rdio-default">
+                                    @Html.RadioButton("Rejected", true, new { id = "rdYesRadio", @checked = "checked" })
+                                    <label for="rdYesRadio">Rejected</label>
+                                </div>
+
+                            </div>
+
+                            <div class="form-group">
+                                <button class="btn btn-default btn-metro mr5" type="button" name="find" id="find" value="Find">Find</button>
+                            </div>
+
+                            <div class="form-group">
+                                <div id="loading" style="display:none">
+                                    <img src="@Url.Content("~/Content/Images/bx_loader.gif")" />
+                                    <span>Loading ...</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="data">
+                    @Html.Partial("_ApplicationFormsGrid", Model.ApplicationForms)
+                </div>
+                <br />
+
+                <div id="buttons">
+                    <div class="form-inline ">
+                        <div class="form-group">
+                            <input type="button" id="btnAccept" value="Accept" class="btn btn-white btn-lg" />
+                            <input type="button" id="btnReject" value="Reject" class="btn btn-white btn-lg" />
+                        </div>
+
+                        <div class="form-group">
+                            <div id="processing" style="display:none">
+                                <img src="@Url.Content("~/Content/Images/bx_loader.gif")" />
+                                <span>Processing ...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+    
+        @*<div class="tab-pane" id="source">
+            <div class="tab-pane active" id="how-to">
+                <br />
+               
+
+            </div>
+
+        </div>*@
+    </div>
+}
+
+    <br />

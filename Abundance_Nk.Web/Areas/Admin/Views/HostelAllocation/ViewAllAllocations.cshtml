@@ -1,0 +1,163 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.HostelViewModel
+@{
+    ViewBag.Title = "ViewAllAllocations";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script type="text/javascript">
+
+
+    function ActivateAll() {
+        if ($('#ActivateAllId').is(':checked')) {
+            $('.Activate').prop('checked', true);
+        }
+        else {
+            $('.Activate').prop('checked', false);
+        }
+    }
+
+</script>
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading panel-dark-head">
+                <h4>Hostel Allocations</h4>
+            </div>
+            <div class="panel-body">
+
+                @using (Html.BeginForm("ViewAllAllocations", "HostelAllocation", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="col-md-12">
+
+                        <div class="row">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Session.Name, "Session:", new { @class = "col-md-2 control-label" })
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(m => m.Session.Id, (IEnumerable<SelectListItem>)ViewBag.Session, new { @class = "form-control", @required = "required" })
+                                    @Html.ValidationMessageFor(m => m.Session.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.Hostel.Name, "Hostel:", new { @class = "col-md-2 control-label" })
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(m => m.Hostel.Id, (IEnumerable<SelectListItem>)ViewBag.Hostel, new { @class = "form-control", @required = "required" })
+                                    @Html.ValidationMessageFor(m => m.Hostel.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-6">
+                                    <input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="Submit" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                
+
+            </div>
+            <br/>
+
+            <div class="panel-body">
+                @if (Model.HostelAllocations != null && Model.HostelAllocations.Count > 0)
+                {
+                    <div class="panel panel-danger">
+                        <div class="panel-body">
+                            
+                                <table class="table-bordered table-hover table-striped table-responsive table">
+                                    <tr>
+                                        <th>
+                                            Hostel
+                                        </th>
+                                        <th>
+                                            Series/Floor
+                                        </th>
+                                        <th>
+                                            Room
+                                        </th>
+                                        <th>
+                                            Bed Space
+                                        </th>
+                                        <th>
+                                            Name Of Student
+                                        </th>
+                                        <th>
+                                            Matric Number
+                                        </th>
+                                        <th>
+                                            Status
+                                        </th>
+                                    </tr>
+
+                                    @for (int i = 0; i < Model.HostelAllocations.Count; i++)
+                                    {
+                                        <tr>
+
+                                            @Html.HiddenFor(model => model.HostelAllocations[i].Id)
+
+                                            <td>
+                                                @Model.HostelAllocations[i].Hostel.Name
+                                            </td>
+                                            <td>
+                                                @Model.HostelAllocations[i].Series.Name
+                                            </td>
+                                            <td>
+                                                @Model.HostelAllocations[i].Room.Number
+                                            </td>
+                                            <td>
+                                                @Model.HostelAllocations[i].Corner.Name
+                                            </td>
+                                            @if (Model.HostelAllocations[i].Student != null)
+                                            {
+                                                <td>
+                                                    @Model.HostelAllocations[i].Student.FullName
+                                                </td>
+                                                <td>
+                                                    @Model.HostelAllocations[i].Student.MatricNumber
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td>
+                                                    @Model.HostelAllocations[i].Person.FullName
+                                                </td>
+                                                <td>
+                                                    NIL
+                                                </td>
+                                            }
+                                                @if (Model.HostelAllocations[i].Occupied)
+                                                {
+                                                    <td>Occupied</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>Unoccupied</td>
+                                                }
+                                        </tr>
+                                    }
+
+                                </table>
+                        </div>
+                    </div>
+                }
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-1"></div>
+</div>
+

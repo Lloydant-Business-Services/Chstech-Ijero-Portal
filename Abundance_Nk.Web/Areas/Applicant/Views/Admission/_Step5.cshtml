@@ -1,0 +1,61 @@
+﻿@model Abundance_Nk.Web.Areas.Applicant.ViewModels.AdmissionViewModel
+<div class="col-md-12 card p-5">
+    <div class="panel-heading">
+        <h3>Generate School Fees Invoice</h3>
+    </div>
+    <div class="panel-body">
+
+        <div class="row">
+            <div class="col-md-12">
+
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        @Html.LabelFor(model => model.AcceptanceReceiptNumber)
+                        @Html.DisplayFor(model => model.AcceptanceReceiptNumber, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        @Html.LabelFor(model => model.PaymentMode.Id, "Payment Option", new { @class = "control-label col-sm-3" })
+                        <div class="col-sm-9" style="font-weight:bold">
+                            @Html.DropDownListFor(model => model.PaymentMode.Id, (IEnumerable<SelectListItem>)ViewBag.PaymentModes, new { @class = "form-control", required = "required" })
+                            @Html.ValidationMessageFor(model => model.PaymentMode.Id, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                
+
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <button class="btn btn-success btn-metro mr5" type="button" name="btnGenerateSchoolFeesInvoice" id="btnGenerateSchoolFeesInvoice">Generate Invoice</button> <br />
+                        @Html.ActionLink("E-Wallet", "Index", new { Controller = "EWallet", Area = "Applicant" }, new { @class= "btn btn-success btn-metro mr5", targe="_blank" })
+                    </div>
+
+                    <div class="form-group margin-bottom-0">
+                        <div id="divProcessingSchoolFeesInvoice" style="display:none">
+                            <img src="@Url.Content("~/Content/Images/bx_loader.gif")" />
+                            <span>Processing ...</span>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="form-group col-md-12  margin-bottom-0 divSchoolFeesInvoice" style="display:none">
+                        <a id="aSchoolFeesInvoiceNumber" href="#" target="_blank" class="btn btn-white btn-lg">Print Invoice</a>
+                    </div>
+                </div>
+
+                <br />
+                <div id="divGenerateSchoolFeesInvoice"></div>
+
+
+            </div>
+
+               
+          
+
+        </div>
+    </div>
+</div>

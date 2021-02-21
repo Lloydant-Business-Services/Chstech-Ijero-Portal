@@ -1,0 +1,283 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.HostelViewModel
+@{
+    ViewBag.Title = "ViewAllocationRequest";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+
+<link href="~/Content/sweetalert.css" rel="stylesheet" />
+<script src="~/Scripts/sweetalert.min.js"></script>
+
+    <script type="text/javascript">
+        //$(document).ready(function() {
+        //    $('#requestTable').DataTable();
+        //});
+
+        function ActivateAll() {
+            if ($('#ActivateAllId').is(':checked')) {
+                $('.Activate').prop('checked', true);
+            } else {
+                $('.Activate').prop('checked', false);
+            }
+        }
+
+        function approveRequest(id) {
+
+            var level = ("#level").val();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ApproveSingleHostelRequest", "HostelAllocation")', // we are calling json method
+                dataType: 'json',
+                data: { requestId: id, levelId : level },
+                success: function (result) {
+                    if (result.IsError === false) {
+                        swal("Good job!", "Hostel request was approved!", "success");
+                    } else {
+                        swal("Failed!", result.Message, "error");
+                    }
+                },
+                error: function(ex) {
+                    swal("Error!", ex, "error");
+                }
+            });
+        }
+
+    </script>
+}
+
+<div class="col-md-12">
+
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading panel-dark-head">
+                <h4>Hostel Allocation Requests</h4>
+            </div>
+            <div class="panel-body">
+
+                @using (Html.BeginForm("ViewAllocationRequest", "HostelAllocation", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="col-md-12">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Level.Name, new {@class = "control-label custom-text-black"})
+                                    @Html.DropDownListFor(model => model.Level.Id, (IEnumerable<SelectListItem>) ViewBag.Level, new {@class = "form-control", @required = "required", id = "level"})
+                                    @Html.ValidationMessageFor(model => model.Level.Id, null, new {@class = "text-danger"})
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Session.Name, "Session", new { @class = "control-label custom-text-black" })
+                                    @Html.DropDownListFor(model => model.Session.Id, (IEnumerable<SelectListItem>)ViewBag.Sessions, new { @class = "form-control", @required = "required" })
+                                    @Html.ValidationMessageFor(model => model.Session.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    <input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="Submit" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="panel-body">
+                @if (Model.HostelRequests != null && Model.HostelRequests.Count > 0)
+                {
+                    <div class="panel panel-danger">
+                        <div class="panel-body table-responsive">
+                            @using (Html.BeginForm("ApproveHostelrequest", "HostelAllocation", new { Area = "Admin" }, FormMethod.Post))
+                            {
+
+                                <table class="table-bordered table-hover table-striped table" id="requestTable">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Picture
+                                            </th>
+                                            <th>
+                                                Name
+                                            </th>
+                                            <th>
+                                                Gender
+                                            </th>
+                                            <th>
+                                                Matric NO.
+                                            </th>
+                                            <th>
+                                                State
+                                            </th>
+                                            <th>
+                                                Address
+                                            </th>
+                                            <th>
+                                                Programme
+                                            </th>
+                                            <th>
+                                                Department
+                                            </th>
+                                            <th>
+                                                <input type="checkbox" id="ActivateAllId" onclick="ActivateAll()"/> Approve
+                                            </th>
+                                            @*<th></th>*@
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    @for (int i = 0; i < Model.HostelRequests.Count; i++)
+                                    {
+                                        <tr>
+
+                                            @Html.HiddenFor(model => model.HostelRequests[i].Id)
+                                            @if (Model.HostelRequests[i].Student != null)
+                                            {
+                                                if (!string.IsNullOrEmpty(Model.HostelRequests[i].Student.ImageFileUrl))
+                                                {
+                                                    <td>
+                                                        <img src="@Url.Content(@Model.HostelRequests[i].Student.ImageFileUrl)" class="img img-rounded" style="width: 200px; height: 200px" />
+
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td>
+                                                        <img src="@Url.Content("~/Content/Images/default_avatar.png")" class="img img-rounded" style="width: 200px; height: 200px" />
+
+                                                    </td>
+                                                }
+
+                                                <td>
+                                                    @Model.HostelRequests[i].Student.FullName.ToUpper()
+                                                </td>
+                                                if (Model.HostelRequests[i].Student.Sex != null && Model.HostelRequests[i].Student.Sex.Id > 0)
+                                                {
+                                                    <td>
+                                                        @Model.HostelRequests[i].Student.Sex.Name
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td></td>
+                                                }
+
+                                                if (Model.HostelRequests[i].Student.MatricNumber != null)
+                                                {
+                                                    <td>
+                                                        @Model.HostelRequests[i].Student.MatricNumber.ToUpper()
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td></td>
+                                                }
+
+                                                if (Model.HostelRequests[i].Student.State != null)
+                                                {
+                                                    <td>
+                                                        @Model.HostelRequests[i].Student.State.Name.ToUpper()
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td></td>
+                                                }
+
+                                                <td>
+                                                    @Model.HostelRequests[i].Student.SchoolContactAddress
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                if (!string.IsNullOrEmpty(Model.HostelRequests[i].Person.ImageFileUrl))
+                                                {
+                                                    <td>
+                                                        <img src="@Url.Content(@Model.HostelRequests[i].Person.ImageFileUrl)" class="img img-rounded" style="width: 200px; height: 200px" />
+
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td>
+                                                        <img src="@Url.Content("~/Content/Images/default_avatar.png")" class="img img-rounded" style="width: 200px; height: 200px" />
+
+                                                    </td>
+                                                }
+
+                                                <td>
+                                                    @Model.HostelRequests[i].Person.FullName.ToUpper()
+                                                </td>
+                                                if (Model.HostelRequests[i].Person.Sex != null && Model.HostelRequests[i].Person.Sex.Id > 0)
+                                                {
+                                                    <td>
+                                                        @Model.HostelRequests[i].Person.Sex.Name
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td></td>
+                                                }
+                                                <td></td>
+
+                                                if (Model.HostelRequests[i].Person.State != null)
+                                                {
+                                                    <td>
+                                                        @Model.HostelRequests[i].Person.State.Name.ToUpper()
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td></td>
+                                                }
+
+                                                <td>
+                                                    @Model.HostelRequests[i].Person.ContactAddress
+                                                </td>
+                                            }
+
+                                            <td>
+                                                @Model.HostelRequests[i].Programme.Name
+                                            </td>
+                                            <td>
+                                                @Model.HostelRequests[i].Department.Name
+                                            </td>
+                                            <td>
+                                                @Html.CheckBoxFor(m => m.HostelRequests[i].Approved, new {@type = "checkbox", @class = "Activate"})
+                                            </td>
+                                            @*<td>
+                                                <input type="button" value="Approve" class="btn btn-success mr5" onclick="approveRequest(@Model.HostelRequests[i].Id)"><i class="fa fa-check"> Approve</i><
+                                            </td>*@
+                                        </tr>
+                                    }
+                                    </tbody>
+                                    
+                                </table>
+                                <br />
+                                <div class="form-group">
+                                    <div class=" col-md-10">
+                                        <input type="submit" value="Save" class="btn btn-success" />
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+
+        </div>
+</div>
+

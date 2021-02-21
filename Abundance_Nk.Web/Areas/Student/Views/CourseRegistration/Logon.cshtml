@@ -1,0 +1,77 @@
+﻿@model Abundance_Nk.Web.Areas.Student.ViewModels.CourseRegistrationViewModel
+
+@{
+    ViewBag.Title = "Course  Registration";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+<div class="row">
+    <div class="col-md-4 " style="vertical-align:bottom">
+        <div class="panel panel-default well" style="height:315px">
+            <div class="panel-body">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>@ViewBag.Title</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <section id="loginForm">
+                    @using (Html.BeginForm("Logon", "CourseRegistration", new { Area = "Student" }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true)
+                        
+                        <h5>Please enter your <b>Matric. No.</b> and Scratch Card <b>PIN</b> below to fill your course form.</h5>
+                        <hr class="no-top-padding" />
+
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                               
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.MatricNumber, new { @class = "col-md-3 control-label" })
+                                    <div class="col-md-9">
+                                        @Html.TextBoxFor(m => m.MatricNumber, new { @class = "form-control", required = "required" })
+                                        @Html.ValidationMessageFor(m => m.MatricNumber, null, new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.ScratchCard.Pin, new { @class = "col-md-3 control-label" })
+                                    <div class="col-md-9">
+                                        @Html.PasswordFor(m => m.ScratchCard.Pin, new { @class = "form-control", required = "required" })
+                                        @Html.ValidationMessageFor(m => m.ScratchCard.Pin, null, new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-md-offset-3 col-md-9">
+                                        <input type="submit" value="Login" class="btn btn-default" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                @if (TempData["Message"] != null)
+                                {
+                                    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+                                }
+                            </div>
+                        </div>
+                    }
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

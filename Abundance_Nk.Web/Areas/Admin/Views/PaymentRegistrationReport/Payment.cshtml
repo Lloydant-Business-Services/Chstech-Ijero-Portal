@@ -1,0 +1,35 @@
+﻿@model Abundance_Nk.Model.Model.FeeType
+@{
+    ViewBag.Title = "StaffCourseAllocation";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@if (TempData["Message"] != null)
+{
+    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+
+@using (Html.BeginForm("PaymentReport", "PaymentRegistrationReport", new { area = "Admin" }, FormMethod.Post))
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><i class="fa fa-fw fa-money"></i>Payment Report</h3>
+        </div>
+        <div class="panel-body">
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Name, "Select Fee Type", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.DropDownListFor(model => model.Id, (IEnumerable<SelectListItem>)ViewBag.Feetype, new { @class = "form-control", @required = "required" })
+                    @Html.ValidationMessageFor(model => model.Id, null, new { @class = "text-danger" })
+                </div>
+
+            </div> 
+                      
+        </div>
+    </div>
+
+}
+
+

@@ -1,0 +1,110 @@
+﻿
+@model Abundance_Nk.Web.Areas.Admin.ViewModels.ClearanceViewModel
+@using System.Linq
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+@*<link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/style.default.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />*@
+
+
+@using (Html.BeginForm("EditAlternative", "Clearance", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <div>
+
+    </div>
+    if (Model.admissionCriteriaForOLevelSubjectAlternative[0] != null)
+    {
+
+        <div class="row">
+            <h5>Selected Programme</h5>
+            <hr style="margin-top:0" />
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.admissionCriteriaForOLevelSubjectAlternative[0].Alternative.MainCriteria.Programme.Id, new { @class = "control-label custom-text-black" })
+                            @Html.DisplayFor(model => model.admissionCriteriaForOLevelSubjectAlternative[0].Alternative.MainCriteria.Programme.Name, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.admissionCriteriaForOLevelSubjectAlternative[0].Alternative.MainCriteria.Programme.Id, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.HiddenFor(model => model.admissionCriteriaForOLevelSubjectAlternative[0].Id)
+                            @Html.HiddenFor(model => model.admissionCriteriaForOLevelSubjectAlternative[0].Alternative.MainCriteria.Department.Id, new { @class = "control-label custom-text-black" })
+                            @Html.DisplayFor(model => model.admissionCriteriaForOLevelSubjectAlternative[0].Alternative.MainCriteria.Department.Name, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div id="divJambNo" class="form-group" style="display:none">
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+    }
+
+    <div>
+
+        <div class="row" id="divOLevel" style="color:black">
+            <div class="col-md-12">
+                <h5>
+                    @Html.DisplayFor(model => model.admissionCriteriaForOLevelSubjectAlternative[0].Alternative.Subject.Name)
+                </h5>
+                <hr class="no-top-padding" />
+
+                <table class="table table-condensed table-responsive" style="background-color:whitesmoke">
+                    <tr>
+
+                        <th>
+                            Subject
+                        </th>
+                        <th>
+
+                        </th>
+
+                    </tr>
+
+                    @for (int i = 0; i < Model.admissionCriteriaForOLevelSubjectAlternative.Count(); i++)
+                    {
+                        @Html.HiddenFor(model => model.admissionCriteriaForOLevelSubjectAlternative[i].Id)
+
+                        @Html.HiddenFor(model => model.admissionCriteriaForOLevelSubjectAlternative[i].Alternative.Id)
+                        <tr>
+
+                            <td>
+                                @Html.DropDownListFor(model => Model.admissionCriteriaForOLevelSubjectAlternative[i].OLevelSubject.Id, (IEnumerable<SelectListItem>)ViewData["AlternativeOLevelSubjectId" + i], new { @class = "form-control olevel" })
+                                @Html.HiddenFor(model => model.admissionCriteriaForOLevelSubjectAlternative[i].Id)
+                            </td>
+
+                            <td><i class="fa fa-recycle"> @Html.ActionLink("Delete", "DeleteAlternativeCriteriaSubject", "Clearance", new { Area = "Admin", AlternativeSubjectId = @Model.admissionCriteriaForOLevelSubjectAlternative[i].Id }, null)</i></td>
+
+                        </tr>
+
+                    }
+
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+    <div>
+
+        <input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="Update Criteria" />
+
+    </div>
+}

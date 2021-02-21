@@ -1,0 +1,326 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.AdmissionProcessingViewModel
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.4.1/css/buttons.dataTables.min.css">
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.flash.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.html5.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.print.min.js"></script>
+
+@section Scripts {
+
+    <link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+
+    @Scripts.Render("~/bundles/jquery")
+
+    @*<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+        <script src="~/Scripts/jquery-migrate-1.2.1.min.js"></script>
+        <script src="~/Scripts/prettify.js"></script>
+        <script src="~/Scripts/custom.js"></script>
+
+
+        <script src="~/Scripts/jquery.min.js"></script>
+        <script src="~/Scripts/responsive-tabs.js"></script>*@
+
+
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/file-upload/jquery-ui-1.9.2.min.js"></script>
+<script type="text/javascript">
+         $(document).ready(function () {
+
+             $('#example').DataTable({
+                 dom: 'Bfrtip',
+                 ordering: true,
+                 retrieve: true,
+                 buttons: [
+                     {
+                         extend: 'copy',
+                         exportOptions: {
+                             columns: ':visible'
+                         }
+                     },
+                     {
+                         extend: 'csv',
+                         exportOptions: {
+                             columns: ':visible'
+                         }
+                     },
+                     {
+                         extend: 'excel',
+                         exportOptions: {
+                             columns: ':visible'
+                         }
+                     },
+                     {
+                         extend: 'pdf',
+                         exportOptions: {
+                             columns: ':visible'
+                         }
+                     },
+                     {
+                         extend: 'print',
+                         exportOptions: {
+                             columns: ':visible'
+                         }
+                     }, , 'colvis'
+                 ]
+             });
+         });
+</script>
+
+
+    <script type="text/javascript">
+
+    var person = null;
+
+    $(document).ready(function () {
+        //Programme Drop down Selected-change event
+        $("#Programme_Id").change(function () {
+            $("#Department_Id").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartments", "AdmissionProcessing")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#Programme_Id").val() },
+                // Get Selected Country ID.
+                success: function (departments) {
+                    $("#Department_Id").append('<option value="' +
+                        0 +
+                        '">' +
+                        '-- Select Department --' +
+                        '</option>');
+                    $.each(departments,
+                        function (i, department) {
+                            $("#Department_Id").append('<option value="' +
+                                department.Value +
+                                '">' +
+                                department.Text +
+                                '</option>');
+                        });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+        });
+
+
+    });
+
+
+    function clearApplicant(personId, status) {
+
+        if (!personId || !status) {
+            return;
+        }
+        var accept = null;
+        var reason = null;
+        if (status === 1)
+        {
+            accept = true;
+        }
+        else {
+            accept = false;
+            reason = $("#remark").val();
+        }
+
+        if (!accept && !reason){
+            alert("Kindly Enter the reject reason.");
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("ClearApplicantForAcceptance", "AdmissionProcessing")",
+            traditional: true,
+            data: { personId: personId, status: accept, remark: reason },
+            beforeSend: function () {
+                $("#processing").show();
+            },
+            complete: function () {
+                $("#processing").hide();
+            },
+            success: SuccessFunc,
+            error: ErrorFunc,
+        })
+
+        function SuccessFunc(data, status) {
+            alert(data);
+            window.location.reload(true);
+        }
+
+        function ErrorFunc() {
+            alert("Operation failed!");
+        }
+    };
+
+    function showModal(id) {
+        person = id;
+        $("#modal-reject").modal('show');
+    }
+
+     function rejectApplicant() {
+
+         if (!person) {
+             alert("Parameter not set.");
+            return;
+        }
+         var accept = false;
+         var reason = $("#remark").val();;
+
+        if (!reason){
+            alert("Kindly Enter the reject reason.");
+            return;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("ClearApplicantForAcceptance", "AdmissionProcessing")",
+            traditional: true,
+            data: { personId: person, status: accept, remark: reason },
+            beforeSend: function () {
+                $("#processing").show();
+            },
+            complete: function () {
+                $("#processing").hide();
+            },
+            success: SuccessFunc,
+            error: ErrorFunc,
+        })
+
+        function SuccessFunc(data, status) {
+            alert(data);
+            window.location.reload(true);
+        }
+
+        function ErrorFunc() {
+            alert("Operation failed!");
+        }
+    };
+
+    </script>
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h3>This interface enables Admission Officer to Clear Applicants for acceptance fee payment</h3>
+                <p>
+                    Kindly select the session, programme, department and then click the Search button.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+
+        @using (Html.BeginForm("ClearPartTimeApplicants", "AdmissionProcessing", new { area = "Admin" }, FormMethod.Post))
+            {
+            <div class="panel panel-default">
+                <div class="panel-body ">
+                    <div class="form-inline ">
+
+                        <div class="form-group">
+                            @Html.DropDownListFor(m => m.Session.Id, (IEnumerable<SelectListItem>)ViewBag.Session, new { @class = "form-control", required = "required" })
+                            @Html.DropDownListFor(m => m.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.Programme, new { @class = "form-control", required = "required" })
+                            @Html.DropDownListFor(m => m.Department.Id, (IEnumerable<SelectListItem>)ViewBag.Department, new { @class = "form-control", required = "required" })
+                            <button class="btn btn-primary btn-metro mr5" type="submit" name="btnSearch" id="btnSearch">Search</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+        <div>
+
+            @if (Model != null && Model.ListOfAdmission != null && Model.ListOfAdmission.Count > 0)
+            {
+                <div>
+                    <span id="processing" style="display:none"><img width="30px" height="30px" src="@Url.Content("~/Content/Images/bx_loader.gif")" /></span>
+                </div>
+                <table id="example" class="display nowrap" style="width:100%">
+                    <thead>
+                        <tr class="well" style="height:35px; vertical-align:middle">
+                            <th>
+                                SN
+                            </th>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Form Number
+                            </th>
+                            <th>
+                                Clearance status
+                            </th>
+                            <th>
+                                Approve/Reject
+                            </th>
+                        </tr>
+                    </thead>
+
+                    @for (int i = 0; i < Model.ListOfAdmission.Count; i++)
+                    {
+                        var sn = i + 1;
+                        <tr>
+                            <td>
+                                @sn
+                            </td>
+                            <td>
+                                @Model.ListOfAdmission[i].Form.Person.Name.ToUpper()
+                            </td>
+                            <td>
+                                @Model.ListOfAdmission[i].Form.Number
+                            </td>
+
+                            @if (@Model.ListOfAdmission[i].Form.CleardForAcceptance == null || @Model.ListOfAdmission[i].Form.CleardForAcceptance == false)
+                            {
+                                <td>Not cleared</td>
+                            }
+                            else
+                            {
+                                <td>Cleared</td>
+                            }
+                            <td>
+                                <button class="btn btn-primary btn-metro mr5" onclick="clearApplicant(@Model.ListOfAdmission[i].Form.Person.Id, 1)" type="button" name="btnApprove" id="btnApprove">Approve</button> &nbsp; |
+                                @*<button class="btn btn-primary btn-metro mr5" onclick="clearApplicant(@Model.ListOfAdmission[i].Form.Person.Id, 2)" type="button" name="btnReject" id="btnReject">Reject</button>*@
+                                <a href="#" onclick="showModal(@Model.ListOfAdmission[i].Form.Person.Id)" class="btn btn-danger btn-metro mr5">Reject</a>
+                            </td>
+                        </tr>
+                    }
+                </table>
+
+            }
+
+        </div>
+    </div>
+
+
+</div>
+
+<!-- Modal Small -->
+<div class="modal fade" id="modal-reject" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Reject Applicant</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="remark" class="form-control col-md-2" placeholder="Reject Reason..." />
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="rejectApplicant()" class="btn btn-primary btn-sm">Save</button>
+                <button type="button" class="btn btn-dark btn-sm" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

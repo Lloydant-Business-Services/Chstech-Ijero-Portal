@@ -1,0 +1,241 @@
+﻿@using Abundance_Nk.Web.Models
+@model Abundance_Nk.Web.Areas.Admin.ViewModels.ELearningViewModel
+@{
+    ViewBag.Title = "E-Learning";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .ui-state-disabled {
+        background-color: #959696;
+        color: white;
+    }
+
+    .ui-datepicker-next ui-corner-all {
+        background-color: dodgerblue !important;
+        color: white;
+    }
+
+    .ui-datepicker-prev ui-corner-all {
+        background-color: dodgerblue !important;
+        color: white;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Disable past date
+        $(".myCalendar").datepicker({
+            dateFormat: "mm-dd-yy",
+            minDate: -0,
+            maxDate: "+3M"
+
+        });
+    })
+    //go back
+    function goBack() {
+        window.history.back()
+    }
+</script>
+@if (TempData["Message"] != null)
+{
+    @Html.Partial("_Message", TempData["Message"])
+}
+<h2>ViewContent</h2>
+
+@using (Html.BeginForm("AssignmentAddContent", "Elearning", new { area = "Admin" }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><i class="fa fa-fw fa-download"></i>Test|Assignment Content Manager</h3>
+        </div>
+        <div class="panel-body">
+
+            @Html.HiddenFor(model => model.eAssignment.Course.Id)
+            @Html.HiddenFor(model => model.CourseAllocation.Id)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.eAssignment.Assignment, "Assignment Topic", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.TextAreaFor(model => model.eAssignment.Assignment, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.eAssignment.Assignment, null, new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.eAssignment.Instructions, new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.TextAreaFor(model => model.eAssignment.Instructions, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.eAssignment.Instructions, null, new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="col-md-12">
+                @Html.LabelFor(model => model.eAssignment.AssignmentinText, "Enter Test/Assignment Questions Directly ", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.TextAreaFor(model => model.eAssignment.AssignmentinText, new { @class = "form-control", @cols = "120", @rows = "10" })
+                    @Html.ValidationMessageFor(model => model.eAssignment.AssignmentinText, null, new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <fieldset>
+                    <legend>Due Date and Time</legend>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.eAssignment.DueDate, "Date", new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(model => model.eAssignment.DueDate, new { @class = "form-control myCalendar", require = true, id = "fromDate",@type="date" })
+                            @Html.ValidationMessageFor(model => model.eAssignment.DueDate)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.startTime, "Time", new { @class = "col-sm-2 control-label" })
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(model => model.startTime, new { @class = "form-control ", require = true, type = "time", id = "fromTime" })
+                            @Html.ValidationMessageFor(model => model.startTime)
+                        </div>
+                    </div>
+
+                </fieldset>
+            </div>
+
+            &nbsp;
+            <div class="form-group">
+                @Html.LabelFor(model => model.eAssignment.MaxScore, "Max Score", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.DropDownListFor(model => model.eAssignment.MaxScore, (IEnumerable<SelectListItem>)ViewBag.MaxGrade, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.eAssignment.MaxScore, null, new { @class = "text-danger" })
+                </div>
+            </div>
+            &nbsp;
+
+            <div class="form-group">
+                @Html.Label("File", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    <input type="file" title="Upload Assignment" id="fileInput" name="file" class="form-control" />
+                </div>
+                &nbsp;
+            </div>
+
+
+
+            <div class="form-group">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-10">
+                    <input class="btn btn-primary mr5 " type="submit" name="submit" id="submit" value="Add Content" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+@if (Model.EAssignmentList != null && Model.EAssignmentList.Count() > 0)
+{
+  
+
+                    <div class="panel panel-danger">
+                        <div class="panel-body">
+                            <table class="table-bordered table-hover table-striped table-responsive table id=" myTable"">
+                                <tr>
+                                    <th colspan="7">@Model.EAssignmentList.FirstOrDefault().Course.Code - @Model.EAssignmentList.FirstOrDefault().Course.Name</th>
+                                </tr>
+                                <tr>
+                                    @*<th>
+                            Course Code
+                        </th>
+                        <th>
+                            Course Name
+                        </th>*@
+                                    <th>
+                                        S/N
+                                    </th>
+                                    <th>
+                                        Assignment
+                                    </th>
+                                    <th>
+                                        Date Set
+
+                                    </th>
+                                    <th>
+                                        Due Date
+                                    </th>
+                                    <th>
+
+                                    </th>
+                                    <th>
+                                        @Html.ActionLink("Report", "AverageElearningTestResult", "Elearning", new { Area = "Admin", cid = Utility.Encrypt(Model.EAssignmentList.FirstOrDefault().CourseAllocation.Id.ToString()) }, new { @class = "btn btn-primary " })
+                                    </th>
+                                    <th>
+
+                                    </th>
+
+                                </tr>
+
+                                @for (int i = 0; i < Model.EAssignmentList.Count(); i++)
+                                {
+                                    var s = i + 1;
+                                    <tr>
+                                        <td>
+                                            @s
+                                        </td>
+                                        <td>
+                                            @Model.EAssignmentList[i].Assignment
+                                        </td>
+                                        <td>
+                                            @Model.EAssignmentList[i].DateSet
+                                        </td>
+                                        <td>
+                                            @Model.EAssignmentList[i].DueDate
+                                        </td>
+                                        <td>
+                                            @Html.ActionLink("View Submissions", "AssignmentSubmission", "Elearning", new { Area = "Admin", AssignmentId = Utility.Encrypt(Model.EAssignmentList[i].Id.ToString()) }, new { @class = "btn btn-primary " })
+                                        </td>
+                                        <td>
+                                            @Html.ActionLink("Report on this Topic", "GetAssignmentList", "Elearning", new { Area = "Admin", eAssignmentId = Utility.Encrypt(Model.EAssignmentList[i].Id.ToString()) }, new { @class = "btn btn-secondary " })
+                                        </td>
+                                        <td>
+                                            @Html.ActionLink("Edit", "EditAssignment", "Elearning", new { Area = "Admin", eAssignmentId = Utility.Encrypt(Model.EAssignmentList[i].Id.ToString()) }, new { @class = "btn btn-info " })
+                                        </td>
+
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+
+                    </div>
+
+}
+    <div class="panel-footer">
+        <a href="#" class="btn btn-primary" onclick="goBack()">Back</a>
+    </div>
+<script>
+    document.querySelector("#fileInput").addEventListener("change", (e) => {
+        const fileEl = document.querySelector("#fileInput");
+        const file = e.target.files[0];
+        const fileType = file.type;
+        const fileSize = file.size;
+        if (fileSize > 1048576) {
+            alert("File size is too much. Allowed size is 1MB")
+            $("#fileInput").val("");
+            $("#fileInput").text("");
+            return false;
+        }
+        //If file type is Video, Return False; ask user to insert a youtube link
+        if (fileType.split("/")[0] === "video") {
+            alert("Videos are not allowed, enter a youtube link");
+
+            //Reset the file selector to application/pdf
+            fileEl.setAttribute("accept", "application/pdf");
+
+            //Clear the inout type field
+            $("#fileInput").val("");
+            $("#fileInput").text("");
+            //$('#videoUrl').show();
+            return false;
+        }
+
+    })
+
+</script>

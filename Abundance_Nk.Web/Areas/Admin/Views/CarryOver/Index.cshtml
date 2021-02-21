@@ -1,0 +1,132 @@
+﻿@using Abundance_Nk.Web.Areas.Admin.ViewModels
+@model CarryOverViewModel
+@{
+    ViewBag.Title = "Carry-Over Report";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+@*<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<link href="~/Content/style.default.css" rel="stylesheet" />
+<link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />*@
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery-1.7.1.js"></script>
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        //Country Dropdown Selectedchange event
+        $("#Programme").change(function () {
+            $("#Department").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartments", "CarryOver")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#Programme").val() },
+                // Get Selected Country ID.
+                success: function (departments) {
+                    $.each(departments, function (i, department) {
+                        $("#Department").append('<option value="' + department.Value + '">' +
+                             department.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+            return false;
+        })
+        //Session Drop down Selected change event
+        $("#Session").change(function () {
+            $("#Semester").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetSemester", "CarryOver")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#Session").val() },
+                // Get Selected Country ID.
+                success: function (semesters) {
+                    $("#Semester").append('<option value="' + 0 + '">' +
+                           '-- Select Semester --' + '</option>');
+                    $.each(semesters, function (i, semester) {
+                        $("#Semester").append('<option value="' + semester.Value + '">' +
+                             semester.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve semesters.' + ex);
+                }
+            });
+            return false;
+        })
+
+    });
+</script>
+
+<div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+
+    @using (Html.BeginForm("ViewCarryOverStudents", "CarryOver", new { Area = "Admin" }, FormMethod.Post))
+    {
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-fw fa-download"></i>Carry Over</h3>
+            </div>
+            <div class="panel-body">
+
+                <div class="form-group">
+                    <div class="col-md-6">
+
+                        @Html.LabelFor(model => model.Programme.Name, "Programme", new { @class = "control-label " })
+                        @Html.DropDownListFor(model => model.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.ProgrammeId, new { @class = "form-control", @id = "Programme", @required = "required" })
+                        @Html.ValidationMessageFor(model => model.Programme.Id, null, new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-6">
+                        @Html.LabelFor(model => model.Department.Name, "Department", new { @class = "control-label " })
+                        @Html.DropDownListFor(model => model.Department.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentId, new { @class = "form-control", @id = "Department" })
+                        @Html.ValidationMessageFor(model => model.Department.Id, null, new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-6">
+                        @Html.LabelFor(model => model.Session.Name, "Session", new { @class = "control-label " })
+                        @Html.DropDownListFor(model => model.Session.Id, (IEnumerable<SelectListItem>)ViewBag.SessionId, new { @class = "form-control", @required = "required", @id = "Session" })
+                        @Html.ValidationMessageFor(model => model.Session.Id, null, new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-6">
+                        @Html.LabelFor(model => model.Semester.Name, "Semester", new { @class = "control-label " })
+                        @Html.DropDownListFor(model => model.Semester.Id, (IEnumerable<SelectListItem>)ViewBag.Semester, new { @class = "form-control", @id = "Semester" })
+                        @Html.ValidationMessageFor(model => model.Semester.Id, null, new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                        <div class="col-md-6">
+                            @Html.LabelFor(model => model.Level.Name, "Level", new { @class = "control-label " })
+                            @Html.DropDownListFor(model => model.Level.Id, (IEnumerable<SelectListItem>)ViewBag.LevelId, new { @class = "form-control", @required = "required" })
+                            @Html.ValidationMessageFor(model => model.Level.Id, null, new { @class = "text-danger" })
+                        </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col--2"></div>
+                    <div class="col-sm-10">
+                        <input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="Next" />
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+    </div>
+    <div class="col-md-1"></div>
+</div>
+
+

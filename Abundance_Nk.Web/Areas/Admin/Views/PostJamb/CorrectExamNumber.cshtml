@@ -1,0 +1,122 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.PostjambResultSupportViewModel
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link href="~/Scripts/file-upload/jquery-ui.css" rel="stylesheet" />
+<script src="~/Scripts/file-upload/jquery-1.9.1.min.js"></script>
+<script src="~/Scripts/file-upload/jquery-ui-1.9.2.min.js"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#Search").autocomplete({
+
+            source: "@Url.Action("AutoCompleteSearch", "PostJamb", new { area = "Admin" })"
+        });
+    })
+</script>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+
+        <div class="col-md-12">
+            <div>
+                <p class="text-center"><h4>CORRECT EXAM NUMBER</h4></p>
+            </div>
+
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+
+            @using (Html.BeginForm("CorrectExamNumber", "PostJamb", FormMethod.Post))
+            {
+                
+                <div class="panel panel-default ">
+                    <div class="panel-body ">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <h4>Enter Exam Number</h4>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ExamNumber, new { @class = "col-sm-2 control-label " })
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(model => model.ExamNumber, new { @class = "form-control", @placeholder = "Enter Exam No", @id = "Search" })
+                                @Html.ValidationMessageFor(model => model.ExamNumber, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-10">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-10">
+                                <input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="Search" />
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+
+            <br />
+            <div class="col-md-12">
+                @if (Model.PutmeResults != null && Model.PutmeResults.Count > 0)
+                {
+                    <div class="panel panel-danger">
+                        <div class="panel-body">
+                            <table class="table-bordered table-hover table-striped table-responsive table">
+                                <tr>
+                                    <th>
+                                        Exam Number
+                                    </th>
+                                    <th>
+                                        Name
+                                    </th>
+                                    <th>
+                                        Programme
+                                    </th>
+                                    <th>
+                                        Edit
+                                    </th>
+                                </tr>
+
+                                @for (int i = 0; i < Model.PutmeResults.Count(); i++)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Model.PutmeResults[i].ExamNo
+                                        </td>
+                                        <td>
+                                            @Model.PutmeResults[i].FullName
+                                        </td>
+                                        <td>
+                                            @Model.PutmeResults[i].Programme
+                                        </td>
+                                        <td>
+                                            @Html.ActionLink("Edit", "EditExamNumber", "PostJamb", new { Area = "Admin", rid = Model.PutmeResults[i].Id }, new { @class = "btn btn-success " })
+
+                                        </td>
+                                    </tr>
+                                }
+
+                            </table>
+                        </div>
+                    </div>
+                }
+            </div>
+
+        </div>
+    </div>
+
+</div>
+

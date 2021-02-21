@@ -1,0 +1,63 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.HostelViewModel
+
+@{
+    ViewBag.Title = "HostelTypes";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="col-md-12">
+
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading panel-dark-head">
+                <h4>Hostel Types</h4>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    
+                    <p>
+                        @Html.ActionLink("Create New Hostel Type", "CreateHostelType", new{controller = "Hostel", area = "Admin"}, new{@class = "btn btn-success"})
+                    </p>
+                    <table class="table table-bordered table-hover table-striped">
+                        <tr>
+                            <th>
+                                @Html.DisplayName("Hostel Type Name")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Hostel Type Description")
+                            </th>
+                            <th></th>
+                        </tr>
+
+                        @foreach (var item in Model.HostelTypes)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Hostel_Type_Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Hostel_Type_Description)
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Edit", "EditHostelType", new { id = item.Hostel_Type_Id }, new { @class = "btn btn-success" }) |
+                                    @Html.ActionLink("Details", "HostelTypeDetails", new { id = item.Hostel_Type_Id }, new { @class = "btn btn-success" }) |
+                                    @Html.ActionLink("Delete", "DeleteHostelType", new { id = item.Hostel_Type_Id }, new { @class = "btn btn-success" })
+                                </td>
+                            </tr>
+                        }
+
+                    </table>
+
+                </div>
+            </div>
+        </div>
+</div>
+
+
+                    

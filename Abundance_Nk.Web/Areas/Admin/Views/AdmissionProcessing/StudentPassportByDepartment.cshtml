@@ -1,0 +1,239 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.AdmissionProcessingViewModel
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+@section Scripts {
+
+    <link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+
+
+    @Scripts.Render("~/bundles/jquery")
+
+   <link href="~/Scripts/DataTables-1.10.15/media/css/jquery.dataTables.css" rel="stylesheet" />
+<script src="~/Scripts/DataTables-1.10.15/media/js/jquery.dataTables.js"></script>
+<link href="~/Scripts/DataTables-1.10.15/extensions/Buttons/css/buttons.dataTables.css" rel="stylesheet" />
+<script src="~/Scripts/DataTables-1.10.15/extensions/Buttons/js/dataTables.buttons.js"></script>
+<script src="~/Scripts/DataTables-1.10.15/extensions/Buttons/js/buttons.colVis.js"></script>
+<script src="~/Scripts/DataTables-1.10.15/extensions/Responsive/js/dataTables.responsive.js"></script>
+@*<script src="~/Scripts/dataTables.js"></script>
+    <link href="~/Content/dataTables.css" rel="stylesheet"/>*@
+
+<script src="~/Scripts/DataTables-1.10.15/buttons.flash.min.js"></script>
+<script src="~/Scripts/DataTables-1.10.15/buttons.html5.min.js"></script>
+<script src="~/Scripts/DataTables-1.10.15/buttons.print.min.js"></script>
+<script src="~/Scripts/DataTables-1.10.15/jszip.min.js"></script>
+<script src="~/Scripts/DataTables-1.10.15/pdfmake.min.js"></script>
+<script src="~/Scripts/DataTables-1.10.15/vfs_fonts.js"></script>
+
+    <style>
+        .modal-backdrop.in {
+            z-index: 0 !important
+        }
+    </style>
+
+
+
+
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/file-upload/jquery-ui-1.9.2.min.js"></script>
+
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $.extend($.fn.dataTable.defaults, {
+                responsive: true
+            });
+            $("#processing").hide();
+
+            $('#example').DataTable({
+                dom: 'Bfrtip',
+                ordering: true,
+                //retrieve: true,
+                buttons: [
+                    {
+                        extend: 'copy',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, , 'colvis'
+                ]
+            });
+        });
+
+        $("#btnSearch").click(function () {
+            $("#processing").show();
+        })
+        $("#downloadBtn").click(function () {
+            $("#processing").show();
+        })
+       
+    </script>
+
+
+
+}
+
+<div class="row">
+    <h3>Student Passport Download</h3>
+    @*<div class="col-md-12">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h4>This interface allows the Admission Proposal Officer to select/propose applicant(s) for possible admission</h4>
+                    Kindly select the session, programme, department and then click the "Load Applicants" button.
+              
+            </div>
+        </div>
+    </div>*@
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+
+        @using (Html.BeginForm("StudentPassportByDepartment", "AdmissionProcessing", new { area = "Admin" }, FormMethod.Post))
+            {
+            <div class="panel panel-default">
+                <div class="panel-body ">
+                    <div class="form-inline ">
+
+                        <div class="form-group">
+                            @Html.DropDownListFor(m => m.Session.Id, (IEnumerable<SelectListItem>)ViewBag.SessionSelectList, new { @class = "form-control", required = "required" })
+                            @Html.DropDownListFor(m => m.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.ProgrammeSelectList, new { @class = "form-control", required = "required" })
+                            @Html.DropDownListFor(m => m.Department.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentSelectList, new { @class = "form-control", required = "required" })
+                            @Html.DropDownListFor(m => m.Level.Id, (IEnumerable<SelectListItem>)ViewBag.LevelSelectList, new { @class = "form-control", required = "required" })
+                            
+
+                            <button class="btn btn-primary btn-metro mr5" type="submit" name="btnSearch" id="btnSearch">Load Students</button>
+                        </div>
+
+                    </div>
+                </div>
+                <div>
+                    <span id="processing" style="display:none"><img width="30px" height="30px" src="@Url.Content("~/Content/Images/bx_loader.gif")" /></span>
+                </div>
+            </div>
+        }
+        <div>
+
+            @*@if (Model != null && Model.ListOfAdmission != null && Model.ListOfAdmission.Count > 0)
+                {*@
+            @if (Model != null && Model.StudentLevel != null && Model.StudentLevel.Count > 0)
+            {
+                <section class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <cite><p class="custom-text-black"> Download Students' Passports</p></cite>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-8">
+                                @*<a class="btn btn-success mr5" id="ancDownloadFiles" href="@Html.AttributeEncode(Url.Action("DownloadFile", "AdmissionProcessing", new { Area = "Admin" }))">
+                                      Download Password
+                                    </a>*@
+                                @Html.ActionLink("Download Passports", "DownloadIdCardPassport", new { Controller = "AdmissionProcessing", Area = "Admin" }, new { @class = "btn btn-success mr5", @id="downloadBtn" })
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+
+
+                <table id="example" class="display nowrap table-responsive" style="width:100%">
+                    <thead>
+                        <tr class="well" style="height:35px; vertical-align:middle">
+                            <th>
+                                SN
+                            </th>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Image Url
+                            </th>
+                          
+                            <th>
+                                Programme
+                            </th>
+
+                            <th>
+                               Department
+                            </th>
+                            <th>
+                                Matriculation Number
+                            </th>
+                           
+                        </tr>
+                    </thead>
+
+
+                    @for (int i = 0; i < Model.StudentLevel.Count; i++)
+                    {
+                        var sn = i + 1;
+                        <tr>
+                            <td>
+                                @sn
+                            </td>
+                           <td>
+                                @Model.StudentLevel[i].Student.Name
+                          </td>
+                            <td>
+                                @Model.StudentLevel[i].Student.ImageFileUrl
+                            </td>
+                            <td>
+                                @Model.StudentLevel[i].Programme.Name
+                            </td>
+                            <td>
+                                @Model.StudentLevel[i].Department.Name
+                            </td>
+                            <td>
+                                @Model.StudentLevel[i].Student.MatricNumber
+                            </td>
+                          
+                        </tr>
+                    }
+
+
+
+                </table>
+            }
+
+
+
+        </div>
+    </div>
+
+
+</div>
+

@@ -1,0 +1,213 @@
+﻿
+@model Abundance_Nk.Web.Areas.Admin.ViewModels.ResultUploadViewModel
+@{
+    ViewBag.Title = "ProcessDeactivatedResult";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@if (TempData["Message"] != null)
+{
+    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+}
+
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<script type="text/javascript">
+        $(document).ready(function () {
+
+            //Programme Drop down Selected-change event
+            $("#Programme").change(function () {
+                if ($("#Department").val() > 0 && $("#Level").val() > 0 && $("#Semester").val() > 0) {
+                    populateCourses();
+                }
+                $("#Department").empty();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetDepartments", "Result")', // Calling json method
+                    dataType: 'json',
+                    data: { id: $("#Programme").val() },
+                    // Get Selected Country ID.
+                    success: function (departments) {
+                        $("#Department").append('<option value="' + 0 + '">' +
+                                '-- Select Department --' + '</option>');
+                        $.each(departments, function (i, department) {
+                            $("#Department").append('<option value="' + department.Value + '">' +
+                                 department.Text + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve departments.' + ex);
+                    }
+                });
+                return false;
+            })
+            //Session Drop down Selected change event
+            $("#Session").change(function () {
+                if ($("#Department").val() > 0 && $("#Level").val() > 0 && $("#Semester").val() > 0) {
+                    populateCourses();
+                }
+
+                $("#Semester").empty();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetSemester", "Result")', // Calling json method
+                    dataType: 'json',
+                    data: { id: $("#Session").val() },
+                    // Get Selected Country ID.
+                    success: function (semesters) {
+                        $("#Semester").append('<option value="' + 0 + '">' +
+                               '-- Select Semester --' + '</option>');
+                        $.each(semesters, function (i, semester) {
+                            $("#Semester").append('<option value="' + semester.Value + '">' +
+                                 semester.Text + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve semesters.' + ex);
+                    }
+                });
+                return false;
+            })
+       });
+</script>
+@using (Html.BeginForm("ProcessDeactivatedResult", "Result", new { area = "Admin" }, FormMethod.Post))
+{
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><i class="fa fa-fw fa-book"></i>PROCESS RESULT FOR DISABLED STUDENTS</h3>
+        </div>
+        <div class="panel-body">
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Session.Name, "Session", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.DropDownListFor(model => model.Session.Id, (IEnumerable<SelectListItem>)ViewBag.AllSession, new { @class = "form-control", @id = "Session" })
+                    @Html.ValidationMessageFor(model => model.Session.Id, null, new { @class = "text-danger" })
+                </div>
+
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Semester.Name, "Semester", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.DropDownListFor(model => model.Semester.Id, (IEnumerable<SelectListItem>)ViewBag.Semester, new { @class = "form-control", @id = "Semester" })
+                    @Html.ValidationMessageFor(model => model.Semester.Id, null, new { @class = "text-danger" })
+                </div>
+
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Programme.Name, "Programme", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.DropDownListFor(model => model.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.Programme, new { @class = "form-control", @id = "Programme" })
+                    @Html.ValidationMessageFor(model => model.Programme.Id, null, new { @class = "text-danger" })
+                </div>
+
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Department.Name, "Department", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.DropDownListFor(model => model.Department.Id, (IEnumerable<SelectListItem>)ViewBag.Department, new { @class = "form-control", @id = "Department" })
+                    @Html.ValidationMessageFor(model => model.Department.Id, null, new { @class = "text-danger" })
+                </div>
+
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Level.Name, "Level", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.DropDownListFor(model => model.Level.Id, (IEnumerable<SelectListItem>)ViewBag.Level, new { @class = "form-control", @id = "Level" })
+                    @Html.ValidationMessageFor(model => model.Level.Id, null, new { @class = "text-danger" })
+                </div>
+
+            </div>
+            @*<div class="form-group">
+                    @Html.LabelFor(model => model.StudentType.Name, "Student Type", new { @class = "col-sm-2 control-label " })
+                    <div class="col-sm-10">
+                        @Html.DropDownListFor(model => model.StudentType.Id, (IEnumerable<SelectListItem>)ViewBag.StudentType, new { @class = "form-control", @id = "Course" })
+                        @Html.ValidationMessageFor(model => model.StudentType.Id, null, new { @class = "text-danger" })
+                    </div>
+
+                </div>*@
+            <div class="form-group">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-10">
+                    <input class="btn btn-success mr5 " type="submit" name="submit" id="submit" value="View" />
+
+                </div>
+            </div>
+
+        </div>
+        @if (Model == null || Model.ResultList == null)
+        {
+            return;
+        }
+        @if (Model != null && Model.ResultList.Count > 0)
+        {
+            <table class="table table-responsive table-striped">
+                <tr>
+                    <th>
+                        S/N
+                    </th>
+                    <th>
+                        MATRIC NUMBER
+                    </th>
+                    <th>
+                        SURNAME
+                    </th>
+                    <th>
+                        FIRSTNAME
+                    </th>
+                    <th>
+                        MIDDLENAME
+                    </th>
+                    <th>
+                        CATEGORY
+                    </th>
+                    <th>
+                        REASON
+                    </th>
+                    <th>
+                        VIEW
+                    </th>
+
+
+                </tr>
+                @for (int i = 0; i < Model.ResultList.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            @(i + 1)
+                        </td>
+                        <td>
+                            @Model.ResultList[i].MatricNumber
+                        </td>
+                        <td>
+                            @Model.ResultList[i].Surname
+                        </td>
+                        <td>
+                            @Model.ResultList[i].Firstname
+                        </td>
+                        <td>
+                            @Model.ResultList[i].Othername
+                        </td>
+                        <td>
+                            @Model.ResultList[i].RejectCategory
+                        </td>
+                        <td>
+                            @Model.ResultList[i].Reason
+                        </td>
+                        <td>
+                            @Html.ActionLink("View", "ViewProcessedStudentResult", new { controller = "Result", area = "Admin", id = Model.ResultList[i].StudentId })
+                        </td>
+
+
+                    </tr>
+                }
+            </table>
+
+        }
+    </div>
+
+}
+

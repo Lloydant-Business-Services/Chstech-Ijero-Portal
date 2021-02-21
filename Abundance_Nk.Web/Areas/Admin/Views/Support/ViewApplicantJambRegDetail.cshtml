@@ -1,0 +1,199 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.SupportViewModel
+@{
+    ViewBag.Title = "ViewApplicantJambRegDetail";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div>
+    @if (TempData["Message"] != null)
+    {
+        @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+    }
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">Applicant Details</h4>
+    </div>
+    <div class="panel-body">
+
+        @using (Html.BeginForm("ViewApplicantJambRegDetail", "Support", new { Area = "Admin" }, FormMethod.Post))
+        {
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @Html.ValidationSummary(true)
+                     
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ApplicationForm.Number, "Application Number/ID: ", new { @class = "col-md-3 control-label" })
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(m => m.ApplicationForm.Number, new { @class = "form-control", @required = "required" })
+                            @Html.ValidationMessageFor(m => m.ApplicationForm.Id, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-3 col-md-9">
+                            <input type="submit" value="Submit" class="btn btn-success" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+
+    <br />
+    <div class="panel-body">
+        <div class="col-md-12">
+         
+
+            @if (Model.ApplicantJambDetailList != null && Model.ApplicantJambDetailList.Count > 0)
+            {
+                <div class="panel panel-danger">
+                    <div class="panel-body">
+
+                            <table class="table-bordered table-hover table-striped table-responsive table">
+                                <tr>
+                                    <th>
+                                        Name
+                                    </th>
+                                    <th>
+                                        Jamb Reg. Number
+                                    </th>
+                                    <th>
+                                        Application Number
+                                    </th>
+                                    <th>
+                                        Edit
+                                    </th>
+                                </tr>
+
+                                @for (int i = 0; i < Model.ApplicantJambDetailList.Count; i++)
+                                {
+                                    <tr>
+
+                                        @Html.HiddenFor(model => model.ApplicantJambDetailList[i].Person.Id)
+
+                                        <td>
+                                            @Model.ApplicantJambDetailList[i].Person.FullName
+                                        </td>
+                                        <td>
+                                            @Model.ApplicantJambDetailList[i].JambRegistrationNumber
+                                        </td>
+                                        <td>
+                                            @Model.ApplicantJambDetailList[i].ApplicationForm.Number
+                                        </td>
+                                        <td>
+                                            @Html.ActionLink("Edit", "EditApplicantJambRegDetail", "Support", new { Area = "Admin", pid = Model.ApplicantJambDetailList[i].Person.Id }, new { @class = "btn btn-success " })
+                                        </td>
+                                    </tr>
+                                }
+
+                            </table>
+
+                    </div>
+                </div>
+
+            }
+
+        </div>
+    </div>
+
+    <br />
+    <div class="panel-body">
+        <div class="col-md-12"> 
+
+            @if (Model.ChangeOfCourseList != null && Model.ChangeOfCourseList.Count > 0)
+            {
+                <div class="panel panel-danger">
+                    <div class="panel-body">
+
+                        <table class="table-bordered table-hover table-striped table-responsive table">
+                            <tr>
+                                <th>
+                                    Jamb Reg. Number
+                                </th>
+                                <th>
+                                    Application Form
+                                </th>
+                                <th>
+                                    Session
+                                </th>
+                                <th>
+                                    New Person
+                                </th>
+                                <th>
+                                    Old Person
+                                </th>
+                                <th>
+                                    Edit
+                                </th>
+                            </tr>
+
+                            @for (int i = 0; i < Model.ChangeOfCourseList.Count; i++)
+                            {
+                                <tr>
+
+                                    @Html.HiddenFor(model => model.ChangeOfCourseList[i].Id)
+
+                                    <td>
+                                        @Model.ChangeOfCourseList[i].JambRegistrationNumber
+                                    </td>
+                                    @if (Model.ChangeOfCourseList[i].ApplicationForm != null)
+                                    {
+                                        <td>
+                                            @Model.ChangeOfCourseList[i].ApplicationForm.Number
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            Null
+                                        </td>
+                                    }
+                                    <td>
+                                        @Model.ChangeOfCourseList[i].Session.Name
+                                    </td>
+                                    @if (Model.ChangeOfCourseList[i].NewPerson != null)
+                                    {
+                                        <td>
+                                            @Model.ChangeOfCourseList[i].NewPerson.FullName
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            Null
+                                        </td>
+                                    }
+                                    @if (Model.ChangeOfCourseList[i].OldPerson != null)
+                                    {
+                                        <td>
+                                            @Model.ChangeOfCourseList[i].OldPerson.FullName
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            Null
+                                        </td>
+                                    }
+                                    <td>
+                                        @Html.ActionLink("Edit", "EditChangeOfCourse", "Support", new { Area = "Admin", cid = Model.ChangeOfCourseList[i].Id }, new { @class = "btn btn-success " })
+                                    </td>
+                                </tr>
+                            }
+
+                        </table>
+
+                    </div>
+                </div>
+
+            }
+
+        </div>
+    </div>
+
+
+
+</div>

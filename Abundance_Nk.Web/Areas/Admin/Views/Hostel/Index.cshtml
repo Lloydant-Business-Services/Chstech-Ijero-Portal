@@ -1,0 +1,87 @@
+﻿@model IEnumerable<Abundance_Nk.Model.Entity.HOSTEL>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="col-md-12">
+
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading panel-dark-head">
+                <h4>Hostels</h4>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    
+                    <p>
+                        @Html.ActionLink("Create New Hostel", "Create", new{controller = "Hostel", area = "Admin"}, new{@class = "btn btn-success"})
+                    </p>
+                    <table class="table table-bordered table-hover table-striped">
+                        <tr>
+                            <th>
+                                @Html.DisplayName("Hostel Name")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Hostel Capacity")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Hostel Description")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Date Added")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Activated")
+                            </th>
+                            <th>
+                                @Html.DisplayName("Hostel Type")
+                            </th>
+                            <th></th>
+                        </tr>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Hostel_Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Capacity)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Description)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Date_Entered)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Activated)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.HOSTEL_TYPE.Hostel_Type_Name)
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Edit", "Edit", new { id = item.Hostel_Id }, new { @class = "btn btn-success" }) |
+                                    @Html.ActionLink("Details", "Details", new { id = item.Hostel_Id }, new { @class = "btn btn-success" }) |
+                                    @Html.ActionLink("Delete", "Delete", new { id = item.Hostel_Id }, new { @class = "btn btn-success" })
+                                </td>
+                            </tr>
+                        }
+
+                    </table>
+
+                </div>
+            </div>
+        </div>
+</div>
+
+
+                    

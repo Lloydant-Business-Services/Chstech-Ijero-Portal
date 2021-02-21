@@ -1,0 +1,262 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.UserViewModel
+@{
+    ViewBag.Title = "Assign Department";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section Scripts {
+
+
+    <link href="~/Scripts/DataTables-1.10.15/media/css/jquery.dataTables.css" rel="stylesheet" />
+    <script src="~/Scripts/DataTables-1.10.15/media/js/jquery.dataTables.js"></script>
+    <link href="~/Scripts/DataTables-1.10.15/extensions/Buttons/css/buttons.dataTables.css" rel="stylesheet" />
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Buttons/js/dataTables.buttons.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Buttons/js/buttons.colVis.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Responsive/js/dataTables.responsive.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/buttons.flash.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/buttons.html5.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/buttons.print.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/jszip.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/pdfmake.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/vfs_fonts.js"></script>
+    <script type="text/javascript">
+    let UserIdArray = [];
+    localStorage.setItem("array", '[]');
+        $(document).ready(function () {
+            $.extend($.fn.dataTable.shadows, {
+                responsive: false
+            });
+
+            $("#staffRecordTable").DataTable({
+                dom: 'Bfrtip',
+                ordering: true,
+                buttons: [
+                    {
+                        extend: 'copy',
+                        exportOptions: {
+                            columns: ':visible',
+                            modifier: {
+                                orientation: 'Potrait'
+                            }
+                        },
+                        orientation: 'Potrait'
+
+
+                    },
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                            columns: ':visible',
+                            modifier: {
+                                orientation: 'Potrait'
+                            }
+                        },
+                        orientation: 'Potrait'
+
+                    },
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: ':visible',
+                            modifier: {
+                                orientation: 'Potrait'
+                            }
+                        },
+                        orientation: 'Potrait'
+
+
+                    },
+                    {
+                        extend: 'pdf',
+                        exportOptions: {
+                            columns: ':visible',
+                            header: true,
+                            modifier: {
+                                orientation: 'Potrait'
+                            }
+
+
+
+                        },
+                        orientation: 'Potrait'
+
+
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: ':visible',
+                            modifier: {
+                                orientation: 'Potrait'
+                            }
+                        },
+                        orientation: 'Potrait'
+
+
+                    }, , 'colvis'
+                ]
+            });
+            $('#assignButton').on('click', function () {
+                departmentId = $('#deparmentId').val();
+                if (departmentId > 0 && UserIdArray.length > 0) {
+
+                    $('#assignButton').attr('disabled', true);
+                    $('#assignButton').text("Assigning...");
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("CreateStaffDepartmentRecord", "User")', // we are calling json method
+                        dataType: 'json',
+                        data: { UserIdArray, departmentId },
+                        success: function (result) {
+                            if (!result.IsError && result.Message != null) {
+                                alert(result.Message);
+                                UserIdArray = [];
+                                localStorage.setItem("array", '[]');
+                                window.location.reload(true);
+                            }
+                            if (result.IsError && result.Message != null) {
+                                alert(result.Message);
+                                $('#assignButton').attr('disabled', false);
+                                $('#assignButton').text("Assign");
+                            }
+
+                        },
+                        error: function (ex) {
+                            $('#assignButton').attr('disabled', false);
+                            $('#assignButton').text("Assign");
+                            alert('Failed' + ex);
+                        }
+                    });
+                }
+                else {
+                    alert("Please, ensure you select department and staff to assign.");
+                }
+            })
+        })
+        
+    function PassUserId(id) {
+        let userId = id;
+        UserIdArray = JSON.parse(localStorage.getItem("array")) || [];
+        let existUserId = UserIdArray.includes(userId);
+        if (existUserId) {
+            UserIdArray = $.grep(UserIdArray, function (value) {
+                return value != existUserId;
+            })
+            //reset the object
+            localStorage.setItem("array", JSON.stringify(UserIdArray));
+
+        }
+        else {
+            UserIdArray.push(userId);
+            localStorage.setItem("array", JSON.stringify(UserIdArray));
+        }
+    }
+
+    </script>
+    }
+    <div class="col-md-12">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+
+            <div>
+                @if (TempData["Message"] != null)
+                {
+                    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+                }
+            </div>
+
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4><i class="fa fa-fw fa-edit"></i> Assign Department to Staff</h4>
+                </div>
+                <div class="panel-body">
+
+
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Department.Name, "Department ", new { @class = "control-label " })
+                            @Html.DropDownListFor(model => model.Department.Id, (IEnumerable<SelectListItem>)ViewBag.Departments, new { @class = "form-control", @required = "required", id = "deparmentId" })
+                            @Html.ValidationMessageFor(model => model.Department.Name)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4><i class="fa fa-fw fa-edit"></i> Staff List</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table-bordered table-hover table-striped  table" id="staffRecordTable">
+
+                            <thead>
+                                <tr>
+                                    <th>S/N</th>
+                                    <th>
+                                        Staff Username
+                                    </th>
+
+                                    <th>
+                                        Portfolio
+                                    </th>
+                                    <th>
+                                        Department
+                                    </th>
+
+                                    <th>
+
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+                            <tbody>
+
+                                @for (int i = 0; i < Model.UserStaffRecords.Count; i++)
+                                {
+                                    var sn = i + 1;
+                                    <tr>
+                                        <td>@sn</td>
+                                        <td>
+                                            @Model.UserStaffRecords[i].User.Username
+                                        </td>
+
+                                        <td>
+                                            @Model.UserStaffRecords[i].User.Role.Name
+                                        </td>
+
+                                        @if (Model.UserStaffRecords[i].StaffDepartment != null && Model.UserStaffRecords[i].StaffDepartment.Id > 0)
+                                        {
+                                            <td>
+                                                @Model.UserStaffRecords[i].StaffDepartment.Department.Name
+                                            </td>
+
+                                        }
+                                        else
+                                        {
+                                            <td></td>
+
+                                        }
+
+                                        <td>
+                                            <input type="checkbox" onclick="PassUserId(@Model.UserStaffRecords[i].User.Id)" />
+                                        </td>
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <button class="btn btn-primary activate" id="assignButton">Assign</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+    </div>
+

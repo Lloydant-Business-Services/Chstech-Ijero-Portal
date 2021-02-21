@@ -1,0 +1,494 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.SupportViewModel
+
+@{
+    ViewBag.Title = "StudentRecord";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@if (TempData["Message"] != null)
+{
+    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+}
+
+<br />
+<br />
+<br />
+<br />
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div style="font-size: large">View Student Record</div>
+            </div>
+            <div class="panel-body">
+
+                @using (Html.BeginForm("StudentRecord", "Support", new { area = "Admin" }, FormMethod.Post))
+                {
+                    <div class="row">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Student.MatricNumber, "Matric Number/Application Number", new { @class = "control-label col-md-2" })
+                            <div class="col-md-6">
+                                @Html.TextBoxFor(model => model.Student.MatricNumber, new { @class = "form-control", @required = "required" })
+                                @Html.ValidationMessageFor(model => model.Student.MatricNumber, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-md-offset-2">
+                                <input class="btn btn-success btn-sm mr5" type="submit" name="submit" id="submit" value="Submit" />
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        @if (Model == null || Model.Person == null) { return; }
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div style="margin-top: 40px">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#biodata">Biodata</a></li>
+                        <li><a data-toggle="tab" href="#application">Application Record</a></li>
+                        <li><a data-toggle="tab" href="#admission">Admission Record</a></li>
+                        <li><a data-toggle="tab" href="#academic">Academic Record</a></li>
+                        <li><a data-toggle="tab" href="#payment">Payment Record</a></li>
+                        <li><a data-toggle="tab" href="#pwd">Password</a></li>
+                    </ul>
+
+                    <div class="tab-content" style="margin-top: 20px">
+                        <div id="biodata" class="tab-pane fade in active">
+                            @if (Model.Person != null)
+                            {
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <dl>
+                                            <dd><img src="@Model.Person.ImageFileUrl" alt="Passport" width="100px" height="100px" /></dd>
+                                            <dt>Name:</dt>
+                                            <dd>@Model.Person.FullName</dd>
+                                            <dt>Phone Number</dt>
+                                            <dd>@Model.Person.MobilePhone</dd>
+                                            <dt>Email</dt>
+                                            <dd>@Model.Person.Email</dd>
+                                            <dt>Sex</dt>
+                                            @if (Model.Person.Sex != null)
+                                            {
+                                                <dd>@Model.Person.Sex.Name</dd>
+                                            }
+                                            else
+                                            {
+                                                <dd></dd>
+                                            }
+
+                                            <dt>Contact Address</dt>
+                                            <dd>@Model.Person.ContactAddress</dd>
+                                            <dt>DOB</dt>
+                                            <dd>@Model.Person.DateOfBirth</dd>
+                                            <dt>State</dt>
+                                            @if (@Model.Person.State != null)
+                                            {
+                                                <dd>@Model.Person.State.Name</dd>
+                                            }
+                                            else
+                                            {
+                                                <dd></dd>
+                                            }
+                                            <dt>Local Government</dt>
+                                            @if (@Model.Person.LocalGovernment != null)
+                                            {
+                                                <dd>@Model.Person.LocalGovernment.Name</dd>
+                                            }
+                                            else
+                                            {
+                                                <dd></dd>
+                                            }
+
+                                        </dl>
+                                    </div>
+                                </div>
+                            }
+                            @if (Model.Student != null)
+                            {
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <dl>
+                                            <dt>Matric Number:</dt>
+                                            <dd>@Model.Student.MatricNumber</dd>
+                                            <dt>School Contact Address</dt>
+                                            <dd>@Model.Student.SchoolContactAddress</dd>
+                                            <dt>Status</dt>
+                                            @if (Model.Student.Activated == null || !Model.Student.Activated.Value)
+                                            {
+                                                <dd>Not Active</dd>
+                                            }
+                                            else
+                                            {
+                                                <dd>Active</dd>
+                                            }
+                                        </dl>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <div id="application" class="tab-pane fade">
+                            @if (Model.AppliedCourse != null)
+                            {
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <dl>
+                                            <dt>Applied Programme:</dt>
+                                            <dd>@Model.AppliedCourse.Programme.Name</dd>
+                                            <dt>Applied Department:</dt>
+                                            <dd>@Model.AppliedCourse.Department.Name</dd>
+                                            <dt>Applied Department Option:</dt>
+                                            @if (Model.AppliedCourse.Option == null)
+                                            {
+                                                <dd></dd>
+                                            }
+                                            else
+                                            {
+                                                <dd>@Model.AppliedCourse.Option.Name</dd>
+                                            }
+
+                                        </dl>
+                                    </div>
+                                </div>
+                            }
+                            @if (Model.ApplicationForm != null)
+                            {
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <dl>
+                                            <dt>Applcation Number:</dt>
+                                            <dd>@Model.ApplicationForm.Number</dd>
+                                            <dt>Exam Number:</dt>
+                                            <dd>@Model.ApplicationForm.ExamNumber</dd>
+                                            <dt>Form Type:</dt>
+                                                <dd>@Model.ApplicationForm.Setting.Name</dd>
+                                            <dt>Form Session:</dt>
+                                            <dd>@Model.ApplicationForm.Setting.Session.Name</dd>
+                                            <dt>Application Invoice:</dt>
+                                            <dd>@Model.ApplicationForm.Payment.InvoiceNumber</dd>
+                                            <dt>Date Applied:</dt>
+                                            <dd>@Model.ApplicationForm.DateSubmitted.ToLongDateString()</dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            }
+                            @if (Model.ApplicantJambDetail != null)
+                            {
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <dl>
+                                            <dt>Jamb Reg. Number:</dt>
+                                            <dd>@Model.ApplicantJambDetail.JambRegistrationNumber</dd>
+                                            <dt>Jamb Score:</dt>
+                                            <dd>@Model.ApplicantJambDetail.JambScore</dd>
+                                            <dt>Institution Choice:</dt>
+                                            <dd>
+                                                @if (Model.ApplicantJambDetail.InstitutionChoice != null)
+                                                {
+                                                    @Model.ApplicantJambDetail.InstitutionChoice.Name
+                                                }
+                                            </dd>
+                                            <dt>Subject1:</dt>
+                                            @if (Model.ApplicantJambDetail.Subject1 != null)
+                                            {
+                                                <dd>@Model.ApplicantJambDetail.Subject1.Name</dd>
+                                            }
+                                            else
+                                            {
+                                                <dd></dd>
+                                            }
+
+                                            <dt>Subject2:</dt>
+                                            @if (Model.ApplicantJambDetail.Subject2 != null)
+                                            {
+                                                <dd>@Model.ApplicantJambDetail.Subject2.Name</dd>
+                                            }
+                                            else
+                                            {
+                                                <dd></dd>
+                                            }
+                                            <dt>Subject3:</dt>
+                                            @if (Model.ApplicantJambDetail.Subject3 != null)
+                                            {
+                                                <dd>@Model.ApplicantJambDetail.Subject3.Name</dd>
+                                            }
+                                            else
+                                            {
+                                                <dd></dd>
+                                            }
+                                            <dt>Subject4:</dt>
+                                            @if (Model.ApplicantJambDetail.Subject4 != null)
+                                            {
+                                                <dd>@Model.ApplicantJambDetail.Subject4.Name</dd>
+                                            }
+                                            else
+                                            {
+                                                <dd></dd>
+                                            }
+                                        </dl>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                        <div id="admission" class="tab-pane fade">
+                            @if (Model.AdmissionList != null)
+                            {
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <dl>
+                                            <dt>Admitted Programme:</dt>
+                                            <dd>@Model.AdmissionList.Programme.Name</dd>
+                                            <dt>Admitted Department:</dt>
+                                            @if (@Model.AdmissionList.Deprtment == null)
+                                            {
+                                                <dd></dd>
+                                            }
+                                            else
+                                            {
+                                                <dd>@Model.AdmissionList.Deprtment.Name</dd>
+                                            }
+                                            <dt>Admitted Department Option:</dt>
+                                            @if (Model.AdmissionList.DepartmentOption == null)
+                                            {
+                                                <dd></dd>
+                                            }
+                                            else
+                                            {
+                                                <dd>@Model.AdmissionList.DepartmentOption.Name</dd>
+                                            }
+                                            <dt>Date Uploaded:</dt>
+                                            <dd>@Model.AdmissionList.Batch.DateUploaded.ToLongDateString()</dd>
+                                            <dt>Admission Status:</dt>
+                                            @if (Model.AdmissionList.ActivateAlt)
+                                            {
+                                                <dd>Active</dd>}
+                                            else
+                                            {
+                                                <dd>Not Active</dd>
+                                            }
+                                        </dl>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <div id="academic" class="tab-pane fade">
+                            @if (Model.StudentLevelList != null && Model.StudentLevelList.Count > 0)
+                            {
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        @foreach (var level in Model.StudentLevelList)
+                                        {
+                                            <dl>
+                                                <dt>Programme:</dt>
+                                                <dd>@level.Programme.Name</dd>
+                                                <dt>Department:</dt>
+                                                <dd>@level.Department.Name</dd>
+                                                <dt>Department Option:</dt>
+                                                @if (level.DepartmentOption == null)
+                                                {
+                                                    <dd></dd>
+                                                }
+                                                else
+                                                {
+                                                    <dd>@level.DepartmentOption.Name</dd>
+                                                }
+
+                                                <dt>Level:</dt>
+                                                <dd>@level.Level.Name</dd>
+                                                <dt>Session:</dt>
+                                                <dd>@level.Session.Name</dd>
+                                            </dl>
+                                            <hr />
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <div id="payment" class="tab-pane fade">
+
+                            @if (Model.Payments != null && Model.Payments.Count > 0)
+                            {
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4>Generated Invoices</h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        <table class="table table-striped table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        Payment Type
+                                                    </th>
+                                                    <th>
+                                                        Invoice No
+                                                    </th>
+                                                    <th>
+                                                        Date Generated
+                                                    </th>
+                                                    <th>
+                                                        Session
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            @for (int i = 0; i < Model.Payments.Count; i++)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => Model.Payments[i].FeeType.Name)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => Model.Payments[i].InvoiceNumber)
+                                                    </td>
+
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => Model.Payments[i].DatePaid)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => Model.Payments[i].Session.Name)
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </table>
+                                    </div>
+                                </div>
+
+                            }
+                            @if (Model.PaymentHistory != null && Model.PaymentHistory.Payments != null && Model.PaymentHistory.Payments.Count > 0)
+                            {
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4>Successful payments</h4>
+                                    </div>
+                                    <div class="panel-body">
+                                        <table class="table table-striped table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        Payment Type
+                                                    </th>
+                                                    <th>
+                                                        Invoice No
+                                                    </th>
+                                                    <th>
+                                                        Confirmation Order No/RRR No.
+                                                    </th>
+                                                    <th>
+                                                        Transaction Date
+                                                    </th>
+                                                    @*<th>
+                                                            Session
+                                                        </th>*@
+                                                    <th style="text-align: right">
+                                                        Amount (₦)
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            @for (int i = 0; i < Model.PaymentHistory.Payments.Count; i++)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => Model.PaymentHistory.Payments[i].FeeTypeName)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => Model.PaymentHistory.Payments[i].InvoiceNumber)
+                                                    </td>
+
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => Model.PaymentHistory.Payments[i].ConfirmationOrderNumber)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => Model.PaymentHistory.Payments[i].PaymentDate)
+                                                    </td>
+                                                    @*<td>
+                                                            @Html.DisplayFor(modelItem => Model.PaymentHistory.Payments[i].Session.Name)
+                                                        </td>*@
+                                                    <td style="text-align: right">
+                                                        @Html.DisplayFor(modelItem => Model.PaymentHistory.Payments[i].Amount)
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </table>
+                                    </div>
+                                </div>
+
+                            }
+                            @*@if (Model.ScratchCards != null && Model.ScratchCards.Count > 0)
+                                {
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4>Scratch card / pins</h4>
+                                        </div>
+                                        <div class="panel-body">
+                                            <table class="table table-striped table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+                                                            Pin
+                                                        </th>
+                                                        <th>
+                                                            Serial #
+                                                        </th>
+                                                        <th>
+                                                            First used date
+                                                        </th>
+                                                        <th>
+                                                            Usage count
+                                                        </th>
+                                                        <th>
+                                                            Type
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                @for (int i = 0; i < Model.ScratchCards.Count; i++)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => Model.ScratchCards[i].Pin)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => Model.ScratchCards[i].SerialNumber)
+                                                        </td>
+
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => Model.ScratchCards[i].FirstUsedDate)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => Model.ScratchCards[i].UsageCount)
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => Model.ScratchCards[i].Batch.CardType.Name)
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                }*@
+                        </div>
+
+                        <div id="pwd" class="tab-pane fade">
+                                @if (Model.Student != null)
+                                {
+                                    <dl>
+                                        <dt>Password</dt>
+                                        <dd>@Model.Student.PasswordHash</dd>
+                                    </dl>
+                                }
+                            </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-1"></div>
+</div>
+

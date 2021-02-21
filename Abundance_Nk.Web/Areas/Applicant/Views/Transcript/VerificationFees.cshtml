@@ -1,0 +1,89 @@
+﻿@using Abundance_Nk.Web.Models
+@model Abundance_Nk.Web.Areas.Applicant.ViewModels.TranscriptViewModel
+@{
+    ViewBag.Title = "Verification Fees";
+    Layout = "~/Views/Shared/_NewThemeLayout.cshtml";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>
+          @Model.FeeType.Name <span class="label label-default"> Search</span>
+        </h2>
+    </div>
+    <hr />
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+
+            @using(Html.BeginForm("VerificationFees","Transcript",FormMethod.Post,new { id = "frmIndex",enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                @Html.HiddenFor(model => model.FeeType.Id)
+                <div class="row">
+                    <h4>Enter your matric Number and click on the search button to retrieve your details</h4>
+                    <hr style="margin-top:0" />
+                    <div class="col-md-12">
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.StudentVerification.Student.MatricNumber,new { @class = "control-label " })
+                                    @Html.TextBoxFor(model => model.StudentVerification.Student.MatricNumber,new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.StudentVerification.Student.MatricNumber,null,new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            @if(Model.StudentVerification != null && Model.StudentVerification.Student != null)
+                            {
+                                <div class="col-md-8">
+                                    <div class="well well-sm">
+                                        <div class="form-group">
+
+                                            <br />
+                                            @if(Model.StudentVerification.Payment == null)
+                                            {
+                                                @Html.ActionLink(Model.StudentVerification.Student.FullName + " - " + Model.StudentVerification.Student.MatricNumber + " >> Click to continue","VerificationRequest","Transcript",new { sid = Model.StudentVerification.Student.Id,feeTypeId = Utility.Encrypt(Model.StudentVerification.FeeType.Id.ToString())},new { @class = "btn btn-danger btn-sm",target = "_blank" })
+                                            }
+                                            else
+                                            {
+                                                @Html.ActionLink(Model.StudentVerification.Student.FullName + " - " + Model.StudentVerification.Student.MatricNumber + " >> Click to check status","TranscriptPayment","Transcript",new { tid = Model.StudentVerification.Payment.Id },new { @class = "btn btn-danger btn-sm",target = "_blank" })
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+
+
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <input class="btn btn-success btn-lg mr5" type="submit" name="submit" id="submit" value="Search" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <br />
+            }
+
+        </div>
+
+    </div>
+    <div class="col-md-1"></div>
+</div>
+

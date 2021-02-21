@@ -1,0 +1,241 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.ELearningViewModel
+@{
+                /**/
+
+                ViewBag.Title = "EnterChatRoom";
+                Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<style>
+    .chat {
+        font-family: Montserrat !important;
+        font-weight: 400 !important;
+    }
+
+    .btn-go {
+        background-color: #368E23 !important;
+        color: #fff !important;
+    }
+
+    .btn-stop {
+        background-color: #D86D6D !important;
+        color: #fff !important;
+    }
+
+    .page-heading {
+        font-weight: 300;
+        color: #787878
+    }
+
+    .message-box {
+        width: 100%;
+        padding: 30px 20px;
+        border-radius: 10px;
+        height: 60vh;
+        overflow: scroll;
+    }
+
+    .recipient {
+        max-width: 450px;
+        background-color: #fff;
+        border: 1px solid #d3d3d3;
+        padding: 15px 10px;
+        border-radius: 10px;
+        margin: 20px 10px;
+        float: left;
+        clear: both;
+    }
+
+        .recipient p {
+            padding: 0;
+            margin: 0;
+            font-weight: 500;
+            font-size: 15px;
+            color: #000;
+        }
+
+    .sender {
+        max-width: 450px;
+        background-color: #DCF8C6;
+        border: 1px solid #d3d3d3;
+        padding: 15px 10px;
+        border-radius: 10px;
+        margin: 20px 10px;
+        float: right;
+        clear: both;
+    }
+
+        .sender p {
+            padding: 0;
+            margin: 0;
+            font-weight: 500;
+            font-size: 15px;
+            color: #000;
+        }
+
+    .label {
+        font-weight: 600 !important;
+        font-size: 12.5px !important;
+        color: #7b7b7b;
+    }
+
+    .timestmp {
+        font-weight: 600 !important;
+        font-size: 10px !important;
+        color: #767676 !important;
+        float: right;
+        clear: both;
+        margin-top: 10px !important;
+    }
+
+    .clearboth {
+        clear: both;
+    }
+
+    .bg-light {
+        background-color: #f5f5f5;
+    }
+
+    .p-3 {
+        padding: 3rem;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+</style>
+
+
+<div class="card">
+    <div class="row">
+        <div class="col-lg-2"></div>
+        <div class="col-lg-8">
+            <div class="panel bg-light p-3">
+                <div class="mt-5 mb-5 chat">
+                    <div class="container mt-5">
+                        @Html.HiddenFor(m => m.CourseAllocation.Id)
+                        <h2 class="page-heading text-center">@Model.User.Username</h2>
+                        <hr>
+                        <h5 class="text-center">@Model.CourseAllocation.Programme.Name (@Model.CourseAllocation.Department.Name) - @Model.CourseAllocation.Course.Name (@Model.CourseAllocation.Course.Code)</h5>
+                        <section class="mt-5 mb-5">
+                            <div class="message-box clearfix" id="message-box">
+
+
+                            </div>
+                            <div class=" clearboth">
+                                <hr>
+
+                                <div class="form-row form-group">
+                                    <div class="col-lg-6"></div>
+                                    <div class=" col-lg-5">
+                                        <input type="text" class="form-control" placeholder="Type your message here..." id="responseMessage">
+                                    </div>
+                                    <div class="col-lg-1">
+                                        <button class="btn btn-go" id="send-msg-form">Send</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<hr />
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<script>
+    var courseAllocationId = 0;
+    $(document).ready(function () {
+        courseAllocationId = $('#@Html.IdFor(m => m.CourseAllocation.Id)').val();
+        loadChat();
+
+        //Send message
+                $("#send-msg-form").on("click", function (e) {
+            //e.preventDefault();
+
+            let response = $('#responseMessage').val();
+                    if (response != null && response != undefined) {
+
+                   $.ajax({
+                 type: 'POST',
+                 url: '@Url.Action("SaveChatResponse", "ELearning")', // we are calling json method
+                 dataType: 'json',
+                       data: { courseAllocationId, response},
+                 success: function (result) {
+                     if (!result.isError) {
+                         $('#responseMessage').val("");
+                         loadChat();
+                     }
+                 },
+                 error: function (ex) {
+                            alert('Failed to retrieve messages.' + ex);
+                 }
+             });
+            }
+        })
+    })
+        function loadChat() {
+            if (courseAllocationId > 0) {
+             $.ajax({
+                 type: 'POST',
+                 url: '@Url.Action("AjaxLoadChatBoard", "ELearning")', // we are calling json method
+                 dataType: 'json',
+                 data: { courseAllocationId},
+                 success: function (result) {
+                     if (!result.IsError) {
+                         if (result.EChatBoards && result.EChatBoards.length > 0) {
+                             let messageBox = $("#message-box");
+                             messageBox.empty();//Clear all earlier content from the message box
+                             let messageBoxContent = "";
+
+                             //localStorage.setItem("Messages", JSON.stringify(result.bulletinChatResponses));
+                             result.EChatBoards.forEach(chatMessage => {
+
+
+                                 if (!chatMessage.ActiveSender) {
+
+                                    messageBoxContent += `<div class="recipient shadow">
+                                         <p class="label">${chatMessage.Sender}</p>
+                                         <p class="msg-text">
+                                             ${chatMessage.Response}
+                                         </p>
+                                         <p class="timestmp">${chatMessage.DateSent}</p></div>`;
+
+                                 }
+                                 else {
+
+
+                                     messageBoxContent += `<div class="sender shadow">
+                                                    <p class="label">${chatMessage.Sender}</p>
+                                                    <p class="msg-text">
+                                                        ${chatMessage.Response}
+                                                    </p>
+                                                    <p class="timestmp">${chatMessage.DateSent}</p></div>`;
+
+
+                                 }
+                             });
+
+                             messageBox.html(messageBoxContent);
+                             //move to the buttom of the div
+                             var divContainer = $("#message-box");
+                             divContainer.scrollTop($("#message-box")[0].scrollHeight);
+                         }
+                     }
+                 },
+                 error: function (ex) {
+                            alert('Failed to retrieve messages.' + ex);
+                 }
+             });
+        }
+
+    }
+    setInterval(() => loadChat(), 300000);
+</script>

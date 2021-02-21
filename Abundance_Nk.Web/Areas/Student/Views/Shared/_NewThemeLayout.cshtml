@@ -1,0 +1,384 @@
+﻿@using Abundance_Nk.Model.Model
+@using Microsoft.AspNet.Identity
+@using Abundance_Nk.Web.Models
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <style>
+        body {
+            font-family: Quicksand, sans-serif !important;
+        }
+
+        body, ul, li, p {
+            font-family: Quicksand, sans-serif !important;
+        }
+           
+
+        .sofia {
+            font-family: Quicksand, sans-serif !important;
+        }
+
+        .sidebar .nav .nav-item .nav-link .menu-title {
+            color: inherit;
+            display: inline-block;
+            font-size: 11px!important;
+            line-height: 0;
+            vertical-align: middle;
+            margin-right: auto;
+        }
+
+        .sidebar-grdient-dark, .sidebar {
+           
+            background: linear-gradient(to right, rgb(29 78 62 / 90%), rgb(23 82 33 / 90%))!important;
+            color: #333 !important;
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+    
+    
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>CHSTECH | Student Portal</title>
+    <!-- plugins:css -->
+    @*<link rel="stylesheet" href="~/Content/theme/admin/assets/js/mdi/css/materialdesignicons.min.css">*@
+        @*<link rel="stylesheet" href="~/Content/theme/admin/assets/js/perfect-scrollbar/dist/css/perfect-scrollbar.min.css">*@
+    <!-- endinject -->
+    <!-- plugin css for this page -->
+    @*<link rel="stylesheet" href="~/Content/theme/admin/assets/js/jquery-bar-rating/dist/themes/css-stars.css">*@
+    <link rel="stylesheet" href="~/Content/theme/admin/assets/js/plugins/bootstrap-datepicker.js" />
+    <!-- End plugin css for this page -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="~/Content/theme/admin/assets/css/style.css">
+    <link rel="stylesheet" href="~/Content/font-awesome/css/font-awesome.min.css">
+
+    <!-- endinject -->
+    <link rel="shortcut icon" href="~/Content/theme/admin/assets/images/favicon.png" />
+    <link rel="stylesheet" href="~/Content/sweetalert.css" />
+
+    
+
+</head>
+@{
+    Student student = null;
+    StudentExtraYearSession studentExtraYear = null;
+    if (!string.IsNullOrEmpty(User.Identity.Name))
+    {
+        student = Utility.GetStudent(@User.Identity.Name);
+        if (student != null)
+        {
+            studentExtraYear = Utility.GetExtraYearStudent(student);
+        }
+    }
+    else
+    {
+
+        Response.Redirect("/Security/Account/Login");
+    }
+
+}
+<body>
+    <div class="container-scroller">
+        <!-- navbar -->
+        <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex  text-white flex-row" style="box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.25); background-color:none!important">
+            <div class="text-center navbar-brand-wrapper text-white d-flex align-items-center justify-content-center">
+                @*<a class="navbar-brand brand-logo" href="#" style="font-size: 13px">College Of Health and Science Technology Ijero-Ekiti</a>
+                <a class="navbar-brand brand-logo-mini" href="#">CHSTECH</a>*@
+                <img class="text-center" src="~/Content/Images/chst.jpg" height="40px" />
+            </div>
+            <div class="navbar-menu-wrapper d-flex align-items-stretch">
+                <div class="search-field ml-4 d-none d-md-block">
+                    <form class="d-flex align-items-stretch h-100" action="#">
+                        <div class="input-group" style="border:2px solid #ccc;">
+                            <input type="text" class="form-control bg-transparent border-0" placeholder="Search">
+
+                            <div class="input-group-addon bg-transparent border-0 search-button">
+                                <button type="submit" class="btn btn-sm bg-transparent px-0">
+                                    <i class="mdi mdi-magnify"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <ul class="navbar-nav navbar-nav-right sofia">
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle nav-profile" id="profileDropdown" href="#" data-toggle="dropdown" aria-expanded="false">
+                            @if (File.Exists(Server.MapPath("~" + student.ImageFileUrl)))
+                            {
+                                <img src="@Url.Content('~' + @student.ImageFileUrl)" />
+                            }
+                            else
+                            {
+                                <img src="~/Content/Images/default_avatar.png" />
+                            }
+                            <span class="d-none d-lg-inline">@student.FullName</span>
+                        </a>
+                        <div class="dropdown-menu navbar-dropdown w-100" aria-labelledby="profileDropdown">
+                            <a class="dropdown-item" href="#">
+                                <i class="mdi mdi-cached mr-2 text-success"></i>
+                                Something
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">
+                                <i class="mdi mdi-logout mr-2 text-primary"></i>
+                                Log Out
+                            </a>
+                        </div>
+                    </li>
+                    <li class="nav-item nav-logout d-none d-lg-block">
+                        <a class="nav-link" href="#">
+                            <i class="mdi mdi-power"></i>
+                        </a>
+                    </li>
+                </ul>
+                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+                    <span class="mdi mdi-menu"></span>
+                </button>
+            </div>
+        </nav>
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <div class="row row-offcanvas row-offcanvas-right">
+                <!-- partial:partials/_sidebar.html -->
+                <nav class="sidebar sidebar-offcanvas" id="sidebar">
+
+                    <ul class="nav mt-0" style="font-size:12px!important">
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("index", "Home")" aria-expanded="false">
+                                <span class="menu-title">Dashboard</span>
+                                <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                            </a>
+
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("ChangePassword","Home")" aria-expanded="false">
+                                <span class="menu-title">Change Password</span>
+                                <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("profile", "Home")" aria-expanded="false">
+                                <span class="menu-title">Profile</span>
+                                <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("PrintAdmissionLetter", "Home")" aria-expanded="false">
+                                <span class="menu-title">Admission Letter</span>
+                                <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Fees", "Home")" aria-expanded="false">
+                                <span class="menu-title">Pay Fees</span>
+                                <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("OtherFees", "Home")" aria-expanded="false">
+                                <span class="menu-title">Pay Other Fees</span>
+                                <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("PaymentHistory", "Home")" aria-expanded="false">
+                                <span class="menu-title">Payment Receipts</span>
+                                <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("ReprintInvoice", "Home")" aria-expanded="false">
+                                <span class="menu-title">Reprint Invoice</span>
+                                <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                            </a>
+                        </li>
+
+                        @*<li class="nav-item">
+            <a class="nav-link" href="@Url.Action("Logon","Home", new {area = "Student"})" aria-expanded="false">
+                <span class="menu-title">Print Other receipts</span>
+                <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+            </a>
+        </li>*@
+
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("CourseRegistration", "Home")" aria-expanded="false">
+                                <span class="menu-title">Course registration</span>
+                                <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                            </a>
+                        </li>
+
+                        @* <li class="nav-item">
+            <a class="nav-link" href="@Url.Action("ELearning", "Home")" aria-expanded="false">
+                <span class="menu-title">E-Learning</span>
+                <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+            </a>
+        </li>*@
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Result", "Home")" aria-expanded="false">
+                                <span class="menu-title">Results</span>
+                                <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("CreateHostelRequest", "Hostel")" aria-expanded="false">
+                                <span class="menu-title">Hostel</span>
+                                <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "EWallet")" aria-expanded="false">
+                                <span class="menu-title">E-Wallet</span>
+                                <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                            </a>
+                        </li>
+
+                        @using (Html.BeginForm("LogOff", "Account", new { Area = "Security" }, FormMethod.Post, new { id = "logoutForm1" }))
+    {
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="javascript:document.getElementById('logoutForm1').submit()" aria-expanded="false">
+                            <span class="menu-title">Logout</span>
+                            <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+                        </a>
+                    </li>
+
+
+}
+
+
+
+
+                    </ul>
+                </nav>
+                <!-- partial -->
+                <div class="content-wrapper">
+                    <div class="row">
+
+
+                        <div class="col-md-12 stretch-card grid-margin">
+                            <div class="card bg-neutral">
+                                <div class="card-body">
+                                    @RenderBody()
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 stretch-card grid-margin">
+                            <div class="card bg-neutral">
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+                <!-- content-wrapper ends -->
+                <!-- partial:partials/_footer.html -->
+                <footer class="footer">
+                    <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © College Of Health and Science Technology ijero-Ekiti. All rights reserved.</span>
+                        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">POWERED BY LloydAnt</span>
+                    </div>
+                </footer>
+                <!-- partial -->
+            </div>
+            <!-- row-offcanvas ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+
+    @*<script type="text/javascript" src="~/Content/theme/assets/js/core/jquery.3.2.1.min.js"></script>*@
+    <script type="text/javascript" src="~/Scripts/jquery-2.1.3.min.js"></script>
+    <script type="text/javascript" src="~/Content/theme/assets/js/core/tether.min.js"></script>
+    @*<script type="text/javascript" src="~/Content/theme/assets/js/core/bootstrap.min.js"></script>*@
+    <!-- endinject -->
+    <!-- inject:js -->
+    <script src="~/Content/theme/admin/assets/js/off-canvas.js"></script>
+    @*<script src="~/Content/theme/admin/assets/js/misc.js"></script>*@
+    <!-- endinject -->
+    <!-- Custom js for this page-->
+    @*<script src="~/Content/theme/admin/assets/js/dashboard.js"></script>*@
+    <!-- End custom js for this page-->
+    
+    <!-- Start of Smartsupp Live Chat script -->
+    <script type="text/javascript">
+
+
+        var _smartsupp = _smartsupp || {};
+        _smartsupp.key = "8d8c5c64fa82b02ea860a7f80d5a93c351259935";
+
+        //
+        _smartsupp.cookieDomain = '.97.74.6.243/fedpolyado';
+        _smartsupp.requireLogin = true;
+        // disable email
+        _smartsupp.loginEmailControl = false;
+        // append checkbox control to confirm something
+        _smartsupp.loginControls = [{
+            xtype: 'textinput',
+            name: 'number',
+            label: 'Phone',
+            required: true
+        }, {
+            xtype: 'textinput',
+            name: 'identifier',
+            label: 'Application / Matric No',
+            required: true
+        }];
+
+        window.smartsupp || (function (d) {
+            var s, c, o = smartsupp = function () { o._.push(arguments) }; o._ = [];
+            s = d.getElementsByTagName('script')[0]; c = d.createElement('script');
+            c.type = 'text/javascript'; c.charset = 'utf-8'; c.async = true;
+            c.src = '//www.smartsuppchat.com/loader.js'; s.parentNode.insertBefore(c, s);
+        })(document);
+
+
+    </script>
+    <!-- End of Smartsupp Live Chat script -->
+    <script>
+        // customize banner & logo
+        smartsupp('banner:set', 'bubble');
+        smartsupp('chat:avatar', '@Url.Content("~/Content/Images/livechat.png")');
+
+        // customize texts
+        smartsupp('chat:translate', {
+            online: {
+                title: 'Support',
+                infoTitle: 'LLOYDANT'
+            },
+            offline: {
+                title: 'OFFLINE'
+            }
+        });
+
+        // customize colors
+        smartsupp('theme:colors', {
+            primary: '#990066',
+            banner: '#999999',
+            primaryText: '#ffffff'
+        });
+    </script>
+
+    @RenderSection("scripts", false)
+</body>
+
+</html>
+

@@ -1,0 +1,79 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.UserViewModel
+@{
+    ViewBag.Title = "EditRoleByUserName";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+
+        @if (TempData["Message"] != null)
+        {
+            @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+        }
+
+        @using (Html.BeginForm("EditRoleByUserName", "User", FormMethod.Post))
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4><i class="fa fa-fw fa-edit"></i> Edit Role</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.User.Username, "Enter Username: ", new { @class = "control-label " })
+                                @Html.TextBoxFor(model => model.User.Username, new { @class = "form-control", @required = "required" })
+                                @Html.ValidationMessageFor(model => model.User.Username, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input class="btn btn-success btn-sm mr5" type="submit" name="submit" id="submit" value="Edit" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+        @if (Model.User == null) { return;}
+        @if (Model.User != null)
+        {
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @using (Html.BeginForm("EditRole", "User", FormMethod.Post))
+                    {
+                    @Html.HiddenFor(model => model.User.Id)
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.User.Role.Name, "Role: ", new { @class = "control-label " })
+                                @Html.DropDownListFor(model => model.User.Role.Id, (IEnumerable<SelectListItem>)ViewBag.Role, new { @class = "form-control", @required = "required" })
+                                @Html.ValidationMessageFor(model => model.User.Role.Name)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input class="btn btn-success btn-sm mr5" type="submit" name="submit" id="submit" value="Save" />
+                            </div>
+                        </div>
+
+                    </div>
+                    }   
+                </div>
+            </div>
+            
+            
+        }
+
+    </div>
+    <div class="col-md-1"></div>
+</div>

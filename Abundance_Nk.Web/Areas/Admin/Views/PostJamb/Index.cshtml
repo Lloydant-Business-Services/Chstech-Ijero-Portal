@@ -1,0 +1,122 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.PostjambResultSupportViewModel
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@*<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<link href="~/Content/bootstrap.css" rel="stylesheet" />
+<link href="~/Content/style.default.css" rel="stylesheet" />
+<link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />*@
+
+
+<div class="panel panel-default">
+    <div class="panel-body">
+
+        <div class="col-md-12">
+            <div>
+                <p class="text-center"><h3>CORRECT PUTME RESULT </h3></p>
+            </div>
+
+            @if (TempData["Message"] != null)
+            {
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>@TempData["Message"]</strong>
+                </div>
+            }
+
+            @using (Html.BeginForm("Index", "PostJamb", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+
+
+
+                <div class="panel panel-default ">
+                    <div class="panel-body ">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <h4>Enter Jamb Number or Exam Number</h4>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.JambNumber, new { @class = "col-sm-2 control-label " })
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(model => model.JambNumber, new { @class = "form-control", @placeholder = "Enter Invoice No" })
+                                @Html.ValidationMessageFor(model => model.JambNumber, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+                       
+                        <div class="form-group">
+                            <div class="col-sm-10">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-10">
+                                <input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="Search" />
+                                <div class="btn btn-default">
+                                    @Html.ActionLink("Back to Home", "Index", "Home", new { Area = "" }, null)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+
+            @if (Model == null || Model.putmeResult == null) { return; }
+
+            @using (Html.BeginForm("UpdateResult", "PostJamb", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+
+                @Html.HiddenFor(model => model.putmeResult.Id)
+                
+                <div class="panel panel-default ">
+                    <div class="panel-body ">
+                        <div class="col-md-12">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Edit Jamb Number</label>
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(model => model.putmeResult.RegNo, new { @class = "form-control", @placeholder = "Enter Regno" })
+                                @Html.ValidationMessageFor(model => model.putmeResult.RegNo)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Exam Number</label>
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(model => model.putmeResult.ExamNo, new { @class = "form-control", @placeholder = "Enter Exam" })
+                                @Html.ValidationMessageFor(model => model.putmeResult.ExamNo)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">FullName</label>
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(model => model.putmeResult.FullName, new { @class = "form-control", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.putmeResult.FullName)
+                            </div>
+                        </div>
+                       
+
+
+                        <div class="form-group">
+                            <div class="col-sm-2"></div>
+                            <div class="col-sm-10">
+                                <input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="Update" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+        </div>
+    </div>
+
+</div>

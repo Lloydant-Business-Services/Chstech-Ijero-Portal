@@ -1,0 +1,61 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.StaffCourseAllocationViewModel
+
+        <div class="panel-body">
+            @if (Model.RawScoreSheets != null && Model.RawScoreSheets.Count > 0)
+            {
+                <table class="table-bordered table-hover table-striped table-responsive table">
+                    <tr>
+                        <th>
+                            Matric Number
+                        </th>
+                        <th>
+                            Course Code
+                        </th>
+                        <th>
+                            Test Score
+                        </th>
+                        <th>
+                            Exam Score
+                        </th>
+                        <th>
+                            Total
+                        </th>
+                        <th>
+                           Session
+                        </th>
+                        <th>
+                            Semester
+                        </th>
+                    </tr>
+
+                    @for (int i = 0; i < Model.RawScoreSheets.Count; i++)
+                    {
+                        <tr>
+                            <td>
+                                @Model.RawScoreSheets[i].Student.MatricNumber
+                            </td>
+                            <td>
+                                @Model.RawScoreSheets[i].Course.Code
+                            </td>
+                            <td>
+                                @Model.RawScoreSheets[i].T_CA
+                            </td>
+                            <td>
+                                @Model.RawScoreSheets[i].T_EX
+                            </td>
+                            <td>
+                                @Model.RawScoreSheets[i].EX_CA
+                            </td>
+                            <td>
+                                @Model.RawScoreSheets[i].Session.Name
+                            </td>
+                            <td>
+                                @Model.RawScoreSheets[i].Semester.Name
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+            }
+              
+</div>

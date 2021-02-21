@@ -1,0 +1,168 @@
+﻿@model Abundance_Nk.Web.Areas.Applicant.ViewModels.TranscriptViewModel
+
+@{
+    //Layout = "";
+    Layout = "~/Views/Shared/_NewThemeLayout.cshtml";
+    ViewBag.Title = "Application Form";
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<link href="~/Content/sweetalert.css" rel="stylesheet" />
+<script src="~/Scripts/sweetalert.min.js"></script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        swal("ATTENTION ATTENTION ATTENTION", "In case payment challenges are experienced, Prospective Students are kindly advised to follow the required steps for resolution: \n\nStep 1: Check for the confirmation mail sent by REMITA after payment has been successful in the inbox of the email address used to make the Payment " +
+            "\nStep 2: Forward the confirmation mail to ict@fedpolyado.edu.ng and  copy support@lloydant.com. Please include" +
+            "the Candidates Full name and Contact Phone Number in the forwarded email.\n Step 3: Wait for 24 hours to receive feedback", "warning");
+
+
+        var selectedProgramme = $("#Programme_Id").val();
+        if (selectedProgramme == 1 || selectedProgramme == 2 || selectedProgramme == 6)
+        {
+            $("#divJambNo").show();
+        }
+        else {
+            $("#divJambNo").hide();
+        }
+
+        //if ($('#rdYesRadio').is(':checked')) {
+        //    $('#divOrderNo').hide();
+        //    $('#divProgramme').show();
+        //}
+        //else if ($('#rdNoRadio').is(':checked')) {
+        //    $('#divProgramme').hide();
+        //    $('#divOrderNo').show();
+        //}
+
+        $("#Programme_Id").change(function () {
+            var programme = $("#Programme_Id").val();
+            if (programme == 3) {
+                $("#divJambNo").hide();
+            }
+            else {
+                $("#divJambNo").show();
+            }
+
+            $("#AppliedCourse_Department_Id").empty();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartmentByProgrammeId")', //calling json method
+                dataType: 'json',
+                data: { id: programme },
+                success: function (departments) {
+                    $("#AppliedCourse_Department_Id").append('<option value="' + 0 + '"> -- Select -- </option>');
+
+                    $.each(departments, function (i, department) {
+                        $("#AppliedCourse_Department_Id").append('<option value="' + department.Value + '">' + department.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+        })
+
+        $('#rdNoRadio').click(function () {
+            if ($(this).is(':checked')) {
+                $('#divProgramme').hide();
+                $('#divOrderNo').show();
+            }
+        });
+
+        $('#rdYesRadio').click(function () {
+            if ($(this).is(':checked')) {
+                $('#divOrderNo').hide();
+                $('#divProgramme').show();
+            }
+        });
+    })
+
+    //$(function () {
+    //    $('#rdYesRadio').click(function () {
+    //        if ($(this).is(':checked')) {
+    //            $('#divOrderNo').attr('disabled', 'disabled');
+    //            $('#divProgramme').removeAttr('disabled');
+    //        }
+    //    });
+    //});
+
+    //$(function () {
+    //    $('#rdNoRadio').click(function () {
+    //        if ($(this).is(':checked')) {
+    //            $('#divProgramme').attr('disabled', 'disabled');
+    //            $('#divOrderNo').removeAttr('disabled');
+    //        }
+    //    });
+    //});
+
+</script>
+
+@using (Html.BeginForm("FillApplicationForm", "Form", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+
+    <div class="row" style="min-height: 650px">
+
+        <div class="col-md-12">
+
+            <h3>TRANSCRIPT REQUEST</h3>
+
+            <div class="card">
+
+                <div class="card-body p-5">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="well" style="margin-bottom: 15px">
+                                <blockquote>
+                                    <p class="custom-text-white">
+                                        Kindly enter your Matric Number in the space provided, and click the 'Search' Button to fill your Transcript Request Form.                                     </p>
+
+                                </blockquote>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div>
+                                @if (TempData["Message"] != null)
+                                {
+                                    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+                                }
+                            </div>
+                            <div class="form-group">
+                                <label style="font-size: 10pt" class=" custom-text-white"> <b>Please enter your Matriculation Number</b></label>
+                                @Html.TextBoxFor(model => model.Student.MatricNumber, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Student.MatricNumber, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+
+                        </div>
+
+                        <div class="col-md-6">
+                            <button class="btn btn-primary btn-lg mr5" type="submit" name="submit" id="submit" value="Search"> Next @*<i class="fa fa-chevron-right mr5"></i><i class="fa fa-chevron-right mr5"></i>*@</button>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+
+
+
+
+
+}

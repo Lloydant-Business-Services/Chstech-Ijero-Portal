@@ -1,0 +1,124 @@
+﻿@{
+    Layout = null;
+}
+
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<script src="~/Scripts/jquery-migrate-1.2.1.min.js"></script>
+<link href="~/Content/pretty-menu.css" rel="stylesheet" />
+<script src="~/Scripts/prettify.js"></script>
+<script src="~/Scripts/custom.js"></script>
+
+<div class="container">
+    
+        <div class="row">
+
+        </div>
+
+        <div class="col-md-12">
+            <div class="col-md-2">
+                
+                <img src="@Url.Content("~/Content/Images/212Newt.fw.png")" width="100px" height="100px" />
+            </div>
+            <div class="col-md-10">
+                <div class="row text-center " style="background-color:white; color:black">
+                    <h3>THE FEDERAL POLYTECHNIC ADO-EKITI</h3>
+                </div>
+                <div class="row" style="background-color:#white; color:black">
+                    <p class="text-uppercase text-center">p.m.b 5153 ADO, EKITI STATE, NIGERIA</p>
+                </div>
+                <div class="row pull-right" style="color: red">
+                    <p class="text-uppercase ">office of the registrar</p>
+                </div>        
+            </div>
+        </div>
+       
+        <div class="col-md-12">
+            <div class="row pull-left">
+                <b>Telephone:</b> 01-7733940 <br />
+                @*<b>Email:</b> registryfedpolyilaro@yahoo.com <br />*@@*BSC, PGDPA, MPA, MITD, ACIPM*@
+                <b style="color:red">Registrar:</b> A.F Osore (Mrs), <small></small> <br />
+            </div>
+        </div>
+    
+        <div class="row">
+        
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 pull-left">
+                <p class="text-uppercase">OUR REF:</p>
+            </div>
+        </div>
+       
+
+        <div class="row">
+        <div class="col-md-12 text-justify">
+            <p>
+                Dear @Model.Person.FullName,
+            <p class="text-center">
+                <h4 class="sectitle"><strong>OFFER OF PROVISIONAL ADMISSION FOR A TWO-YEAR  @Model.Programme.Description.ToUpper()  PROGRAMME  IN @Model.Session.Name  SESSION</strong> </h4>
+            </p>
+            <p>
+                I am pleased to offer you provisional admission into the Federal Polytechnic, Ado-Ekiti for the 2015/2016 Session for a two-year
+                <strong> Full-Time @Model.ProgrammeType </strong> Programme in <strong> @Model.Department.Name  </strong>in the <strong>
+    @Model.Department.Faculty.Name.
+</strong>
+    The offer is subject to your meeting the requirements for the programme.
+</p>
+            <p>
+                During Registration, you will be required to upload your credentials, submit copies of your certificates and other evidence of your academic attainments to authenticate your qualification for admission.  
+                If it is at anytime discovered that you did not fully meet the requirements for admission into your course of study in the Institution, at the time you were offered admission, this offer of Provisional Admission would be withdrawn immediately.  Additionally, your violation of any of the Institution’s rules and regulations, including the terms and conditions in any affidavit sworn to, can cause this offer to be withdrawn.
+            </p>
+            <p>
+
+                This offer of Provisional Admission is also subject to your paying the prescribed Acceptance Fee and printing the Acceptance of Admission Letter by <strong>@Model.RegistrationEndTimeString on @Model.GetValueOrDefault().ToShortDateString()</strong> by which date,
+                the offer would automatically lapse.You are also expected to authenticate your status as a student by paying the School fee prescribed for your Course of study and by completing your registration by<strong> @Model.RegistrationEndDate.GetValueOrDefault().ToShortDateString() </strong>.
+                If you fail to register by this date, this offer of Provisional Admission would automatically lapse.
+            </p>
+            <p>
+                You are required to submit the following with your student's file to the School Officer of your School on completion of your online registration:
+            </p>
+            <p>
+                <ol>
+
+                    <li>	Three (3) photocopies of each of your SSCE/GCE O’ Level results and any other certificates/credentials.  These would be examined; failure to produce them would lead to your offer of Provisional Admission being nullified.</li>
+                    <li>    Six (6) recent passport size photographs of yourself with your names, maximum of three names (surname first in block letters) written on the reverse–side of the photographs.</li>
+                    <li>    Passport-size photographs of both parents and/or a guardian with their/his /her phone number(s) at the back of such photographs.</li>
+                    <li>    A Letter of Recommendation/Testimonial from your former school/Head of Department or a person of reputable standing in the society who can vouch for your good behaviour.</li>
+                    <li>    Letter of confirmation of State of Origin issued by the Secretary of your Local Government.
+
+                </ol>
+                The Medical Centre of the Institution shall make arrangement for your test of Medical fitness.
+            </p>
+            <p>
+                Please note that limited number of Accommodation/welfare services would be available to some fresh students for the 2015/2016 session.
+                This will be allocated on first come, first served basis.  Students who are allocated hostel spaces would be expected to provide their own mattresses and linen etc.
+                Those who do not secure hostel accommodation or do not wish to live in the hostels would be required to make their own private arrangements to live off-campus.
+                In case you are allocated accommodation in the hostel, you would be required to pay for such accommodation, hostel welfare services and abide by the rules governing the hostels.
+            </p>
+            <p>
+                On the commencement of classes, your Head of Department will acquaint you with the materials, equipment and books which you are to provide for your use during the session.
+                The use of laboratory/workshop overalls is compulsory for students in the Schools of Applied Science, Environmental Studies and Engineering, so students are expected to provide them for their own use.
+            </p>
+            <p>
+                Please note that the Polytechnic takes no responsibility for non-receipt of this letter which is expected to be printed from the Polytechnic’s Portal.
+            </p>
+            <p>
+                I look forward to welcoming you to the Polytechnic.
+            </p>
+            <p>
+                Yours sincerely
+            </p>
+            <p>
+                <img src=@Url.Content("~/Content/Images/Registrar_signature.jpg") alt="" style="max-height:50px" />
+                <br />
+                <strong> S.O. ADEDIRAN (MRS))</strong>  <br />
+                <strong>Registrar</strong>  <br />
+
+            </p>
+        </div>
+    </div>
+
+
+</div>

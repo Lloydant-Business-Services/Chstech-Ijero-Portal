@@ -1,0 +1,88 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.ELearningViewModel
+@{
+    /**/
+
+    /**/
+
+    /**/
+
+    ViewBag.Title = "E-Learning EContentType";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@if (TempData["Message"] != null)
+{
+    @Html.Partial("_Message", TempData["Message"])
+}
+
+@using (Html.BeginForm("EditEContentType", "Elearning", new { area = "Admin" }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="container">
+        <div class="card-header">
+            <h3 class="card-title"><i class="fa fa-fw fa-download"></i>Edit E-Content Topic Module</h3>
+        </div>
+        <div class="card-body">
+
+            @Html.HiddenFor(model => model.eContentType.Id)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.eContentType.Name, "Content Topic", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(model => model.eContentType.Name, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.eContentType.Name, null, new { @class = "text-danger" })
+                </div>
+            </div>
+            &nbsp;
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.eContentType.Description, new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(model => model.eContentType.Description, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.eContentType.Description, null, new { @class = "text-danger" })
+                </div>
+            </div>
+            &nbsp;
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.eContentType.StartTime, "Start Time", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+
+                    @Html.TextBoxFor(model => model.eContentType.StartTime, new { @class = "form-control myDate", @type = "datetime", required = "true" })
+                    @Html.ValidationMessageFor(model => model.eContentType.StartTime, null, new { @class = "text-danger" })
+                </div>
+            </div>
+            &nbsp;
+            <div class="form-group">
+                @Html.LabelFor(model => model.eContentType.EndTime, " Stop Time", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(model => model.eContentType.EndTime, new { @class = "form-control", @type = "datetime", required = "true" })
+                    @Html.ValidationMessageFor(model => model.eContentType.EndTime, null, new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.eContentType.Active, "Activate", new { @class = "control-label" })
+                <div>
+                    @Html.CheckBoxFor(model => model.eContentType.Active, new { @checked = Model.eContentType.Active, Id = "active" })
+                    @Html.ValidationMessageFor(model => model.eContentType.Active)
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-10">
+                    <input class="btn btn-primary mr5 " type="submit" name="submit" id="submit" value="Save" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+<link href="~/Content/gridmvc.datepicker.min.css" rel="stylesheet" />
+
+<script>
+        //$(function () {
+        //    $(".myDate").datepicker();
+        //});
+</script>

@@ -1,0 +1,765 @@
+﻿@model Abundance_Nk.Web.Areas.Applicant.ViewModels.TranscriptViewModel
+@{
+    Layout = null;
+}
+<head>
+    <style>
+        body {
+            font-family: Quicksand, sans-serif !important;
+        }
+    </style>
+</head>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="~/Content/font-awesome/css/font-awesome.min.css">
+
+<link href="~/Content/sbCss/bootstrap.min.css" rel="stylesheet" />
+<script type="text/javascript" src="~/Scripts/file-upload/jquery-1.9.1.min.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+@*<script type="text/javascript" src="~/Scripts/file-upload/jquery-1.9.1.min.js"></script>*@
+<script type="text/javascript" src="~/Scripts/file-upload/jquery-ui-1.9.2.min.js"></script>
+<script type="text/javascript" src="~/Scripts/file-upload/jquery.fileupload.js"></script>
+<script type="text/javascript" src="~/Scripts/file-upload/jquery.fileupload-ui.js"></script>
+<script type="text/javascript" src="~/Scripts/file-upload/jquery.iframe-transport.js"></script>
+<link href="~/Content/sweetalert.css" rel="stylesheet" />
+<script src="~/Scripts/sweetalert.min.js"></script>
+
+
+<link href="~/Content/sweetalert.css" rel="stylesheet" />
+
+<script src="~/Scripts/sweetalert.min.js"></script>
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+<script type="text/javascript">
+    let statement_of_result;
+    let file_path;
+    let model_firstname;
+    let model_lastname;
+    let model_othername;
+    let model_student_Id;
+    let model_mat_num;
+    let alumini_passport;
+
+    $(document).ready(function () {
+
+        $("#State").hide();
+        $("#StateName").hide();
+
+
+        document.querySelector("#StatementOfResult").addEventListener("change", onImagePicked);
+        document.querySelector("#PassportImage").addEventListener("change", onPassportPicked);
+
+        $("#StatementOfResult").on('change', function () {
+            //alert("Changed");
+            $('#progress_hold').hide();
+            $('#progress_hold').show();
+            $('#progress_bar').css('width', '100%');
+            $('#progress_bar').html('100%');
+
+            document.querySelector("#PassportFile").addEventListener("change", onImagePicked);
+
+            var extract = $("#StatementOfResult").val(this.files[0].name);
+            statement_of_result = extract;
+
+        });
+
+
+        $("#PassportImage").on('change', function () {
+            //alert("Changed");
+            $('#progress_hold2').hide();
+            $('#progress_hold2').show();
+            $('#progress_bar2').css('width', '100%');
+            $('#progress_bar2').html('100%');
+
+            document.querySelector("#PassportImage").addEventListener("change", onPassportPicked);
+
+            var extract = $("#PassportImage").val(this.files[0].name);
+            alumini_passport = extract;
+
+        });
+
+
+
+    });
+
+        function PassportCredentialUpload() {
+        model_firstname = $('#firstName').val();
+        model_lastname = $('#lastName').val();
+        model_othername = $('#otherName').val();
+        model_mat_num = $('#matNum').val();
+
+        if (model_firstname == null || model_lastname == null) {
+            alert("Name fields must filled")
+            return false;
+            }
+            $('#progress_hold2').hide();
+            $('#processing2').show();
+            fileInput = alumini_passport;
+
+        var formData = new FormData();
+        var concat = model_lastname + "_" + model_firstname + "_" + model_othername;
+            formData.append('file', fileInput);
+            formData.append('personName', concat);
+            //formData.append('studentId', student_Id);
+
+            for (var key of formData.entries()) {
+                console.log(key[0] + ', ' + key[1]);
+            }
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Action("UploadPassportCredential", "Transcript")",
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: formData,
+                beforeSend: function () {
+                    $('#processing2').show();
+
+                },
+                complete: function () {
+                    $('#processing2').hide();
+                    $('#success_tick2').show();
+
+
+                },
+                success: UploadSuccess,
+                error: ErrorFunc,
+            })
+    }
+
+
+
+
+
+
+
+
+
+    function StatementOfResultUpload() {
+        model_firstname = $('#firstName').val();
+        model_lastname = $('#lastName').val();
+        model_othername = $('#otherName').val();
+        model_mat_num = $('#matNum').val();
+
+        if (model_firstname == null || model_lastname == null) {
+            alert("Name fields must filled")
+            return false;
+        }
+        $('#progress_hold').hide();
+        $('#processing').show();
+        fileInput = statement_of_result;
+
+            var student_Id = parseInt(model_student_Id);
+        var formData = new FormData();
+        //var concat = model_lastname + "_" + model_firstname + "_" + model_mat_num + "_" + model_othername;
+        var concat = model_lastname + "_" + model_firstname + "_" + model_othername;
+            formData.append('file', fileInput);
+            formData.append('personName', concat);
+            formData.append('studentId', student_Id);
+
+            //formData.append('LastName', model_lastname);
+            for (var key of formData.entries()) {
+                console.log(key[0] + ', ' + key[1]);
+            }
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Action("UploadStatementOfResult", "Transcript")",
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: formData,
+                beforeSend: function () {
+                    $('#processing').show();
+
+                },
+                complete: function () {
+                    $('#processing').hide();
+                    $('#success_tick').show();
+
+
+                },
+                success: UploadSuccess,
+                error: ErrorFunc,
+            })
+    }
+
+    function UploadSuccess(data, status) {
+        image_url = data.Message
+        setTimeout(() => {
+            swal("", data.Message, "success");
+        },1000)
+        //alert(data.Message);
+        //alert(data.FileName);
+        file_path = data.FileName;
+        @*@Html.Raw(Json.Encode(Model.transcriptRequest.StatementOfResult)) = file_path;*@
+        $('#processing').hide();
+        $('#success_tick').show();
+
+    }
+    function ErrorFunc() {
+        alert("Operation failed!");
+        $("#processing").hide();
+    }
+    const onImagePicked = (event) => {
+        statement_of_result = event.target.files[0];
+        console.log(statement_of_result);
+    };
+
+    const onPassportPicked = (event) => {
+        alumini_passport = event.target.files[0];
+        //console.log(statement_of_result);
+    };
+    function loadDeliveryServices(country, state) {
+
+        $("#DeliveryService_Id").empty();
+
+        if (country != undefined && state != undefined) {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDeliveryServices", "Transcript")', // Calling json method
+                dataType: 'json',
+                data: { countryId: country, stateId: state},
+                success: function(services) {
+                    $("#DeliveryService_Id").append('<option value="' + 0 + '"> -- Select -- </option>');
+                    $.each(services, function (i, service) {
+
+                        $("#DeliveryService_Id").append('<option value="' + service.Value + '">' +
+                             service.Text + '</option>');
+                    });
+                },
+                error: function(ex) {
+                    alert('Request Cannot be Processed.');
+                }
+            });
+
+            $("#deliveryService").show();
+        }
+    }
+
+    function loadDeliveryServiceZones(country, state, deliveryService) {
+
+        $("#DeliveryServiceZone_Id").empty();
+
+        if (country != undefined && state != undefined && deliveryService != undefined) {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDeliveryServiceZones", "Transcript")', // Calling json method
+                dataType: 'json',
+                data: { countryId: country, stateId: state, deliveryServiceId: deliveryService},
+                success: function(zones) {
+                    $("#DeliveryServiceZone_Id").append('<option value="' + 0 + '"> -- Select -- </option>');
+                    $.each(zones, function (i, zone) {
+
+                        $("#DeliveryServiceZone_Id").append('<option value="' + zone.Value + '">' +
+                             zone.Text + '</option>');
+                    });
+
+                    $("#submit").attr("disabled", false);
+                },
+                error: function(ex) {
+                    alert('Request Cannot be Processed.');
+                }
+            });
+
+            $("#deliveryServiceZone").show();
+        }
+    }
+
+    function checkTranscriptZone() {
+        if ($("#Country").val() != undefined) {
+
+            //if ($("#DeliveryService_Id").val() == undefined || $("#DeliveryServiceZone_Id").val() == undefined || $("#DeliveryService_Id").val() == 0 || $("#DeliveryServiceZone_Id").val() == 0) {
+            //    alert("You did not select a delivery service or zone.");
+            //    $("#submit").attr("disabled", "disabled");
+            //} else {
+                $("#submit").attr("disabled", false);
+
+        }
+    }
+
+</script>
+
+@using (Html.BeginForm("Request", "Transcript", FormMethod.Post, new { id = "frmIndex", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.transcriptRequest.student.Id)
+    @Html.HiddenFor(model => model.transcriptRequest.Id)
+    @Html.HiddenFor(model => model.transcriptRequest.transcriptClearanceStatus.TranscriptClearanceStatusId)
+    @Html.HiddenFor(model => model.transcriptRequest.transcriptStatus.TranscriptStatusId)
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+
+        <div class="row">
+            <div class="col-md-12 card p-5">
+                <div class="panel-body" style="border-color:#963675 !important">
+                    <div class="col-md-12">
+                        
+                        <center>
+                            <div class="alert" style="background-color: #963675; color:white">
+                                <div style="width:115px; height:110px; padding-top: 15px; border-radius:50%; background-color:white">
+                                    <img src="@Url.Content("~/Content/Images/ado_Logo.jpg")" width="60" />
+
+                                </div>
+                                <h2>
+                                    <b>Transcript Request Form</b>
+                                </h2>
+                                <p>Kindly fill all the fields provided in this form before clicking the Submit button</p>
+                            </div>
+                            <br />
+                        </center>
+
+
+
+                        <div class="col-md-12 card p-5">
+                            <div class="panel panel-default" style="border-color: #963675 !important">
+                                <div class="panel-heading" style="background-color: #963675; color: white">
+                                    <div style="font-size: large">Student Details</div>
+                                </div>
+                                <div class="panel-body" style="border-color: #963675 !important">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.transcriptRequest.student.LastName, new { @class = "control-label " })
+                                                @Html.TextBoxFor(model => model.transcriptRequest.student.LastName, new { @class = "form-control", id="lastName" })
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.transcriptRequest.student.FirstName, new { @class = "control-label" })
+                                                @Html.TextBoxFor(model => model.transcriptRequest.student.FirstName, new { @class = "form-control", id = "firstName" })
+                                            </div>
+                                        </div>
+ 
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.transcriptRequest.student.OtherName, new { @class = "control-label " })
+                                                @Html.TextBoxFor(model => model.transcriptRequest.student.OtherName, new { @class = "form-control", id = "otherName" })
+                                            </div>
+                                        </div>
+                                        @if (!String.IsNullOrEmpty(Model.MatricNumber))
+                                        {
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(model => model.MatricNumber, new { @class = "control-label " })
+                                                    @Html.TextBoxFor(model => model.MatricNumber, new { @class = "form-control", @readonly = "readonly", id = "matNum" })
+                                                </div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    @Html.LabelFor(model => model.transcriptRequest.student.MatricNumber, new { @class = "control-label " })
+                                                    @Html.TextBoxFor(model => model.transcriptRequest.student.MatricNumber, new { @class = "form-control", @readonly = "readonly", id = "matNum" })
+                                                </div>
+                                            </div>
+                                            
+                                        }
+
+
+                                    </div>
+
+
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.transcriptRequest.student.MobilePhone, new { @class = "control-label " })
+                                                @Html.TextBoxFor(model => model.transcriptRequest.student.MobilePhone, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.transcriptRequest.Email, new { @class = "control-label " })
+                                                @Html.TextBoxFor(model => model.transcriptRequest.Email, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+
+                                    <div class="row">
+                                       
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.StudentLevel.Programme.Id, new { @class = "control-label " })<label class="text-danger">*</label>
+                                                @Html.DropDownListFor(model => model.StudentLevel.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.ProgrammeId, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.StudentLevel.Programme.Id)
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.StudentLevel.Department.Id, new { @class = "control-label " })<label class="text-danger">*</label>
+                                                @Html.DropDownListFor(model => model.StudentLevel.Department.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentId, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.StudentLevel.Department.Id)
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                   
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-md-12 card p-5">
+                            <div class="panel panel-default" style="border-color: #963675 !important">
+                                <div class="panel-heading" style="background-color: #963675; color: white">
+                                    <div style="font-size: large">Supporting Documents</div>
+                                </div>
+                                <div class="panel-body" style="border-color: #963675 !important">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.transcriptRequest.StatementOfResult, new { @class = "control-label " })
+                                                <small class="text-danger">Format: Jpg, Jpeg, png (Max Size - 500kb)</small>
+                                                <input type="file" id="StatementOfResult" class="form-control" />
+                                                <br/>
+                                                <div class="progress" style="display:none" id="progress_hold">
+                                                    <div class="progress-bar bg-success" id="progress_bar" style="width:0%"></div>
+                                                </div>
+                                                @*<i class="fa fa-check text-success fa-2x" id="success_tick" style="display:none"></i>*@
+                                               
+                                                <div>
+                                                    <span id="processing" style="display:none"><img width="30px" height="30px" src="@Url.Content("~/Content/Images/bx_loader.gif")" /></span>
+                                                    <br />
+                                                </div>
+                                                <button class="btn btn-success" type="button" onclick="StatementOfResultUpload()">Upload Statement of Result <i class="fa fa-upload"></i></button>
+                                              
+                                            </div>
+                                        </div>
+                                     
+                                       
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.transcriptRequest.Passport, new { @class = "control-label " })
+                                                <small class="text-danger">Format: Jpg, Jpeg, png (Max Size - 150kb)</small>
+                                                <input type="file" id="PassportImage" class="form-control" />
+                                                <br />
+                                                <div class="progress" style="display:none" id="progress_hold2">
+                                                    <div class="progress-bar bg-success" id="progress_bar2" style="width:0%"></div>
+                                                </div>
+                                                @*<i class="fa fa-check text-success fa-2x" id="success_tick2" style="display:none"></i>*@
+
+                                                <div>
+                                                    <span id="processing2" style="display:none"><img width="30px" height="30px" src="@Url.Content("~/Content/Images/bx_loader.gif")" /></span>
+                                                    <br />
+                                                </div>
+                                                <button class="btn btn-success" type="button" onclick="PassportCredentialUpload()">Upload Passport <i class="fa fa-upload"></i></button>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+                        <div class="col-md-12 card p-5">
+                            <div class="panel panel-default" style="border-color: #963675 !important">
+                                <div class="panel-heading" style="background-color: #963675; color: white">
+                                    <div style="font-size: large">Transcript Details</div>
+                                </div>
+                                <div class="panel-body" style="border-color: #963675 !important">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.Reciever, new { @class = "control-label " })
+                                                @Html.TextBoxFor(model => model.Reciever, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                       
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.transcriptRequest.DestinationAddress, new { @class = "control-label " })
+                                                @Html.TextBoxFor(model => model.transcriptRequest.DestinationAddress, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="row">
+                                        
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.transcriptRequest.DestinationCountry.Id, new { @class = "control-label " })<label class="text-danger">*</label>
+                                                @Html.DropDownListFor(model => model.transcriptRequest.DestinationCountry.Id, (IEnumerable<SelectListItem>)ViewBag.CountryId, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.transcriptRequest.DestinationCountry.Id)
+                                            </div>
+
+
+                                           
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.transcriptRequest.DestinationState.Id, new { @class = "control-label " })<label class="text-danger">*</label>
+                                                @Html.DropDownListFor(model => model.transcriptRequest.DestinationState.Id, (IEnumerable<SelectListItem>)ViewBag.StateId, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.transcriptRequest.DestinationState.Id)
+                                            </div>
+                                        </div>
+                                        </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            @*<div class="col-md-6">
+                                <div class="form-group">
+
+                                </div>
+                            </div>*@
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @*<input class="btn btn-success btn-lg mr5" type="submit" onclick="checkTranscriptZone()" name="submit" id="submit" value="Submit" />*@
+                                    <button class="btn btn-success btn-lg mr5" type="submit" name="submit" id="submit" style="margin-left:10px">Sumbit <i class="fa fa-send"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+                        </div>
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+                                @*@using (Html.BeginForm("Request", "Transcript", FormMethod.Post, new { id = "frmIndex", enctype = "multipart/form-data" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    @Html.ValidationSummary(true)
+                                    @Html.HiddenFor(model => model.transcriptRequest.student.Id)
+                                    @Html.HiddenFor(model => model.transcriptRequest.Id)
+                                    @Html.HiddenFor(model => model.transcriptRequest.transcriptClearanceStatus.TranscriptClearanceStatusId)
+                                    @Html.HiddenFor(model => model.transcriptRequest.transcriptStatus.TranscriptStatusId)
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+                                            <div class="col-md-1"></div>
+                                            <div class="col-md-10">
+
+                                                <h5>Student Details</h5>
+                                                <hr />
+
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            @Html.LabelFor(model => model.transcriptRequest.student.LastName)
+                                                            @if (Model.transcriptRequest.student == null)
+                                                            {
+                                                                @Html.TextBoxFor(model => model.transcriptRequest.student.LastName, new { @class = "form-control", @placeholder = "Enter Surname" })
+                                                            }
+                                                            else
+                                                            {
+                                                                @Html.TextBoxFor(model => model.transcriptRequest.student.LastName, new { @class = "form-control", @readonly = "readonly" })
+                                                            }
+                                                            @Html.ValidationMessageFor(model => model.transcriptRequest.student.LastName)
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            @Html.LabelFor(model => model.transcriptRequest.student.FirstName)
+                                                            @if (Model.transcriptRequest.student == null)
+                                                            {
+                                                                @Html.TextBoxFor(model => model.transcriptRequest.student.FirstName, new { @class = "form-control", @placeholder = "Enter Firstname" })
+
+                                                            }
+                                                            else
+                                                            {
+                                                                @Html.TextBoxFor(model => model.transcriptRequest.student.FirstName, new { @class = "form-control", @readonly = "readonly" })
+                                                            }
+                                                            @Html.ValidationMessageFor(model => model.transcriptRequest.student.FirstName)
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            @Html.LabelFor(model => model.transcriptRequest.student.OtherName, new { @class = "control-label " })
+                                                            @if (Model.transcriptRequest.student == null)
+                                                            {
+                                                                @Html.TextBoxFor(model => model.transcriptRequest.student.OtherName, new { @class = "form-control", @placeholder = "Enter Other Name" })
+
+                                                            }
+                                                            else
+                                                            {
+                                                                @Html.TextBoxFor(model => model.transcriptRequest.student.OtherName, new { @class = "form-control", @readonly = "readonly" })
+
+                                                            }
+                                                            @Html.ValidationMessageFor(model => model.transcriptRequest.student.OtherName)
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            @Html.LabelFor(model => model.transcriptRequest.student.MatricNumber, new { @class = "control-label " })
+                                                            @if (Model.transcriptRequest.student == null)
+                                                            {
+                                                                @Html.TextBoxFor(model => model.transcriptRequest.student.MatricNumber, new { @class = "form-control", @placeholder = "Enter Matric Number" })
+
+                                                            }
+                                                            else
+                                                            {
+                                                                @Html.TextBoxFor(model => model.transcriptRequest.student.MatricNumber, new { @class = "form-control", @readonly = "readonly" })
+
+                                                            }
+                                                            @Html.ValidationMessageFor(model => model.transcriptRequest.student.MatricNumber)
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            @Html.LabelFor(model => model.transcriptRequest.student.Email, new { @class = "control-label " })
+                                                            @if (Model.transcriptRequest.student == null)
+                                                            {
+                                                                @Html.TextBoxFor(model => model.transcriptRequest.student.Email, new { @class = "form-control", @placeholder = "Email address" })
+
+                                                            }
+                                                            else
+                                                            {
+                                                                @Html.TextBoxFor(model => model.transcriptRequest.student.Email, new { @class = "form-control", @readonly = "readonly" })
+
+                                                            }
+                                                            @Html.ValidationMessageFor(model => model.transcriptRequest.student.Email)
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            @Html.LabelFor(model => model.transcriptRequest.student.MobilePhone, new { @class = "control-label " })
+                                                            @if (Model.transcriptRequest.student == null)
+                                                            {
+                                                                @Html.TextBoxFor(model => model.transcriptRequest.student.MobilePhone, new { @class = "form-control", @placeholder = "Enter Phone Number" })
+
+                                                            }
+                                                            else
+                                                            {
+                                                                @Html.TextBoxFor(model => model.transcriptRequest.student.MobilePhone, new { @class = "form-control", @readonly = "readonly" })
+
+                                                            }
+                                                            @Html.ValidationMessageFor(model => model.transcriptRequest.student.MobilePhone)
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <br />
+                                                <h5>Transcript Details</h5>
+                                                <hr />
+
+
+                                                @if (Model.RequestType == "Convocation Fee" || (Model.RequestType != null && Model.RequestType.Contains("Certificate")))
+                {
+                                                    @Html.HiddenFor(model => model.transcriptRequest.DestinationAddress)
+                                                    @Html.HiddenFor(model => model.transcriptRequest.DestinationCountry.Id)
+                                                    @Html.HiddenFor(model => model.transcriptRequest.DestinationState.Id)
+                                                }
+                                                else
+                                                {
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                @Html.LabelFor(model => model.transcriptRequest.student.MatricNumber, new { @class = "control-label " })
+
+                                                                @Html.TextBoxFor(model => model.transcriptRequest.student.MatricNumber, new { @class = "form-control", @placeholder = "Who should the transcript request be addressed to?" })
+
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                @Html.LabelFor(model => model.transcriptRequest.DestinationCountry, new { @class = "control-label " })
+                                                                @Html.DropDownListFor(model => model.transcriptRequest.DestinationCountry.Id, (IEnumerable<SelectListItem>)ViewBag.CountryId, new { @class = "form-control", @id = "Country" })
+                                                                @Html.ValidationMessageFor(model => model.transcriptRequest.DestinationCountry)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                @Html.LabelFor(model => model.transcriptRequest.DestinationAddress, new { @class = "control-label " })
+                                                                @Html.TextAreaFor(model => model.transcriptRequest.DestinationAddress, new { @class = "form-control" })
+                                                                @Html.ValidationMessageFor(model => model.transcriptRequest.DestinationAddress)
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                @Html.LabelFor(model => model.transcriptRequest.DestinationCountry, new { @class = "control-label " })
+                                                                @Html.DropDownListFor(model => model.transcriptRequest.DestinationCountry.Id, (IEnumerable<SelectListItem>)ViewBag.CountryId, new { @class = "form-control", @id = "Country" })
+                                                                @Html.ValidationMessageFor(model => model.transcriptRequest.DestinationCountry)
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                @Html.LabelFor(model => model.transcriptRequest.DestinationState, new { @class = "control-label ", @id = "StateName" })
+                                                                @Html.DropDownListFor(model => model.transcriptRequest.DestinationState.Id, (IEnumerable<SelectListItem>)ViewBag.StateId, new { @class = "form-control", @id = "State" })
+                                                                @Html.ValidationMessageFor(model => model.transcriptRequest.DestinationState)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+
+
+
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <input class="btn btn-success btn-lg mr5" type="submit" onclick="checkTranscriptZone()" name="submit" id="submit" value="Submit" />
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-1"></div>
+                                    </div>
+
+
+                                }*@

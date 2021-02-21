@@ -1,0 +1,150 @@
+﻿@model Abundance_Nk.Web.Areas.Applicant.ViewModels.TranscriptViewModel
+@{
+    Layout = "~/Views/Shared/_NewThemeLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery-1.7.1.js"></script>
+<script src="~/Scripts/jquery-1.7.1.min.js"></script>
+<div class="row">
+    <div class="col-md-12">
+        <h2>
+            Verification/Collection
+            <span class="label label-default"> Request Form</span>
+        </h2>
+    </div>
+    <hr />
+</div>
+@using(Html.BeginForm("VerificationRequest","Transcript",FormMethod.Post,new { id = "frmIndex",enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.StudentVerification.Student.Id)
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="col-md-1"></div>
+            <div class="col-md-10">
+
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.StudentVerification.Student.LastName)
+                            @if(Model.StudentVerification.Student == null)
+                            {
+                                @Html.TextBoxFor(model => model.StudentVerification.Student.LastName,new { @class = "form-control",@placeholder = "Enter Surname" })
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(model => model.StudentVerification.Student.LastName,new { @class = "form-control",@readonly = "readonly" })
+                            }
+                            @Html.ValidationMessageFor(model => model.StudentVerification.Student.LastName)
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.StudentVerification.Student.FirstName)
+                            @if(Model.StudentVerification.Student == null)
+                            {
+                                @Html.TextBoxFor(model => model.StudentVerification.Student.FirstName,new { @class = "form-control",@placeholder = "Enter Firstname" })
+
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(model => model.StudentVerification.Student.FirstName,new { @class = "form-control",@readonly = "readonly" })
+                            }
+                            @Html.ValidationMessageFor(model => model.StudentVerification.Student.FirstName)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.StudentVerification.Student.OtherName,new { @class = "control-label " })
+                            @if(Model.StudentVerification.Student == null)
+                            {
+                                @Html.TextBoxFor(model => model.StudentVerification.Student.OtherName,new { @class = "form-control",@placeholder = "Enter Other Name" })
+
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(model => model.StudentVerification.Student.OtherName,new { @class = "form-control",@readonly = "readonly" })
+
+                            }
+                            @Html.ValidationMessageFor(model => model.StudentVerification.Student.OtherName)
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.StudentVerification.Student.MatricNumber,new { @class = "control-label " })
+                            @if(Model.StudentVerification.Student == null)
+                            {
+                                @Html.TextBoxFor(model => model.StudentVerification.Student.MatricNumber,new { @class = "form-control",@placeholder = "Enter Matric Number" })
+
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(model => model.StudentVerification.Student.MatricNumber,new { @class = "form-control",@readonly = "readonly" })
+
+                            }
+                            @Html.ValidationMessageFor(model => model.StudentVerification.Student.MatricNumber)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.StudentVerification.Student.MobilePhone,new { @class = "control-label "})
+                            @Html.TextBoxFor(model => model.StudentVerification.Student.MobilePhone,new { @class = "form-control",@required="required" })
+                            @Html.ValidationMessageFor(model => model.StudentVerification.Student.MobilePhone)
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.StudentVerification.Student.Email,new { @class = "control-label " })
+                            @Html.TextBoxFor(model => model.StudentVerification.Student.Email,new { @class = "form-control",@required = "required" })
+                            @Html.ValidationMessageFor(model => model.StudentVerification.Student.Email)
+                        </div>
+                    </div>
+               </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.StudentVerification.FeeType.Id,new { @class = "control-label ",@id = "Select Fee" })
+                            @Html.DropDownListFor(model => model.StudentVerification.FeeType.Id,(IEnumerable<SelectListItem>)ViewBag.FeeTypeId,new { @class = "form-control" ,disabled="true"})
+                            @Html.ValidationMessageFor(model => model.StudentVerification.FeeType.Id)
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input class="btn btn-success btn-lg mr5" type="submit" name="submit" id="submit" value="Submit" />
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+
+
+}

@@ -1,0 +1,70 @@
+﻿@model Abundance_Nk.Model.Entity.HOSTEL_SERIES
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading panel-dark-head">
+                <h4>Hostel Series Details</h4>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+
+                    <div>
+                        <h5>HOSTEL SERIES</h5>
+                        <hr />
+                        <dl class="dl-horizontal">
+                            <dt>
+                                @Html.DisplayName("Series Name")
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.Series_Name)
+                            </dd>
+                            <br/> 
+
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Activated)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.Activated)
+                            </dd>
+                            <br />
+
+                            <dt>
+                                @Html.DisplayName("Hostel")
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.HOSTEL.Hostel_Name)
+                            </dd>
+
+                        </dl>
+                    </div>
+                    <p>
+                        @Html.ActionLink("Edit", "Edit", new { id = Model.Series_Id }, new { @class = "btn btn-success" }) |
+                        @Html.ActionLink("Back to List", "Index", "", new { @class = "btn btn-success" })
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-1"></div>
+</div>
+
+

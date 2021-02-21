@@ -1,0 +1,98 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.StaffCourseAllocationViewModel
+@{
+    ViewBag.Title = "GetCourseRegistration";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading panel-dark-head">
+                <h4>Registrations for Course</h4>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+
+                    @if (Model.CourseRegistrationDetails != null && Model.CourseRegistrationDetails.Count > 0)
+                    {
+                        <div class="panel panel-danger">
+                            <div class="panel-body">
+                                <table class="table-bordered table-hover table-striped table-responsive table">
+                                    <tr>
+                                        <th>
+                                            SN
+                                        </th>
+                                        <th>
+                                            Name
+                                        </th>
+                                        <th>
+                                            Matric Number
+                                        </th>
+                                        <th>
+                                            Course
+                                        </th>
+                                        <th>
+                                            Programme
+                                        </th>
+                                        <th>
+                                            Department
+                                        </th>
+                                        <th>
+                                            Level
+                                        </th>
+                                    </tr>
+
+                                    @for (int i = 0; i < Model.CourseRegistrationDetails.Count(); i++)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @{var sn = i + 1; } <span>@sn</span>
+                                            </td>
+                                            <td>
+                                                @Model.CourseRegistrationDetails[i].CourseRegistration.Student.FullName
+                                            </td>
+                                            <td>
+                                                @Model.CourseRegistrationDetails[i].CourseRegistration.Student.MatricNumber
+                                            </td>
+                                            <td>
+                                                @Model.CourseRegistrationDetails[i].Course.Code
+                                            </td>
+                                            <td>
+                                                @Model.CourseRegistrationDetails[i].CourseRegistration.Programme.Name
+                                            </td>
+                                            <td>
+                                                @Model.CourseRegistrationDetails[i].CourseRegistration.Department.Name
+                                            </td>
+                                            <td>
+                                                @Model.CourseRegistrationDetails[i].CourseRegistration.Level.Name
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </table>
+                            </div>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-1"></div>
+</div>
+
+
+
+
+
+
+

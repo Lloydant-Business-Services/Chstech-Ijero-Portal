@@ -1,0 +1,90 @@
+﻿@model Abundance_Nk.Model.Model.ComplaintLog
+
+@{
+    ViewBag.Title = "Complain Form";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    @using (Html.BeginForm()) 
+    {
+        @Html.AntiForgeryToken()
+    <div class="row">
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+     </div>
+        <div class="form-horizontal">
+            <h4>Complaint Form</h4>
+            <p>Kindly provide the available details in the text boxes provided</p>
+            <hr />
+            @Html.ValidationSummary(true)
+            <div class="form-group">
+                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Name, new { @class = "form-control" ,@placeholder = "your name as it appears on your document"})
+                    @Html.ValidationMessageFor(model => model.Name, null, new { @class = "text-danger" })
+                </div>
+            </div>
+    
+            <div class="form-group">
+                @Html.LabelFor(model => model.MobileNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.MobileNumber, new { @class = "form-control" ,@placeholder ="e.g 080XXXXXXXX" })
+                    @Html.ValidationMessageFor(model => model.MobileNumber, null, new { @class = "text-danger" })
+                </div>
+            </div>
+    
+            <div class="form-group">
+                @Html.LabelFor(model => model.ApplicationNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.ApplicationNumber, new { @class = "form-control", @placeholder = "e.g FPI/ND/150000000001" })
+                    @Html.ValidationMessageFor(model => model.ApplicationNumber, null, new { @class = "text-danger" })
+                </div>
+            </div>
+    
+            <div class="form-group">
+                @Html.LabelFor(model => model.RRR, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.RRR, new { @class = "form-control", @placeholder = "e.g Q6567366" })
+                    @Html.ValidationMessageFor(model => model.RRR, null, new { @class = "text-danger" })
+                </div>
+            </div>
+    
+            <div class="form-group">
+                @Html.LabelFor(model => model.ExamNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.ExamNumber, new { @class = "form-control", @placeholder = "e.g ST000012" })
+                    @Html.ValidationMessageFor(model => model.ExamNumber, null, new { @class = "text-danger" })
+                </div>
+            </div>
+    
+            <div class="form-group">
+                @Html.LabelFor(model => model.ConfirmationNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.ConfirmationNumber, new { @class = "form-control", @placeholder = "e.g 078372362563623 / 262544545454" })
+                    @Html.ValidationMessageFor(model => model.ConfirmationNumber, null, new { @class = "text-danger" })
+                </div>
+            </div>
+    
+            <div class="form-group">
+                @Html.LabelFor(model => model.Complain, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextAreaFor(model => model.Complain, new { @class = "form-control", @placeholder = "e.g I am unable to check my admission" })
+                    @Html.ValidationMessageFor(model => model.Complain, null, new { @class = "text-danger" })
+                </div>
+            </div>
+    
+    
+            
+    
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Submit" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    }
+   

@@ -1,0 +1,101 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.HostelViewModel
+@{
+    ViewBag.Title = "SetAllocationCount";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading panel-dark-head">
+                <h4>Set Hostel Allocation Count</h4>
+            </div>
+          
+            <div class="panel-body">
+                @if (Model.HostelAllocationCounts != null && Model.HostelAllocationCounts.Count > 0)
+                {
+                    <div class="panel panel-danger">
+                        <div class="panel-body">
+                            @using (Html.BeginForm("SetAllocationCount", "HostelAllocation", new { Area = "Admin" }, FormMethod.Post))
+                            {
+
+                                <table class="table-bordered table-hover table-striped table-responsive table">
+                                    <tr>
+                                        <th>
+                                            Level
+                                        </th>
+                                        <th>
+                                            Hostel Type
+                                        </th>
+                                        <th>
+                                            Number For Free Rooms
+                                        </th>
+                                        <th>
+                                            Number For Reserved Rooms
+                                        </th>
+                                        <th>
+                                            Total Number
+                                        </th>
+                                        <th>
+                                            Last Modified Date
+                                        </th>
+                                        
+                                    </tr>
+
+                                    @for (int i = 0; i < Model.HostelAllocationCounts.Count; i++)
+                                    {
+                                        <tr>
+
+                                            @Html.HiddenFor(model => model.HostelAllocationCounts[i].Id)
+
+                                            <td>
+                                                @Model.HostelAllocationCounts[i].Level.Name.ToUpper()
+                                            </td>
+                                            <td>
+                                                @Model.HostelAllocationCounts[i].Sex.Name.ToUpper()
+                                            </td>
+                                            <td>
+                                                @Html.EditorFor(model => model.HostelAllocationCounts[i].Free)
+                                            </td>
+                                            <td>
+                                                @Html.EditorFor(model => model.HostelAllocationCounts[i].Reserved)
+                                            </td>
+                                            <td>
+                                                @Html.EditorFor(model => model.HostelAllocationCounts[i].TotalCount)
+                                            </td>
+                                            <td>
+                                                @Model.HostelAllocationCounts[i].LastModified
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </table>
+                                <br />
+                                <div class="form-group">
+                                    <div class=" col-md-10">
+                                        <input type="submit" value="Save" class="btn btn-success" />
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-1"></div>
+</div>
+
+
+

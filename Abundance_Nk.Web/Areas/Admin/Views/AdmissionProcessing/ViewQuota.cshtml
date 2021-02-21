@@ -1,0 +1,175 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.AdmissionQuotaViewModel
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<style>
+    .btn-primary {
+        background: #5b796e !important
+    }
+</style>
+
+@*<link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.4.1/css/buttons.dataTables.min.css">
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.flash.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.print.min.js"></script>*@
+
+@section Scripts {
+
+    <link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+
+    @Scripts.Render("~/bundles/jquery")
+
+    @*<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+        <script src="~/Scripts/jquery-migrate-1.2.1.min.js"></script>
+        <script src="~/Scripts/prettify.js"></script>
+        <script src="~/Scripts/custom.js"></script>
+        <script src="~/Scripts/jquery.min.js"></script>
+        <script src="~/Scripts/responsive-tabs.js"></script>*@
+
+
+
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/file-upload/jquery-ui-1.9.2.min.js"></script>
+
+    <link href="~/Scripts/DataTables-1.10.15/media/css/jquery.dataTables.css" rel="stylesheet" />
+    <script src="~/Scripts/DataTables-1.10.15/media/js/jquery.dataTables.js"></script>
+    <link href="~/Scripts/DataTables-1.10.15/extensions/Buttons/css/buttons.dataTables.css" rel="stylesheet" />
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Buttons/js/dataTables.buttons.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Buttons/js/buttons.colVis.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Responsive/js/dataTables.responsive.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/buttons.flash.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/buttons.html5.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/buttons.print.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/jszip.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/pdfmake.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/vfs_fonts.js"></script>
+
+<script type="text/javascript">
+
+        $("#btnSearch").click(function () {
+            $("#processing").show();
+        })
+</script>
+
+
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+
+        @using (Html.BeginForm("ViewQuota", "AdmissionProcessing", new { area = "Admin" }, FormMethod.Post))
+        {
+            <div class="panel panel-default">
+                <div class="panel-body ">
+                    <div class="form-inline ">
+
+                        <div class="form-group">
+                            @*@Html.DropDownListFor(m => m.Session.Id, (IEnumerable<SelectListItem>)ViewBag.SessionSelectList, new { @class = "form-control", required = "required" })*@
+                            @Html.DropDownListFor(m => m.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.ProgrammeSelectList, new { @class = "form-control", required = "required" })
+                            @Html.DropDownListFor(m => m.Session.Id, (IEnumerable<SelectListItem>)ViewBag.SessionSelectList, new { @class = "form-control", required = "required" })
+                            @*@Html.DropDownListFor(m => m.Department.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentSelectList, new { @class = "form-control", required = "required" })*@
+
+                            <button class="btn btn-primary btn-metro mr5" type="submit" name="btnSearch" id="btnSearch">Load Quota</button>
+                        </div>
+                        <div>
+                            <span id="processing" style="display:none"><img width="30px" height="30px" src="@Url.Content("~/Content/Images/bx_loader.gif")" /></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        <div>
+            <div>
+                <span id="processing" style="display:none"><img width="30px" height="30px" src="@Url.Content("~/Content/Images/bx_loader.gif")" /></span>
+            </div>
+
+            @*@if (Model != null && Model.ListOfAdmission != null && Model.ListOfAdmission.Count > 0)
+                {*@
+            @if (Model != null && Model.AdmissionQuota != null && Model.AdmissionQuota.Count > 0)
+            {
+
+
+
+                <table id="example" class="display nowrap table-responsive" style="width:100%">
+                    <thead>
+                        <tr class="well" style="height:35px; vertical-align:middle">
+                            <th>
+                                SN
+                            </th>
+
+                            <th>
+                               Programme
+                            </th>
+                            <th>
+                                Department
+                            </th>
+                            <th>
+                                Session
+                            </th>
+                            <th>
+                                Set Quota
+                            </th>
+                            <th>
+                               Unused Quota
+                            </th>
+                            <th>
+
+                            </th>
+
+
+                        </tr>
+                    </thead>
+
+
+                    @for (int i = 0; i < Model.AdmissionQuota.Count; i++)
+                    {
+                        var sn = i + 1;
+                        <tr>
+                            <td>
+                                @sn
+                            </td>
+
+                            <td>
+                               @Model.AdmissionQuota[i].Programme.Name
+                            </td>
+                            <td>
+                               @Model.AdmissionQuota[i].Department.Name
+                            </td>
+                            <td>
+                               @Model.AdmissionQuota[i].Session.Name
+                            </td>
+                            <td>
+                                @Model.AdmissionQuota[i].Quota
+                            </td>
+                            <td>
+                                @Model.AdmissionQuota[i].UnusedQuota
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "EditQuota", "AdmissionProcessing", new { Area = "Admin", qid = Model.AdmissionQuota[i].Id }, new { @class = "btn btn-default " })
+                            </td>
+
+
+
+                        </tr>
+                    }
+
+
+
+                </table>
+            }
+
+
+
+
+
+        </div>
+    </div>
+
+
+</div>
+

@@ -1,0 +1,233 @@
+﻿@model Abundance_Nk.Model.Entity.COURSE_UNIT
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $("#Department_Option_Id").append('<option value="' + 0 + '">' + '-- No Option --' + '</option>');
+        });
+
+
+        $("#Department_Id").change(function () {
+
+            var department = $("#Department_Id").val();
+            var programme = $("#Programme_Id").val();
+            //var level = $("#Level_Id").val();
+
+            if (department == undefined || programme == undefined) {
+                $("#Department_Option_Id").hide();
+                return;
+            }
+
+            $("#Department_Option_Id").empty();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartmentOptionByDepartment", "CourseUnit")', // we are calling json method
+                dataType: 'json',
+                data: { id: department, programmeid: programme },
+                success: function (departmentOptions) {
+
+                    if (departmentOptions == "" || departmentOptions == null || departmentOptions == undefined) {
+                        $("#Department_Option_Id").hide();
+                    } else {
+                        $("#Department_Option_Id").append('<option value="' + 0 + '"> -- Select -- </option>');
+                        $.each(departmentOptions, function (i, Option) {
+                            $("#Department_Option_Id").append('<option value="' + Option.Value + '">' + Option.Text + '</option>');
+                        });
+                        if (programme > 2) {
+                            $("#Department_Option_Id").show();
+                        }
+
+                    }
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve department Options.' + ex);
+                }
+            });
+
+        });
+
+        $("#Programme_Id").change(function () {
+
+
+
+
+        });
+
+        //Programme Drop down Selected-change event
+        $("#Programme_Id").change(function () {
+
+            $("#Department_Id").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartments", "CourseUnit")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#Programme_Id").val() },
+                // Get Selected Country ID.
+                success: function (departments) {
+                    $("#Department_Id").append('<option value="' + 0 + '">' +
+                        '-- Select Department --' + '</option>');
+                    $.each(departments, function (i, department) {
+                        $("#Department_Id").append('<option value="' + department.Value + '">' +
+                            department.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+
+            $("#Level_Id").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetLevels", "CourseUnit")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#Programme_Id").val() },
+                // Get Selected Country ID.
+                success: function (levels) {
+                    $("#Level_Id").append('<option value="' + 0 + '">' +
+                        '-- Select Level --' + '</option>');
+                    $.each(levels, function (i, level) {
+                        $("#Level_Id").append('<option value="' + level.Value + '">' +
+                            level.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve levels.' + ex);
+                }
+            });
+
+            var department = $("#Department_Id").val();
+            var programme = $("#Programme_Id").val();
+
+            if (department == undefined || programme == undefined) {
+                $("#Department_Option_Id").hide();
+                return;
+            }
+
+            $("#Department_Option_Id").empty();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartmentOptionByDepartment", "CourseUnit")', // we are calling json method
+                dataType: 'json',
+                data: { id: department, programmeid: programme },
+                success: function (departmentOptions) {
+
+                    if (departmentOptions == "" || departmentOptions == null || departmentOptions == undefined) {
+                        $("#Department_Option_Id").hide();
+                    } else {
+                        $("#Department_Option_Id").append('<option value="' + 0 + '"> -- Select -- </option>');
+                        $.each(departmentOptions, function (i, Option) {
+                            $("#Department_Option_Id").append('<option value="' + Option.Value + '">' + Option.Text + '</option>');
+                        });
+                        if (programme > 2) {
+                            $("#Department_Option_Id").show();
+                        }
+
+                    }
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve department Options.' + ex);
+                }
+            });
+
+
+            return false;
+        });
+
+    </script>
+}
+<h2>Edit</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>COURSE UNIT</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Course_Unit_Id)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Session_Id, "Session", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("Session_Id", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Session_Id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Programme_Id, "Programme", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("Programme_Id", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Programme_Id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Department_Id, "Department", htmlAttributes: new {@class = "control-label col-md-2"})
+            <div class="col-md-10">
+                @Html.DropDownList("Department_Id", null, htmlAttributes: new {@class = "form-control"})
+                @Html.ValidationMessageFor(model => model.Department_Id, "", new {@class = "text-danger"})
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Department_Option_Id, "Course Option", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("Department_Option_Id", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Department_Option_Id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Level_Id, "Level", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("Level_Id", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Level_Id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Semester_Id, "Semester", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("Semester_Id", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Semester_Id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Minimum_Unit, "Munimum Unit", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Minimum_Unit, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Minimum_Unit, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Maximum_Unit, "Minimum Unit", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Maximum_Unit, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Maximum_Unit, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+       
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

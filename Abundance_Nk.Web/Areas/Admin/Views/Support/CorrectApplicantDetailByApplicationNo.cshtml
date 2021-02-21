@@ -1,0 +1,305 @@
+﻿@using Abundance_Nk.Web.Models
+@model Abundance_Nk.Web.Areas.Admin.ViewModels.SupportViewModel
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<html>
+<link href="~/Content/theme/login/assets/css/custom-style.css" rel="stylesheet" />
+@*<script src="~/Scripts/jquery-1.11.1.min.js"></script>*@
+@*<link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/style.default.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />*@
+
+<script type="text/javascript">
+    function LoaderFunc() {
+        //$('#img01').modal('show');
+        document.getElementById('img01').style.display = 'block'
+    }
+    function updateSpinner() {
+        //$('#img01').modal('show');
+        document.getElementById('img02').style.display = 'block'
+    }
+
+    //Session Drop down Selected change event
+    function GetDeptOption() {
+        $("#DeptOption").empty();
+        $("#deptOptionDiv").hide();
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetDepartmentOptions", "Support")', // Calling json method
+            dataType: 'json',
+            data: { ProgId: $("#Programme").val(), DeptId: $("#Department").val() },
+            // Get Selected Country ID.
+            success: function (departmentOptions) {
+                $("#DeptOption").append('<option value="' + 0 + '"> -- Select -- </option>');
+                $.each(departmentOptions, function (i, departmentOption) {
+                    $("#DeptOption").append('<option value="' + departmentOption.Value + '">' + departmentOption.Text + '</option>');
+                    $("#deptOptionDiv").show();
+                });
+            },
+            error: function (ex) {
+                alert('Failed to retrieve options.' + ex);
+                $("#deptOptionDiv").hide();
+            }
+        });
+        $("#deptOptionDiv").hide();
+        //return false;
+    }
+
+    $(document).ready(function () {
+        var deptOpt = $("#DeptOption").val();
+        if (deptOpt != null) {
+            $("#deptOptionDiv").show();
+        } else {
+            $("#deptOptionDiv").hide();
+        }
+        var selectedProgramme = $("#Programme").val();
+        if (selectedProgramme !=1) {
+            $("#ApplicantJambDetail_JambRegistrationNumber").hide();
+            $('#ApplicantJambDetail_JambRegistrationNumber').val('');
+        }
+        else {
+            $("#ApplicantJambDetail_JambRegistrationNumber").show();
+        }
+        $("#Programme").change(function () {
+            var programme = $("#Programme").val();
+            if ((programme == 1)) {
+                $("#ApplicantJambDetail_JambRegistrationNumber").show();
+            }
+            else {
+                $("#ApplicantJambDetail_JambRegistrationNumber").hide();
+                $('#ApplicantJambDetail_JambRegistrationNumber').val('');
+            }
+            $("#Department").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartmentByProgrammeId")', // we are calling json method
+                dataType: 'json',
+                data: { id: programme },
+                success: function (departments) {
+                    $("#Department").append('<option value="' + 0 + '"> -- Select -- </option>');
+                    $.each(departments, function (i, department) {
+                        $("#Department").append('<option value="' + department.Value + '">' + department.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+        })
+    })
+</script>
+
+<body>
+    <div class="alert alert-success fade in nomargin">
+        <h3>@ViewBag.Title</h3>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+            <div class="col-md-12">
+                <div>
+                    <p class="text-center"><h3>CORRECT APPLICANT DETAILS</h3></p>
+                </div>
+                @*<div class="alert alert-success" style="background-color:aqua">Updated</div>*@
+
+                @if (TempData["Message"] != null)
+                {
+                    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+                }
+
+                @using (Html.BeginForm("CorrectApplicantDetailByApplicationNo", "Support", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+
+
+
+                    <div class="panel panel-default ">
+                        <div class="panel-body ">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <h4>Enter the Application Number of the applicant and click Search Button</h4>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @*@Html.LabelFor(model => model.ApplicationFormNumber, new { @class = "col-sm-2 control-label " })*@
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(model => model.ApplicationFormNumber, new { @class = "form-control", @placeholder = "Enter Application No" })
+                                    @Html.ValidationMessageFor(model => model.ApplicationFormNumber, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-10">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-2"></div>
+                                <div class="col-sm-10">
+                                    <input class="btn btn-success mr5" onclick="LoaderFunc()" type="submit" name="submit" id="submit" value="Search" />
+                                    <div class="btn btn-default">
+                                        @Html.ActionLink("Back to Home", "Index", "Home", new { Area = "" }, null)
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+
+                                <div>
+                                    <img class="modal-in-spin" id="img01" src="~/Areas/Security/spinner.gif">
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- Spinner Modal -->
+
+                    </div>
+
+                }
+
+                @if (Model == null || Model.Person == null || Model.Payment == null) { return; }
+
+                @using (Html.BeginForm("UpdateInvoice", "Support", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+
+                    @Html.HiddenFor(model => model.Person.Id)
+                    @Html.HiddenFor(model => model.Person.DateEntered)
+                    @Html.HiddenFor(model => model.Person.DateOfBirth)
+                    @Html.HiddenFor(model => model.Person.Type.Id)
+                    @Html.HiddenFor(model => model.Person.Sex.Id)
+                    @Html.HiddenFor(model => model.Person.State.Id)
+                    @Html.HiddenFor(model => model.Person.Nationality.Id)
+                    @Html.HiddenFor(model => model.Person.Type.Id)
+                    @Html.HiddenFor(model => model.Person.LocalGovernment.Id)
+                    @Html.HiddenFor(model => model.Person.Religion.Id)
+                    @Html.HiddenFor(model => model.Person.Role.Id)
+
+                    @Html.HiddenFor(model => model.Payment.Id)
+
+                    @*@Html.HiddenFor(model => model.AppliedCourse.Person.Id)*@
+                    @*@Html.HiddenFor(model => model.AppliedCourse.Option.Id)*@
+                    @Html.HiddenFor(model => model.AppliedCourse.ApplicationForm.Id)
+                    <div class="panel panel-default ">
+                        <div class="panel-body ">
+                            <div class="col-md-12">
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Surname</label>
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(model => model.Person.LastName, new { @class = "form-control", @placeholder = "Enter Surname" })
+                                    @Html.ValidationMessageFor(model => model.Person.LastName)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">First Name</label>
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(model => model.Person.FirstName, new { @class = "form-control", @placeholder = "Enter Firstname" })
+                                    @Html.ValidationMessageFor(model => model.Person.FirstName)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Other Names</label>
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(model => model.Person.OtherName, new { @class = "form-control", @placeholder = "Enter Other Names" })
+                                    @Html.ValidationMessageFor(model => model.Person.OtherName)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Phone Number</label>
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(model => model.Person.MobilePhone, new { @class = "form-control", @placeholder = "Enter Mobile Number" })
+                                    @Html.ValidationMessageFor(model => model.Person.MobilePhone)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Email</label>
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(model => model.Person.Email, new { @class = "form-control", @placeholder = "Enter Email address" })
+                                    @Html.ValidationMessageFor(model => model.Person.Email)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Programme</label>
+                                <div class="col-sm-10">
+                                    @Html.DropDownListFor(model => model.AppliedCourse.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.ProgrammeId, new { @class = "form-control", @id = "Programme", @onchange = "GetDeptOption()" })
+                                    @Html.ValidationMessageFor(model => model.AppliedCourse.Programme.Id)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Department</label>
+                                <div class="col-sm-10">
+                                    @Html.DropDownListFor(model => model.AppliedCourse.Department.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentId, new { @class = "form-control", @id = "Department", @onchange = "GetDeptOption()" })
+                                    @Html.ValidationMessageFor(model => model.AppliedCourse.Department.Id)
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="deptOptionDiv" style="display: none">
+                                @Html.LabelFor(model => model.AppliedCourse.Option, "Department Option", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-6">
+                                    @Html.DropDownListFor(model => model.AppliedCourse.Option.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentOptionId, new { @class = "form-control", @id = "DeptOption" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Jamb Reg Number</label>
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(model => model.ApplicantJambDetail.JambRegistrationNumber, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ApplicantJambDetail.JambRegistrationNumber)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Jamb Score</label>
+                                <div class="col-sm-10">
+                                    @Html.TextBoxFor(model => model.ApplicantJambDetail.JambScore, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ApplicantJambDetail.JambScore)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-2"></div>
+                                <div class="col-sm-10">
+                                    <input class="btn btn-success mr5" onclick="updateSpinner()" type="submit" name="submit" id="submit" value="Update" /> &nbsp; | &nbsp;
+                                    @Html.ActionLink("Edit Application Form", "EditApplicantForm", new { Controller = "Support", Area = "Admin", personId = Utility.Encrypt(Convert.ToString(Model.AppliedCourse.Person.Id)) },
+                                                                                                new { @class = "btn btn-default mr5", target = "_blank" })
+                                </div>
+                            </div>
+
+                            <div>
+
+                                <div>
+                                    <img class="modal-in-spin" id="img02" src="~/Content/Images/spinner.gif">
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                }
+            </div>
+        </div>
+
+        <script type="text/javascript">
+
+        </script>
+
+        <script type="text/javascript">
+
+        </script>
+
+
+    </div>
+
+
+
+
+</body>
+
+
+
+</html>

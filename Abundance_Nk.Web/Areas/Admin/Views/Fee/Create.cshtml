@@ -1,0 +1,104 @@
+﻿@model Abundance_Nk.Model.Model.Fee
+
+@{
+    ViewBag.Title = "Create Fee";
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    <script type="text/javascript">
+        $(document).ready(function () { // will trigger when the document is ready
+            $('.datepicker').datepicker
+                ({
+                    format: 'dd/mm/yyyy',
+                    autoclose: true,
+                }); //Initialise any date pickers
+        });
+    </script>
+    }
+
+<div class="alert alert-success fade in nomargin">
+    <h3>@ViewBag.Title</h3>
+</div>
+
+@Html.Partial("_IndexSetupHeader", -1)
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true)
+
+        @if (TempData["Message"] != null)
+        {
+            @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+        }
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.TypeId, "Fee Type", new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(f => f.TypeId, (IEnumerable<SelectListItem>)ViewBag.TypeId, "-- Select --", new { @class = "form-control" } )
+                @Html.ValidationMessageFor(model => model.TypeId)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Amount, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Amount, new { @class = "form-control", @placeholder = "Enter Amount" })
+                @Html.ValidationMessageFor(model => model.Amount)
+            </div>
+        </div>
+
+        <div class="form-group ">
+            @Html.LabelFor(model => model.DateEntered, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.DateEntered, "{0:dd/MM/yyyy}", new { @class = "form-control datepicker", placeholder = "Specify Date" })
+                @Html.ValidationMessageFor(model => model.DateEntered)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+    <div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>
+    <hr />
+
+
+                @*<div class="container">
+                    <div class="row">
+                        <div class='col-sm-6'>
+                            <div class="form-group">
+                                <div class='input-group date datepicker'>
+                                    <input type='text' class="form-control" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>*@
+
+
+@*<div class='input-group date datepicker col-md-5'>
+
+        @Html.TextBoxFor(model => model.DateEntered, "{0:dd/mm/yyyy}", new { @class = "form-control ", placeholder = "Specify Date" })
+
+        <span class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+    </div>
+
+    @Html.ValidationMessageFor(model => model.DateEntered)*@

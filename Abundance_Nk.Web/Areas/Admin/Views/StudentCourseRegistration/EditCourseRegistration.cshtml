@@ -1,0 +1,179 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.StudentCourseRegistrationViewModel
+@{
+    ViewBag.Title = "EditCourseRegistration";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+        //Programme Drop down Selected-change event
+        $("#Programme").change(function () {
+
+            $("#Department").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartments", "StudentCourseRegistration")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#Programme").val() },
+                // Get Selected Country ID.
+                success: function (departments) {
+                    $("#Department").append('<option value="' + 0 + '">' +
+                            '-- Select Department --' + '</option>');
+                    $.each(departments, function (i, department) {
+                        $("#Department").append('<option value="' + department.Value + '">' +
+                             department.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+            return false;
+        });
+    });
+</script>
+
+<div class="col-md-12">
+
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading panel-dark-head">
+                <h4>Edit Course Registration</h4>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+
+                    @using (Html.BeginForm("EditCourseRegistration", "StudentCourseRegistration", FormMethod.Post))
+                    {
+                            @Html.HiddenFor(model => model.CourseRegistration.Id)
+
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.CourseRegistration.Level.Name, "Level", new { @class = "control-label col-sm-2" })
+                                    <div class="col-sm-10">
+                                        @Html.DropDownListFor(model => model.CourseRegistration.Level.Id, (IEnumerable<SelectListItem>)ViewBag.Level, new { @class = "form-control", @required = "required" })
+                                        @Html.ValidationMessageFor(model => model.CourseRegistration.Level.Id, null, new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.CourseRegistration.Session.Name, "Session", new { @class = "control-label col-sm-2" })
+                                    <div class="col-sm-10">
+                                        @Html.DropDownListFor(model => model.CourseRegistration.Session.Id, (IEnumerable<SelectListItem>)ViewBag.Session, new { @class = "form-control", @required = "required" })
+                                        @Html.ValidationMessageFor(model => model.CourseRegistration.Session.Id, null, new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.CourseRegistration.Programme.Name, "Programme", new { @class = "col-sm-2 control-label " })
+                                    <div class="col-sm-10">
+                                        @Html.DropDownListFor(model => model.CourseRegistration.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.Programme, new { @class = "form-control", @id = "Programme", @required = "required" })
+                                        @Html.ValidationMessageFor(model => model.CourseRegistration.Programme.Id, null, new { @class = "text-danger" })
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.CourseRegistration.Department.Name, "Department", new { @class = "col-sm-2 control-label " })
+                                    <div class="col-sm-10">
+                                        @Html.DropDownListFor(model => model.CourseRegistration.Department.Id, (IEnumerable<SelectListItem>)ViewBag.Department, new { @class = "form-control", @id = "Department", @required = "required" })
+                                        @Html.ValidationMessageFor(model => model.CourseRegistration.Department.Id, null, new { @class = "text-danger" })
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            @*<div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Student.MatricNumber, "Matric Number", new {@class = "col-sm-2 control-label "})
+                                    <div class="col-sm-10">
+                                        @Html.TextBoxFor(model => model.Student.MatricNumber, new { @class = "form-control"})
+                                        @Html.ValidationMessageFor(model => model.Student.MatricNumber, null, new { @class = "text-danger" })
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Student.LastName, "Last Name", new {@class = "col-sm-2 control-label "})
+                                    <div class="col-sm-10">
+                                        @Html.TextBoxFor(model => model.Student.LastName, new {@class = "form-control", @required = "required"})
+                                        @Html.ValidationMessageFor(model => model.Student.LastName, null, new {@class = "text-danger"})
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Student.FirstName, "First Name", new {@class = "col-sm-2 control-label "})
+                                    <div class="col-sm-10">
+                                        @Html.TextBoxFor(model => model.Student.FirstName, new {@class = "form-control", @required = "required"})
+                                        @Html.ValidationMessageFor(model => model.Student.FirstName, null, new {@class = "text-danger"})
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Student.OtherName, "Other Names", new { @class = "col-sm-2 control-label " })
+                                    <div class="col-sm-10">
+                                        @Html.TextBoxFor(model => model.Student.OtherName, new { @class = "form-control", @required = "required" })
+                                        @Html.ValidationMessageFor(model => model.Student.OtherName, null, new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                            </div>*@
+                            
+                        </div>
+
+                        if (Model.CourseRegistration != null && Model.CourseRegistration.Details.Count > 0)
+                        {
+                            <div class="row">
+                                <table class="col-md-12 table table-bordered table-hover table-responsive">
+                                    <thead>
+                                        <tr>
+                                            <th>Course Code</th>
+                                            <th>Course Title</th>
+                                            <th>Course Mode</th>
+                                            <th>Semester</th>
+                                            <th>Test Score</th>
+                                            <th>Exam Score</th>
+                                            <th>Course Unit</th>
+                                        </tr>
+                                    </thead>
+                                    @for (int i = 0; i < Model.CourseRegistration.Details.Count; i++)
+                                    {
+                                        @Html.HiddenFor(model => model.CourseRegistration.Details[i].Id)
+                                        <tbody>
+                                            <tr>
+                                                <td>@Model.CourseRegistration.Details[i].Course.Code</td>
+                                                <td>@Model.CourseRegistration.Details[i].Course.Name</td>
+                                                <td>@Html.TextBoxFor(model => model.CourseRegistration.Details[i].Mode.Name)</td>
+                                                <td>@Model.CourseRegistration.Details[i].Semester.Name</td>
+                                                <td>@Html.TextBoxFor(model => model.CourseRegistration.Details[i].TestScore)</td>
+                                                <td>@Html.TextBoxFor(model => model.CourseRegistration.Details[i].ExamScore)</td>
+                                                <td>@Html.TextBoxFor(model => model.CourseRegistration.Details[i].CourseUnit)</td>
+                                            </tr>
+                                        </tbody>
+                                    }
+                                </table>
+                            </div>
+                        }
+
+                        <br/>
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    <input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="Update" /> 
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+
+
+                </div>
+            </div>
+        </div>
+
+</div>

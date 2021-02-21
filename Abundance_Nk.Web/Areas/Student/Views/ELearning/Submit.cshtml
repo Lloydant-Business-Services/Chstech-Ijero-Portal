@@ -1,0 +1,100 @@
+﻿@using Abundance_Nk.Web.Models
+@model Abundance_Nk.Web.Areas.Admin.ViewModels.ELearningViewModel
+
+@{
+    ViewBag.Title = "Submit Assignment";
+    Layout = "~/Areas/Student/Views/Shared/_NewThemeLayout.cshtml";
+}
+
+
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+
+@using (Html.BeginForm("Submit", "Elearning", new { area = "Student" }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div>
+        <div class="">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fa fa-fw fa-download"></i>Assignment Submission Manager</h3>
+            </div>
+            <div class="card-body">
+
+
+                @Html.HiddenFor(model => model.eAssignment.Id)
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Assignment: @Model.eAssignment.Assignment</p>
+
+                    </div>
+                    <div class="col-md-12">
+                        <p>Instruction: @Model.eAssignment.Instructions</p>
+
+                    </div>
+                    <div class="col-md-12">
+                        <p>Course: @Model.eAssignment.Course.Name (@Model.eAssignment.Course.Code)</p>
+
+                    </div>
+
+                    <div class="col-md-12">
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.TextSubmission, "Enter Test/Assignment Answer Directly ", new { @class = "col-sm-2 control-label " })
+                            <div class="col-sm-10">
+                                @Html.TextAreaFor(model => model.TextSubmission, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.TextSubmission, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            @Html.Label("File", new { @class = "col-sm-2 control-label " })
+                            <div class="col-sm-10">
+                                <input type="file" accept="application/pdf" title="Upload Assignment" id="fileInput" name="file" class="form-control" />
+                            </div>
+                            &nbsp;
+                        </div>
+                    </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-10">
+                            <input class="btn btn-primary mr5 " type="submit" name="submit" id="submit" value="Submit Assignmnet" />
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+}
+
+<script>
+    document.querySelector("#fileInput").addEventListener("change", (e) => {
+        const fileEl = document.querySelector("#fileInput");
+        const file = e.target.files[0];
+        const fileType = file.type;
+        const fileSize = file.size;
+        if (fileSize > 1048576) {
+            alert("File size is too much. Allowed size is 1MB")
+            $("#fileInput").val("");
+            $("#fileInput").text("");
+            return false;
+        }
+        //If file type is Video, Return False; ask user to insert a youtube link
+        if (fileType.split("/")[1] != "pdf") {
+            alert("Only PDF is allowed!");
+
+            //Reset the file selector to application/pdf
+            fileEl.setAttribute("accept", "application/pdf");
+
+            //Clear the inout type field
+            $("#fileInput").val("");
+            $("#fileInput").text("");
+            //$('#videoUrl').show();
+            return false;
+        }
+
+    })
+
+</script>

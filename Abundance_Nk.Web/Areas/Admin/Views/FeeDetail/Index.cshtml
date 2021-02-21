@@ -1,0 +1,51 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.FeeDetailViewModel
+@using GridMvc.Html
+@{
+    Layout = "~/Views/Shared/_AdminLayout2.cshtml";
+}
+<div class="alert alert-success fade in nomargin">
+    <h3>@ViewBag.Title</h3>
+</div>
+
+@if (TempData["Message"] != null)
+{
+    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+}
+
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        @Html.Grid(Model.feeDetails).Columns(columns =>
+{
+    columns.Add()
+        .Encoded(false)
+        .Sanitized(false)
+        .RenderValueAs(d =>
+        @<div style="width:41px">
+            <a href="@Url.Action("Edit", new { id = d.Id })" title="Edit">
+                <img src="@Url.Content("~/Content/Images/edit_icon.png")" alt="Edit" />
+            </a>
+
+         
+
+            <a href="@Url.Action("Delete", new { id = d.Id })" title="Delete">
+                <img src="@Url.Content("~/Content/Images/delete_icon.png")" alt="Delete" />
+            </a>
+        </div>);
+
+    columns.Add(f => f.Fee.Name).Titled("Name");
+    columns.Add(f => f.Fee.Amount).Titled("Amount").Sortable(true);
+    columns.Add(f => f.FeeType.Name).Titled("FeeType").Sortable(true);
+    columns.Add(f => f.Department.Name).Titled("Department").Sortable(true);
+    columns.Add(f => f.Programme.Name).Titled("Programme").Sortable(true);
+    columns.Add(f => f.Level.Name).Titled("Level").Sortable(true);
+    columns.Add(f => f.PaymentMode.Name).Titled("PaymentMode").Sortable(true);
+
+}).WithPaging(15).Filterable(true)
+    </div>
+</div>
+
+
+<br />
+
+

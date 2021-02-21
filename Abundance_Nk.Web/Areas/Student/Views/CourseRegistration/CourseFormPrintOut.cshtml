@@ -1,0 +1,750 @@
+﻿@using Abundance_Nk.Web.Models
+@model Abundance_Nk.Web.Areas.Student.ViewModels.CourseRegistrationViewModel
+
+@{
+    Layout = null;
+
+    List<Abundance_Nk.Model.Model.CourseRegistrationDetail> firstSemesterCourses = new List<Abundance_Nk.Model.Model.CourseRegistrationDetail>();
+    List<Abundance_Nk.Model.Model.CourseRegistrationDetail> secondSemesterCourses = new List<Abundance_Nk.Model.Model.CourseRegistrationDetail>();
+
+    if (Model.FirstSemesterCourses != null && Model.FirstSemesterCourses.Count > 0)
+    {
+        firstSemesterCourses = Model.FirstSemesterCourses.Where(c => c.Course.IsRegistered == true).ToList();
+    }
+
+    if (Model.SecondSemesterCourses != null && Model.SecondSemesterCourses.Count > 0)
+    {
+        secondSemesterCourses = Model.SecondSemesterCourses.Where(c => c.Course.IsRegistered == true).ToList();
+    }
+    
+}
+
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<link href="~/Content/style.default.css" rel="stylesheet" />
+<link href="~/Content/misc.css" rel="stylesheet" />
+
+<div class="row">
+    <div class="col-xs-12">
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+                <div class="col-xs-12 ">
+                <div class="col-xs-1"></div>
+                <div class="col-xs-10">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <center class="col-xs-12">
+
+                                <img src="@Url.Content("~/Content/Images/chst.png")" alt="logo" width="80px" height="80px" />
+                            </center>
+                            <center class="col-xs-12">
+                                <div><h2>College of Health Science and Technology, Ijero-Ekiti</h2></div>
+                            </center>
+                        </div>
+                        @*<div class="form-group">
+                            
+                        </div>*@
+
+                    </div>
+                </div>
+
+                <div class="shadow">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <center class="col-xs-12">
+                                    <h3>Course Registration Form</h3>
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+
+                    @*<div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <div class="col-xs-12">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>*@
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <div class="col-xs-12" style="font-size: 12pt; text-transform: uppercase">
+                                    @Html.DisplayFor(model => model.Student.FullName) (@Html.DisplayFor(model => model.StudentLevel.Level.Name))
+                                    <img class="pull-right" src="@Url.Content('~' + Model.Student.ImageFileUrl)" alt="Passport" width="80px" height="80px" />
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="form-group margin-bottom-0">
+                                <div class="col-xs-4">
+                                    @Html.LabelFor(model => model.Student.MatricNumber, new {@class = "control-label "})
+                                </div>
+                                <div class="col-xs-8">
+                                    @Html.DisplayFor(model => model.Student.MatricNumber)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-6">
+                            <div class="form-group margin-bottom-0">
+                                <div class="col-xs-5">
+                                    @Html.Label("Session", new {@class = "control-label "})
+                                </div>
+                                <div class="col-xs-7 ">
+                                    @Html.DisplayFor(model => model.CurrentSessionSemester.SessionSemester.Session.Name)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="form-group margin-bottom-0">
+                                <div class="col-xs-4">
+                                    @Html.LabelFor(model => model.StudentLevel.Programme.Name, new {@class = "control-label "})
+                                </div>
+                                <div class="col-xs-8 ">
+                                    @Html.DisplayFor(model => model.StudentLevel.Programme.Name)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-6">
+                            <div class="form-group margin-bottom-0">
+                                <div class="col-xs-5">
+                                    @Html.LabelFor(model => model.StudentLevel.Department.Name, new {@class = "control-label "})
+                                </div>
+                                <div class="col-xs-7 ">
+                                    @Html.DisplayFor(model => model.StudentLevel.Department.Name)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="form-group margin-bottom-0">
+                                <div class="col-xs-4">
+                                    @Html.LabelFor(model => model.StudentLevel.Department.Faculty.Name, new {@class = "control-label "})
+                                </div>
+                                <div class="col-xs-8 ">
+                                    @Html.DisplayFor(model => model.StudentLevel.Department.Faculty.Name)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-6">
+                            <div class="form-group margin-bottom-0">
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                @if (Model != null && Model.CarryOverCourses != null && Model.CarryOverCourses.Count > 0)
+                {
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div>
+
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <b>Carry Over Courses</b>
+                                        <div class="pull-right record-count-label">
+                                            <label class="caption">1st Semester Total Unit</label><span class="badge">@Model.TotalFirstSemesterCarryOverCourseUnit</span>
+                                            <label class="caption">2nd Semester Total Unit</label><span class="badge">@Model.TotalSecondSemesterCarryOverCourseUnit</span>
+
+                                            <span class="caption">Total Course</span><span class="badge">@Model.CarryOverCourses.Count</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="table-responsive " style="font-size: 9pt">
+                                            <table class="table table-condensed grid-table table-head-alt mb30" style="font-size: 12px">
+                                                <thead>
+                                                <tr class="well" style="height: 35px; vertical-align: middle">
+                                                    <th>
+                                                        Course Code
+                                                    </th>
+                                                    <th>
+                                                        Course Title
+                                                    </th>
+                                                    <th>
+                                                        Course Unit
+                                                    </th>
+                                                    <th>
+                                                        Course Type
+                                                    </th>
+                                                    <th>
+                                                        Semester
+                                                    </th>
+                                                </tr>
+                                                </thead>
+
+                                                @for (int i = 0; i < Model.CarryOverCourses.Count; i++)
+                                                {
+                                                    if (Model.CarryOverCourses[i].Course.IsRegistered)
+                                                    {
+                                                        <tr>
+                                                            <td style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                                                @Html.DisplayFor(model => Model.CarryOverCourses[i].Course.Code)
+                                                            </td>
+
+                                                            <td style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                                                @Html.DisplayFor(model => Model.CarryOverCourses[i].Course.Name)
+                                                            </td>
+
+                                                            <td class="unit" style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                                                @Html.DisplayFor(model => Model.CarryOverCourses[i].Course.Unit)
+                                                            </td>
+
+                                                            <td style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                                                @Html.DisplayFor(model => Model.CarryOverCourses[i].Course.Type.Name)
+                                                            </td>
+
+                                                            <td style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                                                @Html.DisplayFor(model => Model.CarryOverCourses[i].Semester.Name)
+                                                            </td>
+
+                                                        </tr>
+                                                    }
+                                                }
+
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                }
+
+@if (Model != null && firstSemesterCourses != null && firstSemesterCourses.Count > 0)
+{
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="divFirstSemesterCourses">
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <b>First Semester Courses</b>
+                        <div class="pull-right record-count-label">
+                            <label class="caption">Total Course Unit</label><span id="spFirstSemesterTotalCourseUnit" class="badge">@Model.SumOfFirstSemesterSelectedCourseUnit</span>
+                            <span class="caption">Total Course</span><span class="badge">@firstSemesterCourses.Count</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="table-responsive " style="font-size: 9pt">
+                            <table class="table table-condensed grid-table table-head-alt mb30" style="font-size: 12px">
+                                <thead>
+                                <tr class="well" style="height: 35px; vertical-align: middle">
+                                    <th>
+                                        Course Code
+                                    </th>
+                                    <th>
+                                        Course Title
+                                    </th>
+                                    <th>
+                                        Course Unit
+                                    </th>
+                                    <th>
+                                        Course Type
+                                    </th>
+                                </tr>
+                                </thead>
+
+                                @for (int i = 0; i < firstSemesterCourses.Count; i++)
+                                {
+                                    <tr>
+                                        <td style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                            @Html.DisplayFor(model => firstSemesterCourses[i].Course.Code)
+                                        </td>
+
+                                        <td style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                            @Html.DisplayFor(model => firstSemesterCourses[i].Course.Name)
+                                        </td>
+
+                                        <td class="unit" style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                            @Html.DisplayFor(model => firstSemesterCourses[i].Course.Unit)
+                                        </td>
+
+                                        <td style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                            @Html.DisplayFor(model => firstSemesterCourses[i].Course.Type.Name)
+                                        </td>
+                                    </tr>
+                                }
+
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model != null && secondSemesterCourses != null && secondSemesterCourses.Count > 0)
+{
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="divSecondSemesterCourses">
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <b>Second Semester Courses</b>
+                        <div class="pull-right record-count-label">
+                            <span class="caption">Total Course Unit</span><span id="spSecondSemesterTotalCourseUnit" class="badge">@Model.SumOfSecondSemesterSelectedCourseUnit</span>
+                            <span class="caption">Total Course</span><span class="badge">@secondSemesterCourses.Count</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="table-responsive" style="font-size: 9pt">
+                            <table class="table table-condensed grid-table table-head-alt mb5" style="font-size: 12px">
+                                <thead>
+                                <tr class="well" style="height: 35px; vertical-align: middle">
+                                    <th>
+                                        Course Code
+                                    </th>
+                                    <th>
+                                        Course Title
+                                    </th>
+                                    <th>
+                                        Course Unit
+                                    </th>
+                                    <th>
+                                        Course Type
+                                    </th>
+                                </tr>
+                                </thead>
+
+                                @for (int i = 0; i < secondSemesterCourses.Count; i++)
+                                {
+                                    <tr>
+                                        <td style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                            @Html.DisplayFor(model => secondSemesterCourses[i].Course.Code)
+                                        </td>
+
+                                        <td style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                            @Html.DisplayFor(model => secondSemesterCourses[i].Course.Name)
+                                        </td>
+
+                                        <td class="unit" style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                            @Html.DisplayFor(model => secondSemesterCourses[i].Course.Unit)
+                                        </td>
+
+                                        <td style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                            @Html.DisplayFor(model => secondSemesterCourses[i].Course.Type.Name)
+                                        </td>
+                                    </tr>
+                                }
+
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+
+        </div>
+    </div>
+}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="pull-left">
+                            @Html.GenerateQrCode(Model.QRVerification)
+                        </div>
+                        <div class="pull-right text-center">
+                            @*<br/>
+            <br/>*@
+                            <p>___________________________________</p>
+                            <p>School Officer / Date & Signature</p>
+                        </div>
+                    </div>
+                    
+
+                </div>
+
+
+                </div>
+                <div class="col-xs-1"></div>
+
+                
+
+                </div>
+
+                
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*<div class="row">
+        <div class="col-xs-12">
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-12 ">
+                            <div class="col-md-1"></div>
+                            <div class="col-xs-10">
+
+                                    <div class="shadow">
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="form-group">
+                                                    <div class="col-xs-12" style="font-size:15pt; text-transform:uppercase">
+                                                        @Html.DisplayFor(model => model.Student.FullName) (@Html.DisplayFor(model => model.StudentLevel.Level.Name)) DETAILS
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-xs-6">
+                                                <div class="form-group margin-bottom-0">
+                                                    <div class="col-xs-4">
+                                                        @Html.LabelFor(model => model.Student.MatricNumber, new { @class = "control-label " })
+                                                    </div>
+                                                    <div class="col-xs-8 text-bold">
+                                                        @Html.DisplayFor(model => model.Student.MatricNumber)
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xs-6">
+                                                <div class="form-group margin-bottom-0">
+                                                    <div class="col-xs-5">
+                                                        @Html.Label("Session", new { @class = "control-label " })
+                                                    </div>
+                                                    <div class="col-xs-7 text-bold">
+                                                        @Html.DisplayFor(model => model.CurrentSessionSemester.SessionSemester.Session.Name)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-xs-6">
+                                                <div class="form-group margin-bottom-0">
+                                                    <div class="col-xs-4">
+                                                        @Html.LabelFor(model => model.AppliedCourse.Programme.Name, new { @class = "control-label " })
+                                                    </div>
+                                                    <div class="col-xs-8 text-bold">
+                                                        @Html.DisplayFor(model => model.AppliedCourse.Programme.Name)
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xs-6">
+                                                <div class="form-group margin-bottom-0">
+                                                    <div class="col-xs-5">
+                                                        @Html.LabelFor(model => model.AppliedCourse.Department.Name, new { @class = "control-label " })
+                                                    </div>
+                                                    <div class="col-xs-7 text-bold">
+                                                        @Html.DisplayFor(model => model.AppliedCourse.Department.Name)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-xs-6">
+                                                <div class="form-group margin-bottom-0">
+                                                    <div class="col-xs-4">
+                                                        @Html.LabelFor(model => model.AppliedCourse.Department.Faculty.Name, new { @class = "control-label " })
+                                                    </div>
+                                                    <div class="col-xs-8 text-bold">
+                                                        @Html.DisplayFor(model => model.AppliedCourse.Department.Faculty.Name)
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xs-6">
+                                                <div class="form-group margin-bottom-0">
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    @if (Model != null && Model.CarryOverCourses != null && Model.CarryOverCourses.Count > 0)
+                                    {
+                                        <div class="panel panel-default">
+                                            <div class="panel-body">
+                                                <div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <b>Carry Over Courses</b>
+                                                            <div class="pull-right record-count-label">
+                                                                <label class="caption">1st Semester Total Unit</label><span class="badge">@Model.TotalFirstSemesterCarryOverCourseUnit</span>
+                                                                <label class="caption">2nd Semester Total Unit</label><span class="badge">@Model.TotalSecondSemesterCarryOverCourseUnit</span>
+
+                                                                <span class="caption">Total Course</span><span class="badge">@Model.CarryOverCourses.Count</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <div class="table-responsive " style="font-size:9pt">
+                                                                <table class="table table-condensed grid-table table-head-alt mb30">
+                                                                    <thead>
+                                                                        <tr class="well" style="height:35px; vertical-align:middle">
+                                                                            <th>
+                                                                                Course Code
+                                                                            </th>
+                                                                            <th>
+                                                                                Course Title
+                                                                            </th>
+                                                                            <th>
+                                                                                Course Unit
+                                                                            </th>
+                                                                            <th>
+                                                                                Course Type
+                                                                            </th>
+                                                                            <th>
+                                                                                Semester
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+
+                                                                    @for (int i = 0; i < Model.CarryOverCourses.Count; i++)
+                                                                    {
+                                                                        if (Model.CarryOverCourses[i].Course.IsRegistered)
+                                                                        {
+                                                                            <tr>
+                                                                                <td style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                                                                    @Html.DisplayFor(model => Model.CarryOverCourses[i].Course.Code)
+                                                                                </td>
+
+                                                                                <td style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                                                                    @Html.DisplayFor(model => Model.CarryOverCourses[i].Course.Name)
+                                                                                </td>
+
+                                                                                <td class="unit" style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                                                                    @Html.DisplayFor(model => Model.CarryOverCourses[i].Course.Unit)
+                                                                                </td>
+
+                                                                                <td style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                                                                    @Html.DisplayFor(model => Model.CarryOverCourses[i].Course.Type.Name)
+                                                                                </td>
+
+                                                                                <td style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                                                                    @Html.DisplayFor(model => Model.CarryOverCourses[i].Semester.Name)
+                                                                                </td>
+
+                                                                            </tr>
+                                                                        }
+                                                                    }
+
+                                                                </table>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+                                            <div id="divFirstSemesterCourses">
+                                                @if (Model != null && Model.FirstSemesterCourses != null && Model.FirstSemesterCourses.Count > 0)
+                                                {
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <b>First Semester Courses</b>
+                                                            <div class="pull-right record-count-label">
+                                                                <label class="caption">Total Course Unit</label><span id="spFirstSemesterTotalCourseUnit" class="badge">@Model.SumOfFirstSemesterSelectedCourseUnit</span>
+                                                                <span class="caption">Total Course</span><span class="badge">@Model.FirstSemesterCourses.Count</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <div class="table-responsive " style="font-size:9pt">
+                                                                <table class="table table-condensed grid-table table-head-alt mb30">
+                                                                    <thead>
+                                                                        <tr class="well" style="height:35px; vertical-align:middle">
+                                                                            <th>
+                                                                                Course Code
+                                                                            </th>
+                                                                            <th>
+                                                                                Course Title
+                                                                            </th>
+                                                                            <th>
+                                                                                Course Unit
+                                                                            </th>
+                                                                            <th>
+                                                                                Course Type
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+
+                                                                    @for (int i = 0; i < Model.FirstSemesterCourses.Count; i++)
+                                                                    {
+                                                                        if (Model.FirstSemesterCourses[i].Course.IsRegistered)
+                                                                        {
+                                                                            <tr>
+                                                                                <td style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                                                                    @Html.DisplayFor(model => Model.FirstSemesterCourses[i].Course.Code)
+                                                                                </td>
+
+                                                                                <td style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                                                                    @Html.DisplayFor(model => Model.FirstSemesterCourses[i].Course.Name)
+                                                                                </td>
+
+                                                                                <td class="unit" style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                                                                    @Html.DisplayFor(model => Model.FirstSemesterCourses[i].Course.Unit)
+                                                                                </td>
+
+                                                                                <td style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                                                                    @Html.DisplayFor(model => Model.FirstSemesterCourses[i].Course.Type.Name)
+                                                                                </td>
+                                                                            </tr>
+                                                                        }
+                                                                    }
+
+
+                                                                </table>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+                                            <div id="divSecondSemesterCourses">
+                                                @if (Model != null && Model.SecondSemesterCourses != null && Model.SecondSemesterCourses.Count > 0)
+                                                {
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <b>Second Semester Courses</b>
+                                                            <div class="pull-right record-count-label">
+                                                                <span class="caption">Total Course Unit</span><span id="spSecondSemesterTotalCourseUnit" class="badge">@Model.SumOfSecondSemesterSelectedCourseUnit</span>
+                                                                <span class="caption">Total Course</span><span class="badge">@Model.SecondSemesterCourses.Count</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-xs-12">
+                                                            <div class="table-responsive" style="font-size:9pt">
+                                                                <table class="table table-condensed grid-table table-head-alt mb5">
+                                                                    <thead>
+                                                                        <tr class="well" style="height:35px; vertical-align:middle">
+                                                                            <th>
+                                                                                Course Code
+                                                                            </th>
+                                                                            <th>
+                                                                                Course Title
+                                                                            </th>
+                                                                            <th>
+                                                                                Course Unit
+                                                                            </th>
+                                                                            <th>
+                                                                                Course Type
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+
+                                                                    @for (int i = 0; i < Model.SecondSemesterCourses.Count; i++)
+                                                                    {
+                                                                        if (Model.SecondSemesterCourses[i].Course.IsRegistered)
+                                                                        {
+                                                                            <tr>
+                                                                                <td style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                                                                    @Html.DisplayFor(model => Model.SecondSemesterCourses[i].Course.Code)
+                                                                                </td>
+
+                                                                                <td style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                                                                    @Html.DisplayFor(model => Model.SecondSemesterCourses[i].Course.Name)
+                                                                                </td>
+
+                                                                                <td class="unit" style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                                                                    @Html.DisplayFor(model => Model.SecondSemesterCourses[i].Course.Unit)
+                                                                                </td>
+
+                                                                                <td style="padding-bottom: 0; padding-top: 0; margin-bottom: 0; margin-top: 0; vertical-align: middle;">
+                                                                                    @Html.DisplayFor(model => Model.SecondSemesterCourses[i].Course.Type.Name)
+                                                                                </td>
+                                                                            </tr>
+                                                                        }
+                                                                    }
+
+                                                                </table>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@

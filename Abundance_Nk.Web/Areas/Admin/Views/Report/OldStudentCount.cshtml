@@ -1,0 +1,30 @@
+﻿@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery.min.js"></script>
+<script src="~/Scripts/responsive-tabs.js"></script>
+
+<script type="text/javascript">
+    function resizeIframe(obj) {
+        obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+    }
+</script>
+
+<div style="color:black">
+    <h3>
+        Returning Student Report
+    </h3>
+</div>
+
+<div class="alert alert-dismissible alert-success">
+    <p>
+        <b>Returning Student Report(Count)</b>
+    </p>
+</div>
+
+<iframe src="~/Reports/Presenter/OldStudentCount.aspx" style="width:100%; height:auto" frameborder="0" scrolling="no" id="iframe" onload='javascript:resizeIframe(this);'></iframe>
+
+
+<br />
+

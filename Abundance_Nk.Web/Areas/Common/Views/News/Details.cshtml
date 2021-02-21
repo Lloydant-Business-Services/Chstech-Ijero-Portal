@@ -1,0 +1,101 @@
+﻿@model Abundance_Nk.Model.Entity.NEWS
+
+@{
+    ViewBag.Title = "Details";
+}
+
+
+<h3>News Details</h3>
+
+<div>
+    @*<h4>NEWS</h4>*@
+	<hr />
+    <dl class="dl-horizontal">
+        <dt class="space-bottom">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd class="space-bottom">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt class="space-bottom">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd class="space-bottom">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt class="space-bottom">
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+
+        <dd class="space-bottom">
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+
+        <dt class="space-bottom">
+            @Html.DisplayNameFor(model => model.Image_File_Url)
+        </dt>
+
+        <dd class="space-bottom">
+            @Html.DisplayFor(model => model.Image_File_Url)
+        </dd>
+
+        <dt class="space-bottom">
+            @Html.DisplayNameFor(model => model.Image_Title)
+        </dt>
+
+        <dd class="space-bottom">
+            @Html.DisplayFor(model => model.Image_Title)
+        </dd>
+
+        <dt class="space-bottom">
+            @Html.DisplayNameFor(model => model.Session_Term_Id)
+        </dt>
+
+        <dd class="space-bottom">
+            @Html.DisplayFor(model => model.Session_Term_Id)
+        </dd>
+
+        <dt class="space-bottom">
+            @Html.DisplayNameFor(model => model.Entered_By_Id)
+        </dt>
+
+        <dd class="space-bottom">
+            @Html.DisplayFor(model => model.Entered_By_Id)
+        </dd>
+
+        <dt class="space-bottom">
+            @Html.DisplayNameFor(model => model.Venue)
+        </dt>
+
+        <dd class="space-bottom">
+            @Html.DisplayFor(model => model.Venue)
+        </dd>
+
+        <dt class="space-bottom">
+            @Html.DisplayNameFor(model => model.Hour)
+        </dt>
+
+        <dd class="space-bottom">
+            @Html.DisplayFor(model => model.Hour)
+        </dd>
+
+        <dt class="space-bottom">
+            @Html.DisplayNameFor(model => model.Minute)
+        </dt>
+
+        <dd class="space-bottom">
+            @Html.DisplayFor(model => model.Minute)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.News_Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+<hr />

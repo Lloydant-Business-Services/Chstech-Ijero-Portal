@@ -1,0 +1,130 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.StaffViewModel
+@{
+    ViewBag.Title = "Upload Result Sheet";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@if(TempData["Message"] != null)
+{
+    @Html.Partial("_Message",(Abundance_Nk.Model.Model.Message)TempData["Message"])
+}
+
+
+<div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><i class="fa fa-fw fa-upload"></i>Uploaded Excel Sheet</h3>
+        </div>
+        <div class="panel-body">
+            <div class="alert alert-warning alert-dismissable"><h4>Endeavor to Cross Check Fields and Verify the excel data uploaded. Click the save button below the sheet after verification</h4></div>
+            <br />
+            @if(Model == null || Model.resultFormatList == null)
+            {
+                return;
+            }
+            @if(Model != null && Model.resultFormatList.Count > 0)
+            {
+                <table class="table table-responsive table-striped">
+                    <tr>
+                        <th>
+                            S/N
+                        </th>
+                        <th>
+                            MATRIC NUMBER
+                        </th>
+                        <th>
+                            QU1
+                        </th>
+                        <th>
+                            QU2
+                        </th>
+                        <th>
+                            QU3
+                        </th>
+                        <th>
+                            QU4
+                        </th>
+                        <th>
+                            QU5
+                        </th>
+                        <th>
+                            QU6
+                        </th>
+                        <th>
+                            QU7
+                        </th>
+                        <th>
+                            QU8
+                        </th>
+                        <th>
+                            QU9
+                        </th>
+                        <th>
+                            T/EX
+                        </th>
+                        <th>
+                            T/CA
+                        </th>
+                        <th>
+                            EX+CA
+                        </th>
+                    </tr>
+                    @for(int i = 0;i < Model.resultFormatList.Count;i++)
+                    {
+                        <tr>
+                            <td>
+                                @Model.resultFormatList[i].SN
+                            </td>
+                            <td>
+                                @Model.resultFormatList[i].MATRICNO
+                            </td>
+                            <td>
+                                @Model.resultFormatList[i].QU1
+                            </td>
+                            <td>
+                                @Model.resultFormatList[i].QU2
+                            </td>
+                            <td>
+                                @Model.resultFormatList[i].QU3
+                            </td>
+                            <td>
+                                @Model.resultFormatList[i].QU4
+                            </td>
+                            <td>
+                                @Model.resultFormatList[i].QU5
+                            </td>
+                            <td>
+                                @Model.resultFormatList[i].QU6
+                            </td>
+                            <td>
+                                @Model.resultFormatList[i].QU7
+                            </td>
+                            <td>
+                                @Model.resultFormatList[i].QU8
+                            </td>
+                            <td>
+                                @Model.resultFormatList[i].QU9
+                            </td>
+                            <td>
+                                @Model.resultFormatList[i].T_EX
+                            </td>
+                            <td>
+                                @Model.resultFormatList[i].T_CA
+                            </td>
+                            <td>
+                                @Model.resultFormatList[i].EX_CA
+                            </td>
+                        </tr>
+                    }
+                </table>
+                <br />
+                <div class="form-group" style="text-align:center">
+
+                    <div class="col-sm-10 pull-left">
+                        @Html.ActionLink("Save Upload","ProcessUpload",new { controller = "staff",area = "Admin" },new { @class = "btn btn-success mr5" })
+                    </div>
+                </div>
+            }
+        </div>
+
+    </div>
+
+

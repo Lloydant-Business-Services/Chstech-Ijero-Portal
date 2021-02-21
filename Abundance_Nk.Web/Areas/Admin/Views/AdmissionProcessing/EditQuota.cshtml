@@ -1,0 +1,105 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.AdmissionQuotaViewModel
+@{
+    ViewBag.Title = "EditMenu";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<head>
+    <style>
+        .btn-primary {
+            background: #5b796e !important
+        }
+    </style>
+    <script>
+
+
+        
+    </script>
+   
+
+</head>
+
+<div class="col-md-12">
+
+    @if (TempData["Message"] != null)
+    {
+
+        @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+    }
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">Edit Admission Quota</h4>
+        </div>
+        <div class="panel-body">
+
+            @using (Html.BeginForm("EditQuota", "AdmissionProcessing", new { Area = "Admin" }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        @Html.ValidationSummary(true)
+
+                        @Html.HiddenFor(m => m.AdmissionQuotaEdit.Id)
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.AdmissionQuotaEdit.Programme.Name, " Programme", new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(m => m.AdmissionQuotaEdit.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.ProgrammeSelectList, new { @class = "form-control", @required = "required" })
+                                @Html.ValidationMessageFor(m => m.AdmissionQuotaEdit.Programme.Id, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.AdmissionQuotaEdit.Session.Name, " Session", new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(m => m.AdmissionQuotaEdit.Session.Id, (IEnumerable<SelectListItem>)ViewBag.SessionSelectList, new { @class = "form-control", @required = "required" })
+                                @Html.ValidationMessageFor(m => m.AdmissionQuotaEdit.Session.Id, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.AdmissionQuotaEdit.Department.Name, " Department", new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(m => m.AdmissionQuotaEdit.Department.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentSelectList, new { @class = "form-control", @required = "required" })
+                                @Html.ValidationMessageFor(m => m.AdmissionQuotaEdit.Department.Id, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.AdmissionQuotaEdit.Quota, new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.TextBoxFor(m => m.AdmissionQuotaEdit.Quota, new { @class = "form-control", @required = "required" })
+                                @Html.ValidationMessageFor(m => m.AdmissionQuotaEdit.Quota, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group">
+                            <div class="col-md-offset-3 col-md-9">
+                                <input type="submit" value="Save" class="btn btn-success" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-3 col-md-9">
+                                @Html.ActionLink("Back", "ViewQuota", "AdmissionProcessing", new { @class = "btn btn-default " })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+
+
+        <div id="myToast" class="alert">
+            <div class="card-content">
+                Admission Quota was successfully updated! 
+
+            </div>
+        </div>
+ 
+    
+</div>
+<script>
+    $("#testSweet").click(function () {
+        swal("Hello World");
+    })
+</script>

@@ -1,0 +1,221 @@
+﻿@model Abundance_Nk.Web.Areas.Student.ViewModels.PaymentViewModel
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <div class="row">
+                <div>
+                    @if (TempData["Message"] != null)
+                    {
+                        @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+                    }
+                </div>
+            </div>
+
+            <div class="row">
+                <h3>Choose Programme</h3>
+                <hr style="margin-top:0" />
+                <div class="col-md-12">
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+
+                                @Html.LabelFor(model => model.Session.Id, new { @class = "control-label " })
+                                @Html.DropDownListFor(model => model.Session.Id, (IEnumerable<SelectListItem>)ViewBag.Sessions, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Session.Id, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.HiddenFor(model => model.StudentLevel.Programme.Id)
+                                @Html.LabelFor(model => model.StudentLevel.Programme.Id, new { @class = "control-label " })
+                                @Html.DropDownListFor(model => model.StudentLevel.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.Programmes, new { @class = "form-control", disabled = true })
+                                @Html.ValidationMessageFor(model => model.StudentLevel.Programme.Id, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.HiddenFor(model => model.StudentLevel.Department.Id)
+                                @Html.LabelFor(model => model.StudentLevel.Department.Id, "Course", new { @class = "control-label " })
+                                @Html.DropDownListFor(model => model.StudentLevel.Department.Id, (IEnumerable<SelectListItem>)ViewBag.Departments, new { @class = "form-control", disabled = true })
+                                @Html.ValidationMessageFor(model => model.StudentLevel.Department.Id, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div id="divDepartmentOption" class="form-group" style="display:none">
+                                @if (Model.StudentLevel != null)
+                                {
+                                    if (Model.StudentLevel.DepartmentOption != null && Model.StudentLevel.DepartmentOption.Id > 0)
+                                    {
+                                        @Html.HiddenFor(model => model.StudentLevel.DepartmentOption.Id)
+                                    }
+                                }
+                              
+
+                                @Html.LabelFor(model => model.StudentLevel.DepartmentOption.Id, "Course Option", new { @class = "control-label" })
+                                @Html.DropDownListFor(model => model.StudentLevel.DepartmentOption.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentOptions, new { @class = "form-control"})
+                                @Html.ValidationMessageFor(model => model.StudentLevel.DepartmentOption.Id, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="row">
+                <h3>Select Extra Year Details</h3>
+                <hr style="margin-top:0" />
+                <div class="col-md-12">
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.extraYear.LastSessionRegistered, new { @class = "control-label " })
+                                @Html.DropDownListFor(model => model.extraYear.LastSessionRegistered.Id, (IEnumerable<SelectListItem>)ViewBag.LastSessions, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.extraYear.LastSessionRegistered.Id, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.extraYear.Sessions_Registered, new { @class = "control-label " })
+                                @Html.DropDownListFor(model => model.extraYear.Sessions_Registered, (IEnumerable<SelectListItem>)ViewBag.SessionsRegistered, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.extraYear.Sessions_Registered, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @if (Model.IsDeferred == true)
+                                {
+                                    @Html.LabelFor(model => model.extraYear.DeferementCommencedSession.Id, new { @class = "control-label " })
+                                    @Html.DropDownListFor(model => model.extraYear.DeferementCommencedSession.Id, (IEnumerable<SelectListItem>)ViewBag.DeferredSessions, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.extraYear.DeferementCommencedSession.Id, null, new { @class = "text-danger" })
+
+                                }
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            <br />
+
+            <div class="row">
+                <h3>Please enter other personal details</h3>
+                <hr style="margin-top:0" />
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.HiddenFor(model => model.Person.LastName)
+                        @Html.LabelFor(model => model.Person.LastName, new { @class = "control-label " })
+                        @Html.TextBoxFor(model => model.Person.LastName, new { @class = "form-control", disabled = true })
+                        @Html.ValidationMessageFor(model => model.Person.LastName, null, new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.HiddenFor(model => model.Person.FirstName)
+                        @Html.LabelFor(model => model.Person.FirstName, new { @class = "control-label" })
+                        @Html.TextBoxFor(model => model.Person.FirstName, new { @class = "form-control", disabled = true })
+                        @Html.ValidationMessageFor(model => model.Person.FirstName, null, new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.HiddenFor(model => model.Person.OtherName)
+                        @Html.LabelFor(model => model.Person.OtherName, new { @class = "control-label" })
+                        @Html.TextBoxFor(model => model.Person.OtherName, new { @class = "form-control", disabled = true })
+                        @Html.ValidationMessageFor(model => model.Person.OtherName, null, new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.HiddenFor(model => model.Student.MatricNumber)
+                        @Html.LabelFor(model => model.Student.MatricNumber, new { @class = "control-label" })
+                        @Html.TextBoxFor(model => model.Student.MatricNumber, new { @class = "form-control", required = "required", disabled = true })
+                        @Html.ValidationMessageFor(model => model.Student.MatricNumber, null, new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.HiddenFor(model => model.Person.State.Id)
+                        @Html.LabelFor(model => model.Person.State.Id, new { @class = "control-label " })
+                        @Html.DropDownListFor(model => model.Person.State.Id, (IEnumerable<SelectListItem>)ViewBag.States, new { @class = "form-control", disabled = true })
+                        @Html.ValidationMessageFor(model => model.Person.State.Id, null, new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.HiddenFor(model => model.Person.Email)
+                        @Html.LabelFor(model => model.Person.Email, new { @class = "control-label" })
+                        @Html.TextBoxFor(model => model.Person.Email, new { @class = "form-control", disabled = true })
+                        @Html.ValidationMessageFor(model => model.Person.Email, null, new { @class = "text-danger" })
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Person.MobilePhone, new { @class = "control-label" })
+                        @if (Model.Person.MobilePhone == null)
+                        {
+                            @Html.TextBoxFor(model => model.Person.MobilePhone, new { @class = "form-control" })
+
+                        }
+                        else
+                        {
+                            @Html.HiddenFor(model => model.Person.MobilePhone)
+                            @Html.TextBoxFor(model => model.Person.MobilePhone, new { @class = "form-control", disabled = true })
+
+                        }
+                        @Html.ValidationMessageFor(model => model.Person.MobilePhone, null, new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.StudentLevel.Level.Id, new { @class = "control-label " })
+                        @Html.DropDownListFor(model => model.StudentLevel.Level.Id, (IEnumerable<SelectListItem>)ViewBag.Levels, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.StudentLevel.Level.Id, null, new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-1"></div>
+</div>
+

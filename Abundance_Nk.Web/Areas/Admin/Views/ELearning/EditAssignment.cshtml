@@ -1,0 +1,69 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.ELearningViewModel
+@{
+                /**/
+
+                ViewBag.Title = "E-Learning Assignment";
+                Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@if (TempData["Message"] != null)
+{
+    @Html.Partial("_Message", TempData["Message"])
+}
+<h2>ViewContent</h2>
+
+@using (Html.BeginForm("EditAssignment", "Elearning", new { area = "Admin" }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="container">
+        <div class="card-header">
+            <h3 class="card-title"><i class="fa fa-fw fa-download"></i>Edit Test|Assignment Module</h3>
+        </div>
+        <div class="card-body">
+
+            @Html.HiddenFor(model => model.eAssignment.Id)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.eAssignment.Assignment, "Assignment Topic", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.TextAreaFor(model => model.eAssignment.Assignment, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.eAssignment.Assignment, null, new { @class = "text-danger" })
+                </div>
+            </div>
+            &nbsp;
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.eAssignment.Instructions, new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.TextAreaFor(model => model.eAssignment.Instructions, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.eAssignment.Instructions, null, new { @class = "text-danger" })
+                </div>
+            </div>
+            &nbsp;
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.eAssignment.DueDate, new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(model => model.eAssignment.DueDate, new { @class = "form-control", @type = "datetime-local" })
+                    @Html.ValidationMessageFor(model => model.eAssignment.DueDate, null, new { @class = "text-danger" })
+                </div>
+            </div>
+            &nbsp;
+
+            <div class="form-group">
+                @Html.Label("File", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    <input type="file" title="Upload Result" id="file" name="file" class="form-control" />
+                </div>
+                &nbsp;
+            </div>
+
+
+
+            <div class="form-group">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-10">
+                    <input class="btn btn-primary mr5 " type="submit" name="submit" id="submit" value="Add Content" />
+                </div>
+            </div>
+        </div>
+    </div>
+}

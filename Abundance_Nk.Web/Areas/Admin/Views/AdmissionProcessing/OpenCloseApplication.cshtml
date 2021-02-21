@@ -1,0 +1,141 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.ProgrammeSetUpViewModel
+@{
+    ViewBag.Title = "EditMenu";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<head>
+    <style>
+
+        .act {
+            background-color: #bbebc0b3 !important;
+            color: #333 !important;
+            border-color: none !important;
+            border: none!important;
+        }
+
+
+        .act2 {
+            background: #e02020a1!important;
+            color: #eee!important;
+            border: none!important;
+        }
+        
+        
+
+    </style>
+</head>
+@section Scripts {
+    <link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+    @Scripts.Render("~/bundles/jquery")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#action_btn').click(function () {
+                $("#load").show();
+            })
+
+            $('#action_btn2').click(function () {
+                $("#load").show();
+            })
+        });
+    </script>
+    }
+
+<h3>Open/Close Application Form</h3>
+<div>
+    @if (TempData["Message"] != null)
+    {
+        @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+    }
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h4>This interface enables the user open and close Application Forms at will.</h4>
+                @*<button class="btn btn-warning btn-sm" id="helpBtn">More Information</button>*@
+
+
+                    <p style="font-size:12px;margin-top:5px">
+                        'Status' tells the state of the Application for a programme. The user can open and close Applications with the <strong>'Acitvate/Deactivate' </strong>buttons presented respectfully
+                    </p>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="panel panel-danger">
+    <div class="panel-body table-responsive">
+
+
+        <table class="table-bordered table-hover table-striped table" id="formatTable">
+            <thead>
+                <tr>
+                    <th>
+                        S/N
+                    </th>
+                    <th>
+                        Programme Name
+                    </th>
+                    <th>
+                        Programme Description
+                    </th>
+                    <th>
+                        Programme Shortname
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                    <th>
+                        Action
+                        <span style="display: none" id="load"><img src="~/Content/Images/bx_loader.gif" /></span>
+                        
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.ApplicationProgrammeList.Count; i++)
+                {
+                    var sn = i + 1;
+                    <tr>
+                        <td>
+                            @sn
+                        </td>
+                        <td>
+                            @Model.ApplicationProgrammeList[i].Name
+                        </td>
+                        <td>
+                            @Model.ApplicationProgrammeList[i].Description
+                        </td>
+                        <td>
+                           @Model.ApplicationProgrammeList[i].ShortName
+                        </td>
+                        @if (Model.ApplicationProgrammeList[i].IsActiveForApplication == true)
+                        {
+                            <td> <span class="badge badge-success" style="background-color:#2fa970!important">Active for Application</span></td>
+                        }
+                        else
+                        {
+                            <td><span class="badge badge-danger" style="background-color:#6f6969!important">Closed for Application</span></td>
+                        }
+                        @if (Model.ApplicationProgrammeList[i].IsActiveForApplication == true)
+                        {
+                            <td> @Html.ActionLink("Deactivate", "ToggleApplicationOpenClose", "AdmissionProcessing", new { aid = Model.ApplicationProgrammeList[i].Id }, new { @class = "btn btn-danger btn-sm act2", @id="action_btn" })
+                        </td>
+                        }
+                        else
+                        {
+                            <td>@Html.ActionLink("Activate", "ToggleApplicationOpenClose", "AdmissionProcessing", new { aid = Model.ApplicationProgrammeList[i].Id }, new { @class = "btn btn-success btn-sm act", @id = "action_btn2" })
+                        </td>
+                        }
+
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+</div>

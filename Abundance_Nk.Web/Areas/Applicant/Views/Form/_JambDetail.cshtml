@@ -1,0 +1,253 @@
+﻿@model Abundance_Nk.Web.Areas.Applicant.ViewModels.PostJambViewModel
+
+@{
+    //Layout = null;
+}
+
+<div class="col-md-12 card p-5">
+    <div class="panel-heading">
+        <div style="font-size:x-large">UTME Details/Mode of Reference</div>
+    </div>
+    <div class="panel-body">
+
+        @if (Model.ApplicantJambDetail != null)
+        {
+            <div class="row">
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ApplicantJambDetail.JambRegistrationNumber, new { @class = "control-label" })
+                        @Html.TextBoxFor(model => model.ApplicantJambDetail.JambRegistrationNumber, new { @class = "form-control", @readonly = "readonly" })
+                        @Html.ValidationMessageFor(model => model.ApplicantJambDetail.JambRegistrationNumber)
+                    </div>
+                </div>
+
+                @if (Model.ApplicantJambDetail.JambScore != null)
+                {
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ApplicantJambDetail.JambScore, new { @class = "control-label " })
+                            @Html.DropDownListFor(model => model.ApplicantJambDetail.JambScore, (IEnumerable<SelectListItem>)ViewBag.JambScoreId, new { @class = "form-control", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(model => model.ApplicantJambDetail.JambScore)
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ApplicantJambDetail.JambScore, new { @class = "control-label " })
+                            @Html.DropDownListFor(model => model.ApplicantJambDetail.JambScore, (IEnumerable<SelectListItem>)ViewBag.JambScoreId, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.ApplicantJambDetail.JambScore)
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="row">
+                @if (Model.ApplicantJambDetail.InstitutionChoice != null)
+                {
+                    if (Model.ApplicantJambDetail.InstitutionChoice.Id > 0)
+                    {
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ApplicantJambDetail.InstitutionChoice.Id, new { @class = "control-label " })
+                                @Html.DropDownListFor(model => model.ApplicantJambDetail.InstitutionChoice.Id, (IEnumerable<SelectListItem>)ViewBag.InstitutionChoiceId, new { @class = "form-control", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.ApplicantJambDetail.InstitutionChoice.Id)
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ApplicantJambDetail.InstitutionChoice.Id, new { @class = "control-label " })
+                                @Html.DropDownListFor(model => model.ApplicantJambDetail.InstitutionChoice.Id, (IEnumerable<SelectListItem>)ViewBag.InstitutionChoiceId, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ApplicantJambDetail.InstitutionChoice.Id)
+                            </div>
+                        </div>
+                    }
+
+                }
+                else
+                {
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ApplicantJambDetail.InstitutionChoice.Id, new { @class = "control-label " })
+                            @Html.DropDownListFor(model => model.ApplicantJambDetail.InstitutionChoice.Id, (IEnumerable<SelectListItem>)ViewBag.InstitutionChoiceId, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.ApplicantJambDetail.InstitutionChoice.Id)
+                        </div>
+                    </div>
+                }
+
+                @if (Model.ApplicantJambDetail.Subject1 != null)
+                {
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ApplicantJambDetail.Subject1, "First Subject", new { @class = "control-label " })
+                            @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject1.Id, (IEnumerable<SelectListItem>)ViewBag.Subject1Id, new { @class = "form-control", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(model => model.ApplicantJambDetail.Subject1.Id)
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ApplicantJambDetail.Subject1, "First Subject", new { @class = "control-label " })
+                            @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject1.Id, (IEnumerable<SelectListItem>)ViewBag.Subject1Id, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.ApplicantJambDetail.Subject1.Id)
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="row">
+                @if (Model.ApplicantJambDetail.Subject2 != null)
+                {
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ApplicantJambDetail.Subject2, new { @class = "control-label " })
+                            @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject2.Id, (IEnumerable<SelectListItem>)ViewBag.Subject2Id, new { @class = "form-control", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(model => model.ApplicantJambDetail.Subject2.Id)
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ApplicantJambDetail.Subject2, new { @class = "control-label " })
+                            @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject2.Id, (IEnumerable<SelectListItem>)ViewBag.Subject2Id, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.ApplicantJambDetail.Subject2.Id)
+                        </div>
+                    </div>
+                }
+
+                @if (Model.ApplicantJambDetail.Subject3 != null)
+                {
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ApplicantJambDetail.Subject3, new { @class = "control-label " })
+                            @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject3.Id, (IEnumerable<SelectListItem>)ViewBag.Subject3Id, new { @class = "form-control", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(model => model.ApplicantJambDetail.Subject3.Id)
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ApplicantJambDetail.Subject3, new { @class = "control-label " })
+                            @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject3.Id, (IEnumerable<SelectListItem>)ViewBag.Subject3Id, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.ApplicantJambDetail.Subject3.Id)
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="row">
+                @if (Model.ApplicantJambDetail.Subject4 != null)
+                {
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ApplicantJambDetail.Subject4, new { @class = "control-label " })
+                            @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject4.Id, (IEnumerable<SelectListItem>)ViewBag.Subject4Id, new { @class = "form-control", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(model => model.ApplicantJambDetail.Subject4.Id)
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ApplicantJambDetail.Subject4, new { @class = "control-label " })
+                            @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject4.Id, (IEnumerable<SelectListItem>)ViewBag.Subject4Id, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.ApplicantJambDetail.Subject4.Id)
+                        </div>
+                    </div>
+                }
+
+                <div class="col-md-6">
+                    <div class="form-group">
+
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ApplicantJambDetail.JambRegistrationNumber, new { @class = "control-label" })
+                        @Html.TextBoxFor(model => model.ApplicantJambDetail.JambRegistrationNumber, new { @class = "form-control", @readonly = "readonly" })
+                        @Html.ValidationMessageFor(model => model.ApplicantJambDetail.JambRegistrationNumber)
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ApplicantJambDetail.JambScore, new { @class = "control-label " })
+                        @Html.DropDownListFor(model => model.ApplicantJambDetail.JambScore, (IEnumerable<SelectListItem>)ViewBag.JambScoreId, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ApplicantJambDetail.JambScore)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ApplicantJambDetail.InstitutionChoice.Id, new { @class = "control-label " })
+                        @Html.DropDownListFor(model => model.ApplicantJambDetail.InstitutionChoice.Id, (IEnumerable<SelectListItem>)ViewBag.InstitutionChoiceId, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ApplicantJambDetail.InstitutionChoice.Id)
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ApplicantJambDetail.Subject1.Id, "First Subject", new { @class = "control-label " })
+                        @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject1.Id, (IEnumerable<SelectListItem>)ViewBag.Subject1Id, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ApplicantJambDetail.Subject1.Id)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ApplicantJambDetail.Subject2, new { @class = "control-label " })
+                        @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject2.Id, (IEnumerable<SelectListItem>)ViewBag.Subject2Id, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ApplicantJambDetail.Subject2.Id)
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ApplicantJambDetail.Subject3, new { @class = "control-label " })
+                        @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject3.Id, (IEnumerable<SelectListItem>)ViewBag.Subject3Id, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ApplicantJambDetail.Subject3.Id)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ApplicantJambDetail.Subject4, new { @class = "control-label " })
+                        @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject4.Id, (IEnumerable<SelectListItem>)ViewBag.Subject4Id, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ApplicantJambDetail.Subject4.Id)
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+

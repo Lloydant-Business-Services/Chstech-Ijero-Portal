@@ -1,0 +1,89 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.SupportViewModel
+@{
+    ViewBag.Title = "AddStaff";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+@using (Html.BeginForm("AddStaff", "Support", new { area = "Admin" }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><i class="fa fa-fw fa-upload"></i>Add Staff</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-5">
+                            <input type="file" title="Upload File" name="file" class="form-control" />
+                            <br />
+                            <input class="btn btn-success mr5 " type="submit" name="submit" id="submit" value="Upload Here" />
+                        </div>
+                        <div class="col-md-7">
+                            <div class="pull-left">
+                                <blockquote><small> NB: The Excel Format Should be in Excel 97-2003 WorkBook Format and the Columns should be arranged in such a way that the first column is the User-name and the second is the Password.</small></blockquote>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <br />
+                @if (Model == null || Model.Users == null)
+                {
+                    return;
+                }
+                @if (Model != null && Model.Users.Count > 0)
+                {
+                    <table class="table table-responsive table-striped">
+                        <tr>
+                            <th>
+                                USERNAME
+                            </th>
+                            <th>
+                                PASSWORD
+                            </th>
+                            <th>
+                                ROLE
+                            </th>
+                        </tr>
+                        @for (int i = 0; i < Model.Users.Count; i++)
+                        {
+                            <tr>
+                                <td>
+                                    @Model.Users[i].Username
+                                </td>
+                                <td>
+                                    @Model.Users[i].Password
+                                </td>
+                                <td>
+                                    @Model.Users[i].Role.Id
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                    <br />
+                    <div class="form-group" style="text-align:center">
+
+                        <div class="col-sm-10 pull-left">
+                            @*<input class="btn btn-success mr5 " type="submit" name="submit" id="submit" value="Save Upload" />*@
+                            @Html.ActionLink("Save", "SaveAddedStaff", new { controller = "Support", area = "Admin" }, new { @class = "btn btn-success mr5" })
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+
+}
+
+
+

@@ -1,0 +1,132 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.SupportViewModel
+
+@{
+    ViewBag.Title = "EditPayments";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4>Edit Payment</h4>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+
+                    @using (Html.BeginForm("EditPayment", "Support", FormMethod.Post))
+                    {
+                        @Html.HiddenFor(model => model.Payment.Id)
+                        @Html.HiddenFor(model => model.Payment.Person.Id)
+                        @Html.HiddenFor(model => model.Payment.PaymentType.Id)
+                        @Html.HiddenFor(model => model.Payment.PersonType.Id)
+                        @Html.HiddenFor(model => model.Payment.PaymentType.Id)
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Payment.Person.FullName, "Name", new { @class = "control-label custom-text-black" })
+                                    @Html.TextBoxFor(model => model.Payment.Person.FullName, new { @class = "form-control", @readonly = "readonly" })
+                                    @Html.ValidationMessageFor(model => model.Payment.Person.FullName, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Payment.PaymentMode.Name, "Payment Mode", new { @class = "control-label custom-text-black" })
+                                    @Html.DropDownListFor(model => model.Payment.PaymentMode.Id, (IEnumerable<SelectListItem>)ViewBag.PaymentMode, new { @class = "form-control", @required = "required" })
+                                    @Html.ValidationMessageFor(model => model.Payment.PaymentMode.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Payment.PaymentType.Name, "Payment Type", new { @class = "control-label custom-text-black" })
+                                    @Html.TextBoxFor(model => model.Payment.PaymentType.Name, new { @class = "form-control", @readonly = "readonly" })
+                                    @Html.ValidationMessageFor(model => model.Payment.PaymentType.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Payment.PersonType.Name, "Person Type", new { @class = "control-label custom-text-black" })
+                                    @Html.TextBoxFor(model => model.Payment.PersonType.Name, new { @class = "form-control", @readonly = "readonly" })
+                                    @Html.ValidationMessageFor(model => model.Payment.PersonType.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Payment.FeeType.Name, "FeeType", new { @class = "control-label custom-text-black" })
+                                    @Html.DropDownListFor(model => model.Payment.FeeType.Id, (IEnumerable<SelectListItem>)ViewBag.FeeType, new { @class = "form-control", @required = "required" })
+                                    @Html.ValidationMessageFor(model => model.Payment.FeeType.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Payment.SerialNumber, "Payment Serial Number", new { @class = "control-label custom-text-black" })
+                                    @Html.TextBoxFor(model => model.Payment.SerialNumber, new { @class = "form-control", @required = "required", @readonly = "readonly" })
+                                    @Html.ValidationMessageFor(model => model.Payment.SerialNumber, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>     
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Payment.InvoiceNumber, "Invoice Number", new { @class = "control-label custom-text-black" })
+                                    @Html.TextBoxFor(model => model.Payment.InvoiceNumber, new { @class = "form-control", @required = "required", @readonly = "readonly" })
+                                    @Html.ValidationMessageFor(model => model.Payment.InvoiceNumber, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Payment.Session.Name, "Session", new { @class = "control-label custom-text-black" })
+                                    @Html.DropDownListFor(model => model.Payment.Session.Id, (IEnumerable<SelectListItem>)ViewBag.Session, new { @class = "form-control", @required = "required" })
+                                    @Html.ValidationMessageFor(model => model.Payment.Session.Id, null, new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Payment.DatePaid, "Date Paid", new { @class = "control-label custom-text-black" })
+                                @Html.TextBoxFor(model => model.Payment.DatePaid, new { @class = "form-control", @readonly = "readonly" })
+                                @Html.ValidationMessageFor(model => model.Payment.DatePaid, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        </div>
+
+        <div class="row">
+            <div class="form-group">
+                <div class="col-md-6">
+                    <input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="Save" />
+                </div>
+            </div>
+        </div>
+        }
+
+
+    </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-1"></div>
+</div>

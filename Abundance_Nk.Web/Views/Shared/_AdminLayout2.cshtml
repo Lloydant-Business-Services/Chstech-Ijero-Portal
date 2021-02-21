@@ -1,0 +1,368 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>@ViewBag.Title - The Federal Polytechnic Ilaro</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/style.default.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />
+
+    <link rel="apple-touch-icon" sizes="57x57" href="~/Content/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="~/Content/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="~/Content/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="~/Content/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="~/Content/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="~/Content/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="~/Content/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="~/Content/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="~/Content/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="~/Content/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="~/Content/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="~/Content/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="~/Content/favicon/favicon-16x16.png">
+    <link rel="manifest" href="~/Content/favicon/manifest.json">
+
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="~/Content/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="containerMod">
+
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+                <a class="navbar-brand" href="http://www.federalpolyilaro.edu.ng/web/" title="Ilaro Poly Home"><img src="@Url.Content("~/Content/Images/school_logo.jpg")" height="65" alt="" /></a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav ">
+                    <li>@Html.ActionLink("Home", "Index", new { Controller = "Home", Area = "" })</li>
+
+                    <li><a href="#">Portal User Guide</a></li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Applicant<span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                            <li>@Html.ActionLink("Generate Invoice", "PostJambFormInvoiceGeneration", "Form", new { Area = "Applicant" }, null)</li>
+                            <li>@Html.ActionLink("Fill Application Form", "PostJambProgramme", "Form", new { Area = "Applicant" }, null)</li>
+                            <li class="divider"></li>
+                            <li>@Html.ActionLink("Check Result", "Index", "PostUtmeResult", new { Area = "Applicant" }, null)</li>
+                            <li>@Html.ActionLink("Search for PUTME Result", "MergeResult", "PostUtmeResult", new { Area = "Applicant" }, null)</li>
+                            <li class="divider"></li>
+                            <li>@Html.ActionLink("Check Admission Status", "CheckStatus", "Admission", new { Area = "Applicant" }, null)</li>
+                            <li>@Html.ActionLink("Generate Change of Course Invoice", "GenerateChangeOfCourseInvoice", "Admission", new { Area = "Applicant" }, null)</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Returning Student<span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                            <li>@Html.ActionLink("Generate Invoice", "Index", "Payment", new { Area = "Student" }, null)</li>
+                            <li class="divider"></li>
+                            <li>@Html.ActionLink("Session Registration", "Logon", "Registration", new { Area = "Student" }, null)</li>
+                            <li class="divider"></li>
+
+                            <li>@Html.ActionLink("Check Semester Result", "Check", "Result", new { Area = "Student" }, null)</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Extra Year Students<span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                            <li>@Html.ActionLink("Generate Invoice", "GenerateCarryOverInvoice", "Payment", new { Area = "Student" }, null)</li>
+                            <li class="divider"></li>
+
+                            <li>@Html.ActionLink("Session Registration", "LogonCarryOver", "Registration", new { Area = "Student" }, null)</li>
+
+                        </ul>
+                    </li>
+                    <li><a href="http://www.federalpolyilaro.edu.ng/web/" target="_blank">School Website</a></li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Complaints<span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                            <li>@Html.ActionLink("Submit your Complaint", "Index", "Complain/Index", new { Area = "Applicant" }, null)</li>
+                            <li>@Html.ActionLink("Check Complaint status", "Status", "Complain/Status", new { Area = "Applicant" }, null)</li>
+
+                        </ul>
+                    </li>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        if (User.IsInRole("Admissions"))
+                        {
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Admissions<span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+
+                                    <li>@Html.ActionLink("Application Summary", "ApplicationSummary", "Report", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Application Summary By Department", "ApplicationFormSummary", "Report", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("List of Applicants", "ListOfApplications", "Report", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Photo Card", "PhotoCard", "Report", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Matriculation Report", "MatriculationReport", "Report", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Bio-data Report", "BiodatatReport", "Report", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Acceptance Report", "AcceptanceReport", "Report", new { Area = "Admin" }, null)</li>
+                                    <li class="divider"></li>
+                                    <li>@Html.ActionLink("O-level Criteria", "AdmissionCriteria", "Clearance", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("View Department Courses", "Courses", "Courses/Index", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Edit Department Courses", "Courses", "Courses/Edit", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Result Correction", "Result", "Result/EditResult", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Reset Step", "ResetStep", "Support/ResetStep", new { Area = "Admin" }, null)</li>
+
+                                    <li class="divider"></li>
+                                    <li>@Html.ActionLink("Reset Registered Student", "UpdateStudentData", "Support/UpdateStudentData", new { Area = "Admin" }, null)</li>
+
+                                    <li class="divider"></li>
+                                    <li>@Html.ActionLink("Upload Admission List", "UploadAdmission", "UploadAdmission", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Edit Admission List", "SearchAdmittedStudents", "UploadAdmission", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("View Admission List", "ViewAdmission", "UploadAdmission", new { Area = "Admin" }, null)</li>
+
+
+                                </ul>
+                            </li>
+                        }
+                        else if (User.IsInRole("Support"))
+                        {
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Support<span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <li>@Html.ActionLink("O-level Criteria", "AdmissionCriteria", "Clearance", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("View Audit", "ViewAuditReport", "Support/ViewAuditReport", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("View Department Courses", "Courses", "Courses/Index", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Edit Department Courses", "Courses", "Courses/Edit", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Result Correction", "Result", "Result/EditResult", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Reset Step", "ResetStep", "Support/ResetStep", new { Area = "Admin" }, null)</li>
+                                    <li class="divider"></li>
+                                    <li>@Html.ActionLink("Correct Applicant Details", "Index", "Support/Index", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Reset Invoice", "ResetInvoice", "Support/ResetInvoice", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Retrieve Pin", "PinRetrieval", "Support/PinRetrieval", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Reset Registered Student", "UpdateStudentData", "Support/UpdateStudentData", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("View Complaints", "View", "Complain/View", new { Area = "Applicant" }, null)</li>
+                                    <li>@Html.ActionLink("Update RRR", "UpdateRRR", "RemitaReport/UpdateRRR", new { Area = "Admin" }, null)</li>
+
+
+                                </ul>
+                            </li>
+                        }
+                        else if (User.IsInRole("School Admin"))
+                        {
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">School Admin<span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <li>@Html.ActionLink("O-level Criteria", "AdmissionCriteria", "Clearance", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("View Audit", "ViewAuditReport", "Support/ViewAuditReport", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("View Department Courses", "Courses", "Courses/Index", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Edit Department Courses", "Courses", "Courses/Edit", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Result Correction", "Result", "Result/EditResult", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Reset Step", "ResetStep", "Support/ResetStep", new { Area = "Admin" }, null)</li>
+
+                                    <li class="divider"></li>
+                                    <li>@Html.ActionLink("Application Summary", "ApplicationSummary", "Report", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Application Summary By Department", "ApplicationFormSummary", "Report", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("List of Applicants", "ListOfApplications", "Report", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Photo Card", "PhotoCard", "Report", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Matriculation Report", "MatriculationReport", "Report", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Bio-data Report", "BiodatatReport", "Report", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Acceptance Report", "AcceptanceReport", "Report", new { Area = "Admin" }, null)</li>
+
+                                    <li class="divider"></li>
+                                    <li>@Html.ActionLink("Upload Admission List", "UploadAdmission", "UploadAdmission", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Edit Admission List", "SearchAdmittedStudents", "UploadAdmission", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("View Admission List", "ViewAdmission", "UploadAdmission", new { Area = "Admin" }, null)</li>
+
+
+                                </ul>
+                            </li>
+                        }
+                        else if (User.IsInRole("Admin"))
+                        {
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin<span class="caret"></span></a>
+
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <li>@Html.ActionLink("O-level Criteria", "AdmissionCriteria", "Clearance", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("View Audit", "ViewAuditReport", "Support/ViewAuditReport", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("View Department Courses", "Courses", "Courses/Index", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Edit Department Courses", "Courses", "Courses/Edit", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Result Correction", "Result", "Result/EditResult", new { Area = "Admin" }, null)</li>
+                                    <li class="divider"></li>
+                                    <li>@Html.ActionLink("Application Summary", "ApplicationSummary", "Report", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Application Summary By Department", "ApplicationFormSummary", "Report", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("List of Applicants", "ListOfApplications", "Report", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Photo Card", "PhotoCard", "Report", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Matriculation Report", "MatriculationReport", "Report", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Bio-data Report", "BiodatatReport", "Report", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Acceptance Report", "AcceptanceReport", "Report", new { Area = "Admin" }, null)</li>
+
+                                    <li class="divider"></li>
+                                    <li>@Html.ActionLink("Upload Admission List", "UploadAdmission", "UploadAdmission", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Edit Admission List", "SearchAdmittedStudents", "UploadAdmission", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("View Admission List", "ViewAdmission", "UploadAdmission", new { Area = "Admin" }, null)</li>
+
+                                    <li class="divider"></li>
+                                    <li>@Html.ActionLink("View School Fees", "AllSchoolFees", "FeeDetail", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("View All Fees", "AllFeeDetails", "FeeDetail", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("View Scholarship Students", "Index", "PaymentScholarship", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Process Application", "Index", "AdmissionProcessing", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Clear Applicant", "ClearApplicant", "AdmissionProcessing", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Generate Invoice with RRR", "RRRApplicationForms", "Form", new { Area = "Applicant" }, null)</li>
+
+                                    <li class="divider"></li>
+                                    <li>@Html.ActionLink("Correct Applicant Details", "Index", "Support/Index", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Reset Invoice", "ResetInvoice", "Support/ResetInvoice", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Retrieve Pin", "PinRetrieval", "Support/PinRetrieval", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Reset Step", "ResetStep", "Support/ResetStep", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Reset Registered Student", "UpdateStudentData", "Support/UpdateStudentData", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("View Complaints", "View", "Complain/View", new { Area = "Applicant" }, null)</li>
+                                    <li>@Html.ActionLink("Update RRR", "UpdateRRR", "RemitaReport/UpdateRRR", new { Area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Unregister Course", "RemoveStudentCourse", "Result/RemoveStudentCourse", new { Area = "Admin" }, null)</li>
+
+                                    <li class="divider"></li>
+                                    <li>@Html.ActionLink("Correct O-LEVEL Details", "CorrectOlevel", "Support/CorrectOlevel", new { Area = "Admin" }, null)</li>
+
+                                </ul>
+
+
+                            </li>
+                        }
+
+
+
+
+                    }
+                </ul>
+
+
+                <div>
+                    @Html.Partial("_LoginPartial")
+                </div>
+            </div>
+
+        </div>
+
+
+    </nav>
+    <br />
+    <br />
+    <div class="container ">
+        @RenderBody()
+
+        <hr />
+
+
+        <div class="row">
+            <div class="col-lg-12 ">
+                <p style="color:green; text-align:center">If you experience any difficulties or issues kindly call 07088391544 , 08050436662 , 09053630262 or email support@lloydant.com</p>
+            </div>
+
+        </div>
+        <hr />
+        <!-- Footer -->
+        <footer>
+            <div class="row ">
+                <div class="col-lg-6 ">
+                    <p style="color:black">&copy; @DateTime.Now.Year - The Federal Polytechnic Ilaro</p>
+                </div>
+                <div class="col-lg-6 pull-right">
+                    <p class="align-right"><a href="http://www.lloydant.com">Powered by <img src="@Url.Content("~/Content/Images/lloydant.png")" alt="" /></a></p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+</body>
+
+
+
+
+
+
+
+
+
+
+
+@*<body>
+
+        <div class="container " style="color: #449D44">
+            <div>
+                <table style="margin-bottom:7px">
+                    <tr>
+                        <td style="padding-right:7px"><img src="/Content/Images/school_logo.jpg" alt="" /></td>
+                        <td><h3><strong>The Federal Polytechnic Ilaro</strong></h3></td>
+                    </tr>
+                </table>
+
+            </div>
+
+        </div>
+
+        <div class="navbar navbar-default " >
+            <div class="container ">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+
+                        @Html.ActionLink("Ilaro Poly", "Index", "Home", null, new { @class = "navbar-brand", @style = "font-size:13pt; font-weight:bold" })
+
+                </div>
+
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-default">
+                        <li>@Html.ActionLink("Admin", "Index", new { Controller = "AdmissionProcessing", Area = "Admin" })</li>
+
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Applicant<span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                <li>@Html.ActionLink("Generate Invoice", "PostJambFormInvoiceGeneration", "Form", new { Area = "Student" }, null)</li>
+                                <li>@Html.ActionLink("Fill Application Form", "PostJambProgramme", "Form", new { Area = "Student" }, null)</li>
+                                <li class="divider"></li>
+                                <li>@Html.ActionLink("Check PUTME Result", "Index", "PostUtmeResult", new { Area = "Student" }, null)</li>
+                                <li class="divider"></li>
+                                <li>@Html.ActionLink("Check Admission Status", "Index", "Clearance", new { Area = "Student" }, null)</li>
+
+
+                            </ul>
+                        </li>
+
+                    </ul>
+
+                    @Html.Partial("_LoginPartial")
+                </div>
+            </div>
+        </div>
+
+        <div class="container ">
+            @RenderBody()
+
+            <hr />
+
+            <footer>
+                <p>&copy; @DateTime.Now.Year - The Federal Polytechnic Ilaro</p>
+            </footer>
+        </div>
+
+            @Scripts.Render("~/bundles/jquery")
+            @Scripts.Render("~/bundles/bootstrap")
+            @RenderSection("scripts", required: false)
+    </body>*@
+</html>

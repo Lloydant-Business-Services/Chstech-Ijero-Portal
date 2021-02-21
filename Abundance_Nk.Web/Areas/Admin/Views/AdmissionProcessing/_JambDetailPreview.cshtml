@@ -1,0 +1,62 @@
+﻿@model Abundance_Nk.Model.Model.ApplicantJambDetail
+
+@{
+    //Layout = null;
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div style="font-size:x-large">UTME Details/Mode of Reference</div>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-6 custom-text-black">
+                <div class="form-group margin-bottom-3">
+                    <div class="col-md-5">
+                        @Html.LabelFor(model => model.JambRegistrationNumber, new { @class = "control-label text-bold " })
+                    </div>
+                    <div class="col-md-7 ">
+                        @Html.DisplayFor(model => model.JambRegistrationNumber)
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group margin-bottom-3">
+                    <div class="col-md-5">
+                        @Html.LabelFor(model => model.JambScore, new { @class = "control-label text-bold " })
+                    </div>
+                    <div class="col-md-7 ">
+                        @Html.DisplayFor(model => model.JambScore)
+                    </div>
+                </div> 
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group margin-bottom-3">
+                    <div class="col-md-5">
+                        @Html.LabelFor(model => model.InstitutionChoice.Id, new { @class = "control-label text-bold " })
+                    </div>
+                    <div class="col-md-7 ">
+                        @Html.DisplayFor(model => model.InstitutionChoice.Name)
+                    </div>
+                </div> 
+
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+

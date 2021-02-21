@@ -1,0 +1,30 @@
+﻿@{
+    ViewBag.Title = "CourseEvaluationReport";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery.min.js"></script>
+<script src="~/Scripts/responsive-tabs.js"></script>
+
+<script type="text/javascript">
+    function resizeIframe(obj) {
+        obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+    }
+</script>
+
+<div style="color:black">
+    <h3>
+        Course Evaluation Report
+    </h3>
+</div>
+
+<div class="alert alert-dismissible alert-success">
+    <p>
+        <b> Course Evaluation Report</b> displays the evaluation of courses by the students.
+    </p>
+</div>
+
+<iframe src="~/Reports/Presenter/CourseEvaluationReport.aspx" style="width:100%; " frameborder="0" scrolling="no" id="iframe" onload='javascript:resizeIframe(this);'></iframe>
+
+<br />
+

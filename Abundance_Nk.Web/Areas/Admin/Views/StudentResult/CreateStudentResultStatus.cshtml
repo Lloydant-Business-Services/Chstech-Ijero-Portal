@@ -1,0 +1,147 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.StudentResultViewModel
+@{
+    ViewBag.Title = "CreateStudentResultStatus";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+<script type="text/javascript">
+   
+
+    function ActivateAll() {
+        if ($('#ActivateAllId').is(':checked')) {
+            $('.Activate').prop('checked', true);
+        }
+        else {
+            $('.Activate').prop('checked', false);
+        }
+    }
+
+</script>
+
+<div class="col-md-12">
+   
+    @if (TempData["Message"] != null)
+    { 
+        @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+    }
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">Create Student Result Status</h4>
+        </div>
+        <div class="panel-body">
+
+            @using (Html.BeginForm("CreateStudentResultStatus", "StudentResult", new { Area = "Admin" }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        @Html.ValidationSummary(true)
+                       
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Programme.Name, "Programme", new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(m => m.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.Programme, new { @class = "form-control", @required = "required" })
+                                @Html.ValidationMessageFor(m => m.Programme.Id, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Level.Name, "Level", new { @class = "col-md-3 control-label" })
+                            <div class="col-md-9">
+                                @Html.DropDownListFor(m => m.Level.Id, (IEnumerable<SelectListItem>)ViewBag.Level, new { @class = "form-control", @required = "required" })
+                                @Html.ValidationMessageFor(m => m.Level.Id, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-offset-3 col-md-9">
+                                <input type="submit" value="Submit" class="btn btn-success" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+
+        <br />
+        <div class="panel-body">
+            <div class="col-md-12">
+
+
+
+    @if (Model.StudentResultStatusFormats != null && Model.StudentResultStatusFormats.Count > 0)
+     {
+         <div class="panel panel-danger">
+             <div class="panel-body">
+
+@using (Html.BeginForm("SaveStudentResultStatus", "StudentResult", new {Area = "Admin"}, FormMethod.Post, new {@class = "form-horizontal", role = "form"}))
+{
+
+                 <table class="table-bordered table-hover table-striped table-responsive table">
+                     <tr>
+                         <th>
+                             Department
+                         </th>
+                         <th>
+                             Programme
+                         </th>
+                         <th>
+                             Level
+                         </th>
+                         <th>
+                             <input type="checkbox" id="ActivateAllId" onclick="ActivateAll()" /> Approved
+                         </th>
+                     </tr>
+
+                     @for (int i = 0; i < Model.StudentResultStatusFormats.Count; i++)
+                     {
+                         <tr>
+
+                             @Html.HiddenFor(model => model.StudentResultStatusFormats[i].Id)
+                             @Html.HiddenFor(model => model.StudentResultStatusFormats[i].Department.Id)
+                             @Html.HiddenFor(model => model.Programme.Id)
+                             @Html.HiddenFor(model => model.Level.Id)
+
+                             <td>
+                                 @Model.StudentResultStatusFormats[i].Department.Name
+                             </td>
+                             <td>
+                                 @Model.Programme.Name
+                             </td>
+                             <td>
+                                 @Model.Level.Name
+                             </td>
+                             <td>
+                                 @Html.CheckBoxFor(m => m.StudentResultStatusFormats[i].Approved, new {@type = "checkbox", @class = "Activate"})
+                             </td>
+                         </tr>
+                     }
+
+                 </table>
+
+    <br/>
+    <div class="form-group">
+        <div class="col-md-offset-3 col-md-9">
+            <input type="submit" value="Save" class="btn btn-success" />
+        </div>
+    </div>
+}
+             </div>
+         </div>
+     
+}
+
+            </div>
+        </div>
+
+
+
+    </div>
+    
+    
+
+
+</div>

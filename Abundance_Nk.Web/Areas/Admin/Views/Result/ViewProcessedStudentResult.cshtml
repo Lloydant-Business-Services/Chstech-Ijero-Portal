@@ -1,0 +1,178 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.ResultUploadViewModel
+@{
+    ViewBag.Title = "ViewProcessedStudentResult";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@if (TempData["Message"] != null)
+{
+    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+@using (Html.BeginForm("ViewProcessedStudentResult", "Result", new { area = "Admin" }, FormMethod.Post))
+{
+    @Html.HiddenFor(model => model.Result.StudentId)
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><i class="fa fa-fw fa-book"></i>RAW SCORES</h3>
+        </div>
+        <div class="panel-body">
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Result.MatricNumber, "Matric Number", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(model => model.Result.MatricNumber, new { @class = "form-control", @id = "MatricNumber" ,@disabled="disabled"})
+                    @Html.ValidationMessageFor(model => model.Result.MatricNumber, null, new { @class = "text-danger" })
+                </div>
+
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Result.Surname, "Surname", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(model => model.Result.Surname, new { @class = "form-control", @id = "Surname", @disabled = "disabled" })
+                    @Html.ValidationMessageFor(model => model.Semester.Id, null, new { @class = "text-danger" })
+                </div>
+
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Result.Surname, "Othernames", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(model => model.Result.firstname_middle, new { @class = "form-control", @id = "Surname", @disabled = "disabled" })
+                    @Html.ValidationMessageFor(model => model.Result.firstname_middle, null, new { @class = "text-danger" })
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Result.GPA, "GPA", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(model => model.Result.GPA, new { @class = "form-control", @id = "GPA", @disabled = "disabled" })
+                    @Html.ValidationMessageFor(model => model.Result.GPA, null, new { @class = "text-danger" })
+                </div>
+
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Result.CGPA, "CGPA", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(model => model.Result.CGPA, new { @class = "form-control", @id = "CGPA", @disabled = "disabled" })
+                    @Html.ValidationMessageFor(model => model.Result.CGPA, null, new { @class = "text-danger" })
+                </div>
+
+            </div>
+
+        </div>
+        @if (Model == null || Model.ResultList == null)
+        {
+            return;
+        }
+        @if (Model != null && Model.ResultList.Count > 0)
+        {
+            <div class="row">
+                <div class="col-md-3 col-md-offset-5">
+                    <h3> <b>RAW SCORE</b></h3>
+                </div>
+               
+            </div>
+            <table class="table table-responsive table-striped">
+                <tr>
+                    <th>S/N</th>
+                    <th>
+                       COURSE CODE
+                    </th>
+                    <th>
+                        SCORES
+                    </th>
+                    <th>
+                        AGGREGATE SCORES
+                    </th>
+                    <th>
+                        LETTER GRADE
+                    </th>
+                    <th>
+                        WTD GRADE POINTS
+                    </th>
+
+
+
+                </tr>
+                @for (int i = 0; i < Model.ResultList.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            @(i + 1)
+                        </td>
+                        <td>
+                            @Model.ResultList[i].CourseCode
+                        </td>
+                        <td>
+                            @Model.ResultList[i].TestScore / @Model.ResultList[i].ExamScore
+                        </td>
+                        <td>
+                            @Model.ResultList[i].TotalScore
+                        </td>
+                        <td>
+                            @Model.ResultList[i].Grade
+                        </td>
+                        <td>
+                            @Model.ResultList[i].WGP
+                        </td>
+
+
+                    </tr>
+                }
+            </table>
+    <div class="row">
+        
+            <div class="form-group">
+
+                @Html.LabelFor(model => model.RejectCategory, "Category  ( W / C / S / E)", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(model => model.RejectCategory, new { @class = "form-control", @id = "MatricNumber" })
+                    @Html.ValidationMessageFor(model => model.RejectCategory, null, new { @class = "text-danger" })
+                </div>
+
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Reason, "Reasons", new { @class = "col-sm-2 control-label " })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(model => model.Reason, new { @class = "form-control", @id = "Surname" })
+                    @Html.ValidationMessageFor(model => model.Reason, null, new { @class = "text-danger" })
+                </div>
+
+            </div>
+        <div class="form-group radio-inline col-md-offset-2">
+            <div class="col-md-6">
+                @Html.RadioButtonFor(model => model.Enable, "1",true)
+
+                @Html.LabelFor(model => model.Result.Surname, "ENABLE", new { @class = " control-label " })
+            </div>
+           
+            
+            <div class="col-md-4">
+                @Html.RadioButtonFor(model => model.Enable, "0",false)
+                
+                @Html.LabelFor(model => model.Result.Surname, "DISABLE", new { @class = "control-label " })
+            </div>
+            
+
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-10">
+                <input class="btn btn-success mr5 " type="submit" name="submit" id="submit" value="Process Result" />
+
+            </div>
+        </div>
+      
+
+    </div>
+
+        }
+    </div>
+
+}

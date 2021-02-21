@@ -1,0 +1,184 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.MatricNumberViewModel
+@{
+    ViewBag.Title = "UploadMatricNumberExcelPreview";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#loading").hide();
+
+            $("#Programme").on('change',function () {
+
+                $("#Department").empty();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetDepartments", "MatricNumber")', // Calling json method
+                    dataType: 'json',
+                    data: { id: $("#Programme").val() },
+
+                    success: function (departments) {
+                        $("#Department").append('<option value="' + 0 + '">' +
+                            '-- Select Department --' + '</option>');
+                        $.each(departments, function (i, department) {
+                            $("#Department").append('<option value="' + department.Value + '">' +
+                                department.Text + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve departments.' + ex);
+                    }
+                });
+
+
+            });
+        })
+        function ButtonClick() {
+            $("#loading").hide();
+        }
+
+
+    </script>
+}
+
+
+<div class="col-md-12">
+ 
+    <div class="col-md-10">
+
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading panel-dark-head">
+                <h4>Preview of Matric Number Uploaded</h4>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Programme.Name, "Programme", new { @class = "col-sm-2 control-label " })
+                                <div class="col-sm-10">
+                                    @Html.DropDownListFor(model => model.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.Programme, new { @class = "form-control", @id = "Programme", @required = "required", @disabled = "disabled" })
+                                    @Html.ValidationMessageFor(model => model.Programme.Id, null, new { @class = "text-danger" })
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Department.Name, "Department", new { @class = "col-sm-2 control-label " })
+                                <div class="col-sm-10">
+                                    @Html.DropDownListFor(model => model.Department.Id, (IEnumerable<SelectListItem>)ViewBag.Department, new { @class = "form-control", @id = "Department", @required = "required", @disabled = "disabled" })
+                                    @Html.ValidationMessageFor(model => model.Department.Id, null, new { @class = "text-danger" })
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Session.Name, "Session", new { @class = "col-sm-2 control-label " })
+                                <div class="col-sm-10">
+                                    @Html.DropDownListFor(model => model.Session.Id, (IEnumerable<SelectListItem>)ViewBag.Session, new { @class = "form-control", @id = "Level", @required = "required", @disabled = "disabled" })
+                                    @Html.ValidationMessageFor(model => model.Session.Id, null, new { @class = "text-danger" })
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                     
+                            <div class="col-md-6">
+                                @Html.ActionLink("Re-Upload", "UploadManuallyGeneratedMatricNo", new { controller = "MatricNumber", area = "Admin" }, new { @class = "btn btn-success mr5" })
+                            </div>
+
+                      
+                    </div>
+                       
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="clearfix"></div>
+
+   
+    <div class="col-md-10">
+        @if (Model != null && Model.ExcelTemplateModels != null)
+        {
+            <div class="panel-body">
+                <div class="alert alert-warning alert-dismissable"><h4>Endeavor to Cross Check Fields and Verify the excel data uploaded. Click the save button below the sheet after verification</h4></div>
+                <br />
+
+                @if (Model != null && Model.ExcelTemplateModels.Count > 0)
+                {
+                    <table class="table table-responsive table-striped">
+                        <tr>
+                            <th>
+                                S/N
+                            </th>
+                            <th>
+                                FULLNAME
+                            </th>
+                            <th>
+                                APPLICATION NO.
+                            </th>
+                            <th>
+                                MATRIC NUMBER
+                            </th>
+                        </tr>
+                        @for (int i = 0; i < Model.ExcelTemplateModels.Count; i++)
+                    {
+                        var sn = i + 1;
+                            <tr>
+                                <td>
+                                    <span>@sn</span>
+                                </td>
+                                <td>
+                                    @Model.ExcelTemplateModels[i].FullName
+                                </td>
+                                <td>
+                                    @Model.ExcelTemplateModels[i].ApplicationNo
+                                </td>
+                                <td>
+                                    @Model.ExcelTemplateModels[i].MatricNo
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                    <div class="panel-header" style="font-weight:bold; background:#f2f2f2; padding:5px;">
+                        @Model.ExcelTemplateModels.Count  Records
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-6 pull-left" style="text-align:center">
+                            @Html.ActionLink("Save Upload", "SaveUploadedMatricNoExcel", new { controller = "MatricNumber", area = "Admin" }, new { @class = "btn btn-success mr5" })
+                        </div>
+                      
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+

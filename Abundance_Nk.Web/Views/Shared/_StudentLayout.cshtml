@@ -1,0 +1,297 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    @*<meta name="viewport" content="width=device-width, initial-scale=1.0">*@
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <title>@ViewBag.Title - The Federal Polytechnic Ilaro</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+        
+    <script type="text/javascript">
+        
+        function SetMenuStyle() {
+
+            var mainPage = window.location.pathname.toString();
+            //var page = mainPage.split("/").pop();
+            
+            var basicSetupMenus = ["FeeType", "Fee", "PersonType", "PaymentMode", "PaymentType", "Nationality", "State", "Lga", "ResultGrade", "Genotype", "Religion", "MaritalStatus", "Relationship", "Title", "StudentCategory", "StudentType", "ModeOfStudy", "ModeOfStudy", "CourseType", "Course", "OLevelGrade", "Cgpa", "Faculty", "Department", "Programme", "OLevelType", "OLevelSubject", "News"];
+            for (var i = 0; i < basicSetupMenus.length; i++)
+            {
+                if (mainPage.indexOf(basicSetupMenus[i]) > -1) {
+                    document.getElementById('lnkBasicSetup').className = "parent active";
+                    document.getElementById('lnk' + basicSetupMenus[i]).className = "active";
+                    break;
+                }
+            }      
+                             
+
+            ////alert(document.getElementById('lnk' + page).id);
+            //if (mainPage.indexOf(mainPage) > -1) {
+            //    document.getElementById('lnk' + page).className = "active";
+            //    document.getElementById('lnkBasicSetup').className = "parent active"
+            //}
+
+            //var str = "This is testing for javascript search !!!";
+            //if (str.search("for") != -1) {
+            //    //logic
+            //}
+
+        }
+
+       
+    </script>
+</head>
+<body onload="javascript:SetMenuStyle();">
+    @*<div class="container" style="color: #428bca">*@
+
+    <div class="container " style="color: #369d44">
+        <div>
+            <table style="margin-bottom:7px">
+                <tr>
+                    <td style="padding-right:7px"><img src="@Url.Content("~/Content/Images/school_logo.jpg")" alt="" /></td>
+                    <td><h3><strong>The Federal Polytechnic, Ilaro</strong></h3></td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+
+
+    @*<div class="container " style="color:#2ec875; ">
+        <h1><strong>Federal Polytechnic Ilaro</strong></h1>
+    </div>*@
+
+    <header>
+        <div class="headerwrapper">
+            <div class="container ">
+                <div class="header-left" style="padding: 15px 0 15px 0; ">
+                   
+                    <div class="pull-right">
+                        <a href="" class="menu-collapse">
+                            <i class="fa fa-bars"></i>
+                        </a>
+                    </div>
+                </div><!-- header-left -->
+
+                @*<div class="header-right">
+                    <div class="pull-right">
+                        <div class="navbar navbar-default ">
+                            <div class="navbar-header">
+                                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </button>
+                            </div>
+
+                            <div class="navbar-collapse collapse">
+                                <ul class="nav navbar-nav ">
+                                    <li>@Html.ActionLink("Home", "Index", "Home", new { Area = "" }, null)</li>
+                                    <li>@Html.ActionLink("About", "About", "Home")</li>
+                                    <li>@Html.ActionLink("Fee Type", "Index", "FeeType")</li>
+                                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    
+                        @Html.Partial("_LoginPartial")
+
+
+                    </div><!-- pull-right -->
+
+                </div>*@<!-- header-right -->
+
+            </div><!-- headerwrapper -->
+        </div>
+
+
+    </header>
+
+
+    <section>
+        <div class="container ">
+            <div class="mainwrapper">
+
+                <div class="leftpanel">
+                    <div class="media profile-left">
+                        @*<a class="pull-left profile-thumb" href="profile.html">
+                            <img class="img-circle" src="~/Content/Images/Photos/profile.png" alt="">
+                        </a>*@
+                        <div class="media-body">
+                            @*<h4 class="media-heading">Elen Adarna</h4>
+                            <small class="text-muted">Beach Lover</small>*@
+                        </div>
+                    </div><!-- media -->
+
+                    <h5 class="leftpanel-title" style="color:transparent">Navigation</h5>
+                    <h5 class="leftpanel-title"> </h5>
+
+                    <ul class="nav nav-stacked">
+                        @*<li><a href="index.html"><i class="fa fa-home"></i> <span>Dashboard</span></a></li>
+                        <li id="lnkBasicSetup" class="parent active">
+
+                            <a href=""><i class="fa fa-cog"></i> <span>Activities</span></a>
+                            <ul class="children ">
+                                <li id="lnkProfile">@Html.ActionLink("My Profile", "Index", "Profile", new { Area = "Student" }, null)</li>
+                                <li id="lnkCourses">@Html.ActionLink("Courses", "Index", "Courses", new { Area = "Student" }, null)</li>
+                                <li id="lnkResult">@Html.ActionLink("Result", "Index", "Result", new { Area = "Student" }, null)</li>
+                                <li id="lnkPayments">@Html.ActionLink("Payments", "Index", "Payments", new { Area = "Student" }, null)</li>
+                                
+                                <li id="lnkRelationship">@Html.ActionLink("Relationship", "Index", "Relationship", new { Area = "Admin" }, null)</li>
+                                <li id="lnkPersonType">@Html.ActionLink("Person Type", "Index", "PersonType", new { Area = "Admin" }, null)</li>
+                                <li id="lnkStudentType">@Html.ActionLink("Student Type", "Index", "StudentType", new { Area = "Admin" }, null)</li>
+                                <li id="lnkOLevelGrade">@Html.ActionLink("O-Level Grade", "Index", "OLevelGrade", new { Area = "Admin" }, null)</li>
+                                <li id="lnkFaculty">@Html.ActionLink("School", "Index", "Faculty", new { Area = "Admin" }, null)</li>
+                                <li id="lnkOLevelType">@Html.ActionLink("O-Level Type", "Index", "OLevelType", new { Area = "Admin" }, null)</li>
+                                <li id="lnkOLevelSubject">@Html.ActionLink("O-Level Subject", "Index", "OLevelSubject", new { Area = "Admin" }, null)</li>
+                                <li id="lnkInstitutionType">@Html.ActionLink("Institution Type", "Index", "InstitutionType", new { Area = "Admin" }, null)</li>
+                                <li id="lnkNews">@Html.ActionLink("News", "Index", "News", new { Area = "Common" }, null)</li>
+                            </ul>
+                        </li>*@
+
+                        @*<li class="parent">
+                            <a href=""><i class="fa fa-edit"></i> <span>Forms</span></a>
+                            <ul class="children">
+                                <li><a href="code-editor.html">Code Editor</a></li>
+                                <li><a href="general-forms.html">General Forms</a></li>
+                                <li><a href="form-layouts.html">Layouts</a></li>
+                                <li><a href="wysiwyg.html">Text Editor</a></li>
+                                <li><a href="form-validation.html">Validation</a></li>
+                                <li><a href="form-wizards.html">Wizards</a></li>
+                            </ul>
+                        </li>*@
+                        @*<li class="parent">
+                            <a href=""><i class="fa fa-bars"></i><span>Tables</span></a>
+                            <ul class="children">
+                                <li><a href="basic-tables.html">Basic Tables</a></li>
+                                <li><a href="data-tables.html">Data Tables</a></li>
+                            </ul>
+                        </li>*@
+
+                        @*<li class="parent">
+                            <a href=""><i class="fa fa-envelope-o"></i><span>Messages</span></a>
+
+                            <ul class="children">
+                                <li class="active"><a href="">SMS</a></li>
+                                <li><a href="">Email</a></li>
+                            </ul>
+                        </li>*@
+
+
+                        @*<li class="parent ">
+
+                            <a href=""><i class="fa fa-file-text"></i> <span>Reports</span></a>
+
+                            <ul class="children">
+                                <li><a href="notfound.html">404 Page</a></li>
+                                <li class="active"><a href="blank.html">Blank Page</a></li>
+                                <li><a href="calendar.html">Calendar</a></li>
+                                <li><a href="invoice.html">Invoice</a></li>
+                                <li><a href="locked.html">Locked Screen</a></li>
+                                <li><a href="media-manager.html">Media Manager</a></li>
+                                <li><a href="people-directory.html">People Directory</a></li>
+                                <li><a href="profile.html">Profile</a></li>
+                                <li><a href="search-results.html">Search Results</a></li>
+                                <li><a href="signin.html">Sign In</a></li>
+                                <li><a href="signup.html">Sign Up</a></li>
+                            </ul>
+                        </li>*@
+
+
+                    </ul>
+                </div><!-- leftpanel -->
+
+                <div class="mainpanel">
+                    <div class="pageheader">
+                        <div class="media">
+                            <div class="pageicon pull-left" style="margin-right:7px">
+                                @*<i class="fa fa-users"></i>*@
+
+                                <i class="fa fa-graduation-cap"></i>
+
+                                @*<i class="fa fa-home"></i>*@
+                            </div>
+                            <div class="media-body">
+                                <ul class="breadcrumb" >
+                                    @*<span class="glyphicons glyphicons-education"></span>*@
+                                    <li><a href=""><i class="glyphicons glyphicons-education"></i></a></li>
+                                </ul>
+                                <h4>Student</h4>
+
+                            </div>
+                        </div><!-- media -->
+                    </div><!-- pageheader -->
+
+                    <div id="contentArea" class="contentpanel" style="margin-top:0px; padding-top:0px">
+                        @RenderBody()
+                        <!-- CONTENT GOES HERE -->
+
+                    </div><!-- contentpanel -->
+                </div>
+            </div><!-- mainwrapper -->
+        </div>
+
+    </section>
+
+
+
+
+
+    @*<script src="js/jquery-1.11.1.min.js"></script>
+        <script src="js/jquery-migrate-1.2.1.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/modernizr.min.js"></script>
+        <script src="js/pace.min.js"></script>
+        <script src="js/retina.min.js"></script>
+        <script src="js/jquery.cookies.js"></script>
+        <script src="js/custom.js"></script>*@
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @*<div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+
+                    @Html.ActionLink("Ilaro Poly", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container body-content">
+            @RenderBody()
+            <hr />
+            <footer>
+                <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            </footer>
+        </div>*@
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+
+</body>
+</html>

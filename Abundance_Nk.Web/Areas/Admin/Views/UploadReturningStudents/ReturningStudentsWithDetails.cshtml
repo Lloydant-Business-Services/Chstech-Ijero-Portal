@@ -1,0 +1,512 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.UploadReturningStudentViewModel
+
+@{
+    ViewBag.Title = "Upload Student";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/Scripts/DataTables-1.10.15/media/js/jquery.js"></script>
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+
+<link href="~/Scripts/DataTables-1.10.15/media/css/jquery.dataTables.css" rel="stylesheet" />
+<script src="~/Scripts/DataTables-1.10.15/media/js/jquery.dataTables.js"></script>
+<link href="~/Scripts/DataTables-1.10.15/extensions/Buttons/css/buttons.dataTables.css" rel="stylesheet" />
+<script src="~/Scripts/DataTables-1.10.15/extensions/Buttons/js/dataTables.buttons.js"></script>
+<script src="~/Scripts/DataTables-1.10.15/extensions/Buttons/js/buttons.colVis.js"></script>
+<script src="~/Scripts/DataTables-1.10.15/extensions/Responsive/js/dataTables.responsive.js"></script>
+
+<script src="~/Scripts/DataTables-1.10.15/buttons.flash.min.js"></script>
+<script src="~/Scripts/DataTables-1.10.15/buttons.html5.min.js"></script>
+<script src="~/Scripts/DataTables-1.10.15/buttons.print.min.js"></script>
+<script src="~/Scripts/DataTables-1.10.15/jszip.min.js"></script>
+<script src="~/Scripts/DataTables-1.10.15/pdfmake.min.js"></script>
+<script src="~/Scripts/DataTables-1.10.15/vfs_fonts.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        //$.extend($.fn.dataTable.defaults, {
+        //    responsive: true
+        //});
+        //alert("Hi");
+
+        //$('#myTable').DataTable({
+        //    dom: 'Bfrtip',
+        //    ordering: true,
+        //    buttons: [
+        //        {
+        //            extend: 'copy',
+        //            exportOptions: {
+        //                columns: ':visible'
+        //            }
+
+
+        //        },
+        //        {
+        //            extend: 'csv',
+        //            exportOptions: {
+        //                columns: ':visible'
+        //            }
+
+        //        },
+        //        {
+        //            extend: 'excel',
+        //            exportOptions: {
+        //                columns: ':visible'
+        //            }
+
+
+        //        },
+        //        {
+        //            extend: 'pdf',
+        //            exportOptions: {
+        //                columns: ':visible'
+        //            }
+
+
+        //        },
+        //        {
+        //            extend: 'print',
+        //            exportOptions: {
+        //                columns: ':visible'
+        //            }
+
+
+        //        }, , 'colvis'
+        //    ]
+        //});
+
+        //Country Dropdown Selectedchange event
+        @*$("#Programme").change(function() {
+            $("#Department").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartments", "UploadReturningStudents")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#Programme").val() },
+                // Get Selected Country ID.
+                success: function(departments) {
+                    $("#Department").append('<option value="' + 0 + '"> -- Select -- </option>');
+                    $.each(departments, function(i, department) {
+                        $("#Department").append('<option value="' + department.Value + '">' +
+                            department.Text + '</option>');
+                    });
+                },
+                error: function(ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+            return false;
+        });*@
+
+        //Hide Department Option on Department change
+        $("#Department").change(function() {
+
+            $("#divDepartmentOption").hide();
+
+        });
+
+        $("#Programme").change(function() {
+
+            var programme = $("#Programme").val();
+
+            $("#Department").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartments", "UploadReturningStudents")', // Calling json method
+                dataType: 'json',
+                data: { id: programme },
+                // Get Selected Country ID.
+                success: function(departments) {
+                    $("#Department").append('<option value="' + 0 + '">' +
+                        '-- Select Department --' + '</option>');
+                    $.each(departments, function(i, department) {
+                        $("#Department").append('<option value="' + department.Value + '">' +
+                            department.Text + '</option>');
+                    });
+                },
+                error: function(ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+
+            $("#Level").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetLevels", "UploadReturningStudents")', // Calling json method
+                dataType: 'json',
+                data: { id: programme },
+                // Get Selected Country ID.
+                success: function(levels) {
+                    $("#Level").append('<option value="' + 0 + '">' +
+                        '-- Select Level --' + '</option>');
+                    $.each(levels, function(i, level) {
+                        $("#Level").append('<option value="' + level.Value + '">' +
+                            level.Text + '</option>');
+                    });
+                },
+                error: function(ex) {
+                    alert('Failed to retrieve levels.' + ex);
+                }
+            });
+
+            var department = $("#Department").val();
+            var level = $("#Level").val();
+
+            if (programme == undefined || department == undefined || level == undefined) {
+                $("#divDepartmentOption").hide();
+                return;
+            }
+
+            $("#DepartmentOption").empty();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartmentOptionByDepartment", "UploadReturningStudents")', // we are calling json method
+                dataType: 'json',
+                data: { id: department, programmeid: programme, levelId: level },
+                success: function(departmentOptions) {
+
+                    if (departmentOptions == "" || departmentOptions == null || departmentOptions == undefined || departmentOptions.Lenght <= 0) {
+                        $("#divDepartmentOption").hide();
+                    } else {
+                        $("#DepartmentOption").append('<option value="' + 0 + '"> -- Select -- </option>');
+                        $.each(departmentOptions, function(i, Option) {
+                            $("#DepartmentOption").append('<option value="' + Option.Value + '">' + Option.Text + '</option>');
+                        });
+                        if (programme > 2) {
+                            $("#divDepartmentOption").show();
+                        }
+
+                    }
+                },
+                error: function(ex) {
+                    alert('Failed to retrieve department Options.' + ex);
+                }
+            });
+
+        });
+
+        //Load Department Option
+        $("#Level").change(function() {
+
+            var programme = $("#Programme").val();
+            var department = $("#Department").val();
+            var level = $("#Level").val();
+
+            if (programme == undefined || department == undefined || level == undefined) {
+                return;
+            }
+
+            $("#DepartmentOption").empty();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartmentOptionByDepartment", "UploadReturningStudents")', // we are calling json method
+                dataType: 'json',
+                data: { id: department, programmeid: programme, levelId: level },
+                success: function(departmentOptions) {
+
+                    if (departmentOptions == "" || departmentOptions == null || departmentOptions == undefined || departmentOptions.Lenght <= 0) {
+                        $("#divDepartmentOption").hide();
+                    } else {
+                        $("#DepartmentOption").append('<option value="' + 0 + '"> -- Select -- </option>');
+                        $.each(departmentOptions, function(i, Option) {
+                            $("#DepartmentOption").append('<option value="' + Option.Value + '">' + Option.Text + '</option>');
+                        });
+                        if (programme > 2) {
+                            $("#divDepartmentOption").show();
+                        }
+
+                    }
+                },
+                error: function(ex) {
+                    alert('Failed to retrieve department Options.' + ex);
+                }
+            });
+        });
+
+        $("#Department").change(function() {
+
+            var programme = $("#Programme").val();
+            var department = $("#Department").val();
+            var level = $("#Level").val();
+
+            if (programme == undefined || department == undefined || level == undefined) {
+                return;
+            }
+
+            $("#DepartmentOption").empty();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartmentOptionByDepartment", "UploadReturningStudents")', // we are calling json method
+                dataType: 'json',
+                data: { id: department, programmeid: programme, levelId: level },
+                success: function(departmentOptions) {
+
+                    if (departmentOptions == "" || departmentOptions == null || departmentOptions == undefined) {
+                        $("#divDepartmentOption").hide();
+                    } else {
+                        $("#DepartmentOption").append('<option value="' + 0 + '"> -- Select -- </option>');
+                        $.each(departmentOptions, function(i, Option) {
+                            $("#DepartmentOption").append('<option value="' + Option.Value + '">' + Option.Text + '</option>');
+                        });
+                        if (programme > 2) {
+                            $("#divDepartmentOption").show();
+                        }
+
+                    }
+                },
+                error: function(ex) {
+                    alert('Failed to retrieve department Options.' + ex);
+                }
+            });
+        });
+
+        $("#btnSave").click(function() {
+            $("#progress").show();
+        });
+
+    });
+</script>
+
+<div>
+    @if (TempData["Message"] != null)
+    {
+        @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+    }
+</div>
+
+
+@using (Html.BeginForm("ReturningStudentsWithDetails", "UploadReturningStudents", new { area = "admin" }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <br />
+    <div class="panel panel-default">
+        <div class="panel-heading"> Upload Students</div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+
+                                @Html.LabelFor(model => model.Programme.Id, new { @class = "control-label " })
+                                @Html.DropDownListFor(model => model.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.ProgrammeId, new { @class = "form-control", @id = "Programme", required = "required" })
+                                @Html.ValidationMessageFor(model => model.Programme.Id, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Department.Id, new { @class = "control-label " })
+                                @Html.DropDownListFor(model => model.Department.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentId, new { @class = "form-control", @id = "Department", required = "required" })
+                                @Html.ValidationMessageFor(model => model.Department.Id, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Level.Name, "Level", new { @class = "control-label " })
+                                @Html.DropDownListFor(model => model.Level.Id, (IEnumerable<SelectListItem>)ViewBag.LevelId, new { @class = "form-control", required = "required", @id = "Level" })
+                                @Html.ValidationMessageFor(model => model.Level.Id, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+
+                                @Html.LabelFor(model => model.Session.Name, "Session", new { @class = "control-label " })
+                                @Html.DropDownListFor(model => model.Session.Id, (IEnumerable<SelectListItem>)ViewBag.SessionId, new { @class = "form-control", required = "required" })
+                                @Html.ValidationMessageFor(model => model.Session.Id, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="row" style="display:none" id="divDepartmentOption">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.DepartmentOption.Id, new { @class = "control-label " })
+                                @Html.DropDownListFor(model => model.DepartmentOption.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentOptionId, new { @class = "form-control", @id = "DepartmentOption" })
+                                @Html.ValidationMessageFor(model => model.DepartmentOption.Id, null, new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    @*<div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="row form-inline">
+                                    <div class="col-md-12">
+                                        @Html.RadioButtonFor(m => m.StudentType, "Returning", new { id = "returningStudents" }) Returning Students &nbsp;
+                                        @Html.RadioButtonFor(m => m.StudentType, "New", new { id = "newStudents" }) New Students
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>*@
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.TextBoxFor(m => m.File, new { id = "file", type = "file", style = "color:white; background-color: darkslategray;", @class = "form-control custom-text-black" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col--2"></div>
+                            <div class="col-sm-10">
+                                <input class="btn btn-primary mr5" type="submit" name="submit" id="submit" value="Upload Excel File" /> &nbsp; &nbsp;
+                                @Html.ActionLink("Sample Sheet", "SampleStudentUploadWithDetails", new { Controller = "UploadReturningStudents", area = "Admin" }, new { @class = "btn btn-default mr5" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                @*@if (Model == null || Model.ReturningStudentList == null)
+                    {
+                        return;
+                    }*@
+
+                @if (Model != null && Model.ReturningStudentList != null && Model.ReturningStudentList.Count > 0)
+                {
+                    <div class="col-md-12 table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <tr>
+                                <th>Sn</th>
+                                <th>Lastname</th>
+                                <th>Firstname</th>
+                                <th>Othernames</th>
+                                <th>Date Of Birth</th>
+                                <th>Address</th>
+                                <th>State</th>
+                                <th>LGA</th>
+                                <th>Phone Number</th>
+                                <th>Email</th>
+                                <th>Next Of Kin</th>
+                                <th>N.O.K Phone Number</th>
+                                <th>Country</th>
+                                <th>Marital Status</th>
+                                <th>Sex</th>
+                                <th>Matric Number</th>
+                            </tr>
+                            @for (int i = 0; i < Model.ReturningStudentList.Count(); i++)
+                            {
+                                var sn = i + 1;
+                            <tr>
+                                <td>@sn</td>
+                                <td>@Model.ReturningStudentList[i].Surname</td>
+                                <td>@Model.ReturningStudentList[i].Firstname</td>
+                                <td>@Model.ReturningStudentList[i].Othername</td>
+                                <td>@Model.ReturningStudentList[i].DateOfBirth</td>
+                                <td>@Model.ReturningStudentList[i].Address</td>
+                                <td>@Model.ReturningStudentList[i].State</td>
+                                <td>@Model.ReturningStudentList[i].LocalGovernmentArea</td>
+                                <td>@Model.ReturningStudentList[i].MobilePhone</td>
+                                <td>@Model.ReturningStudentList[i].Email</td>
+                                <td>@Model.ReturningStudentList[i].NexOfKinName</td>
+                                <td>@Model.ReturningStudentList[i].NexOfKinPhoneNumber</td>
+                                <td>@Model.ReturningStudentList[i].Country</td>
+                                <td>@Model.ReturningStudentList[i].MaritalStatus</td>
+                                <td>@Model.ReturningStudentList[i].Sex</td>
+                                <td>@Model.ReturningStudentList[i].MatricNumber</td>
+                            </tr>
+                            }
+                        </table>
+                    </div>
+
+
+                    @Html.ActionLink("Save", "SaveUploadStudentWithDetails", "UploadReturningStudents", new { Area = "Admin" }, new { @class = "btn btn-success mr5", id = "btnSave" })
+                    //<button id="progress" class = "btn btn-success mr5" style="display:none"><img src="~/Content/Images/bx_loader.gif" /></button>
+                    <span id="progress" style="display:none"><img src="~/Content/Images/bx_loader.gif" /></span>
+                }
+            </div>
+
+            <div class="row table-responsive">
+                @if (Model != null && Model.UploadedStudents != null && Model.UploadedStudents.Count > 0)
+                {
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3>Uploaded Records</h3>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <table class="table table-bordered table-striped" id="myTable">
+                            <thead>
+                            <tr>
+                                <th>Sn</th>
+                                <th>Name</th>
+                                <th>Matric Number</th>
+                                <th>Programme</th>
+                                <th>Department</th>
+                                <th>Session</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @for (int i = 0; i < Model.UploadedStudents.Count(); i++)
+                            {
+                                var sn = i + 1;
+                                <tr>
+                                    <td>@sn</td>
+                                    <td>@Model.UploadedStudents[i].Name</td>
+                                    <td>@Model.UploadedStudents[i].MatricNumber</td>
+                                    <td>@Model.UploadedStudents[i].Programme</td>
+                                    <td>@Model.UploadedStudents[i].Department</td>
+                                    <td>@Model.UploadedStudents[i].Session</td>
+                                </tr>
+                            }
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                }
+            </div>
+
+            <div class="row table-responsive">
+                @if (Model != null && Model.FailedUploads != null && Model.FailedUploads.Count > 0)
+                {
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h3>Failed Records</h3>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <table class="table table-bordered table-striped" id="myTable">
+                            <thead>
+                                <tr>
+                                    <th>Sn</th>
+                                    <th>Name</th>
+                                    <th>Matric Number</th>
+                                    <th>Reason</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.FailedUploads.Count(); i++)
+                                {
+                                    var sn = i + 1;
+                                    <tr>
+                                        <td>@sn</td>
+                                        <td>@Model.FailedUploads[i].Name</td>
+                                        <td>@Model.FailedUploads[i].MatricNumber</td>
+                                        <td>@Model.FailedUploads[i].Reason</td>
+                                    </tr>
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                }
+            </div>
+
+        </div>
+    </div>
+}

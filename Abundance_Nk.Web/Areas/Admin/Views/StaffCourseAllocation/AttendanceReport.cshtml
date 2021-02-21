@@ -1,0 +1,37 @@
+﻿@{
+    ViewBag.Title = "Attendance Sheet";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@*@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")*@
+
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+    <script src="~/Scripts/responsive-tabs.js"></script>
+
+    <script type="text/javascript">
+               function resizeIframe(obj) {
+            obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+        }
+    </script>
+
+<div style="color:black">
+    <h3>
+        Attendance Sheet
+    </h3>
+</div>
+
+<div class="alert alert-dismissible alert-success">
+    <p>
+        <b>Attendance Sheet </b>
+    </p>
+</div>
+
+<iframe src="@Url.Content("~/Reports/Presenter/AttendanceReport.aspx?sessionId=" + (string)ViewBag.SessionId + "&semesterId=" + (string)ViewBag.SemesterId + "&levelId=" + (string)ViewBag.LevelId + "&courseId=" + ViewBag.CourseId + "&programmeId=" + (string)ViewBag.ProgrammeId + "&departmentId=" + (string)ViewBag.DepartmentId)" style="width:100%; " frameborder="0" scrolling="no" id="iframe" onload='javascript:resizeIframe(this);'></iframe>
+
+
+<br />
+

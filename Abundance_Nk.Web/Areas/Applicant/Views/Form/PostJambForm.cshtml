@@ -1,0 +1,2944 @@
+﻿@using Abundance_Nk.Web.Models
+@model Abundance_Nk.Web.Areas.Applicant.ViewModels.PostJambViewModel
+
+@{
+    Layout = null;
+    //Layout = "~/Views/Shared/_NewThemeLayout.cshtml";
+}
+
+<!doctype>
+<html lang="en">
+<head>
+    <style>
+       
+
+        body {
+            font-family: Quicksand, sans-serif !important;
+        }
+
+        .anch li a {
+            color: #2f422f !important;
+        }
+
+        .btn-primary {
+            background-color: #b72f9cfc!important
+        }
+    </style>
+    <title>CHSTECH Ijero-Ekiti | Application</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+    @*<link href="~/Content/Form/bootstrap.min.css" rel="stylesheet" />*@
+    <link href="~/Content/theme/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link href="~/Content/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link href="~/Content/Form/AdminLTE.css" rel="stylesheet" />
+    <link href="~/Content/Form/_all-skins.min.css" rel="stylesheet" />
+    <link href="~/Content/theme/login/assets/css/now-ui-kit.css" rel="stylesheet" />
+    <link href="~/Content/theme/login/assets/css/wfmi-style.css" rel="stylesheet" />
+    <link href="~/Scripts/DropZone/dropzone.css" rel="stylesheet" />
+    <link href="~/Content/animate.min.css" rel="stylesheet" />
+    <link href="~/Content/toastr.css" rel="stylesheet" />
+    <link href="~/Content/loader.css" rel="stylesheet" />
+    <link href="~/Content/sweetalert.css" rel="stylesheet" />
+
+    <script src="~/Content/Form/jquery-2.2.3.min.js"></script>
+    @*<script src="~/Content/Form/bootstrap.min.js"></script>
+        <script src="~/Content/Form/jquery.slimscroll.min.js"></script>
+        <script src="~/Content/Form/fastclick.min.js"></script>
+        <script src="~/Content/Form/jquery.cycle.all.js"></script>
+        <script src="~/Content/Form/app.min.js"></script>
+        <script src="~/Content/Form/demo.js"></script>*@
+    <script src="~/Content/theme/assets/js/core/bootstrap.min.js"></script>
+
+    <link href="~/Content/bootstrap-datepicker.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap-datepicker.js"></script>
+    <link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+    <script src="~/Scripts/file-upload/jquery-ui-1.9.2.min.js"></script>
+    <script src="~/Scripts/DropZone/dropzone.js"></script>
+    <script src="~/Scripts/bootstrap-notify.min.js"></script>
+    <script src="~/Scripts/jquery.print.js"></script>
+    <script src="~/Scripts/toastr.js"></script>
+    <script src="~/Scripts/sweetalert.min.js"></script>
+
+    <script type="text/javascript">
+
+    var isPutme = false;
+    var isPreviousEducation = false;
+    var personId;
+    var formNumber;
+    var personImageUrl;
+
+    $(document).ready(function () {
+
+        personId = $("#Person_Id").val();
+        formNumber = $("#ApplicationForm_Number").val();
+        if (formNumber) {
+
+            $("#applicationNumber").text(formNumber);
+        }
+
+
+        $('.date').datepicker({
+            dateFormat: "mm/dd/yy",
+            showOtherMonths: true,
+            selectOtherMonths: true,
+            autoclose: true,
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:+0"
+        });
+
+        $("#btnPrintPreview").on('click', function () {
+            $(".printable").print();
+            return false;
+        });
+
+
+        if ($("#passportImage").val() != null) {
+            $('#btnSubmit').removeClass("disabled");
+        }
+
+        $('#btnBiodata').click(function () {
+            var sexId = $("#Person_Sex_Id").val();
+            var dob = $("#Person_DateOfBirth").val();
+            var stateId = $("#Person_State_Id").val();
+            var lgaId = $("#Person_LocalGovernment_Id").val();
+            var homeTown = $("#Person_HomeTown").val();
+            var mobilePhone = $("#Person_MobilePhone").val();
+            var email = $("#Person_Email").val();
+            var religionId = $("#Person_Religion_Id").val();
+            var homeAddress = $("#Person_HomeAddress").val();
+            var abilityId = $("#Applicant_Ability_Id").val();
+            var otherAbility = $("#Applicant_OtherAbility").val();
+            var extraCurricullarActivities = $("#Applicant_ExtraCurricullarActivities").val();
+            personId = $("#Person_Id").val();
+
+            if (sexId && dob && stateId && lgaId && homeTown && mobilePhone && email && religionId && homeAddress && abilityId && extraCurricullarActivities) {
+
+                $("#loadingSteps").show();
+
+                var bioDataArray = populateJsonData();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("SaveBioData", "Form")', // we are calling json method
+                    dataType: 'json',
+                    data: { bioData: JSON.stringify(bioDataArray) },
+                    success: function (result) {
+                        if (result.IsError === false) {
+
+                            //showNotification("bg-purple", "BioData was saved.   ", "top", "right", "animated fadeInRight", "animated fadeOutRight");
+                            toastMessage("BioData was saved.", "Success!");
+
+                            $('#lnkNOK').removeClass("disabled");
+                            $('#lnkBiodata').removeClass("active");
+                            $('#lnkNOK').addClass("active");
+                            $('#biodata').hide();
+                            $('#nextOfKin').show();
+                            $('#utme').hide();
+                            $('#previousEducation').hide();
+                            $('#academicDetails').hide();
+                            $('#olevel').hide();
+                            $('#passport').hide();
+                        } else {
+                            alert(result.Message);
+                        }
+
+                        $("#loadingSteps").hide();
+                    },
+                    error: function (ex) {
+                        console.log(ex);
+                        alert('Failed to save Biodata.' + ex);
+                        $("#loadingSteps").hide();
+                    }
+                });
+
+            } else {
+
+                alert("Please fill all the fields!");
+            }
+
+        });
+
+        $('#btnNOK').click(function () {
+
+            var nokName = $("#Sponsor_Name").val();
+            var nokAddress = $("#Sponsor_ContactAddress").val();
+            var nokRelationship = $("#Sponsor_Relationship_Id").val();
+            var nokMobileNumber = $("#Sponsor_MobilePhone").val();
+            if (nokName && nokAddress && nokRelationship && nokMobileNumber) {
+                $("#loadingSteps").show();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("SaveNextOfKinDetails", "Form")', // we are calling json method
+                    dataType: 'json',
+                    data: {
+                        PersonId: personId,
+                        Name: nokName,
+                        Address: nokAddress,
+                        MobilePhone: nokMobileNumber,
+                        RelationShipId: nokRelationship
+                    },
+                    success: function (result) {
+                        if (result.IsError === false) {
+
+                            //showNotification("bg-purple", "Next of kin details were saved.   ", "top", "right", "animated fadeInRight", "animated fadeOutRight");
+                            toastMessage("Next of kin details were saved.", "Success!");
+
+                            $('#lnkNOK').removeClass("active");
+                            $('#biodata').hide();
+                            $('#nextOfKin').hide();
+                            $('#olevel').hide();
+                            $('#passport').hide();
+                            if (isPutme === true) {
+                                $('#lnkUTME').removeClass("disabled");
+                                $('#lnkUTME').addClass("active");
+                                $('#utme').show();
+                            } else {
+                                $('#utme').hide();
+                            }
+                            if (isPreviousEducation === true) {
+                                $('#lnkPreviousEducation').removeClass("disabled");
+                                $('#lnkPreviousEducation').addClass("active");
+                                $('#previousEducation').show();
+                            } else {
+                                $('#previousEducation').hide();
+                            }
+
+                            if (!isPreviousEducation && !isPutme) {
+                                $('#lnkAcademicDetails').removeClass("disabled");
+                                $('#lnkAcademicDetails').addClass("active");
+                                $('#academicDetails').show();
+                            }
+
+                        } else {
+                            alert(result.Message);
+                        }
+                        $("#loadingSteps").hide();
+                    },
+                    error: function (ex) {
+                        console.log(ex);
+                        alert('Failed to save Next of Kin.' + ex);
+                        $("#loadingSteps").hide();
+                    }
+                });
+            } else {
+
+                alert("Please fill all the fields!");
+            }
+        });
+
+        $('#btnUTME').click(function () {
+
+            var jambnumber = $('#ApplicantJambDetail_JambRegistrationNumber').val();
+            var jambscore = $('#ApplicantJambDetail_JambScore').val();
+            var firstSubject = $('#ApplicantJambDetail_Subject1_Id').val();
+            var secondSubject = $('#ApplicantJambDetail_Subject2_Id').val();
+            var thirdsubject = $('#ApplicantJambDetail_Subject3_Id').val();
+            var fourthSubject = $('#ApplicantJambDetail_Subject4_Id').val();
+            var firstSubjectScore = $('#ApplicantJambDetail_Subject1Score').val();
+            var secondSubjectScore = $('#ApplicantJambDetail_Subject2Score').val();
+            var thirdsubjectScore = $('#ApplicantJambDetail_Subject3Score').val();
+            var fourthSubjectScore = $('#ApplicantJambDetail_Subject4Score').val();
+            var institutionChoiceId = $('#ApplicantJambDetail_InstitutionChoice_Id').val();
+            var personid = personId;
+            if (jambnumber && jambscore && firstSubject && secondSubject && thirdsubject && fourthSubject && institutionChoiceId && personid && firstSubjectScore && secondSubjectScore && thirdsubjectScore
+                && fourthSubjectScore) {
+
+                if ((parseInt(fourthSubjectScore, 10) + parseInt(thirdsubjectScore,10) + parseInt(secondSubjectScore,10) + parseInt(firstSubjectScore,10)) !== parseInt(jambscore,10)) {
+                    alert("Sum of the various scores for the jamb subjects is not equal to the jamb core. Kindly check and try again.");
+                    return;
+                }
+
+                $("#loadingSteps").show();
+                //Post Form
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("SaveUtmeDetails", "Form")', // we are calling json method
+                    dataType: 'json',
+                    data: {
+                        jambnumber: jambnumber,
+                        jambscore: jambscore,
+                        firstSubject: firstSubject,
+                        secondSubject: secondSubject,
+                        thirdsubject: thirdsubject,
+                        fourthSubject: fourthSubject,
+                        institutionChoiceId: institutionChoiceId,
+                        personid: personid,
+                        firstSubjectScore: firstSubjectScore,
+                        secondSubjectScore: secondSubjectScore,
+                        thirdSubjectScore: thirdsubjectScore,
+                        fourthSubjectScore: fourthSubjectScore
+                    },
+                    success: function (result) {
+                        if (result.IsError === false) {
+
+                            //showNotification("bg-purple", "PUTME details were saved.   ", "top", "right", "animated fadeInRight", "animated fadeOutRight");
+                            toastMessage("PUTME details were saved.", "Success!");
+
+                            $('#lnkAcademicDetails').removeClass("disabled");
+                            $('#lnkAcademicDetails').addClass("active");
+                            $('#lnkPUTME').removeClass("active");
+                            $('#biodata').hide();
+                            $('#nextOfKin').hide();
+                            $('#olevel').hide();
+                            $('#passport').hide();
+                            $('#utme').hide();
+                            $('#academicDetails').show();
+                            $('#previousEducation').hide();
+
+                        } else {
+                            alert(result.Message);
+                        }
+                        $("#loadingSteps").hide();
+                    },
+                    error: function (ex) {
+                        console.log(ex);
+                        alert('Failed to save PUTME Details.' + ex);
+                        $("#loadingSteps").hide();
+                    }
+                });
+            }
+            else {
+
+                alert("Please fill all the fields!");
+            }
+        });
+
+        $('#btnPreviousEducation').click(function () {
+
+            var courseVal = $('#PreviousEducation_Course').val();
+            //var starDateVal = $('#PreviousEducation_StartDate').val();
+            var endMonthVal = $('#PreviousEducation_EndMonth_Id').val();
+            var endYearVal = $('#PreviousEducation_EndYear_Id').val();
+            var endDateVal = (endMonthVal) + "/1" + "/" + endYearVal;
+            var qualificationIdVal = $('#PreviousEducation_Qualification_Id').val();
+            var resultGradeIdVal = $('#PreviousEducation_ResultGrade_Id').val();
+            var itDurationIdVal = $('#PreviousEducation_ITDuration_Id').val();
+            var previousSchoolVal = $('#PreviousEducation_PreviousSchool_Id option:selected').text();
+
+            var itEndMonthVal = $('#PreviousEducation_ITEndMonth_Id').val();
+            var itEndYearVal = $('#PreviousEducation_ITEndYear_Id').val();
+            var itStartMonthVal = $('#PreviousEducation_ITStartMonth_Id').val();
+            var itStartYearVal = $('#PreviousEducation_ITStartYear_Id').val();
+
+            var itEndDateVal = (itEndMonthVal) + "/1" + "/" + itEndYearVal;
+            var itStartDateVal = (itStartMonthVal) + "/1" + "/" + itStartYearVal;
+            //var itStartDateVal = $('#PreviousEducation_ITStartDate').val();
+            //var itEndDateVal = $('#PreviousEducation_ITEndDate').val();
+
+            if (previousSchoolVal && previousSchoolVal === "-- Select --") {
+                previousSchoolVal = $('#PreviousEducation_SchoolName').val();
+            }
+
+            if (courseVal && qualificationIdVal && resultGradeIdVal && itDurationIdVal && previousSchoolVal && itStartDateVal && itEndDateVal) {
+                $("#loadingSteps").show();
+                //Post Form
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("SavePreviousEducation", "Form")', // we are calling json method
+                    dataType: 'json',
+                    data: {
+                        course: courseVal,
+                        endDate: endDateVal,
+                        qualificationId: qualificationIdVal,
+                        resultGradeId: resultGradeIdVal,
+                        ITDurationId: itDurationIdVal,
+                        personId: personId,
+                        previousSchoolId: previousSchoolVal,
+                        itStartDate: itStartDateVal,
+                        itEndDate: itEndDateVal
+                    },
+                    success: function (result) {
+                        if (result.IsError === false) {
+
+                            //showNotification("bg-purple", "Previous Education details were saved.   ", "top", "right", "animated fadeInRight", "animated fadeOutRight");
+                            toastMessage("Previous Education details were saved.", "Success!");
+
+                            $('#lnkAcademicDetails').removeClass("disabled");
+                            $('#lnkAcademicDetails').addClass("active");
+                            $('#lnkPreviousEducation').removeClass("active");
+                            $('#biodata').hide();
+                            $('#nextOfKin').hide();
+                            $('#olevel').hide();
+                            $('#passport').hide();
+                            $('#utme').hide();
+                            $('#academicDetails').show();
+                            $('#previousEducation').hide();
+
+                        } else {
+                            alert(result.Message);
+                        }
+                        $("#loadingSteps").hide();
+                    },
+                    error: function (ex) {
+                        console.log(ex);
+                        alert('Failed to save Previous Education.' + ex);
+                        $("#loadingSteps").hide();
+                    }
+                });
+            } else {
+
+                alert("Please fill all the fields!");
+            }
+
+        });
+
+        $('#btnOlevel').click(function () {
+
+            var jsonDataArray = [];
+            var firstSittingOLevelResultDetailArray = [];
+            var secondSittingOLevelResultDetailArray = [];
+
+            jsonDataArray = populateJsonData();
+            firstSittingOLevelResultDetailArray = populateFirstSittingResultDetail();
+            secondSittingOLevelResultDetailArray = populateSecondSittingResultDetail();
+
+            
+            var firstSittingScratchCard=$("#FirstSittingOLevelResult_ScratchCard").val();
+            var secondSittingScratchCard = $("#SecondSittingOLevelResult_ScratchCard").val();
+            var firstSittingExamNumber = $("#FirstSittingOLevelResult_ExamNumber").val();
+            var secondSittingExamNumber = $("#SecondSittingOLevelResult_ExamNumber").val();
+            var firstSittingScratchCardSerialNo = $("#FirstSittingOLevelResult_ScratchCardSerialNo").val();
+            var secondSittingScratchCardSerialNo = $("#SecondSittingOLevelResult_ScratchCardSerialNo").val();
+            var programmeId = $("#@Html.IdFor(m => m.AppliedCourse.Programme.Id)").val();
+            var firstSittingExamType = $("#@Html.IdFor(m=>m.FirstSittingOLevelResult.Type.Id)").val();
+            var secondSittingExamType = $("#@Html.IdFor(m=>m.SecondSittingOLevelResult.Type.Id)").val();
+            if (programmeId == 1 || programmeId == 6) {
+                if ((firstSittingExamNumber != null && firstSittingExamNumber != "" && firstSittingExamNumber != undefined)) {
+                    if (firstSittingExamType != 3 && firstSittingExamType != 4 && (firstSittingScratchCard == null || firstSittingScratchCard == "" || firstSittingScratchCard == undefined || firstSittingScratchCardSerialNo == null || firstSittingScratchCardSerialNo == "" || firstSittingScratchCardSerialNo == undefined)) {
+                        alert("Please provide first sitting Olevel result checking information");
+                        return false;
+                    }
+                    if ((firstSittingExamType == 3 || firstSittingExamType == 4) && (firstSittingScratchCard == null || firstSittingScratchCard == "" || firstSittingScratchCard == undefined)) {
+                        alert("Please provide first sitting Olevel result checking information");
+                        return false;
+                    }
+                    
+                }
+                if ((secondSittingExamNumber != null && secondSittingExamNumber != "" && secondSittingExamNumber != undefined)) {
+                    if (secondSittingExamType != 3 && secondSittingExamType != 4 && (secondSittingScratchCard == null || secondSittingScratchCard == "" || secondSittingScratchCard == undefined || secondSittingScratchCardSerialNo == null || secondSittingScratchCardSerialNo == "" || secondSittingScratchCardSerialNo == undefined)) {
+                        alert("Please provide second sitting Olevel result checking information");
+                        return false;
+                    }
+                    if ((firstSittingExamType == 3 || firstSittingExamType == 4) && (secondSittingScratchCard == null || secondSittingScratchCard == "" || secondSittingScratchCard == undefined)) {
+                        alert("Please provide second sitting Olevel result checking information");
+                        return false;
+                    }
+                    
+                }
+            }
+           
+            $("#loadingSteps").show();
+            $("#loadingOLevel").show();
+            //Post Form
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SaveOLevelResultAndApplication", "Form")', // we are calling json method
+                dataType: 'json',
+                data: { dataArray: JSON.stringify(jsonDataArray), firstSitting: JSON.stringify(firstSittingOLevelResultDetailArray), secondSitting: JSON.stringify(secondSittingOLevelResultDetailArray) },
+                success: function (result) {
+                    if (result.IsError === false) {
+
+                        //showNotification("bg-purple", "OLevel results were saved.   ", "top", "right", "animated fadeInRight", "animated fadeOutRight");
+                        toastMessage("O-Level results were saved.", "Success!");
+
+                        $('#lnkPassport').removeClass("disabled");
+                        $('#lnkPassport').addClass("active");
+                        $('#lnkOlevel').removeClass("active");
+                        $('#biodata').hide();
+                        $('#nextOfKin').hide();
+                        $('#olevel').hide();
+                        $('#passport').show();
+                        $('#utme').hide();
+                        $('#academicDetails').hide();
+                        $('#previousEducation').hide();
+
+                        if (!$("#ApplicationForm_Number").val()) {
+                            $("#ApplicationForm_Number").val(result.ApplicationFormNumber);
+                        }
+
+                        formNumber = result.ApplicationFormNumber;
+
+                        $("#applicationNumber").text(result.ApplicationFormNumber);
+
+                        var mySrc = "/Applicant/Form/AcknowledgmentSlip?formId=" + result.ApplicationFormId;
+                        $("#btnAcknowledgment").attr("href", mySrc);
+
+                        $('#acknowledgmentBtnDiv').show();
+
+                        $('body').animate({ scrollTop: 0 }, 1000);
+
+                    } else {
+                        alert(result.Message);
+                    }
+                    $("#loadingSteps").hide();
+                    $("#loadingOLevel").hide();
+                },
+                error: function (ex) {
+                    console.log(ex);
+                    alert('Failed to save OLevel Result.' + ex);
+                    $("#loadingSteps").hide();
+                    $("#loadingOLevel").hide();
+                }
+            });
+
+        });
+
+        $('#btnAcademicDetails').click(function () {
+
+            var optionSecondChoiceVal = $('#AppliedCourse_OptionSecondChoice_Id').val();
+
+            if (optionSecondChoiceVal) {
+                $("#loadingSteps").show();
+                //Post Form
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("SaveAcademicDetails", "Form")', // we are calling json method
+                    dataType: 'json',
+                    data: {
+                        optionSecondChoice: optionSecondChoiceVal,
+                        personId: personId
+                    },
+                    success: function (result) {
+                        if (result.IsError === false) {
+
+                            toastMessage("Academic Details were saved.", "Success!");
+
+                            $('#lnkAcademicDetails').removeClass("disabled");
+                            $('#lnkOlevel').addClass("active");
+                            $('#lnkAcademicDetails').removeClass("active");
+                            $('#biodata').hide();
+                            $('#nextOfKin').hide();
+                            $('#olevel').show();
+                            $('#passport').hide();
+                            $('#utme').hide();
+                            $('#academicDetails').hide();
+                            $('#previousEducation').hide();
+
+                        } else {
+                            alert(result.Message);
+                        }
+                        $("#loadingSteps").hide();
+                    },
+                    error: function (ex) {
+                        //console.log(ex);
+                        alert('Failed to save Academic Details.' + ex);
+                        $("#loadingSteps").hide();
+                    }
+                });
+            } else {
+                $('#lnkAcademicDetails').removeClass("disabled");
+                $('#lnkOlevel').addClass("active");
+                $('#lnkAcademicDetails').removeClass("active");
+                $('#biodata').hide();
+                $('#nextOfKin').hide();
+                $('#olevel').show();
+                $('#passport').hide();
+                $('#utme').hide();
+                $('#academicDetails').hide();
+                $('#previousEducation').hide();
+            }
+
+
+            //$("#loadingSteps").show();
+
+            //$('#lnkAcademicDetails').removeClass("disabled");
+            //$('#lnkOlevel').addClass("active");
+            //$('#lnkAcademicDetails').removeClass("active");
+            //$('#biodata').hide();
+            //$('#nextOfKin').hide();
+            //$('#olevel').show();
+            //$('#passport').hide();
+            //$('#utme').hide();
+            //$('#academicDetails').hide();
+            //$('#previousEducation').hide();
+
+            //$("#loadingSteps").hide();
+
+        });
+
+        $('#lnkBiodata').click(function () {
+            if (!($('#lnkBiodata').hasClass("disabled"))) {
+                $('#biodata').show();
+                $('#nextOfKin').hide();
+                $('#utme').hide();
+                $('#olevel').hide();
+                $('#passport').hide();
+                $('#previousEducation').hide();
+                $('#academicDetails').hide();
+
+                if (!($('#lnkBiodata').hasClass("active"))) {
+                    $('#lnkBiodata').addClass("active");
+                }
+                $('#lnkNOK').removeClass("active");
+                $('#lnkPreviousEducation').removeClass("active");
+                $('#lnkUTME').removeClass("active");
+                $('#lnkAcademicDetails').removeClass("active");
+                $('#lnkPassport').removeClass("active");
+                $('#lnkOlevel').removeClass("active");
+            }
+        });
+
+
+        $('#lnkNOK').click(function () {
+
+            if (!($('#lnkNOK').hasClass("disabled"))) {
+                $('#biodata').hide();
+                $('#nextOfKin').show();
+                $('#utme').hide();
+                $('#olevel').hide();
+                $('#passport').hide();
+                $('#previousEducation').hide();
+                $('#academicDetails').hide();
+
+                $('#lnkBiodata').removeClass("active");
+                if (!($('#lnkNOK').hasClass("active"))) {
+                    $('#lnkNOK').addClass("active");
+                }
+                $('#lnkPreviousEducation').removeClass("active");
+                $('#lnkUTME').removeClass("active");
+                $('#lnkAcademicDetails').removeClass("active");
+                $('#lnkPassport').removeClass("active");
+                $('#lnkOlevel').removeClass("active");
+            }
+        });
+
+
+        $('#lnkUTME').click(function () {
+
+            if (!$('#lnkUTME').hasClass("disabled")) {
+                $('#biodata').hide();
+                $('#nextOfKin').hide();
+                $('#utme').show();
+                $('#olevel').hide();
+                $('#passport').hide();
+                $('#previousEducation').hide();
+                $('#academicDetails').hide();
+
+                $('#lnkBiodata').removeClass("active");
+                if (!($('#lnkUTME').hasClass("active"))) {
+                    $('#lnkUTME').addClass("active");
+                }
+                $('#lnkPreviousEducation').removeClass("active");
+                $('#lnkNOK').removeClass("active");
+                $('#lnkAcademicDetails').removeClass("active");
+                $('#lnkPassport').removeClass("active");
+                $('#lnkOlevel').removeClass("active");
+            }
+        });
+
+
+        $('#lnkPreviousEducation').click(function () {
+
+            if (!$('#lnkPreviousEducation').hasClass("disabled")) {
+                $('#biodata').hide();
+                $('#nextOfKin').hide();
+                $('#utme').hide();
+                $('#olevel').hide();
+                $('#passport').hide();
+                $('#previousEducation').show();
+                $('#academicDetails').hide();
+
+                $('#lnkBiodata').removeClass("active");
+                if (!($('#lnkPreviousEducation').hasClass("active"))) {
+                    $('#lnkPreviousEducation').addClass("active");
+                }
+                $('#lnkUTME').removeClass("active");
+                $('#lnkNOK').removeClass("active");
+                $('#lnkAcademicDetails').removeClass("active");
+                $('#lnkPassport').removeClass("active");
+                $('#lnkOlevel').removeClass("active");
+            }
+        });
+
+        $('#lnkAcademicDetails').click(function () {
+
+            if (!$('#lnkAcademicDetails').hasClass("disabled")) {
+                $('#biodata').hide();
+                $('#nextOfKin').hide();
+                $('#utme').hide();
+                $('#olevel').hide();
+                $('#passport').hide();
+                $('#previousEducation').hide();
+                $('#academicDetails').show();
+
+                $('#lnkBiodata').removeClass("active");
+                if (!($('#lnkAcademicDetails').hasClass("active"))) {
+                    $('#lnkAcademicDetails').addClass("active");
+                }
+                $('#lnkUTME').removeClass("active");
+                $('#lnkNOK').removeClass("active");
+                $('#lnkPreviousEducation').removeClass("active");
+                $('#lnkPassport').removeClass("active");
+                $('#lnkOlevel').removeClass("active");
+            }
+        });
+
+
+        $('#lnkOlevel').click(function () {
+
+            if (!$('#lnkOlevel').hasClass("disabled")) {
+                $('#biodata').hide();
+                $('#nextOfKin').hide();
+                $('#utme').hide();
+                $('#olevel').show();
+                $('#passport').hide();
+                $('#previousEducation').hide();
+                $('#academicDetails').hide();
+
+                $('#lnkBiodata').removeClass("active");
+                if (!($('#lnkOlevel').hasClass("active"))) {
+                    $('#lnkOlevel').addClass("active");
+                }
+                $('#lnkUTME').removeClass("active");
+                $('#lnkNOK').removeClass("active");
+                $('#lnkPreviousEducation').removeClass("active");
+                $('#lnkPassport').removeClass("active");
+                $('#lnkAcademicDetails').removeClass("active");
+            }
+        });
+
+
+        $('#lnkPassport').click(function () {
+
+            if (!$('#lnkPassport').hasClass("disabled")) {
+                $('#biodata').hide();
+                $('#nextOfKin').hide();
+                $('#utme').hide();
+                $('#olevel').hide();
+                $('#passport').show();
+                $('#previousEducation').hide();
+                $('#academicDetails').hide();
+
+                $('#lnkBiodata').removeClass("active");
+                if (!($('#lnkPassport').hasClass("active"))) {
+                    $('#lnkPassport').addClass("active");
+                }
+                $('#lnkUTME').removeClass("active");
+                $('#lnkNOK').removeClass("active");
+                $('#lnkPreviousEducation').removeClass("active");
+                $('#lnkOlevel').removeClass("active");
+                $('#lnkAcademicDetails').removeClass("active");
+            }
+        });
+
+
+
+        $('#biodata').toggle(); //toggle biodata on page load
+        $('#lnkBiodata').removeClass("disabled");
+        $('#lnkBiodata').addClass("active");
+
+        $("#Person_State_Id").change(function () {
+            $("#Person_LocalGovernment_Id").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetLocalGovernmentsByState")', //we are calling json method
+                    dataType: 'json',
+                    data: { id: $("#Person_State_Id").val() },
+                    success: function (lgas) {
+                        $("#Person_LocalGovernment_Id").append('<option value="' + 0 + '">-- Select --</option>');
+
+                        $.each(lgas, function (i, lga) {
+                            $("#Person_LocalGovernment_Id").append('<option value="' + lga.Value + '">' + lga.Text + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve lgas.' + ex);
+                    }
+                });
+
+                return false;
+            });
+
+
+        var optionId = $("#@Html.IdFor(m => m.AppliedCourse.Option.Id)").val();
+        if (optionId && optionId > 0) {
+            $("#AppliedCourse_OptionSecondChoice_Id option[value=" + optionId + "]").remove();
+        }
+
+            //------------------------------
+
+        });
+
+
+        function formPreview() {
+
+            var firstSittingOLevelResultDetailArray = [];
+            var secondSittingOLevelResultDetailArray = [];
+
+            firstSittingOLevelResultDetailArray = populateFirstSittingResultDetail();
+            secondSittingOLevelResultDetailArray = populateSecondSittingResultDetail();
+
+            $("#loadingPreview").show();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("PreLoadOLevel", "Form")', // we are calling json method
+            dataType: 'json',
+            data: { firstSitting: JSON.stringify(firstSittingOLevelResultDetailArray), secondSitting: JSON.stringify(secondSittingOLevelResultDetailArray) },
+            success: function (result) {
+                if (result.IsError === false) {
+
+                    populateOLevel(result.FirstSittingOLevelJsonData, 1);
+                    populateOLevel(result.SecondSittingOLevelJsonData, 2);
+
+                    assignFormValues();
+                    $(".printable").print();
+                    //$('#formPreviewModal').modal('show');
+                    //$('body').animate({ scrollTop: $("#btnPrintPreview").scrollTop() }, 1000);
+
+                } else {
+                    alert(result.Message);
+                }
+
+                $("#loadingPreview").hide();
+            },
+            error: function (ex) {
+                alert('Operation failed.' + ex);
+                $("#loadingPreview").hide();
+            }
+        });
+
+    }
+
+    function populateJsonData() {
+
+        var programmeId = $("#@Html.IdFor(m => m.AppliedCourse.Programme.Id)").val();
+        var departmentId = $("#@Html.IdFor(m => m.AppliedCourse.Department.Id)").val();
+
+        if (!personId) {
+            personId = $("#@Html.IdFor(x => x.Person.Id)").val();
+        }
+        var jsonDataArray = {
+            "PersonId": personId,
+            "LastName": $("#Person_LastName").val(),
+            "FirstName": $("#Person_FirstName").val(),
+            "OtherName": $("#Person_OtherName").val(),
+            "SexId": $("#@Html.IdFor(m => m.Person.Sex.Id)").val(),
+            "YearOfBirthId": $("#@Html.IdFor(m => m.Person.YearOfBirth.Id)").val(),
+            "MonthOfBirthId": $("#@Html.IdFor(m => m.Person.MonthOfBirth.Id)").val(),
+            "DayOfBirthId": $("#@Html.IdFor(m => m.Person.DayOfBirth.Id)").val(),
+            "DateOfBirth": $("#Person_DateOfBirth").val(),
+            "StateId": $("#@Html.IdFor(m => m.Person.State.Id)").val(),
+            "LocalGovernmentId": $("#@Html.IdFor(m => m.Person.LocalGovernment.Id)").val(),
+            "HomeTown": $("#Person_HomeTown").val(),
+            "MobilePhone": $("#Person_MobilePhone").val(),
+            "Email": $("#Person_Email").val(),
+            "ReligionId": $("#@Html.IdFor(m => m.Person.Religion.Id)").val(),
+            "HomeAddress": $("#Person_HomeAddress").val(),
+            "ApplicantId": "",
+            "AbilityId": $("#@Html.IdFor(m => m.Applicant.Ability.Id)").val(),
+            "OtherAbility": $("#Applicant_OtherAbility").val(),
+            "ExtraCurricullarActivities": $("#Applicant_ExtraCurricullarActivities").val(),
+            "SponsorId": "",
+            "SponsorName": $("#Sponsor_Name").val(),
+            "SponsorContactAddress": $("#Sponsor_ContactAddress").val(),
+            "RelationshipId": $("#@Html.IdFor(m => m.Sponsor.Relationship.Id)").val(),
+            "SponsorMobilePhone": $("#Sponsor_MobilePhone").val(),
+            "FirstSittingOLevelResultId": $("#@Html.IdFor(x => x.FirstSittingOLevelResult.Id)").val(),
+            "FirstSittingOLevelResultTypeId": $("#@Html.IdFor(m => m.FirstSittingOLevelResult.Type.Id)").val(),
+            "FirstSittingOLevelResultExamNumber": $("#FirstSittingOLevelResult_ExamNumber").val(),
+            "FirstSittingOLevelResultExamYear": $("#FirstSittingOLevelResult_ExamYear").val(),
+            "SecondSittingOLevelResultId": $("#@Html.IdFor(x => x.SecondSittingOLevelResult.Id)").val(),
+            "SecondSittingOLevelResultTypeId": $("#@Html.IdFor(m => m.SecondSittingOLevelResult.Type.Id)").val(),
+            "SecondSittingOLevelResultExamNumber": $("#SecondSittingOLevelResult_ExamNumber").val(),
+            "SecondSittingOLevelResultExamYear": $("#SecondSittingOLevelResult_ExamYear").val(),
+            "Programme": $("#AppliedCourse_Programme_Name").val(),
+            "Department": $("#AppliedCourse_Department_Name").val(),
+            "ProgrammeId": programmeId,
+            "DepartmentId": departmentId,
+            "Faculty": $("#AppliedCourse_Faculty_Name").val(),
+            "SubjectCombination": $("#AppliedCourse_SubjectCombination_Name").val(),
+
+            "ApplicationFormId": $("#@Html.IdFor(m => m.ApplicationForm.Id)").val(),
+            "ApplicationFormNumber": $("#@Html.IdFor(m => m.ApplicationForm.Number)").val(),
+            "Rejected": $("#@Html.IdFor(m => m.ApplicationForm.Rejected)").val(),
+            "RejectReason": $("#@Html.IdFor(m => m.ApplicationForm.RejectReason)").val(),
+            "SessionId": $("#@Html.IdFor(m => m.Session.Id)").val(),
+            "Session": $("#@Html.IdFor(m => m.Session.Name)").val(),
+            "ApplicationFormSettingId": $("#@Html.IdFor(m => m.ApplicationFormSetting.Id)").val(),
+            "ApplicationFormSettingName": $("#@Html.IdFor(m => m.ApplicationFormSetting.Name)").text(),
+            "PaymentModeId": $("#@Html.IdFor(m => m.ApplicationFormSetting.PaymentMode.Id)").val(),
+            "PaymentTypeId": $("#@Html.IdFor(m => m.ApplicationFormSetting.PaymentType.Id)").val(),
+            "PersonTypeId": $("#@Html.IdFor(m => m.ApplicationFormSetting.PersonType.Id)").val(),
+            "ExamDate": $("#@Html.IdFor(m => m.ApplicationFormSetting.ExamDate)").val(),
+            "ExamVenue": $("#@Html.IdFor(m => m.ApplicationFormSetting.ExamVenue)").val(),
+            "ExamTime": $("#@Html.IdFor(m => m.ApplicationFormSetting.ExamTime)").val(),
+            "ProgrammeFeeId": $("#@Html.IdFor(m => m.ApplicationProgrammeFee.Id)").val(),
+            "FeeTypeId": $("#@Html.IdFor(m => m.ApplicationProgrammeFee.FeeType.Id)").val(),
+            "PaymentId": $("#@Html.IdFor(x => x.Payment.Id)").val(),
+            "PersonDateEntered": $("#@Html.IdFor(m => m.Person.DateEntered)").val(),
+            "FullName": $("#@Html.IdFor(m => m.Person.FullName)").val(),
+            "ApplicationAlreadyExist": $("#@Html.IdFor(m => m.ApplicationAlreadyExist)").val(),
+            "institutionChoiceId": $("#ApplicantJambDetail_InstitutionChoice_Id").val(),
+            "firstSubject": $("#ApplicantJambDetail_Subject1_Id").val(),
+            "secondSubject": $("#ApplicantJambDetail_Subject2_Id").val(),
+            "thirdSubject": $("#ApplicantJambDetail_Subject3_Id").val(),
+            "fourthSubject": $("#ApplicantJambDetail_Subject4_Id").val(),
+            "jambNumber": $("#ApplicantJambDetail_JambRegistrationNumber").val(),
+            "jambScore": $("#ApplicantJambDetail_JambScore").val(),
+
+            "LastName": $("#Person_LastName").val(),
+            "FirstName": $("#Person_FirstName").val(),
+            "OtherName": $("#Person_OtherName").val(),
+            "FirstSittingOLevelResultScratchCard": $("#FirstSittingOLevelResult_ScratchCard").val(),
+            "SecondSittingOLevelResultScratchCard": $("#SecondSittingOLevelResult_ScratchCard").val(),
+            "FirstSittingOLevelResultScratchCardSerialNo": $("#FirstSittingOLevelResult_ScratchCardSerialNo").val(),
+            "SecondSittingOLevelResultScratchCardSerialNo": $("#SecondSittingOLevelResult_ScratchCardSerialNo").val(),
+
+        };
+
+        return jsonDataArray;
+    }
+
+        function showSecondSitting () {
+            $("#sittingProgress").show();
+            $("#divSecondSitting").show('slow');
+            $("#btnClearSecondSitting").show();
+            $("#btnShowSecondSitting").hide();
+            $("#sittingProgress").hide();
+        }
+
+        function clearSecondSitting() {
+           
+            swal({
+                title: "Do you want to continue?",
+                text: "This will remove your second sitting result!",
+                type: "warning",
+                showCancelButton: !0,
+                confirmButtonColor: "#3085d6",
+                confirmButtonText: "Yes",
+                cancelButtonText: "No, cancel"
+            },
+            function (isConfirm) {
+
+                if (isConfirm) {
+                    $("#sittingProgress").show();
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("ClearSecondSitting", "Form")', // we are calling json method
+                        dataType: 'json',
+                        data: { personId: personId },
+                        success: function (result) {
+                            swal("Success", result, "success" );
+
+                            $("#sittingProgress").hide();
+                            window.location.reload(true);
+                        },
+                        error: function (ex) {
+                            //console.log(ex);
+                            swal("Warning", 'Failed.' + ex, "error");
+                            $("#sittingProgress").hide();
+                        }
+                    });
+                } else {
+                    swal("Cancelled", "Results were not cleard", "error");
+                }
+            }
+            );
+            @*.then(function () {
+
+            });*@
+        }
+
+    </script>
+
+    <script src="~/Scripts/form.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-toggleable-md navbar-expand-lg bg-primary p-0" color-on-scroll="500" style="background-color: #2f422f!important; z-index:999!important">
+        <div class=" pl-2" style="width:100%;">
+            <div class="row">
+                <div class="col-md-3 col-sm-12">
+                    <div class="navbar-translate">
+                        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-bar bar1"></span>
+                            <span class="navbar-toggler-bar bar2"></span>
+                            <span class="navbar-toggler-bar bar3"></span>
+                        </button>
+                        <a class="navbar-brand ml-2" href="#">
+                            @*<img src="~/Content/images/school_logo.jpg" alt="logo">*@
+                            <b style="font-size: 18px">The College Of Health Sciences and Technology, Ijero-Ekiti</b>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-md-9 col-sm-12 text-right pt-2">
+                    <div class="collapse navbar-collapse justify-content-end" id="navigation" data-nav-image="~/Content/theme/index/assets/img/blurred-image-1.jpg">
+                        <ul class="navbar-nav">
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"><span class="menu-title">APPLICANTS</span></a>
+
+                                <ul class="dropdown-menu bg-primary" aria-labelledby="dropdown" style="color: #333 !important;">
+                                    <li class="dropdown-item">@Html.ActionLink("Generate Invoice", "FormInvoiceGeneration", "Form", new { Area = "Applicant" }, null)</li>
+                                    <li class="dropdown-item">@Html.ActionLink("Generate Reciept", "GenerateReciept", "Credential", new { Area = "Common" }, null)</li>
+
+                                    <li class="dropdown-item">@Html.ActionLink("Fill Application Form", "FillApplicationForm", "Form", new { Area = "Applicant" }, null)</li>
+                                    <li class="divider"></li>
+
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"><span class="menu-title">RETURNING STUDENT</span></a>
+
+                                <ul class="dropdown-menu bg-primary" aria-labelledby="dropdown" style="color: #333 !important;">
+                                    @*<li>@Html.ActionLink("Generate Invoice", "Index", "Payment", new { Area = "Student" }, null)</li>
+                                    *@
+                                </ul>
+                            </li>
+
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"><span class="menu-title">GRADUATE</span></a>
+
+                                <ul class="dropdown-menu bg-primary" aria-labelledby="dropdown" style="color: #333 !important;">
+                                    <li>@Html.ActionLink("Transcript Request", "Index", "Transcript", new { type = "", Area = "Applicant" }, null)</li>
+                                    <li>@Html.ActionLink("Print Receipt", "PrintTranscriptReciept", "Transcript", new { type = "", Area = "Applicant" }, null)</li>
+
+                                </ul>
+                            </li>
+
+
+
+                        </ul>
+                        <div class="col-md-2 bg-warning hidden-md-down text-center pt-3" style="margin:-18px 0 -20px 0; background-color: #b72f9cfc!important;">
+                            <a class="nav-link" href="@Url.Action("Login","Account", new { Area = "Security" })">
+                                <span class="navbar-text">
+
+                                    <p>LOGIN</p>
+
+                                </span>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </nav>
+
+    @*<div class="hold-transition skin-blue layout-top-nav" style="width: 100%; background: #fff !important;">
+        <div class="wrapper">*@
+
+            <!-- Full Width Column -->
+            @*<div class="content-wrapper">
+                <div class="container-fluid">*@
+                    <!-- Main content -->
+                    @*<section class="content">
+
+                        <div class="box box-default">*@
+                            @*<div class="box-header with-border">
+                                <h3 class="box-title"></h3>
+                            </div>*@
+    <div class="row" style="min-height: 650px">
+
+
+        <div class="col-md-1"></div>
+
+        @if (Model.ApplicationForm != null && Model.ApplicationForm.Id > 0)
+        {
+            @Html.HiddenFor(model => model.ApplicationForm.Id)
+            @Html.HiddenFor(model => model.ApplicationForm.Number)
+        }
+
+        @Html.HiddenFor(model => model.Session.Id)
+
+        @Html.HiddenFor(model => model.ApplicationFormSetting.Id)
+
+        @Html.HiddenFor(model => model.ApplicationProgrammeFee.Id)
+
+        @Html.HiddenFor(model => model.Programme.Id)
+
+        @Html.HiddenFor(model => model.AppliedCourse.Programme.Id)
+        @Html.HiddenFor(model => model.AppliedCourse.Department.Id)
+@if (Model != null && Model.AppliedCourse != null && Model.AppliedCourse.Option != null)
+{
+    @Html.HiddenFor(model => model.AppliedCourse.Option.Id)
+}
+        
+        @Html.HiddenFor(model => model.Person.Id)
+        @Html.HiddenFor(model => model.Payment.Id)
+        @Html.HiddenFor(model => model.ApplicationAlreadyExist)
+
+        @if (Model != null && Model.Programme != null)
+        {
+            if (Model.Programme.Id == 3 || Model.Programme.Id == 4 || Model.Programme.Id == 5)
+            {
+                <script>isPreviousEducation = true;</script>
+            }
+            else if (Model.Programme.Id == 1)
+            {
+                <script>isPutme = true;</script>
+            }
+        }
+        @*<div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>*@
+        <div class="col-md-3 col-xs-12">
+            <div class="box box-solid box-primary">
+                <div class="box-header with-border" style="background-color: #2f422f!important;">
+                    <h3 class="box-title p-3">Steps</h3>
+
+                    <div class="box-tools">
+
+                    </div>
+                </div>
+                <div class="box-body no-padding" style="display: block;">
+                    <ul class="list-group list-group-flush anch">
+                        @if (Model.ApplicationAlreadyExist)
+                        {
+                            <li id="lnkBiodata" class="list-group-item"><a href="#"><i class="fa fa-male"></i> Biodata</a></li>
+                            <li id="lnkNOK" class="list-group-item"><a href="#"><i class="fa fa-child"></i> Next Of Kin Details</a></li>
+                            if (Model != null && Model.Programme != null && Model.Programme.Id == 1)
+                            {
+                                <li id="lnkUTME" class="list-group-item"><a href="#"><i class="fa fa-graduation-cap"></i> UTME Details</a></li>
+                            }
+                            if (Model != null && Model.Programme != null && (Model.Programme.Id == 3 || Model.Programme.Id == 4 || Model.Programme.Id == 5))
+                            {
+                                <li id="lnkPreviousEducation" class="list-group-item"><a href="#"><i class="fa fa-navicon"></i> ND Details</a></li>
+                            }
+                            <li id="lnkAcademicDetails" class="list-group-item"><a href="#"><i class="fa fa-navicon"></i> Academic Details</a></li>
+                            <li id="lnkOlevel" class="list-group-item"><a href="#"><i class="fa fa-navicon"></i> O-level Details</a></li>
+                            <li id="lnkPassport" class="list-group-item"><a href="#"><i class="fa fa-photo"></i> Passport</a></li>
+                        }
+                        else
+                        {
+                            <li id="lnkBiodata" class="disabled list-group-item"><a href="#"><i class="fa fa-male"></i> Biodata</a></li>
+                            <li id="lnkNOK" class="disabled list-group-item"><a href="#"><i class="fa fa-child"></i> Next Of Kin Details</a></li>
+                            if (Model != null && Model.Programme != null && Model.Programme.Id == 1)
+                            {
+                                <li id="lnkUTME" class="disabled list-group-item"><a href="#"><i class="fa fa-graduation-cap"></i> UTME Details</a></li>
+                            }
+                            if (Model != null && Model.Programme != null && (Model.Programme.Id == 3 || Model.Programme.Id == 4 || Model.Programme.Id == 5 ))
+                            {
+                                <li id="lnkPreviousEducation" class="disabled list-group-item"><a href="#"><i class="fa fa-navicon"></i> ND Details</a></li>
+                            }
+                            <li id="lnkAcademicDetails" class="disabled list-group-item"><a href="#"><i class="fa fa-navicon"></i> Academic Details</a></li>
+                            <li id="lnkOlevel" class="disabled list-group-item"><a href="#"><i class="fa fa-navicon"></i> O-level Details</a></li>
+                            <li id="lnkPassport" class="disabled list-group-item"><a href="#"><i class="fa fa-photo"></i> Passport</a></li>
+                        }
+
+                    </ul>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            @if (Model != null && Model.ApplicationForm != null && Model.ApplicationForm.Id > 0)
+            {
+                <div class="pull-left">
+                    @Html.ActionLink("Print Acknowledgment Slip", "AcknowledgmentSlip", new { Controller = "Form", Area = "Applicant", formId = Utility.Encrypt(Model.ApplicationForm.Id.ToString()) }, new { @class = "btn btn-primary btn-lg bg-navy btn-flat margin" })
+                </div>
+            }
+            <div class="pull-right">
+                <span style="display: none;" id="loadingSteps">
+                    <img src="~/Content/Images/loading.gif" />
+                </span>
+            </div>
+        </div>
+
+
+        <div class="col-md-7 col-xs-12">
+
+            <div class="row">
+
+                <div id="biodata" class="card" style="display:none">
+                    <div class="card-header" style="background-color: #2f422f!important; color:white">
+                        <h4>Bio Data</h4>
+                    </div>
+                    <div class="card-body p-4">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Person.LastName, "Surname")
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        @Html.TextBoxFor(model => model.Person.LastName, new { @class = "form-control text-uppercase" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.Person.LastName, new { @class = "form-control text-uppercase", @readonly = "readonly" })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.Person.LastName)
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Person.FirstName)
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        @Html.TextBoxFor(model => model.Person.FirstName, new { @class = "form-control text-uppercase" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.Person.FirstName, new { @class = "form-control text-uppercase", @readonly = "readonly" })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.Person.FirstName)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Person.OtherName, new { @class = "control-label " })
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        @Html.TextBoxFor(model => model.Person.OtherName, new { @class = "form-control text-uppercase" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.Person.OtherName, new { @class = "form-control text-uppercase", @readonly = "readonly" })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.Person.OtherName)
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Person.Sex.Id, new { @class = "control-label " })
+                                    @Html.DropDownListFor(f => f.Person.Sex.Id, (IEnumerable<SelectListItem>)ViewBag.SexId, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Person.Sex.Id)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Person.DateOfBirth, "Date of birth", new { @class = "control-label " })
+                                    @Html.TextBoxFor(model => model.Person.DateOfBirth, new { @class = "form-control date", placeholder = "Date of birth", required = "required" })
+                                    @Html.ValidationMessageFor(model => model.Person.DateOfBirth)
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Person.State.Id, "State of Origin", new { @class = "control-label " })
+                                    @Html.DropDownListFor(f => f.Person.State.Id, (IEnumerable<SelectListItem>)ViewBag.StateId, new { @class = "form-control", required = "required" })
+                                    @Html.ValidationMessageFor(model => model.Person.State.Id)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Person.LocalGovernment.Id, new { @class = "control-label " })
+                                    @Html.DropDownListFor(f => f.Person.LocalGovernment.Id, (IEnumerable<SelectListItem>)ViewBag.LgaId, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Person.LocalGovernment.Id)
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Person.HomeTown, new { @class = "control-label " })
+                                    @Html.TextBoxFor(model => model.Person.HomeTown, new { @class = "form-control text-uppercase", max = "50" })
+                                    @Html.ValidationMessageFor(model => model.Person.HomeTown)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Person.MobilePhone, new { @class = "control-label " })
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        @Html.TextBoxFor(model => model.Person.MobilePhone, new { @class = "form-control", max = "15", min = "11", type = "number" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.Person.MobilePhone, new { @class = "form-control", @readonly = "readonly", max = "15", min = "11", type = "number" })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.Person.MobilePhone)
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Person.Email, new { @class = "control-label " })
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        @Html.TextBoxFor(model => model.Person.Email, new { @class = "form-control text-uppercase", max = "50" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.Person.Email, new { @class = "form-control text-uppercase", @readonly = "readonly", max = "50" })
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Person.Religion.Id, new { @class = "control-label " })
+                                    @Html.DropDownListFor(model => model.Person.Religion.Id, (IEnumerable<SelectListItem>)ViewBag.ReligionId, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Person.Religion.Id)
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Person.HomeAddress, new { @class = "control-label " })
+                                    @Html.TextBoxFor(model => model.Person.HomeAddress, new { @class = "form-control text-uppercase", max = "250" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Applicant.Ability.Id, new { @class = "control-label " })
+                                    @Html.DropDownListFor(model => model.Applicant.Ability.Id, (IEnumerable<SelectListItem>)ViewBag.AbilityId, new { @class = "form-control" })
+                                    @*@Html.ValidationMessageFor(model => model.Sponsor.Ability.Id)*@
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Applicant.OtherAbility)
+                                    @Html.TextBoxFor(model => model.Applicant.OtherAbility, new { @class = "form-control text-uppercase" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Applicant.ExtraCurricullarActivities)
+                                    @Html.TextBoxFor(model => model.Applicant.ExtraCurricullarActivities, new { @class = "form-control text-uppercase" })
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+
+                            </div>
+
+
+                            <div class="col-md-6 col-sm-12">
+                                <div class="col-sm-12">
+                                    <button id="btnBiodata" type="button" class="btn btn-primary btn-lg bg-navy btn-flat margin pull-right">Next</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="nextOfKin" class="card" style="display:none">
+                    <div class="card-header" style="background-color: #2f422f!important; color:whitesmoke">
+                        <h4>Next Of Kin</h4>
+                    </div>
+                    <div class="card-body p-4">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Sponsor.Name)
+                                    @Html.TextBoxFor(model => model.Sponsor.Name, new { @class = "form-control text-uppercase", max = "50" })
+                                    @Html.ValidationMessageFor(model => model.Sponsor.Name)
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Sponsor.ContactAddress, new { @class = "control-label " })
+                                    @Html.TextBoxFor(model => model.Sponsor.ContactAddress, new { @class = "form-control text-uppercase", max = "350" })
+                                    @Html.ValidationMessageFor(model => model.Sponsor.ContactAddress)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Sponsor.Relationship.Id, new { @class = "control-label " })
+                                    @Html.DropDownListFor(model => model.Sponsor.Relationship.Id, (IEnumerable<SelectListItem>)ViewBag.RelationshipId, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Sponsor.Relationship.Id)
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Sponsor.MobilePhone, new { @class = "control-label " })
+                                    @Html.TextBoxFor(model => model.Sponsor.MobilePhone, new { @class = "form-control", max = "15", min = "11", type = "number" })
+                                    @Html.ValidationMessageFor(model => model.Sponsor.MobilePhone)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-12 col-xs-12">
+                                <div class="col-sm-12">
+                                    <button id="btnNOK" type="button" class="btn btn-primary btn-lg bg-navy btn-flat margin pull-right">Next</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="utme" class="card" style="display:none">
+                    <div class="card-header" style="background-color: #2f422f!important; color:whitesmoke!important">
+                        <h4>UTME Details</h4>
+                    </div>
+                    <div class="card-body p-4">
+
+                        @if (Model != null && Model.ApplicantJambDetail != null)
+                        {
+                            <div class="row">
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.ApplicantJambDetail.JambRegistrationNumber, new { @class = "control-label" })
+                                        @if (User.Identity.IsAuthenticated)
+                                        {
+                                            @Html.TextBoxFor(model => model.ApplicantJambDetail.JambRegistrationNumber, new { @class = "form-control", max = "20" })
+                                        }
+                                        else
+                                        {
+                                            @Html.TextBoxFor(model => model.ApplicantJambDetail.JambRegistrationNumber, new { @class = "form-control", @readonly = "readonly", max = "20" })
+                                        }
+                                        @Html.ValidationMessageFor(model => model.ApplicantJambDetail.JambRegistrationNumber)
+                                    </div>
+                                </div>
+
+                                @if (Model.ApplicantJambDetail.JambScore != null)
+                                {
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.ApplicantJambDetail.JambScore, new { @class = "control-label " })
+                                            @Html.DropDownListFor(model => model.ApplicantJambDetail.JambScore, (IEnumerable<SelectListItem>)ViewBag.JambScoreId, new { @class = "form-control"})
+                                            @Html.ValidationMessageFor(model => model.ApplicantJambDetail.JambScore)
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.ApplicantJambDetail.JambScore, new { @class = "control-label " })
+                                            @Html.DropDownListFor(model => model.ApplicantJambDetail.JambScore, (IEnumerable<SelectListItem>)ViewBag.JambScoreId, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.ApplicantJambDetail.JambScore)
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="row">
+                                @if (Model.ApplicantJambDetail.InstitutionChoice != null)
+                                {
+                                    if (Model.ApplicantJambDetail.InstitutionChoice.Id > 0)
+                                    {
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.ApplicantJambDetail.InstitutionChoice.Id, new { @class = "control-label " })
+                                                @Html.DropDownListFor(model => model.ApplicantJambDetail.InstitutionChoice.Id, (IEnumerable<SelectListItem>)ViewBag.InstitutionChoiceId, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.ApplicantJambDetail.InstitutionChoice.Id)
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.ApplicantJambDetail.InstitutionChoice.Id, new { @class = "control-label " })
+                                                @Html.DropDownListFor(model => model.ApplicantJambDetail.InstitutionChoice.Id, (IEnumerable<SelectListItem>)ViewBag.InstitutionChoiceId, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.ApplicantJambDetail.InstitutionChoice.Id)
+                                            </div>
+                                        </div>
+                                    }
+
+                                }
+                                else
+                                {
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.ApplicantJambDetail.InstitutionChoice.Id, new { @class = "control-label " })
+                                            @Html.DropDownListFor(model => model.ApplicantJambDetail.InstitutionChoice.Id, (IEnumerable<SelectListItem>)ViewBag.InstitutionChoiceId, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.ApplicantJambDetail.InstitutionChoice.Id)
+                                        </div>
+                                    </div>
+                                }
+
+                                @if (Model.ApplicantJambDetail.Subject1 != null)
+                                {
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.ApplicantJambDetail.Subject1, "First Subject & Score", new { @class = "control-label " })
+                                            @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject1.Id, (IEnumerable<SelectListItem>)ViewBag.Subject1Id, new { @class = "form-control"})
+                                            @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject1Score, (IEnumerable<SelectListItem>)ViewBag.Subject1ScoreId, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.ApplicantJambDetail.Subject1.Id)
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.ApplicantJambDetail.Subject1, "First Subject & Score", new { @class = "control-label " })
+                                            @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject1.Id, (IEnumerable<SelectListItem>)ViewBag.Subject1Id, new { @class = "form-control" })
+                                            @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject1Score, (IEnumerable<SelectListItem>)ViewBag.Subject1ScoreId, new { @class = "form-control"})
+                                            @Html.ValidationMessageFor(model => model.ApplicantJambDetail.Subject1.Id)
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="row">
+                                @if (Model.ApplicantJambDetail.Subject2 != null)
+                                {
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.ApplicantJambDetail.Subject2, "Second Subject & Score", new { @class = "control-label " })
+                                            @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject2.Id, (IEnumerable<SelectListItem>)ViewBag.Subject2Id, new { @class = "form-control"})
+                                            @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject2Score, (IEnumerable<SelectListItem>)ViewBag.Subject2ScoreId, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.ApplicantJambDetail.Subject2.Id)
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.ApplicantJambDetail.Subject2, "Second Subject & Score", new { @class = "control-label " })
+                                            @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject2.Id, (IEnumerable<SelectListItem>)ViewBag.Subject2Id, new { @class = "form-control" })
+                                            @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject2Score, (IEnumerable<SelectListItem>)ViewBag.Subject2ScoreId, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.ApplicantJambDetail.Subject2.Id)
+                                        </div>
+                                    </div>
+                                }
+
+                                @if (Model.ApplicantJambDetail.Subject3 != null)
+                                {
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.ApplicantJambDetail.Subject3, "Third Subject & Score", new { @class = "control-label " })
+                                            @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject3.Id, (IEnumerable<SelectListItem>)ViewBag.Subject3Id, new { @class = "form-control" })
+                                            @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject3Score, (IEnumerable<SelectListItem>)ViewBag.Subject3ScoreId, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.ApplicantJambDetail.Subject3.Id)
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.ApplicantJambDetail.Subject3, "Third Subject & Score", new { @class = "control-label " })
+                                            @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject3.Id, (IEnumerable<SelectListItem>)ViewBag.Subject3Id, new { @class = "form-control" })
+                                            @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject3Score, (IEnumerable<SelectListItem>)ViewBag.Subject3ScoreId, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.ApplicantJambDetail.Subject3.Id)
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="row">
+                                @if (Model.ApplicantJambDetail.Subject4 != null)
+                                {
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.ApplicantJambDetail.Subject4, "Fourth Subject & Score", new { @class = "control-label " })
+                                            @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject4.Id, (IEnumerable<SelectListItem>)ViewBag.Subject4Id, new { @class = "form-control"})
+                                            @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject4Score, (IEnumerable<SelectListItem>)ViewBag.Subject4ScoreId, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.ApplicantJambDetail.Subject4.Id)
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.ApplicantJambDetail.Subject4, "Fourth Subject & Score", new {@class = "control-label "})
+                                            @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject4.Id, (IEnumerable<SelectListItem>) ViewBag.Subject4Id, new {@class = "form-control"})
+                                            @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject4Score, (IEnumerable<SelectListItem>)ViewBag.Subject4ScoreId, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.ApplicantJambDetail.Subject4.Id)
+                                        </div>
+                                    </div>
+                                }
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+
+                                    </div>
+                                </div>
+                            </div>
+    <div class="row">
+
+        <div class="col-md-12 col-xs-12">
+            <div class="col-sm-12">
+                <button id="btnUTME" type="button" class="btn btn-primary btn-lg bg-navy btn-flat margin pull-right">Next</button>
+            </div>
+        </div>
+    </div>
+                        }
+                        @*else
+                            {
+                             <div class="row">
+                                 <div class="col-md-6">
+                                     <div class="form-group">
+                                         @Html.LabelFor(model => model.ApplicantJambDetail.JambRegistrationNumber, new { @class = "control-label" })
+                                         @Html.TextBoxFor(model => model.ApplicantJambDetail.JambRegistrationNumber, new { @class = "form-control", @readonly = "readonly" })
+                                         @Html.ValidationMessageFor(model => model.ApplicantJambDetail.JambRegistrationNumber)
+                                     </div>
+                                 </div>
+
+                                 <div class="col-md-6">
+                                     <div class="form-group">
+                                         @Html.LabelFor(model => model.ApplicantJambDetail.JambScore, new { @class = "control-label " })
+                                         @Html.DropDownListFor(model => model.ApplicantJambDetail.JambScore, (IEnumerable<SelectListItem>)ViewBag.JambScoreId, new { @class = "form-control" })
+                                         @Html.ValidationMessageFor(model => model.ApplicantJambDetail.JambScore)
+                                     </div>
+                                 </div>
+                             </div>
+
+                             <div class="row">
+                                 <div class="col-md-6">
+                                     <div class="form-group">
+                                         @Html.LabelFor(model => model.ApplicantJambDetail.InstitutionChoice.Id, new { @class = "control-label " })
+                                         @Html.DropDownListFor(model => model.ApplicantJambDetail.InstitutionChoice.Id, (IEnumerable<SelectListItem>)ViewBag.InstitutionChoiceId, new { @class = "form-control" })
+                                         @Html.ValidationMessageFor(model => model.ApplicantJambDetail.InstitutionChoice.Id)
+                                     </div>
+                                 </div>
+
+                                 <div class="col-md-6">
+                                     <div class="form-group">
+                                         @Html.LabelFor(model => model.ApplicantJambDetail.Subject1.Id, "First Subject", new { @class = "control-label " })
+                                         @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject1.Id, (IEnumerable<SelectListItem>)ViewBag.Subject1Id, new { @class = "form-control" })
+                                         @Html.ValidationMessageFor(model => model.ApplicantJambDetail.Subject1.Id)
+                                     </div>
+                                 </div>
+                             </div>
+
+                             <div class="row">
+                                 <div class="col-md-6">
+                                     <div class="form-group">
+                                         @Html.LabelFor(model => model.ApplicantJambDetail.Subject2, new { @class = "control-label " })
+                                         @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject2.Id, (IEnumerable<SelectListItem>)ViewBag.Subject2Id, new { @class = "form-control" })
+                                         @Html.ValidationMessageFor(model => model.ApplicantJambDetail.Subject2.Id)
+                                     </div>
+                                 </div>
+
+                                 <div class="col-md-6">
+                                     <div class="form-group">
+                                         @Html.LabelFor(model => model.ApplicantJambDetail.Subject3, new { @class = "control-label " })
+                                         @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject3.Id, (IEnumerable<SelectListItem>)ViewBag.Subject3Id, new { @class = "form-control" })
+                                         @Html.ValidationMessageFor(model => model.ApplicantJambDetail.Subject3.Id)
+                                     </div>
+                                 </div>
+                             </div>
+
+                             <div class="row">
+                                 <div class="col-md-6">
+                                     <div class="form-group">
+                                         @Html.LabelFor(model => model.ApplicantJambDetail.Subject4, new { @class = "control-label " })
+                                         @Html.DropDownListFor(model => model.ApplicantJambDetail.Subject4.Id, (IEnumerable<SelectListItem>)ViewBag.Subject4Id, new { @class = "form-control" })
+                                         @Html.ValidationMessageFor(model => model.ApplicantJambDetail.Subject4.Id)
+                                     </div>
+                                 </div>
+
+                                 <div class="col-md-6">
+                                     <div class="form-group">
+
+                                     </div>
+                                 </div>
+                             </div>
+                            }*@
+
+                    </div>
+                </div>
+
+
+
+                <div id="olevel" class="card" style="display: none">
+                    <div class="card-header" style="background-color: #2f422f!important; color: whitesmoke">
+                        <h4>O-level Details</h4>
+                    </div>
+                    <div class="card-body p-4">
+
+                        <div class="row" id="divOLevel">
+                            <div class="col-md-6 custom-text-black">
+                                <h5>First Sitting</h5>
+                                <hr class="no-top-padding" />
+                                @Html.HiddenFor(model => model.FirstSittingOLevelResult.Id)
+                                <div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.FirstSittingOLevelResult.Type.Id, "Type", new { @class = "control-label col-md-3" })
+                                        <div class="col-md-9">
+                                            @Html.DropDownListFor(model => model.FirstSittingOLevelResult.Type.Id, (IEnumerable<SelectListItem>)ViewBag.FirstSittingOLevelTypeId, new { @class = "form-control olevel" })
+                                            @Html.ValidationMessageFor(model => model.FirstSittingOLevelResult.Type.Id)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.FirstSittingOLevelResult.ExamNumber, new { @class = "control-label col-md-3" })
+                                        <div class="col-md-9">
+                                            @Html.TextBoxFor(model => model.FirstSittingOLevelResult.ExamNumber, new { @class = "form-control olevel text-uppercase", max = "20" })
+                                            @Html.ValidationMessageFor(model => model.FirstSittingOLevelResult.ExamNumber)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group ">
+                                        @Html.LabelFor(model => model.FirstSittingOLevelResult.ExamYear, new { @class = "control-label col-md-3" })
+                                        <div class="col-md-9">
+                                            @Html.DropDownListFor(model => model.FirstSittingOLevelResult.ExamYear, (IEnumerable<SelectListItem>)ViewBag.FirstSittingExamYearId, new { @class = "form-control olevel" })
+                                            @Html.ValidationMessageFor(model => model.FirstSittingOLevelResult.ExamYear)
+                                        </div>
+                                    </div>
+                                    @if ((Model.Programme.Id == 1 || Model.Programme.Id == 6))
+                                    {
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.FirstSittingOLevelResult.ScratchCard, new { @class = "control-label col-md-3" })
+                                            <div class="col-md-9">
+                                                @Html.TextBoxFor(model => model.FirstSittingOLevelResult.ScratchCard, new { @maxlength = "12", @class = "form-control olevel text-uppercase" })
+                                                @Html.ValidationMessageFor(model => model.FirstSittingOLevelResult.ScratchCard)
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.FirstSittingOLevelResult.ScratchCardSerialNo, new { @class = "control-label col-md-3" })
+                                            <div class="col-md-9">
+                                                @Html.TextBoxFor(model => model.FirstSittingOLevelResult.ScratchCardSerialNo, new { @maxlength = "10", @class = "form-control olevel text-uppercase" })
+                                                @Html.ValidationMessageFor(model => model.FirstSittingOLevelResult.ScratchCardSerialNo)
+                                            </div>
+                                        </div>
+                                    }
+
+
+                                </div>
+
+                                <table id="firstSittingTable" class="table table-condensed table-responsive" style="background-color: whitesmoke">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Subject
+                                            </th>
+                                            <th>
+                                                Grade
+                                            </th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (int i = 0; i < 9; i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Html.HiddenFor(model => model.FirstSittingOLevelResultDetails[i].Id)
+                                                    @Html.HiddenFor(model => model.FirstSittingOLevelResultDetails[i].Subject.Name)
+                                                    @Html.DropDownListFor(model => model.FirstSittingOLevelResultDetails[i].Subject.Id, (IEnumerable<SelectListItem>)ViewData["FirstSittingOLevelSubjectId" + i], new { @class = "form-control olevel" })
+                                                </td>
+                                                <td>
+
+                                                    @Html.HiddenFor(model => model.FirstSittingOLevelResultDetails[i].Grade.Name)
+                                                    @Html.DropDownListFor(model => model.FirstSittingOLevelResultDetails[i].Grade.Id, (IEnumerable<SelectListItem>)ViewData["FirstSittingOLevelGradeId" + i], new { @class = "form-control olevel" })
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="col-md-6 custom-text-black">
+                                <div class="col-md-12">
+                                    <button id="btnShowSecondSitting" onclick="showSecondSitting()" type="button" class="btn btn-primary btn-sm btn-flat">Show Second Sitting</button>
+                                </div>
+                                <div style="display:none" id="divSecondSitting">
+                                    <div class="col-md-12">
+                                        <div class="pull-left">
+                                            <h5>Second Sitting</h5> 
+                                        </div>
+
+                                        
+                                        <div class="pull-right">
+                                            
+                                            <span class="pull-right">
+                                                <button style="display:none" id="btnClearSecondSitting" onclick="clearSecondSitting()" type="button" class="btn btn-primary btn-sm btn-flat">Clear Second Sitting</button> &nbsp;
+                                                <span style="display:none; " id="sittingProgress"><img style="width:30px; height:30px;" src="~/Content/Images/bx_loader.gif"></span>
+                                            </span>
+                                            
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <br />
+
+                                    <hr class="no-top-padding" />
+                                    @Html.HiddenFor(model => model.SecondSittingOLevelResult.Id)
+                                    <div>
+                                        <div class="form-group">
+
+                                            @Html.LabelFor(model => model.SecondSittingOLevelResult.Type.Id, "Type", new { @class = "control-label col-md-3" })
+                                            <div class="col-md-9">
+                                                @Html.DropDownListFor(model => model.SecondSittingOLevelResult.Type.Id, (IEnumerable<SelectListItem>)ViewBag.SecondSittingOLevelTypeId, new { @class = "form-control olevel" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.SecondSittingOLevelResult.ExamNumber, new { @class = "control-label col-md-3" })
+                                            <div class="col-md-9">
+                                                @Html.TextBoxFor(model => model.SecondSittingOLevelResult.ExamNumber, new { @class = "form-control olevel text-uppercase", max = "20" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group ">
+                                            @Html.LabelFor(model => model.SecondSittingOLevelResult.ExamYear, new { @class = "control-label col-md-3" })
+                                            <div class="col-md-9">
+                                                @Html.DropDownListFor(model => model.SecondSittingOLevelResult.ExamYear, (IEnumerable<SelectListItem>)ViewBag.SecondSittingExamYearId, new { @class = "form-control olevel" })
+                                            </div>
+                                        </div>
+                                        @if ((Model.Programme.Id == 1 || Model.Programme.Id == 6))
+                                        {
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.SecondSittingOLevelResult.ScratchCard, new { @class = "control-label col-md-3" })
+                                                <div class="col-md-9">
+                                                    @Html.TextBoxFor(model => model.SecondSittingOLevelResult.ScratchCard, new { @maxlength = "12", @class = "form-control olevel text-uppercase" })
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                @Html.LabelFor(model => model.SecondSittingOLevelResult.ScratchCardSerialNo, new { @class = "control-label col-md-3" })
+                                                <div class="col-md-9">
+
+                                                    @Html.TextBoxFor(model => model.SecondSittingOLevelResult.ScratchCardSerialNo, new { @maxlength = "10", @class = "form-control olevel text-uppercase" })
+                                                </div>
+                                            </div>
+                                        }
+
+                                    </div>
+
+                                    <table id="secondSittingTable" class="table table-condensed table-responsive" style="background-color: whitesmoke">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    Subject
+                                                </th>
+                                                <th>
+                                                    Grade
+                                                </th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @for (int i = 0; i < 9; i++)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.HiddenFor(model => model.SecondSittingOLevelResultDetails[i].Id)
+                                                        @Html.HiddenFor(model => model.SecondSittingOLevelResultDetails[i].Subject.Name)
+                                                        @Html.DropDownListFor(model => model.SecondSittingOLevelResultDetails[i].Subject.Id, (IEnumerable<SelectListItem>)ViewData["SecondSittingOLevelSubjectId" + i], new { @class = "form-control olevel" })
+                                                    </td>
+                                                    <td>
+                                                        @Html.HiddenFor(model => model.SecondSittingOLevelResultDetails[i].Grade.Name)
+                                                        @Html.DropDownListFor(model => model.SecondSittingOLevelResultDetails[i].Grade.Id, (IEnumerable<SelectListItem>)ViewData["SecondSittingOLevelGradeId" + i], new { @class = "form-control olevel" })
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+
+                            </div>
+
+
+                            <div class="col-md-6 col-sm-12">
+                                <div class="col-sm-12">
+                                    <button id="btnOlevel" type="button" class="btn btn-primary btn-lg bg-navy btn-flat margin pull-right">Next</button>
+                                    <span class="pull-right" style="display: none;" id="loadingOLevel">
+                                        <img src="~/Content/Images/bx_loader.gif" />
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="previousEducation" class="card" style="display: none">
+                    <div class="card-header bg-primary">
+                        <h4>ND Details</h4>
+                    </div>
+                    <div class="card-body p-4">
+@if (Model != null && Model.Programme.Id > 2 && Model.Programme.Id!=6)
+{
+
+    <div class="row">
+        <div class="col-md-12">
+            <h6>ND Institution</h6>
+            <hr/>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.PreviousEducation.PreviousSchool.Id, "School Name", new {@class = "control-label "})
+                @Html.DropDownListFor(model => model.PreviousEducation.PreviousSchool.Id, (IEnumerable<SelectListItem>) ViewBag.PreviousSchoolId, new {@class = "form-control", required = "required"})
+                @Html.ValidationMessageFor(model => model.PreviousEducation.PreviousSchool.Id)
+                @*@Html.LabelFor(model => model.PreviousEducation.SchoolName, new { @class = "control-label " })
+                    @Html.TextBoxFor(model => model.PreviousEducation.SchoolName, new { @class = "form-control text-uppercase", max = "350", required = "required" })
+                    @Html.ValidationMessageFor(model => model.PreviousEducation.SchoolName)*@
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.PreviousEducation.PreviousSchool.Name, "Other", new {@class = "control-label "})
+                @Html.TextBoxFor(model => model.PreviousEducation.SchoolName, new {@class = "form-control text-uppercase", max = "150", placeholder = "Enter school name if not on the dropdown."})
+                @Html.ValidationMessageFor(model => model.PreviousEducation.PreviousSchool.Name)
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.PreviousEducation.Course, new { @class = "control-label " })
+                @Html.TextBoxFor(model => model.PreviousEducation.Course, new { @class = "form-control text-uppercase", max = "150", required = "required" })
+                @Html.ValidationMessageFor(model => model.PreviousEducation.Course)
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        @*<div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.PreviousEducation.StartDate, new { @class = "control-label " })
+                @Html.TextBoxFor(model => model.PreviousEducation.StartDate, new {@class = "form-control date", placeholder = "Previous Education Start Date", required = "required"}) &nbsp; 
+                @Html.ValidationMessageFor(model => model.PreviousEducation.StartDate)
+            </div>
+        </div>*@
+       
+        <div class="col-md-6">
+            <div class="form-group">
+                    @Html.LabelFor(model => model.PreviousEducation.EndDate, "Month and Year of Graduation", new { @class = "control-label " })
+                    <div class="form-inline">
+                            @Html.DropDownListFor(model => model.PreviousEducation.EndMonth.Id, (IEnumerable<SelectListItem>)ViewBag.PreviousEducationEndMonthSelectList, new { @class = "form-control", required = "required" }) &nbsp;
+                        
+                            @Html.DropDownListFor(model => model.PreviousEducation.EndYear.Id, (IEnumerable<SelectListItem>)ViewBag.PreviousEducationEndYearSelectList, new { @class = "form-control", required = "required" })
+                       
+                    </div>
+                    @Html.ValidationMessageFor(model => model.PreviousEducation.EndDate)
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.PreviousEducation.Qualification.Id, new { @class = "control-label " })
+                @Html.DropDownListFor(model => model.PreviousEducation.Qualification.Id, (IEnumerable<SelectListItem>)ViewBag.QualificationId, new { @class = "form-control", required = "required" })
+                @Html.ValidationMessageFor(model => model.PreviousEducation.Qualification.Id)
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.PreviousEducation.ResultGrade.Id, new { @class = "control-label" })
+                @Html.DropDownListFor(model => model.PreviousEducation.ResultGrade.Id, (IEnumerable<SelectListItem>)ViewBag.ResultGradeId, new { @class = "form-control", required = "required" })
+                @Html.ValidationMessageFor(model => model.PreviousEducation.ResultGrade.Id)
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.PreviousEducation.ITDuration.Id, new { @class = "control-label " })
+                @Html.DropDownListFor(model => model.PreviousEducation.ITDuration.Id, (IEnumerable<SelectListItem>)ViewBag.ITDurationId, new { @class = "form-control", required = "required" })
+                @Html.ValidationMessageFor(model => model.PreviousEducation.ITDuration.Id)
+            </div>
+        </div>
+
+        <div class="col-md-6">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.PreviousEducation.ITStartDate, "IT Start Date (Month and Year)", new { @class = "control-label " })
+                <div class="form-inline">
+                    @Html.DropDownListFor(model => model.PreviousEducation.ITStartMonth.Id, (IEnumerable<SelectListItem>)ViewBag.PreviousEducationITStartMonthSelectList, new { @class = "form-control", required = "required" }) &nbsp;
+
+                    @Html.DropDownListFor(model => model.PreviousEducation.ITStartYear.Id, (IEnumerable<SelectListItem>)ViewBag.PreviousEducationITStartYearSelectList, new { @class = "form-control", required = "required" })
+
+                </div>
+                @Html.ValidationMessageFor(model => model.PreviousEducation.ITStartDate)
+            </div>
+            @*<div class="form-group">
+                @Html.LabelFor(model => model.PreviousEducation.ITStartDate, "IT Start Date", new {@class = "control-label "})
+                @Html.TextBoxFor(model => model.PreviousEducation.ITStartDate, new {@class = "form-control date", placeholder = "IT Start Date", required = "required"})
+                @Html.ValidationMessageFor(model => model.PreviousEducation.ITStartDate)
+            </div>*@
+        </div>
+
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.PreviousEducation.ITEndDate, "IT End Date (Month and Year)", new { @class = "control-label " })
+                <div class="form-inline">
+                    @Html.DropDownListFor(model => model.PreviousEducation.ITEndMonth.Id, (IEnumerable<SelectListItem>)ViewBag.PreviousEducationITEndMonthSelectList, new { @class = "form-control", required = "required" }) &nbsp;
+
+                    @Html.DropDownListFor(model => model.PreviousEducation.ITEndYear.Id, (IEnumerable<SelectListItem>)ViewBag.PreviousEducationITEndYearSelectList, new { @class = "form-control", required = "required" })
+
+                </div>
+                @Html.ValidationMessageFor(model => model.PreviousEducation.ITEndDate)
+            </div>
+            @*<div class="form-group">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PreviousEducation.ITEndDate, "IT End Date", new {@class = "control-label "})
+                    @Html.TextBoxFor(model => model.PreviousEducation.ITEndDate, new {@class = "form-control date", placeholder = "IT End Date", required = "required"})
+                    @Html.ValidationMessageFor(model => model.PreviousEducation.ITEndDate)
+                </div>
+            </div>*@
+        </div>
+    </div>
+    
+    
+    <div class="row">
+
+        <div class="col-md-12 col-xs-12">
+            <div class="col-sm-12">
+                <button id="btnPreviousEducation" type="button" class="btn btn-primary btn-lg bg-navy btn-flat margin pull-right">Next</button>
+            </div>
+        </div>
+    </div>
+}
+                       
+
+                    </div>
+                </div>
+
+                <div id="academicDetails" class="card" style="display:none">
+                    <div class="card-header" style="background-color: #2f422f!important; color: whitesmoke">
+                        <h4>Academic Details</h4>
+                    </div>
+                    <div class="card-body p-4">
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.AppliedCourse.Programme.Name, new { @class = "control-label" })
+                                    @Html.TextBoxFor(model => model.AppliedCourse.Programme.Name, new { @class = "form-control text-uppercase", disabled = "disabled" })
+                                    @Html.ValidationMessageFor(model => model.AppliedCourse.Programme.Name)
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.AppliedCourse.Department.Faculty.Name, new { @class = "control-label" })
+                                    @Html.TextBoxFor(model => model.AppliedCourse.Department.Faculty.Name, new { @class = "form-control text-uppercase", disabled = "disabled" })
+                                    @Html.ValidationMessageFor(model => model.AppliedCourse.Department.Faculty.Name)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.AppliedCourse.Department.Name, new {@class = "control-label "})
+                                    @Html.TextBoxFor(model => model.AppliedCourse.Department.Name, new {@class = "form-control text-uppercase", disabled = "disabled"})
+                                    @Html.ValidationMessageFor(model => model.AppliedCourse.Department.Name)
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @if (Model != null && Model.AppliedCourse != null && Model.AppliedCourse.Option != null)
+                                    {
+                                        @Html.LabelFor(model => model.AppliedCourse.Option.Name, new {@class = "control-label "})
+                                        @Html.TextBoxFor(model => model.AppliedCourse.Option.Name, new {@class = "form-control text-uppercase", disabled = "disabled"})
+                                        @Html.ValidationMessageFor(model => model.AppliedCourse.Option.Name)
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @if (Model != null && Model.AppliedCourse != null && Model.AppliedCourse.Option != null)
+                                    {
+                                        @Html.LabelFor(model => model.AppliedCourse.OptionSecondChoice.Name, "Option 2", new { @class = "control-label " })
+                                        @Html.DropDownListFor(model => model.AppliedCourse.OptionSecondChoice.Id, (IEnumerable<SelectListItem>)ViewBag.OptionList, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.AppliedCourse.OptionSecondChoice.Name)
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-12 col-xs-12">
+                                <div class="col-sm-12">
+                                    <button id="btnAcademicDetails" type="button" class="btn btn-primary btn-lg bg-navy btn-flat margin pull-right">Next</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="passport" class="card" style="display:none">
+                    <div class="card-header" style="background-color: #2f422f!important; color: whitesmoke">
+                        <h4>Passport</h4>
+                    </div>
+                    <div class="card-body p-4">
+
+                        @*<div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-6 col-form-label">Passport </label>
+                                        <div class="col-sm-12">
+                                            <input class="form-control" type="file" id="passport_url" name="passport_url" placeholder="Passport">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-6">
+                                    <button type="button" id="btnUploadPassport" class="btn btn-primary">Upload</button>
+                                </div>
+                            </div>*@
+                        <div class="row">
+                            <div class="col-md-3">
+                                <img id="passportImage" src="@Url.Content(Model.Person.ImageFileUrl)" height="100" width="100">
+                            </div>
+                            <div class="col-md-1"></div>
+                            <div class="col-md-4">
+                                <div id="dropzone">
+                                    <form class="dropzone needsclick" id="demo-upload" action="/"></form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <blockquote>
+                                    <i class="fa fa-quote-left"></i>
+                                    <p>
+                                        To upload your passport, scan and save the passport in the computer file
+                                        system. Click on the box shown above to display the file dialog box. Select
+                                        the passport file from the saved location.
+                                    </p>
+                                    <small>Please note that the passport photo background should be plain (white or clear) and passport size should not be more than 50kb. The file format must be in either .gif, .jpeg, .jpg or .bmp file format.<cite title="Source Title"></cite></small>
+                                </blockquote>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-12 col-xs-12">
+                                <div class="col-sm-12">
+                                    <span id="acknowledgmentBtnDiv" style="display: none"><a class="btn btn-primary btn-lg bg-navy btn-flat margin pull-right" href="#" id="btnAcknowledgment">Acknowledgment Slip</a></span>
+                                    <a class="btn btn-primary btn-lg bg-navy btn-flat margin pull-right" href="#" onclick="formPreview()">Print Form</a>
+                                    <span class="pull-right" style="display: none;" id="loadingPreview">
+                                        <img src="~/Content/Images/bx_loader.gif" />
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-1"></div>
+
+
+
+
+    </div>
+
+                            <!-- /.box-body -->
+                        @*</div>*@
+
+                        <!-- /.box -->
+                    @*</section>
+
+                </div>*@
+                <!-- /.container -->
+            @*</div>*@
+            <!-- /.content-wrapper -->
+        @*</div>
+    </div>*@
+
+    <div class="clearfix"></div>
+
+    <div class="container-fluid pt-5 pb-5 Design3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-sm-12 text-center">
+                    <img src="~/Content/theme/index/assets/img/call.svg" class=" text-right" alt="SEMESTER RESULTS" height="90px" />
+                </div>
+
+                <div class="col-md-7 col-sm-12 pt-1">
+                    <span class="font-1"><b>ARE YOU EXPERIENCING ANY DIFFICULTIES OR ISSUES?</b></span><br />
+                    <b>CALL:</b> 07088391544 or 090838920222<br />
+                    <b>EMAIL SUPPORT:</b> support@lloydant.com
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid blueBg">
+        <div class="row" style="background-color: #2f422f!important;">
+
+            <div class="col-md-4 col-sm-12 text-white  pt-5 pb-4">
+                <h5>EMPLOYEE EXTERNAL LINKS</h5>
+                <div class="separator separator-primary"></div>
+                <ul>
+                    <li>Administrative Guide</li>
+                    <li>Faculty &amp; Staff Help center</li>
+                    <li>Services</li>
+                </ul>
+            </div>
+
+            <div class="col-md-4 col-sm-12 text-white  pt-5 pb-4">
+                <h5>ACADEMIC EXTERNAL LINKS </h5>
+                <div class="separator separator-primary"></div>
+                <ul>
+                    <li>Explore Courses </li>
+                    <li>Student services center</li>
+                    <li>Explore Degrees</li>
+                </ul>
+            </div>
+
+            <div class="col-md-4 col-sm-12 text-white  p-5">
+                <h5 class="mb-0">COLLEGE OF HEALTH AND SCIENCE TECHNOLOGY,</h5>
+                <sub> IJERO-EKITI</sub>
+                <br /><br />
+                <h6>ABOUT</h6>
+                    College of Health Science and Technology, Ijero-Ekiti
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid bg-primary line-1"></div>
+
+    <div class="container-fluid bg-primary p-1">
+        <div class="row">
+            <div class="col-md-8 col-sm-12">
+                &copy;COLLEGE OF HEALTH AND SCIENCE TECHNOLOGY IJERO-EKITI,<br>
+                EKITI STATE.
+            </div>
+            <div class="col-md-4 col-sm-12 text-right">
+                Powered by <img class="image" style="height: 30px; width: 30px" src="~/Content/images/lloydant.png" />
+            </div>
+        </div>
+    </div>
+
+    <div class="printable" style="display: none">
+
+        <table class="table table-bordered" style="font-size: 11px;">
+            <tr style="background-color: #990066;">
+                <td colspan="4">
+                    <center>
+                        <h2>
+                            <b>Application Form For @Model.Session.Name Academic Session</b>
+                        </h2>
+                    </center>
+
+                </td>
+            </tr>
+            <tr></tr>
+            <tr>
+                <td>
+                    <h3>Bio Data</h3>
+                </td>
+            </tr>
+            <tr>
+                <td colspan=2><img src="@Url.Content(Model.Person.ImageFileUrl)" id="personImage" width="100px" height="100px" alt="" /></td>
+                <td><b>Application Number: </b></td>
+                <td>
+                    <p id="applicationNumber"></p>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Surname: </b></td>
+                <td>
+                    <p id="lastName"></p>
+                </td>
+                <td><b>First Name: </b></td>
+                <td>
+                    <p id="firstName"></p>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Other Name: </b></td>
+                <td>
+                    <p id="otherName"></p>
+                </td>
+                <td><b>Sex: </b></td>
+                <td>
+                    <p id="sex"></p>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Date Of Birth: </b></td>
+                <td>
+                    <p id="dateOfBirth"></p>
+                </td>
+                <td><b>State: </b></td>
+                <td>
+                    <p id="state"></p>
+                </td>
+            </tr>
+            <tr>
+                <td><b>L.G.A: </b></td>
+                <td>
+                    <p id="localGovernment"></p>
+                </td>
+                <td><b>HomeTown</b></td>
+                <td>
+                    <p id="homeTown"></p>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Phone Number: </b></td>
+                <td>
+                    <p id="mobilePhone"></p>
+                </td>
+                <td><b>Email: </b></td>
+                <td>
+                    <p id="email"></p>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Religion: </b></td>
+                <td>
+                    <p id="religion"></p>
+                </td>
+                <td><b>HomeAddress: </b></td>
+                <td>
+                    <p id="homeAddress"></p>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Disability: </b></td>
+                <td>
+                    <p id="ability"></p>
+                </td>
+                <td><b>Other Disability: </b></td>
+                <td>
+                    <p id="otherAbility"></p>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ExtraCurricullarActivities: </b></td>
+                <td>
+                    <p id="extraCurricullarActivities"></p>
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr></tr>
+            <tr>
+                <td>
+                    <h3>Next of Kin</h3>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Name: </b></td>
+                <td>
+                    <p id="sponsorName"></p>
+                </td>
+                <td><b>Contact Address: </b></td>
+                <td>
+                    <p id="sponsorContactAddress"></p>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Phone Number: </b></td>
+                <td>
+                    <p id="sponsorPhone"></p>
+                </td>
+                <td><b>Relationship: </b></td>
+                <td>
+                    <p id="relationship"></p>
+                </td>
+            </tr>
+            <tr></tr>
+            <tr>
+                <td>
+                    <h3>O-Level Result</h3>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <table class="table table-bordered" id="firstSittingOLevel">
+                        <tr>
+                            <th colspan="4"><b>First Sitting</b></th>
+                        </tr>
+                        <tr>
+                            <td><b>Type: </b></td>
+                            <td>
+                                <p id="firstSittingOLevelResultTypeName"></p>
+                            </td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td><b>Exam Number: </b></td>
+                            <td>
+                                <p id="firstSittingOLevelResultExamNumber"></p>
+                            </td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td><b>Exam Year: </b></td>
+                            <td>
+                                <p id="firstSittingOLevelResultExamYear"></p>
+                            </td>
+                            <td colspan="2"></td>
+                        </tr>
+                        @if ((Model.Programme.Id == 1 || Model.Programme.Id == 6))
+                        {
+                            <tr>
+                                <td><b>Scratch Card Pin/Token: </b></td>
+                                <td>
+                                    <p id="firstSittingOLevelResultScratchCard"></p>
+                                </td>
+                                <td colspan="2"></td>
+                            </tr>
+                            <tr>
+                                <td><b>Scratch Card SerialNo: </b></td>
+                                <td>
+                                    <p id="firstSittingOLevelResultScratchCardSerialNo"></p>
+                                </td>
+                                <td colspan="2"></td>
+                            </tr>
+                        }
+
+                        <tr>
+                            <td colspan="4">
+                                <table class="table table-condensed" style="background-color: whitesmoke">
+                                    <thead>
+                                        <tr>
+                                            <th class="custom-text-black">
+                                                Subject
+                                            </th>
+                                            <th class="custom-text-black">
+                                                Grade
+                                            </th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="firstSittingPreview"></tbody>
+
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+
+                </td>
+
+                <td colspan="2">
+
+                    <table class="table table-bordered" id="secondSittingOLevel">
+                        <tr>
+                            <th colspan="4"><b>Second Sitting</b></th>
+                        </tr>
+                        <tr>
+                            <td><b>Type: </b></td>
+                            <td>
+                                <p id="secondSittingOLevelResultTypeName"></p>
+                            </td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td><b>Exam Number: </b></td>
+                            <td>
+                                <p id="secondSittingOLevelExamNumber"></p>
+                            </td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td><b>Exam Year: </b></td>
+                            <td>
+                                <p id="secondSittingOLevelExamYear"></p>
+                            </td>
+                            <td colspan="2"></td>
+                        </tr>
+                        @if ((Model.Programme.Id == 1 || Model.Programme.Id == 6))
+                        {
+                            <tr>
+                                <td><b>Scratch Card Pin/Token: </b></td>
+                                <td>
+                                    <p id="secondSittingOLevelResultScratchCard"></p>
+                                </td>
+                                <td colspan="2"></td>
+                            </tr>
+                            <tr>
+                                <td><b>Scratch Card SerialNo: </b></td>
+                                <td>
+                                    <p id="secondSittingOLevelResultScratchCardSerialNo"></p>
+                                </td>
+                                <td colspan="2"></td>
+                            </tr>
+                        }
+
+                        <tr>
+                            <td colspan="4">
+                                <table class="table table-condensed" style="background-color: whitesmoke">
+                                    <thead>
+                                        <tr>
+                                            <th class="custom-text-black">
+                                                Subject
+                                            </th>
+                                            <th class="custom-text-black">
+                                                Grade
+                                            </th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="secondSittingPreview"></tbody>
+
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+
+                </td>
+            </tr>
+            <tr></tr>
+
+            <tr>
+                <td>
+                    <h3>Academic Details</h3>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Programme: </b></td>
+                <td>
+                    <p id="programmeName"></p>
+                </td>
+                <td><b>Department: </b></td>
+                <td>
+                    <p id="departmentName"></p>
+                </td>
+            </tr>
+
+            <tr>
+                <td><b>School: </b></td>
+                <td>
+                    <p id="facultyName"></p>
+                </td>
+                @if (Model != null && Model.AppliedCourse != null && Model.AppliedCourse.Option != null)
+                {
+                    <td><b>Option: </b></td>
+                    <td>
+                        <p id="optionName"></p>
+                    </td>
+                }
+                else
+                {
+                    <td colspan="2"></td>
+                }
+            </tr>
+
+            <tr>
+                <td></td>
+                <td></td>
+                @if (Model != null && Model.AppliedCourse != null && Model.AppliedCourse.Option != null)
+                {
+                    <td><b>Second Choice (Option): </b></td>
+                    <td>
+                        <p id="secondOptionName"></p>
+                    </td>
+                }
+                else
+                {
+                    <td colspan="2"></td>
+                }
+            </tr>
+
+            @if (Model != null && Model.Programme != null && (Model.Programme.Id == 3 || Model.Programme.Id == 4 || Model.Programme.Id == 5))
+            {
+                <tr>
+                    <td><b>Previous School: </b></td>
+                    <td>
+                        <p id="previousSchool"></p>
+                    </td>
+                    <td><b>Course: </b></td>
+                    <td>
+                        <p id="previousSchoolCourse"></p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><b>Qaulification: </b></td>
+                    <td>
+                        <p id="previousSchoolQualification"></p>
+                    </td>
+                    <td><b>Grade: </b></td>
+                    <td>
+                        <p id="previousSchoolGrade"></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>IT Start Month: </b></td>
+                    <td>
+                        <p id="itStartMonth"></p>
+                    </td>
+                    <td><b>IT Start Year: </b></td>
+                    <td>
+                        <p id="itStartYear"></p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><b>IT End Month: </b></td>
+                    <td>
+                        <p id="itEndMonth"></p>
+                    </td>
+                    <td><b>IT End Year: </b></td>
+                    <td>
+                        <p id="itEndYear"></p>
+                    </td>
+                </tr>
+            }
+
+
+        </table>
+
+    </div>
+
+
+   
+        @*<div class="modal fade" role="dialog" id="formPreviewModal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content printable">
+                    <div class="modal-header bg-primary">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <div style="text-align: center;">
+                            <div style="background-color: #990066; color: #fff">
+                                <h2>
+                                    <b>Application Form For @Model.Session.Name Academic Session</b>
+                                </h2>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-body">
+                        <div id="slip">
+
+                            <div class="card p-5">
+                                <div class="card-heading bg-primary">
+                                    <div style="font-size: x-large"> &nbsp; Bio Data</div>
+                                </div>
+
+                                <div class="card-body p-4">
+
+                                    <table class="table table-bordered">
+                                        <tr style="border:none;">
+                                            <td colspan=2><img src="@Url.Content(Model.Person.ImageFileUrl)" id="personImage" alt=" " style="max-width: 150px" /></td>
+                                            <td><b>Application Number: </b></td>
+                                            <td><p id="applicationNumber"></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Last Name: </b></td>
+                                            <td><p id="lastName"></p></td>
+                                            <td><b>First Name: </b></td>
+                                            <td><p id="firstName"></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Other Name: </b></td>
+                                            <td><p id="otherName"></p></td>
+                                            <td><b>Sex: </b></td>
+                                            <td><p id="sex"></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Date Of Birth: </b></td>
+                                            <td><p id="dateOfBirth"></p></td>
+                                            <td><b>State: </b></td>
+                                            <td><p id="state"></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>L.G.A: </b></td>
+                                            <td><p id="localGovernment"></p></td>
+                                            <td><b>HomeTown</b></td>
+                                            <td><p id="homeTown"></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Phone Number: </b></td>
+                                            <td><p id="mobilePhone"></p></td>
+                                            <td><b>Email: </b></td>
+                                            <td><p id="email"></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Religion: </b></td>
+                                            <td><p id="religion"></p></td>
+                                            <td><b>HomeAddress: </b></td>
+                                            <td><p id="homeAddress"></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Ability: </b></td>
+                                            <td><p id="ability"></p></td>
+                                            <td><b>Other Ability: </b></td>
+                                            <td><p id="otherAbility"></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>ExtraCurricullarActivities: </b></td>
+                                            <td><p id="extraCurricullarActivities"></p></td>
+                                        </tr>
+                                    </table>
+
+                                </div>
+                            </div>
+
+                            <div class="card p-5">
+                                <div class="card-heading bg-primary">
+                                    <div style="font-size: x-large"> &nbsp; Next of Kin</div>
+                                </div>
+                                <div class="card-body p-4">
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <td><b>Name: </b></td>
+                                            <td><p id="sponsorName"></p></td>
+                                            <td><b>Contact Address: </b></td>
+                                            <td><p id="sponsorContactAddress"></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Phone Number: </b></td>
+                                            <td><p id="sponsorPhone"></p></td>
+                                            <td><b>Relationship: </b></td>
+                                            <td><p id="relationship"></p></td>
+                                        </tr>
+                                    </table>
+
+                                </div>
+                            </div>
+
+                            <div class="card p-5">
+                                <div class="card-heading bg-primary">
+                                    <div style="font-size: x-large"> &nbsp; O-Level Result</div>
+                                </div>
+                                <div class="card-body p-4 table-responsive">
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <td>
+
+                                                <table class="table table-bordered" id="firstSittingOLevel">
+                                                    <tr>
+                                                        <th colspan="2"><b>First Sitting</b></th>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>Type: </b></td>
+                                                        <td><p id="firstSittingOLevelResultTypeName"></p></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>Exam Number: </b></td>
+                                                        <td><p id="firstSittingOLevelResultExamNumber"></p></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>Exam Year: </b></td>
+                                                        <td><p id="firstSittingOLevelResultExamYear"></p></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2">
+                                                            <table class="table table-condensed" style="background-color: whitesmoke">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th class="custom-text-black">
+                                                                            Subject
+                                                                        </th>
+                                                                        <th class="custom-text-black">
+                                                                            Grade
+                                                                        </th>
+                                                                        <th></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="firstSittingPreview"></tbody>
+
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+
+                                            </td>
+
+                                            <td>
+
+                                                <table class="table table-bordered" id="secondSittingOLevel">
+                                                    <tr>
+                                                        <th colspan="2"><b>Second Sitting</b></th>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>Type: </b></td>
+                                                        <td><p id="secondSittingOLevelResultTypeName"></p></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>Exam Number: </b></td>
+                                                        <td><p id="secondSittingOLevelExamNumber"></p></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><b>Exam Year: </b></td>
+                                                        <td><p id="secondSittingOLevelExamYear"></p></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2">
+                                                            <table class="table table-condensed" style="background-color: whitesmoke">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th class="custom-text-black">
+                                                                            Subject
+                                                                        </th>
+                                                                        <th class="custom-text-black">
+                                                                            Grade
+                                                                        </th>
+                                                                        <th></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="secondSittingPreview"></tbody>
+
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                </div>
+                            </div>
+
+                            <div class="card p-5">
+                                <div class="card-heading bg-primary">
+                                    <div style="font-size: x-large"> &nbsp; Academic Details</div>
+                                </div>
+                                <div class="card-body p-4">
+
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <td><b>Programme: </b></td>
+                                            <td><p id="programmeName"></p></td>
+                                            <td><b>Department: </b></td>
+                                            <td><p id="departmentName"></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>School: </b></td>
+                                            <td>
+                                                <p id="facultyName"></p></td>
+                                            @if (Model != null && Model.AppliedCourse != null && Model.AppliedCourse.Option != null)
+                                            {
+                                                <td><b>Option: </b></td>
+                                                <td>
+                                                    <p id="optionName"></p></td>
+                                            }
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            @if (Model != null && Model.AppliedCourse != null && Model.AppliedCourse.Option != null)
+                                            {
+                                                <td><b>Second Choice (Option): </b></td>
+                                                <td><p id="secondOptionName"></p></td>
+                                            }
+                                        </tr>
+                                    </table>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="modal-footer form-group">
+                        <button class="btn btn-success btn-lg" name="submit" id="btnPrintPreview"><i class="fa fa-save mr5"></i> Print</button> &nbsp;
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+
+
+
+    <!-- Start of Smartsupp Live Chat script -->
+    <script type="text/javascript">
+
+
+        var _smartsupp = _smartsupp || {};
+        _smartsupp.key = "8d8c5c64fa82b02ea860a7f80d5a93c351259935";
+
+        //
+        _smartsupp.cookieDomain = '.97.74.6.243/fedpolyado';
+        _smartsupp.requireLogin = true;
+        // disable email
+        _smartsupp.loginEmailControl = false;
+        // append checkbox control to confirm something
+        _smartsupp.loginControls = [{
+            xtype: 'textinput',
+            name: 'number',
+            label: 'Phone',
+            required: true
+        }, {
+            xtype: 'textinput',
+            name: 'identifier',
+            label: 'Application / Matric No',
+            required: true
+        }];
+
+        window.smartsupp || (function (d) {
+            var s, c, o = smartsupp = function () { o._.push(arguments) }; o._ = [];
+            s = d.getElementsByTagName('script')[0]; c = d.createElement('script');
+            c.type = 'text/javascript'; c.charset = 'utf-8'; c.async = true;
+            c.src = '//www.smartsuppchat.com/loader.js'; s.parentNode.insertBefore(c, s);
+        })(document);
+
+
+    </script>
+    <!-- End of Smartsupp Live Chat script -->
+    <script>
+        // customize banner & logo
+        smartsupp('banner:set', 'bubble');
+        smartsupp('chat:avatar', '@Url.Content("~/Content/Images/livechat.png")');
+
+        // customize texts
+        smartsupp('chat:translate', {
+            online: {
+                title: 'Support',
+                infoTitle: 'LLOYDANT'
+            },
+            offline: {
+                title: 'OFFLINE'
+            }
+        });
+
+        // customize colors
+        smartsupp('theme:colors', {
+            primary: '#990066',
+            banner: '#999999',
+            primaryText: '#ffffff'
+        });
+    </script>
+</body>
+</html>

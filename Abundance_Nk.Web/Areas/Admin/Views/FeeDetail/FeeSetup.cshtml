@@ -1,0 +1,1025 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.FeeDetailViewModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@section Scripts {
+
+<link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+
+    @Scripts.Render("~/bundles/jquery")
+
+
+<script src="~/Scripts/bootstrap.js"></script>
+<script src="~/Scripts/file-upload/jquery-ui-1.9.2.min.js"></script>
+
+    <script type="text/javascript">
+
+        //1 = applicationFormSetting, 2 = applicationProgrammeFee, 3 = PaymentEtranzactType, 4 = FeeDetail, 5 = PaymentTerminal, 6 = Fee, 7 = FeeType
+
+        var formSettingDataTable;
+        var programmeFeeDataTable;
+        var etranzactTypeDataTable;
+        var feeDetailDataTable;
+        var paymentTerminalDataTable;
+        var feeDataTable;
+        var feeTypeDataTable;
+
+        $(document).ready(function () {
+            $(".Load").hide();
+
+            $('link[rel=stylesheet][href~="/Content/sbCss/bootstrap.min.css"]').remove();
+
+
+            PopulateSetupTables(1, null, null);
+            PopulateSetupTables(2, null, null);
+            PopulateSetupTables(3, null, null);
+            //PopulateSetupTables(4, null, null);
+            PopulateSetupTables(5, null, null);
+            PopulateSetupTables(6, null, null);
+            PopulateSetupTables(7, null, null);
+
+        });
+
+        function populateFeeDetails() {
+
+            if (feeDetailDataTable == undefined) {
+                //Do nothing
+            } else {
+                feeDetailDataTable.destroy();
+            }
+
+            var feeType = $("#FeeTypeName").val();
+            var session = $("#Session").val();
+            PopulateSetupTables(4, feeType, session);
+        }
+
+
+        function showCreateModal(tableId) {
+
+            hideControls();
+
+            switch (tableId) {
+                case 1:
+                    $("#createFormSettingHeader").show();
+                    $("#btnCreateFormSetting").show();
+                    $("#paymentModeTextBox").show();
+                    $("#sessionTextBox").show();
+                    break;
+                case 2:
+                    $("#createProgrammeFeeHeader").show();
+                    $("#btnCreateProgrammeFee").show();
+                    $("#programmeTextBox").show();
+                    $("#feeTypeTextBox").show();
+                    $("#sessionTextBox").show();
+                    break;
+                case 3:
+                    $("#createEtranzactTypeHeader").show();
+                    $("#btnCreateEtranzactType").show();
+                    $("#etranzactTypeTextBox").show();
+                    $("#programmeTextBox").show();
+                    $("#levelTextBox").show();
+                    $("#feeTypeTextBox").show();
+                    $("#paymentModeTextBox").show();
+                    $("#sessionTextBox").show();
+                    break;
+                case 4:
+                    $("#createFeeDetailHeader").show();
+                    $("#btnCreateFeeDetail").show();
+                    $("#feeTextBox").show();
+                    $("#feeTypeTextBox").show();
+                    $("#programmeTextBox").show();
+                    $("#levelTextBox").show();
+                    $("#departmentTextBox").show();
+                    $("#paymentModeTextBox").show();
+                    $("#sessionTextBox").show();
+                    break;
+                case 5:
+                    $("#createPaymentTerminalHeader").show();
+                    $("#btnCreatePaymentTerminal").show();
+                    $("#terminalIdTextBox").show();
+                    $("#feeTypeTextBox").show();
+                    $("#sessionTextBox").show();
+                    break;
+                case 6:
+                    $("#createFeeHeader").show();
+                    $("#btnCreateFee").show();
+                    $("#feeNameTextBox").show();
+                    $("#amountTextBox").show();
+                    $("#feeDescriptionTextBox").show();
+                    break;
+                case 7:
+                    $("#createFeeTypeHeader").show();
+                    $("#btnCreateFeeType").show();
+                    $("#feeTypeNameTextBox").show();
+                    $("#feeTypeDescriptionTextBox").show();
+                    break;
+
+                default:
+                    break;
+            }
+
+            $('#createModal').modal('show');
+        }
+
+        function hideControls() {
+
+            $("#createFormSettingHeader").hide();
+            $("#editFormSettingHeader").hide();
+            $("#createProgrammeFeeHeader").hide();
+            $("#editProgrammeFeeHeader").hide();
+            $("#createEtranzactTypeHeader").hide();
+            $("#editEtranzactTypeHeader").hide();
+            $("#createFeeDetailHeader").hide();
+            $("#editFeeDetailHeader").hide();
+            $("#createPaymentTerminalHeader").hide();
+            $("#editPaymentTerminalHeader").hide();
+            $("#createFeeHeader").hide();
+            $("#editFeeHeader").hide();
+            $("#createFeeTypeHeader").hide();
+            $("#editFeeTypeHeader").hide();
+            $("#idTextBox").hide();
+            $("#programmeTextBox").hide();
+            $("#levelTextBox").hide();
+            $("#sessionTextBox").hide();
+            $("#feeTypeTextBox").hide();
+            $("#feeTextBox").hide();
+            $("#departmentTextBox").hide();
+            $("#paymentModeTextBox").hide();
+            $("#terminalIdTextBox").hide();
+            $("#etranzactTypeTextBox").hide();
+            $("#feeNameTextBox").hide();
+            $("#amountTextBox").hide();
+            $("#feeDescriptionTextBox").hide();
+            $("#feeTypeNameTextBox").hide();
+            $("#feeTypeDescriptionTextBox").hide();
+            $("#btnCreateFormSetting").hide();
+            $("#btnSaveFormSetting").hide();
+            $("#btnCreateProgrammeFee").hide();
+            $("#btnSaveProgrammeFee").hide();
+            $("#btnCreateEtranzactType").hide();
+            $("#btnSaveEtranzactType").hide();
+            $("#btnCreateFeeDetail").hide();
+            $("#btnSaveFeeDetail").hide();
+            $("#btnCreatePaymentTerminal").hide();
+            $("#btnSavePaymentTerminal").hide();
+            $("#btnCreateFee").hide();
+            $("#btnSaveFee").hide();
+            $("#btnCreateFeeType").hide();
+            $("#btnSaveFeeType").hide();
+        }
+
+        function createRecord(tableType) {
+            if (tableType != null && tableType > 0) {
+
+                var valueArray = populateRecords();
+                var myJson = JSON.stringify(valueArray);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("CreateRecord")',
+                    dataType: 'json',
+                    data: { tableType: tableType, myRecordArray: myJson },
+                    beforeSend: function () {
+                        $(".Load").show();
+                    },
+                    complete: function () {
+                        $(".Load").hide();
+                    },
+                    success: function (result) {
+                        if (result.IsError === false) {
+
+                            alert('Record created successfully');
+
+                            switch (tableType) {
+                                case 1:
+                                    formSettingDataTable.destroy();
+                                    break;
+                                case 2:
+                                    programmeFeeDataTable.destroy();
+                                    break;
+                                case 3:
+                                    etranzactTypeDataTable.destroy();
+                                    break;
+                                case 4:
+                                    if (feeDetailDataTable != undefined) {
+                                        feeDetailDataTable.destroy();
+                                    }
+
+                                    break;
+                                case 5:
+                                    paymentTerminalDataTable.destroy();
+                                    break;
+                                case 6:
+                                    feeDataTable.destroy();
+                                    break;
+                                case 7:
+                                    feeTypeDataTable.destroy();
+                                    break;
+                                default:
+                                    break;
+                            }
+
+                            $('#createModal').modal('hide');
+                            if (tableType !== 4) {
+                                PopulateSetupTables(tableType, null, null);
+                            }
+
+                        } else {
+                            alert(result.Message);
+                        }
+                    },
+                    error: function (ex) {
+                        alert('Create failed.' + ex);
+                    }
+                });
+
+            }
+        }
+        function editRecord(id, tableType) {
+            if (tableType != null && tableType > 0) {
+
+                var valueArray = populateRecords();
+                var myJson = JSON.stringify(valueArray);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("EditRecord")',
+                    dataType: 'json',
+                    data: { tableType: tableType, recordId: id, myRecordArray: myJson, action: "edit" },
+                    beforeSend: function () {
+                        $(".Load").show();
+                    },
+                    complete: function () {
+                        $(".Load").hide();
+                    },
+                    success: function (result) {
+                        if (result.IsError === false) {
+
+                            hideControls();
+
+                            $("#idEdit").val(result.Id);
+                            $("#idEdit").attr("readonly", "readonly");
+                            $("#idTextBox").show();
+
+                            switch (tableType) {
+                                case 1:
+                                    $("#sessionCreate").val(result.Session);
+                                    $("#paymentModeCreate").val(result.PaymentMode);
+
+                                    $("#editFormSettingHeader").show();
+                                    $("#btnSaveFormSetting").show();
+                                    $("#paymentModeTextBox").show();
+                                    $("#sessionTextBox").show();
+                                    break;
+                                case 2:
+                                    $("#sessionCreate").val(result.Session);
+                                    $("#programmeCreate").val(result.Programme);
+                                    $("#feeTypeCreate").val(result.FeeType);
+
+                                    $("#editProgrammeFeeHeader").show();
+                                    $("#btnSaveProgrammeFee").show();
+                                    $("#programmeTextBox").show();
+
+                                    $("#sessionTextBox").show();
+                                    $("#feeTypeTextBox").show();
+                                    break;
+                                case 3:
+                                    $("#sessionCreate").val(result.Session);
+                                    $("#programmeCreate").val(result.Programme);
+                                    $("#feeTypeCreate").val(result.FeeType);
+                                    $("#paymentModeCreate").val(result.PaymentMode);
+                                    $("#etranzactTypeNameCreate").val(result.Name);
+                                    $("#levelCreate").val(result.Level);
+
+                                    $("#editEtranzactTypeHeader").show();
+                                    $("#btnSaveEtranzactType").show();
+                                    $("#programmeTextBox").show();
+                                    $("#levelTextBox").show();
+                                    $("#sessionTextBox").show();
+                                    $("#feeTypeTextBox").show();
+                                    $("#etranzactTypeTextBox").show();
+                                    $("#paymentModeTextBox").show();
+                                    break;
+                                case 4:
+                                    $("#sessionCreate").val(result.Session);
+                                    $("#programmeCreate").val(result.Programme);
+                                    $("#feeTypeCreate").val(result.FeeType);
+                                    $("#paymentModeCreate").val(result.PaymentMode);
+                                    $("#levelCreate").val(result.Level);
+                                    $("#departmentCreate").val(result.Department);
+                                    $("#feeCreate").val(result.Fee);
+
+                                    $("#editFeeDetailHeader").show();
+                                    $("#btnSaveFeeDetail").show();
+                                    $("#programmeTextBox").show();
+                                    $("#sessionTextBox").show();
+                                    $("#feeTypeTextBox").show();
+                                    $("#levelTextBox").show();
+                                    $("#paymentModeTextBox").show();
+                                    $("#feeTextBox").show();
+                                    $("#departmentTextBox").show();
+                                    break;
+                                case 5:
+                                    $("#sessionCreate").val(result.Session);
+                                    $("#terminalIdCreate").val(result.TerminalId);
+                                    $("#feeTypeCreate").val(result.FeeType);
+
+                                    $("#editPaymentTerminalHeader").show();
+                                    $("#btnSavePaymentTerminal").show();
+                                    $("#terminalIdTextBox").show();
+                                    $("#sessionTextBox").show();
+                                    $("#feeTypeTextBox").show();
+                                    break;
+                                case 6:
+                                    $("#feeNameCreate").val(result.FeeName);
+                                    $("#amountCreate").val(result.Amount);
+                                    $("#feeDescriptionCreate").val(result.FeeDescription);
+
+                                    $("#editFeeHeader").show();
+                                    $("#btnSaveFee").show();
+                                    $("#feeNameTextBox").show();
+                                    $("#amountTextBox").show();
+                                    $("#feeDescriptionTextBox").show();
+                                    break;
+                                case 7:
+                                    $("#feeTypeNameCreate").val(result.FeeTypeName);
+                                    $("#feeTypeDescriptionCreate").val(result.FeeTypeDescription);
+
+                                    $("#editFeeTypeHeader").show();
+                                    $("#btnSaveFeeType").show();
+                                    $("#feeTypeNameTextBox").show();
+                                    $("#feeTypeDescriptionTextBox").show();
+                                    break;
+                                default:
+                                    break;
+                            }
+
+                            $('#createModal').modal('show');
+                        } else {
+                            alert(result.Message);
+                        }
+                    },
+                    error: function (ex) {
+                        alert('Edit failed.' + ex);
+                    }
+                });
+
+            }
+        }
+
+        function saveRecord(tableType) {
+            if (tableType != null && tableType > 0) {
+
+                var valueArray = populateRecords();
+                var myJson = JSON.stringify(valueArray);
+                var id = 0;
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("EditRecord")',
+                    dataType: 'json',
+                    data: { tableType: tableType, recordId: id, myRecordArray: myJson, action: "save" },
+                    beforeSend: function () {
+                        $(".Load").show();
+                    },
+                    complete: function () {
+                        $(".Load").hide();
+                    },
+                    success: function (result) {
+                        if (result.IsError === false) {
+
+                            alert(result.Message);
+
+                            switch (tableType) {
+                                case 1:
+                                    formSettingDataTable.destroy();
+                                    break;
+                                case 2:
+                                    programmeFeeDataTable.destroy();
+                                    break;
+                                case 3:
+                                    etranzactTypeDataTable.destroy();
+                                    break;
+                                case 4:
+                                    if (feeDetailDataTable != undefined) {
+                                        feeDetailDataTable.destroy();
+                                    }
+                                    break;
+                                case 5:
+                                    paymentTerminalDataTable.destroy();
+                                    break;
+                                case 6:
+                                    feeDataTable.destroy();
+                                    break;
+                                case 7:
+                                    feeTypeDataTable.destroy();
+                                    break;
+                                default:
+                                    break;
+                            }
+
+                            $('#createModal').modal('hide');
+                            PopulateSetupTables(tableType, null, null);
+                        } else {
+                            alert(result.Message);
+                        }
+                    },
+                    error: function (ex) {
+                        alert('Save operation failed.' + ex);
+                    }
+                });
+
+            }
+        }
+
+        function deleteRecord(id, tableType) {
+            if (tableType != null && tableType > 0) {
+
+                var deleteConfirmation = confirm("Confirm Delete!");
+
+                if (deleteConfirmation === true) {
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("DeleteRecord")',
+                        dataType: 'json',
+                        data: { tableType: tableType, recordId: id },
+                        beforeSend: function () {
+                            $(".Load").show();
+                        },
+                        complete: function () {
+                            $(".Load").hide();
+                        },
+                        success: function (result) {
+                            if (result.IsError === false) {
+
+                                alert('Record was deleted.');
+
+                                switch (tableType) {
+                                    case 1:
+                                        formSettingDataTable.destroy();
+                                        break;
+                                    case 2:
+                                        programmeFeeDataTable.destroy();
+                                        break;
+                                    case 3:
+                                        etranzactTypeDataTable.destroy();
+                                        break;
+                                    case 4:
+                                        if (feeDetailDataTable != undefined) {
+                                            feeDetailDataTable.destroy();
+                                        }
+
+                                        break;
+                                    case 5:
+                                        paymentTerminalDataTable.destroy();
+                                        break;
+                                    case 6:
+                                        feeDataTable.destroy();
+                                        break;
+                                    case 7:
+                                        feeTypeDataTable.destroy();
+                                        break;
+                                    default:
+                                        break;
+                                }
+
+                                PopulateSetupTables(tableType, null, null);
+                            } else {
+                                alert(result.Message);
+                            }
+                        },
+                        error: function (ex) {
+                            alert('Delete failed.' + ex);
+                        }
+                    });
+                }
+            } else {
+                alert('Parameter was not set!');
+            }
+        }
+
+        function populateRecords() {
+            var valueArray = { "id": $("#idEdit").val(), "programme": $("#programmeCreate").val(), "department": $("#departmentCreate").val(), "level": $("#levelCreate").val(), "feeType": $("#feeTypeCreate").val(), "fee": $("#feeCreate").val(), "session": $("#sessionCreate").val(), "paymentMode": $("#paymentModeCreate").val(), "terminalId": $("#terminalIdCreate").val(), "etranzactTypeName": $("#etranzactTypeNameCreate").val(), "feeName": $("#feeNameCreate").val(), "amount": $("#amountCreate").val(), "feeDescription": $("#feeDescriptionCreate").val(), "feeTypeName": $("#feeTypeNameCreate").val(), "feeTypeDescription": $("#feeTypeDescriptionCreate").val() }
+
+            return valueArray;
+        }
+
+        function PopulateSetupTables(feeTableType, feeType, session) {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("PopulateSetupTables", "FeeDetail")',
+                traditional: true,
+                data: { tableType: feeTableType, feeType: feeType, session: session },
+                beforeSend: function () {
+                    $(".Load").show();
+                },
+                complete: function () {
+                    $(".Load").hide();
+                },
+                success: function (result) {
+                    if (result[0] != undefined && result[0].IsError === false) {
+                        var i;
+                        switch (feeTableType) {
+                            case 1:
+
+                                $("#ApplicationFormSetting").empty();
+
+                                for (i = 0; i < result.length; i++) {
+                                    result[i].index = result[i].Id;
+                                    $("#ApplicationFormSetting").append('<tr><td>' + result[i].Id + '</td>' + '<td>' + result[i].PersonType + '</td>' + '<td>' + result[i].PaymentType + '</td>' + '<td>' + result[i].PaymentMode + '</td>' + '<td>' + result[i].Session + '</td>' + '<td>' + result[i].EnteredBy + '</td>' + ' <td><input onclick="editRecord(' + result[i].Id + ', 1)" class="btn btn-sm btn-success editTableRow" value="Edit" type="button" /></td>' + ' <td><input onclick="deleteRecord(' + result[i].Id + ', 1)" class="btn btn-sm btn-success removeTableRow" value="Delete" type="button" /></td></tr>');
+
+                                }
+
+                                //$('#FormSettingTable').DataTable();
+                                formSettingDataTable = $('#FormSettingTable').DataTable();
+                                break;
+                            case 2:
+
+                                $("#ApplicationProgrammeFee").empty();
+
+                                for (i = 0; i < result.length; i++) {
+                                    result[i].index = result[i].Id;
+                                    $("#ApplicationProgrammeFee").append('<tr><td>' + result[i].Id + '</td>' + '<td>' + result[i].Programme + '</td>' + '<td>' + result[i].FeeType + '</td>' + '<td>' + result[i].Session + '</td>' + '<td><input onclick="editRecord(' + result[i].Id + ', 2)" class="btn btn-sm btn-success editTableRow" value="Edit" type="button" /></td>' + ' <td><input onclick="deleteRecord(' + result[i].Id + ', 2)" class="btn btn-sm btn-success removeTableRow" value="Delete" type="button" /></td></tr>');
+
+                                }
+
+                                //$('#ProgrammeFeeTable').DataTable();
+                                programmeFeeDataTable = $('#ProgrammeFeeTable').DataTable();
+                                break;
+                            case 3:
+
+                                $("#PaymentEtranzactType").empty();
+
+                                for (i = 0; i < result.length; i++) {
+                                    result[i].index = result[i].Id;
+                                    $("#PaymentEtranzactType").append('<tr><td>' + result[i].Id + '</td>' + '<td>' + result[i].Name + '</td>' + '<td>' + result[i].FeeType + '</td>' + '<td>' + result[i].Programme + '</td>' + '<td>' + result[i].Level + '</td>' + '<td>' + result[i].PaymentMode + '</td>' + '<td>' + result[i].Session + '</td>' + '<td><input onclick="editRecord(' + result[i].Id + ', 3)" class="btn btn-sm btn-success editTableRow" value="Edit" type="button" /></td>' + ' <td><input onclick="deleteRecord(' + result[i].Id + ', 3)" class="btn btn-sm btn-success removeTableRow" value="Delete" type="button" /></td></tr>');
+
+                                }
+
+                                //$('#EtranzactTypeTable').DataTable();
+                                etranzactTypeDataTable = $('#EtranzactTypeTable').DataTable();
+                                break;
+                            case 4:
+
+                                $("#FeeDetail").empty();
+
+                                for (i = 0; i < result.length; i++) {
+                                    result[i].index = result[i].Id;
+                                    $("#FeeDetail").append('<tr><td>' + result[i].Id + '</td>' + '<td>' + result[i].Fee + '</td>' + '<td>' + result[i].FeeType + '</td>' + '<td>' + result[i].Programme + '</td>' + '<td>' + result[i].Level + '</td>' + '<td>' + result[i].PaymentMode + '</td>' + '<td>' + result[i].Department + '</td>' + '<td>' + result[i].Session + '</td>' + '<td><input onclick="editRecord(' + result[i].Id + ', 4)" class="btn btn-sm btn-success editTableRow" value="Edit" type="button" /></td>' + ' <td><input onclick="deleteRecord(' + result[i].Id + ', 4)" class="btn btn-sm btn-success removeTableRow" value="Delete" type="button" /></td></tr>');
+
+                                }
+
+                                //$('#FeeDetailTable').DataTable();
+                                feeDetailDataTable = $('#FeeDetailTable').DataTable();
+                                break;
+                            case 5:
+
+                                $("#paymentTerminal").empty();
+
+                                for (i = 0; i < result.length; i++) {
+                                    result[i].index = result[i].Id;
+                                    $("#paymentTerminal").append('<tr><td>' + result[i].Id + '</td>' + '<td>' + result[i].TerminalId + '</td>' + '<td>' + result[i].FeeType + '</td>' + '<td>' + result[i].Session + '</td>' + '<td><input onclick="editRecord(' + result[i].Id + ', 5)" class="btn btn-sm btn-success editTableRow" value="Edit" type="button" /></td>' + ' <td><input onclick="deleteRecord(' + result[i].Id + ', 5)" class="btn btn-sm btn-success removeTableRow" value="Delete" type="button" /></td></tr>');
+
+                                }
+
+                                //$('#paymentTerminalTable').DataTable();
+                                paymentTerminalDataTable = $('#paymentTerminalTable').DataTable();
+                                break;
+                            case 6:
+
+                                $("#fee").empty();
+
+                                for (i = 0; i < result.length; i++) {
+                                    result[i].index = result[i].Id;
+                                    $("#fee").append('<tr><td>' + result[i].Id + '</td>' + '<td>' + result[i].FeeName + '</td>' + '<td>' + result[i].Amount + '</td>' + '<td>' + result[i].FeeDescription + '</td>' + '<td><input onclick="editRecord(' + result[i].Id + ', 6)" class="btn btn-sm btn-success editTableRow" value="Edit" type="button" /></td>' + ' <td><input onclick="deleteRecord(' + result[i].Id + ', 6)" class="btn btn-sm btn-success removeTableRow" value="Delete" type="button" /></td></tr>');
+
+                                }
+
+                                //$('#paymentTerminalTable').DataTable();
+                                feeDataTable = $('#feeTable').DataTable();
+                                break;
+                            case 7:
+
+                                $("#feeType").empty();
+
+                                for (i = 0; i < result.length; i++) {
+                                    result[i].index = result[i].Id;
+                                    $("#feeType").append('<tr><td>' + result[i].Id + '</td>' + '<td>' + result[i].FeeTypeName + '</td>' + '<td>' + result[i].FeeTypeDescription + '</td>' + '<td><input onclick="editRecord(' + result[i].Id + ', 7)" class="btn btn-sm btn-success editTableRow" value="Edit" type="button" /></td>' + ' <td><input onclick="deleteRecord(' + result[i].Id + ', 7)" class="btn btn-sm btn-success removeTableRow" value="Delete" type="button" /></td></tr>');
+
+                                }
+
+                                //$('#paymentTerminalTable').DataTable();
+                                feeTypeDataTable = $('#feeTypeTable').DataTable();
+                                break;
+                            default:
+                                break;
+                        }
+
+                    } else {
+                        alert(result.Message);
+                    }
+                },
+                error: function (ex) {
+                    alert('Operation Failed.' + ex);
+                }
+            });
+        }
+
+        $("#programmeCreate").change(function () {
+
+            var programme = $("#programmeCreate").val();
+
+            $("#departmentCreate").empty();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartmentByProgrammeId")', // we are calling json method
+                dataType: 'json',
+                data: { id: programme },
+                success: function (departments) {
+                    $("#departmentCreate").append('<option value="' + 0 + '"> -- Select -- </option>');
+
+                    $.each(departments, function (i, department) {
+                        $("#departmentCreate").append('<option value="' + department.Value + '">' + department.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+        });
+
+
+    </script>
+
+}
+
+<br />
+<div>
+    @if (TempData["Message"] != null)
+    {
+        @Html.Partial("_Message", TempData["Message"])
+    }
+</div>
+
+
+<div class="col-md-12 table-responsive">
+    <h2 style="text-align: center">Fee Setup Page &nbsp; <span class="Load"><img src="~/Content/Images/bx_loader.gif" /></span> </h2>
+    <hr />
+
+    <div class="row table-responsive">
+
+        <div class="col-md-6">
+            <div class="panel panel-success">
+                <div class="panel-heading"><h3 style="text-align: center">Fee</h3> </div>
+                <div class="panel-body table-responsive">
+
+                    <table class="table table-striped table-hover" id="feeTable">
+                        <thead>
+                            <tr>
+                                <th>Fee Id</th>
+                                <th>Fee Name</th>
+                                <th>Amount</th>
+                                <th>Description</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="fee"></tbody>
+                    </table>
+                    <button id="btnFeeCreate" class="btn btn-success" onclick="showCreateModal(6)"><i class="fa fa-plus"> Add</i></button>
+
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="col-md-6">
+            <div class="panel panel-success">
+                <div class="panel-heading"><h3 style="text-align: center">Fee Type</h3> </div>
+                <div class="panel-body table-responsive">
+
+                    <table class="table table-striped table-hover" id="feeTypeTable">
+                        <thead>
+                            <tr>
+                                <th>Fee Type Id</th>
+                                <th>fee Type Name</th>
+                                <th>Description</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="feeType"></tbody>
+                    </table>
+                    <button id="btnFeeTypeCreate" class="btn btn-success" onclick="showCreateModal(7)"><i class="fa fa-plus"> Add</i></button>
+
+
+                </div>
+            </div>
+            </div>
+
+
+    </div>
+
+    <div class="row table-responsive">
+
+        <div class="col-md-6">
+            <div class="panel panel-success">
+                <div class="panel-heading"><h3 style="text-align: center">Application Programme Fee</h3> </div>
+                <div class="panel-body table-responsive">
+
+                    <table class="table table-striped table-hover" id="ProgrammeFeeTable">
+                        <thead>
+                            <tr>
+                                <th>Programme Fee Id</th>
+                                <th>Programme</th>
+                                <th>FeeType</th>
+                                <th>Session</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="ApplicationProgrammeFee"></tbody>
+                    </table>
+                    <button id="btnProgrammeFeeCreate" class="btn btn-success" onclick="showCreateModal(2)"><i class="fa fa-plus"> Add</i></button>
+
+                </div>
+            </div>
+
+           
+        </div>
+
+        <div class="col-md-6">
+            <div class="panel panel-success">
+                <div class="panel-heading"><h3 style="text-align: center">Application Form Setting</h3> </div>
+                <div class="panel-body table-responsive">
+
+                    <table class="table table-striped table-hover" id="FormSettingTable">
+                        <thead>
+                            <tr>
+                                <th>Form Setting Id</th>
+                                <th>Person Type</th>
+                                <th>Payment Type</th>
+                                <th>Payment Mode</th>
+                                <th>Session</th>
+                                <th>Entered By</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="ApplicationFormSetting"></tbody>
+                    </table>
+                    <button id="btnFormSettingCreate" class="btn btn-success" onclick="showCreateModal(1)"><i class="fa fa-plus"> Add</i></button>
+
+                </div>
+            </div>
+           
+        </div>
+
+
+    </div>
+
+
+
+    <div class="row table-responsive">
+        <div class="col-md-6">
+            <div class="panel panel-success">
+                <div class="panel-heading"> <h3 style="text-align: center">Payment Etranzact Type</h3></div>
+                <div class="panel-body table-responsive">
+
+                    <table class="table table-striped table-hover" id="EtranzactTypeTable">
+                        <thead>
+                            <tr>
+                                <th>Etranzact Type Id</th>
+                                <th>Etranzact Type Name</th>
+                                <th>FeeType</th>
+                                <th>Programme</th>
+                                <th>Level</th>
+                                <th>Payment Mode</th>
+                                <th>Session</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="PaymentEtranzactType"></tbody>
+                    </table>
+                    <button id="btnEtranzactTypeCreate" class="btn btn-success" onclick="showCreateModal(3)"><i class="fa fa-plus"> Add</i></button>
+
+
+                </div>
+            </div>
+           </div>
+        <div class="col-md-6">
+            <div class="panel panel-success">
+                <div class="panel-heading"><h3 style="text-align: center">FeeDetail</h3> </div>
+                <div class="panel-body table-responsive">
+                    <div style="text-align: center"><span><input type="text" id="FeeTypeName" name="FeeTypeName" placeholder="Fee Type Name" /> &nbsp; <input type="text" id="Session" name="Session" placeholder="Session(eg. 2016/2017)" />  &nbsp; <button onclick="populateFeeDetails()" class="btn btn-success"> Populate</button></span></div>
+
+                    <table id="FeeDetailTable" class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>FeeDetail Id</th>
+                                <th>Fee</th>
+                                <th>FeeType</th>
+                                <th>Programme</th>
+                                <th>Level</th>
+                                <th>Payment Mode</th>
+                                <th>Department</th>
+                                <th>Session</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="FeeDetail"></tbody>
+                    </table>
+                    <button id="btnFeeDetailCreate" class="btn btn-success" onclick="showCreateModal(4)"><i class="fa fa-plus"> Add</i></button>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row table-responsive">
+
+        <div class="col-md-6">
+            <div class="panel panel-success">
+                <div class="panel-heading"><h3 style="text-align: center">Payment Terminal</h3> </div>
+                <div class="panel-body table-responsive">
+
+                    <table class="table table-striped table-hover" id="paymentTerminalTable">
+                        <thead>
+                            <tr>
+                                <th>Payment Terminal Id</th>
+                                <th>Terminal ID</th>
+                                <th>FeeType</th>
+                                <th>Session</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="paymentTerminal"></tbody>
+                    </table>
+                    <button id="btnPaymentTerminalCreate" class="btn btn-success" onclick="showCreateModal(5)"><i class="fa fa-plus"> Add</i></button>
+
+
+                </div>
+            </div>
+            </div>
+
+    </div>
+</div>
+
+
+<div class="modal fade" role="dialog" id="createModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 style="display: none" id="createFormSettingHeader" class="modal-title">Create Form Setting</h4>
+
+                <h4 style="display: none" id="editFormSettingHeader" class="modal-title">Edit Form Setting</h4>
+
+                <h4 style="display: none" id="createProgrammeFeeHeader" class="modal-title">Create Programme Fee</h4>
+
+                <h4 style="display: none" id="editProgrammeFeeHeader" class="modal-title">Edit Programme Fee</h4>
+
+                <h4 style="display: none" id="createEtranzactTypeHeader" class="modal-title">Create Etranzact Type</h4>
+
+                <h4 style="display: none" id="editEtranzactTypeHeader" class="modal-title">Edit Etranzact Type</h4>
+
+                <h4 style="display: none" id="createFeeDetailHeader" class="modal-title">Create FeeDetail</h4>
+
+                <h4 style="display: none" id="editFeeDetailHeader" class="modal-title">Edit FeeDetail</h4>
+
+                <h4 style="display: none" id="createPaymentTerminalHeader" class="modal-title">Create Payment Terminal</h4>
+
+                <h4 style="display: none" id="editPaymentTerminalHeader" class="modal-title">Edit Payment Terminal</h4>
+
+                <h4 style="display: none" id="createFeeHeader" class="modal-title">Create Fee</h4>
+
+                <h4 style="display: none" id="editFeeHeader" class="modal-title">Edit Fee</h4>
+
+                <h4 style="display: none" id="createFeeTypeHeader" class="modal-title">Create FeeType</h4>
+
+                <h4 style="display: none" id="editFeeTypeHeader" class="modal-title">Edit FeeType</h4> &nbsp;
+
+                <span class="Load"><img src="~/Content/Images/bx_loader.gif" /></span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" style="display: none" id="idTextBox">
+                    @Html.LabelFor(model => model.Id, "ID:", new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.Id, new { @class = "form-control", id = "idEdit" })
+                    @Html.ValidationMessageFor(model => model.Id)
+                </div>
+                <div class="form-group" style="display: none" id="programmeTextBox">
+                    @Html.LabelFor(model => model.Programme.Id, "Programme:", new { @class = "control-label" })
+                    @Html.DropDownListFor(model => model.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.ProgrammeId, new { @class = "form-control", id = "programmeCreate" })
+                    @Html.ValidationMessageFor(model => model.Programme.Id)
+                </div>
+                <div class="form-group" style="display: none" id="levelTextBox">
+                    @Html.LabelFor(model => model.level.Id, "Level:", new { @class = "control-label" })
+                    @Html.DropDownListFor(model => model.level.Id, (IEnumerable<SelectListItem>)ViewBag.LevelId, new { @class = "form-control", id = "levelCreate" })
+                    @Html.ValidationMessageFor(model => model.level.Id)
+                </div>
+                <div class="form-group" style="display: none" id="departmentTextBox">
+                    @Html.LabelFor(model => model.Department.Id, "Department:", new { @class = "control-label" })
+                    @Html.DropDownListFor(model => model.Department.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentId, new { @class = "form-control", id = "departmentCreate" })
+                    @Html.ValidationMessageFor(model => model.Department.Id)
+                </div>
+
+                <div class="form-group" style="display: none" id="sessionTextBox">
+                    @Html.LabelFor(model => model.CurrentSession.Id, "Session:", new { @class = "control-label" })
+                    @Html.DropDownListFor(model => model.CurrentSession.Id, (IEnumerable<SelectListItem>)ViewBag.SessionId, new { @class = "form-control", id = "sessionCreate" })
+                    @Html.ValidationMessageFor(model => model.CurrentSession.Id)
+                </div>
+                <div class="form-group" style="display: none" id="feeTypeTextBox">
+                    @Html.LabelFor(model => model.feeType.Id, "FeeType:", new { @class = "control-label" })
+                    @Html.DropDownListFor(model => model.feeType.Id, (IEnumerable<SelectListItem>)ViewBag.FeeTypeId, new { @class = "form-control", id = "feeTypeCreate" })
+                    @Html.ValidationMessageFor(model => model.feeType.Id)
+                </div>
+                <div class="form-group" style="display: none" id="feeTextBox">
+                    @Html.LabelFor(model => model.fee.Id, "Fee:", new { @class = "control-label" })
+                    @Html.DropDownListFor(model => model.fee.Id, (IEnumerable<SelectListItem>)ViewBag.feeId, new { @class = "form-control", id = "feeCreate" })
+                    @Html.ValidationMessageFor(model => model.fee.Id)
+                </div>
+                <div class="form-group" style="display: none" id="paymentModeTextBox">
+                    @Html.LabelFor(model => model.PaymentMode.Id, "Payment Mode:", new { @class = "control-label" })
+                    @Html.DropDownListFor(model => model.PaymentMode.Id, (IEnumerable<SelectListItem>)ViewBag.PaymentModeId, new { @class = "form-control", id = "paymentModeCreate" })
+                    @Html.ValidationMessageFor(model => model.PaymentMode.Id)
+                </div>
+                <div class="form-group" style="display: none" id="terminalIdTextBox">
+                    @Html.LabelFor(model => model.PaymentTerminal.TerminalId, "Terminal ID:", new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.PaymentTerminal.TerminalId, new { @class = "form-control", id = "terminalIdCreate" })
+                    @Html.ValidationMessageFor(model => model.PaymentTerminal.TerminalId)
+                </div>
+                <div class="form-group" style="display: none" id="etranzactTypeTextBox">
+                    @Html.LabelFor(model => model.PaymentEtranzactType.Name, "EtranzactType Name:", new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.PaymentEtranzactType.Name, new { @class = "form-control", id = "etranzactTypeNameCreate" })
+                    @Html.ValidationMessageFor(model => model.PaymentEtranzactType.Name)
+                </div>
+                <div class="form-group" style="display: none" id="feeNameTextBox">
+                    @Html.LabelFor(model => model.fee.Name, "Fee Name:", new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.fee.Name, new { @class = "form-control", id = "feeNameCreate" })
+                    @Html.ValidationMessageFor(model => model.fee.Name)
+                </div>
+                <div class="form-group" style="display: none" id="amountTextBox">
+                    @Html.LabelFor(model => model.fee.Amount, "Amount:", new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.fee.Amount, new { @class = "form-control", id = "amountCreate" })
+                    @Html.ValidationMessageFor(model => model.fee.Amount)
+                </div>
+                <div class="form-group" style="display: none" id="feeDescriptionTextBox">
+                    @Html.LabelFor(model => model.fee.Description, "Fee Description:", new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.fee.Description, new { @class = "form-control", id = "feeDescriptionCreate" })
+                    @Html.ValidationMessageFor(model => model.fee.Description)
+                </div>
+                <div class="form-group" style="display: none" id="feeTypeNameTextBox">
+                    @Html.LabelFor(model => model.feeType.Name, "FeeType Name:", new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.feeType.Name, new { @class = "form-control", id = "feeTypeNameCreate" })
+                    @Html.ValidationMessageFor(model => model.feeType.Name)
+                </div>
+                <div class="form-group" style="display: none" id="feeTypeDescriptionTextBox">
+                    @Html.LabelFor(model => model.feeType.Description, "FeeType Description:", new { @class = "control-label" })
+                    @Html.TextBoxFor(model => model.feeType.Description, new { @class = "form-control", id = "feeTypeDescriptionCreate" })
+                    @Html.ValidationMessageFor(model => model.feeType.Description)
+                </div>
+            </div>
+            <div class="modal-footer form-group">
+                <span style="display: none" class="Load"><img src="~/Content/Images/bx_loader.gif" /></span>
+
+                <button style="display: none" type="button" id="btnCreateFormSetting" class="btn btn-success" onclick="createRecord(1)">Create Form Setting</button>
+
+                <button style="display: none" type="button" id="btnSaveFormSetting" class="btn btn-success" onclick="saveRecord(1)">Save Form Setting</button>
+
+                <button style="display: none" type="button" id="btnCreateProgrammeFee" class="btn btn-success" onclick="createRecord(2)">Create Programme Fee</button>
+
+                <button style="display: none" type="button" id="btnSaveProgrammeFee" class="btn btn-success" onclick="saveRecord(2)">Save Programme Fee</button>
+
+                <button style="display: none" type="button" id="btnCreateEtranzactType" class="btn btn-success" onclick="createRecord(3)">Create Etranzact Type</button>
+
+                <button style="display: none" type="button" id="btnSaveEtranzactType" class="btn btn-success" onclick="saveRecord(3)">Save Etranzact Type</button>
+
+                <button style="display: none" type="button" id="btnCreateFeeDetail" class="btn btn-success" onclick="createRecord(4)">Create FeeDetail</button>
+
+                <button style="display: none" type="button" id="btnSaveFeeDetail" class="btn btn-success" onclick="saveRecord(4)">Save FeeDetail</button>
+
+                <button style="display: none" type="button" id="btnCreatePaymentTerminal" class="btn btn-success" onclick="createRecord(5)">Create Payment Terminal</button>
+
+                <button style="display: none" type="button" id="btnSavePaymentTerminal" class="btn btn-success" onclick="saveRecord(5)">Save Payment Terminal</button>
+
+                <button style="display: none" type="button" id="btnCreateFee" class="btn btn-success" onclick="createRecord(6)">Create Fee</button>
+
+                <button style="display: none" type="button" id="btnSaveFee" class="btn btn-success" onclick="saveRecord(6)">Save Fee</button>
+
+                <button style="display: none" type="button" id="btnCreateFeeType" class="btn btn-success" onclick="createRecord(7)">Create FeeType</button>
+
+                <button style="display: none" type="button" id="btnSaveFeeType" class="btn btn-success" onclick="saveRecord(7)">Save FeeType</button>
+
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

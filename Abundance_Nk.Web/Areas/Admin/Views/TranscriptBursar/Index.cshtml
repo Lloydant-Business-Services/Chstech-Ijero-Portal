@@ -1,0 +1,187 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.TranscriptBursarViewModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@{
+    ViewBag.Title = "Transcript Requests";
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+
+
+    <link href="~/Scripts/DataTables-1.10.15/media/css/jquery.dataTables.css" rel="stylesheet" />
+    <script src="~/Scripts/DataTables-1.10.15/media/js/jquery.dataTables.js"></script>
+    <link href="~/Scripts/DataTables-1.10.15/extensions/Buttons/css/buttons.dataTables.css" rel="stylesheet" />
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Buttons/js/dataTables.buttons.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Buttons/js/buttons.colVis.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Responsive/js/dataTables.responsive.js"></script>
+
+
+    <script src="~/Scripts/DataTables-1.10.15/buttons.flash.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/buttons.html5.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/buttons.print.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/jszip.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/pdfmake.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/vfs_fonts.js"></script>
+
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $.extend($.fn.dataTable.defaults, {
+                responsive: true
+            });
+
+            $('#studentTable').DataTable({
+                dom: 'Bfrtip',
+                ordering: true,
+                buttons: [
+                    {
+                        extend: 'copy',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+
+
+                    },
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+
+                    },
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+
+
+                    },
+                    {
+                        extend: 'pdf',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+
+
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+
+
+                    }, , 'colvis'
+                ]
+
+                @*serverSide: true,
+            ajax: '@Url.Action("StudentIdDataAjaxAsync", "UploadAdmission")'*@
+
+
+            });
+
+
+        });
+
+    </script>
+}
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-12">
+
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading panel-dark-head">
+                <p><h2>Incoming Transcript Payment</h2></p>
+
+                <a href="@Url.Action("UpdateRRRBulk")"><button class="btn btn-info">Update All</button></a>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+
+
+
+
+
+
+
+
+
+                    <div class="col-md-12 table-responsive">
+
+
+
+                        <table class="table table-bordered table-hover table-striped" id="studentTable">
+                            <thead>
+                                <tr>
+                                    <th>@Html.ActionLink("Full Name", "Index", new { sortOrder = ViewBag.FullName, currentFilter = ViewBag.CurrentFilter })</th>
+                                    <th>@Html.ActionLink("Matric Number", "Index", new { sortOrder = ViewBag.FullName, currentFilter = ViewBag.CurrentFilter })</th>
+                                    <th>Request Type</th>
+                                    <th>@Html.ActionLink("Date Requesterd", "Index", new { sortOrder = ViewBag.FullName, currentFilter = ViewBag.CurrentFilter })</th>
+                                    <th>@Html.ActionLink("Destination", "Index", new { sortOrder = ViewBag.Number, currentFilter = ViewBag.CurrentFilter })</th>
+                                    <th>@Html.ActionLink("RRR", "Index", new { sortOrder = ViewBag.Number, currentFilter = ViewBag.CurrentFilter })</th>
+                                    <th>Confirm</th>
+                                    <th>@Html.ActionLink("Amount Paid", "Index", new { sortOrder = ViewBag.Number, currentFilter = ViewBag.CurrentFilter })</th>
+
+                                    @*<th>Reject</th>*@
+                                </tr>
+                            </thead>
+                            <tbody style="color: black;">
+                                @for (int i = 0; i < Model.transcriptRequests.Count; i++)
+                                {
+                                    var SN = i + 1;
+                                    <tr>
+                                        <td>@Html.DisplayTextFor(m => m.transcriptRequests[i].student.FullName)</td>
+                                        <td>@Html.DisplayTextFor(m => m.transcriptRequests[i].student.MatricNumber)</td>
+                                        @if (Model.transcriptRequests[i].RequestType == null)
+                                        {
+                                            <td>Transcript Request</td>
+                                        }
+                                        else
+                                        {
+                                            <td>@Html.DisplayTextFor(m => m.transcriptRequests[i].RequestType)</td>
+                                        }
+
+                                        <td>@Html.DisplayTextFor(m => m.transcriptRequests[i].DateRequested)</td>
+                                        <td>@Html.DisplayTextFor(m => m.transcriptRequests[i].DestinationAddress)</td>
+                                        <td>@Html.DisplayTextFor(m => m.transcriptRequests[i].ConfirmationOrderNumber)</td>
+                                        <td>
+                                            @if (Model.transcriptRequests[i].remitaPayment != null)
+                                            {
+                                                @*@Html.ActionLink("Confirm Payment", "UpdateStatus", "TranscriptBursar", new { tid = Model.transcriptRequests[i].Id, confirmationOrder = Model.transcriptRequests[i].ConfirmationOrderNumber }, new { @class = "btn btn-default", @id = "url" + i })*@
+                                                @Html.ActionLink("Get Status", "GetStatus", "TranscriptBursar", new { order_Id = Model.transcriptRequests[i].remitaPayment.OrderId }, new { @class = "btn btn-default" })
+
+                                            }
+                                            else
+                                            {
+                                                @Html.Display("Invoice not yet generated")
+                                            }
+                                        </td>
+                                        <td class="text-bold text-red">@Html.DisplayTextFor(m => m.transcriptRequests[i].Amount)</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-1"></div>
+</div>

@@ -1,0 +1,661 @@
+﻿@model Abundance_Nk.Web.Areas.Applicant.ViewModels.AdmissionViewModel
+@{
+    Layout = "~/Views/Shared/_NewThemeLayout.cshtml";
+}
+<style>
+    .step {
+        color: blue;
+        font-size: 11pt;
+    }
+</style>
+
+<link href="~/Content/AdminLayoutContent/smart_wizard.css" rel="stylesheet" />
+<link href="~/Content/AdminLayoutContent/smart_wizard.min.css" rel="stylesheet" />
+<link href="~/Content/AdminLayoutContent/smart_wizard_theme_arrows.css" rel="stylesheet" />
+<link href="~/Content/AdminLayoutContent/smart_wizard_theme_dots.css" rel="stylesheet" />
+
+
+<script type="text/javascript" src="~/Scripts/jquery.min.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery-3.1.1.min.js"></script>
+<script src="~/Scripts/jquery.smartWizard.min.js"></script>
+
+<script type="text/javascript">
+    var jQueryVesrsion_1_11_1 = $.noConflict(true);
+    jQueryVesrsion_1_11_1(document).ready(function () {
+
+        var applicantStatus = $('#ApplicantStatusId').val();
+        var stepToGoTo;
+        if (applicantStatus == 2) {
+            stepToGoTo = 0;
+        }
+        else if (applicantStatus == 3) {
+            stepToGoTo = 3;
+        }
+        else if (applicantStatus == 4) {
+            stepToGoTo = 4;
+        }
+        else if (applicantStatus == 5) {
+            stepToGoTo = 2;
+        }
+        else if (applicantStatus == 6) {
+            stepToGoTo = 2;
+        }
+        else if (applicantStatus == 7) {
+            stepToGoTo = 1;
+        }
+        else if (applicantStatus == 8) {
+            stepToGoTo = 5;
+        }
+        else if (applicantStatus == 9) {
+            stepToGoTo = 6;
+        }
+        else if (applicantStatus == 10) {
+            stepToGoTo = 6;
+        }
+        else if (applicantStatus == 11) {
+            stepToGoTo = 6;
+        }
+
+        jQueryVesrsion_1_11_1('#smartwizard').smartWizard({
+            selected: stepToGoTo,
+            theme: 'default',
+            transitionEffect: 'fade',
+            toolbarPosition: 'bottom',
+            showStepURLhash: false
+
+
+        });
+
+        jQueryVesrsion_1_11_1("#smartwizard").on("showStep", function (e, anchorObject, stepNumber, stepDirection, stepPosition) {
+            //alert("You are on step " + stepNumber + " now" + stepToGoTo);
+
+            if (stepPosition === 'first') {
+                $("#prev-btn").addClass('disabled');
+                showNextButton(stepNumber);
+            } else if (stepPosition === 'final') {
+                $("#next-btn").addClass('disabled');
+            } else {
+                $("#prev-btn").removeClass('disabled');
+                //$("#next-btn").removeClass('disabled');
+
+                showNextButton(stepNumber);
+            }
+        });
+
+        function showNextButton(stepNumber) {
+
+            var step1Status = ['3', '4', '5', '6', '8', '9', '10', '11'];
+            var step2Status = ['4', '8', '9', '10', '11'];
+            var step3Status = ['8', '9', '10', '11'];
+            var step4Status = ['9', '10', '11'];
+            var step5Status = ['9', '10', '11'];
+            var step6Status = ['9', '10', '11'];
+
+            switch (stepNumber) {
+                case 1:
+                    if (!step1Status.includes(applicantStatus)) {
+                        $(".sw-btn-next").hide();
+                    } else {
+                        $(".sw-btn-next").show();
+                    }
+                    break;
+                case 2:
+                    if (!step2Status.includes(applicantStatus)) {
+                        $(".sw-btn-next").hide();
+                    } else {
+                        $(".sw-btn-next").show();
+                    }
+                    break;
+                case 3:
+                    if (!step3Status.includes(applicantStatus)) {
+                        $(".sw-btn-next").hide();
+                    } else {
+                        $(".sw-btn-next").show();
+                    }
+                    break;
+                case 4:
+                    if (!step4Status.includes(applicantStatus)) {
+                        $(".sw-btn-next").hide();
+                    } else {
+                        $(".sw-btn-next").show();
+                    }
+                    break;
+                case 5:
+                    if (!step5Status.includes(applicantStatus)) {
+                        $(".sw-btn-next").hide();
+                    } else {
+                        $(".sw-btn-next").show();
+                    }
+                    break;
+                case 6:
+                    if (!step6Status.includes(applicantStatus)) {
+                        $(".sw-btn-next").hide();
+                    } else {
+                        $(".sw-btn-next").show();
+                    }
+                    break;
+                default:
+                    $(".sw-btn-next").show();
+                    break;
+            }
+        }
+
+        jQueryVesrsion_1_11_1("#prev-btn").on("click", function () {
+            // Navigate previous
+            //UpdateTabState(stepToGoTo);
+            UpdateTabState(applicantStatus);
+            $('#smartwizard').smartWizard("prev");
+            return true;
+        });
+
+        jQueryVesrsion_1_11_1("#next-btn").on("click", function () {
+            // Navigate next
+            $('#smartwizard').smartWizard("next");
+            return true;
+        });
+
+        jQueryVesrsion_1_11_1("#theme_selector").on("change", function () {
+            // Change theme
+            $('#smartwizard').smartWizard("theme", $(this).val());
+            return true;
+        });
+
+        // Set selected theme on page refresh
+        jQueryVesrsion_1_11_1("#theme_selector").change();
+
+
+        var formId = $("#ApplicationForm_Id").val();
+        var formNo = $("#ApplicationForm_Number").val();
+
+        var invoiceUrl = "/Applicant/Admission/Invoice?ivn=";
+        var acceptanceInvoiceNo = $("#AcceptanceInvoiceNumber").val();
+        var schoolFeesInvoiceNo = $("#SchoolFeesInvoiceNumber").val();
+        var changeOfCourseApplies = $("#ChangeOfCourseApplies").val();
+        if (changeOfCourseApplies == false) {
+            jQueryVesrsion_1_11_1('#ChangeOfCourseApplies').prop('disabled', true);
+        } else {
+            jQueryVesrsion_1_11_1('#ChangeOfCourseApplies').prop('disabled', false);
+        }
+        //UpdateTabState(stepToGoTo);
+        UpdateTabState(applicantStatus);
+        jQueryVesrsion_1_11_1("#aAcceptanceInvoiceNumber").prop("href", invoiceUrl + acceptanceInvoiceNo);
+        jQueryVesrsion_1_11_1("#aSchoolFeesInvoiceNumber").prop("href", invoiceUrl + schoolFeesInvoiceNo);
+
+        $("#btnGenerateAcceptanceInvoice").on('click', function (e) {
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GenerateAcceptanceInvoice", "Admission")',
+                traditional: true,
+                datatype: 'json',
+                data: { applicationFormNo: formNo },
+                beforeSend: function () {
+                    $("#divProcessingAcceptanceInvoice").show();
+                },
+                complete: function () {
+                    $("#divProcessingAcceptanceInvoice").hide();
+                },
+                success: function (data) {
+                    var payment = JSON.parse(data);
+
+                    $('.divAcceptanceInvoice').show();
+                    $("#btnGenerateAcceptanceInvoice").prop('disabled', true);
+
+                    var url = invoiceUrl + payment.InvoiceNumber;
+                    $("#aAcceptanceInvoiceNumber").prop("href", url);
+
+                    if (data.includes("Registration")) {
+                        alert(data);
+                    } else {
+                        alert("Acceptance Invoice has been successfully generated! Click on the 'Print Invoice' button to print the invoice, then proceed to bank for payment.");
+                    }
+
+                },
+                error: function () {
+                    $('.divAcceptanceInvoice').hide();
+                    alert("Unable to generate inovice, Please try again after some time!");
+                }
+            });
+        });
+
+        $("#btnGenerateAcceptanceReceipt").on('click', function (e) {
+            e.preventDefault();
+            var nextApplicantStatus = 4;
+            var acceptanceInvoiceNo = $("#AcceptanceInvoiceNumber").val();
+            var orderConfirmationNo = $("#AcceptanceConfirmationOrderNumber").val();
+
+            if (acceptanceInvoiceNo == "" || acceptanceInvoiceNo == undefined) {
+                alert("Acceptance Invoice Number not set! Please contact your system administrator.");
+                return;
+            } else if (orderConfirmationNo == "" || orderConfirmationNo == undefined) {
+                alert("Please enter your Acceptance Confirmation Order Number!");
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GenerateAcceptanceReceipt", "Admission")',
+                traditional: true,
+                datatype: 'json',
+                data: { fid: formId, ivn: acceptanceInvoiceNo, con: orderConfirmationNo, st: nextApplicantStatus },
+
+                beforeSend: function () {
+                    $("#divProcessingAcceptanceReceipt").show();
+                },
+                complete: function () {
+                    $("#divProcessingAcceptanceReceipt").hide();
+                },
+                success: function (data) {
+                    //alert(data.indexOf("success"));
+                    UpdateButtonState($("#btnGenerateAcceptanceReceipt"), data);
+
+                    $('#divGenerateAcceptanceReceipt').html(data);
+
+                    if (data.indexOf("success") > -1) {
+                        $('.divAcceptanceReceipt').show();
+                        $('#AcceptanceConfirmationOrderNumber').prop('disabled', true);
+
+                        $("#btnGenerateSchoolFeesInvoice").prop('disabled', false);
+                    } else {
+                        $('.divAcceptanceReceipt').hide();
+                        $('#AcceptanceConfirmationOrderNumber').prop('disabled', false);
+                    }
+
+                },
+                error: function () {
+                    $('.divAcceptanceReceipt').hide();
+                    alert("Unable to connect to verify payment, Please try again after some time!");
+                }
+            });
+        });
+
+        $("#btnGenerateSchoolFeesReceipt").on('click', function (e) {
+            e.preventDefault();
+
+            var nextApplicantStatus = 9;
+            var schoolFeesInvoiceNo = $("#SchoolFeesInvoiceNumber").val();
+            var orderConfirmationNo = $("#SchoolFeesConfirmationOrderNumber").val();
+
+            if (schoolFeesInvoiceNo == "" || schoolFeesInvoiceNo == undefined) {
+                alert("School Fees Invoice Number not set! Please contact your system administrator.");
+                return;
+            } else if (orderConfirmationNo == "" || orderConfirmationNo == undefined) {
+                alert("Please enter your School Fees Order Confirmation Number!");
+                return;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GenerateSchoolFeesReceipt", "Admission")',
+                traditional: true,
+                datatype: 'json',
+                data: { fid: formId, ivn: schoolFeesInvoiceNo, con: orderConfirmationNo, st: nextApplicantStatus },
+                //data: { fid: formId, ivn: schoolFeesInvoiceNo, con: orderConfirmationNo, st: applicantStatus },
+
+                beforeSend: function () {
+                    $("#divProcessingSchoolFeesReceipt").show();
+                },
+                complete: function () {
+                    $("#divProcessingSchoolFeesReceipt").hide();
+                },
+                success: function (data) {
+                    UpdateButtonState($("#btnGenerateSchoolFeesReceipt"), data);
+
+                    //RemoveClass($('#tab5'), $('#step5'));
+                    //UpdateTabState(9);
+
+                    $('#divGenerateSchoolFeesReceipt').html(data);
+                    if (data.indexOf("success") > -1) {
+                        $('.divSchoolFeesReceipt').show();
+                        $('#SchoolFeesConfirmationOrderNumber').prop('disabled', true);
+                    } else {
+                        $('.divSchoolFeesReceipt').hide();
+                        $('#SchoolFeesConfirmationOrderNumber').prop('disabled', true);
+                    }
+                },
+                error: function () {
+                    $('.divSchoolFeesReceipt').hide();
+                    alert("Unable to generate receipt, Please try again after some time!");
+                }
+            });
+        });
+
+        $("#btnGenerateSchoolFeesInvoice").on('click', function (e) {
+            e.preventDefault();
+            var paymentMode = $("#PaymentMode_Id").val();
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GenerateSchoolFeesInvoice", "Admission")',
+                traditional: true,
+                datatype: 'json',
+                data: { formNo: formNo, paymentModeId: paymentMode },
+
+                beforeSend: function () {
+                    $("#divProcessingSchoolFeesInvoice").show();
+                },
+                complete: function () {
+                    $("#divProcessingSchoolFeesInvoice").hide();
+                },
+                success: function (data) {
+                    var payment = JSON.parse(data);
+                    console.log(payment);
+                    console.log(data);
+
+                    $('.divSchoolFeesInvoice').show();
+                    $("#btnGenerateSchoolFeesInvoice").prop('disabled', true);
+
+                    var url = invoiceUrl + payment.InvoiceNumber;
+                    $("#aSchoolFeesInvoiceNumber").prop("href", url);
+
+                    if (data.includes("Registration")) {
+                        alert(data);
+                    } else {
+                        if (payment.InvoiceNumber == "No Acceptance") {
+                            alert("Pay Acceptance Fee before proceeding.");
+                        }
+                        else {
+                            if (payment.InvoiceNumber == "No Fee") {
+                                alert("Fee not set.");
+                            }
+                            else {
+                                alert("School Fees Invoice has been successfully generated! Click on the 'Print Invoice' button to print the invoice, then proceed to bank for payment.")
+                            }
+                        }
+                    }
+
+                },
+                error: function () {
+                    $('.divSchoolFeesInvoice').hide();
+                    alert("Operation failed!");
+                }
+            });
+        });
+
+        function UpdateButtonState(button, data) {
+            if (data.indexOf("success") > -1) {
+                button.prop('disabled', true);
+            } else {
+                button.prop('disabled', false);
+            }
+        }
+
+        function UpdateTabState(applicantStatus) {
+
+
+            if (applicantStatus == 2) {
+
+                $('#btnGenerateAcceptanceInvoice').prop('disabled', true);
+                $("#btnGenerateSchoolFeesInvoice").prop('disabled', true);
+                $('#AcceptanceConfirmationOrderNumber').prop('disabled', true);
+
+            } else if (applicantStatus == 3) {
+                $('#btnGenerateAcceptanceInvoice').prop('disabled', true);
+                $("#btnGenerateSchoolFeesInvoice").prop('disabled', true);
+
+                var acceptanceConfirmationorderNo = $("#AcceptanceConfirmationOrderNumber").val();
+                if (acceptanceConfirmationorderNo !== '') {
+                    $('.divAcceptanceReceipt').show();
+                } else {
+                    $('.divAcceptanceReceipt').hide();
+                }
+
+                $('.divAcceptanceInvoice').show();
+
+            } else if (applicantStatus == 4) {
+
+                $('#btnGenerateAcceptanceInvoice').prop('disabled', true);
+                $('#btnGenerateAcceptanceReceipt').prop('disabled', true);
+                $('#AcceptanceConfirmationOrderNumber').prop('disabled', true);
+
+                var acceptanceConfirmationorderNo = $("#AcceptanceConfirmationOrderNumber").val();
+                if (acceptanceConfirmationorderNo !== '') {
+                    $('.divAcceptanceReceipt').show();
+                } else {
+                    $('.divAcceptanceReceipt').hide();
+                }
+
+                $('.divAcceptanceInvoice').show();
+            } else if (applicantStatus == 5) {
+
+                //$('#btnGenerateAcceptanceInvoice').prop('disabled', true);
+                $('#AcceptanceConfirmationOrderNumber').prop('disabled', true);
+
+                var schoolFeesConfirmationorderNo = $("#SchoolFeesConfirmationOrderNumber").val();
+                if (schoolFeesConfirmationorderNo !== '') {
+                    $('.divSchoolFeesReceipt').show();
+                } else {
+                    $('.divSchoolFeesReceipt').hide();
+                }
+
+            } else if (applicantStatus == 6) {
+
+                //$('#btnGenerateAcceptanceInvoice').prop('disabled', true);
+                //$('#AcceptanceConfirmationOrderNumber').prop('disabled', true);
+                $("#btnVerifyOlevelResult").prop('disabled', true);
+
+            } else if (applicantStatus == 7) {
+
+                $('#btnGenerateAcceptanceInvoice').prop('disabled', true);
+                $('#AcceptanceConfirmationOrderNumber').prop('disabled', true);
+
+
+            } else if (applicantStatus == 8) {
+
+                $('#btnGenerateAcceptanceInvoice').prop('disabled', true);
+                $("#btnGenerateSchoolFeesInvoice").prop('disabled', true);
+                //$('#btnGenerateAcceptanceReceipt').prop('disabled', true);
+                //$('#AcceptanceConfirmationOrderNumber').prop('disabled', true);
+                $("#btnGenerateSchoolFeesInvoice").prop('disabled', false);
+                $("#btnVerifyOlevelResult").prop('disabled', true);
+
+                $("#alStudentForm").hide();
+                $("#alCourseRegistration").hide();
+
+                var acceptanceConfirmationorderNo = $("#AcceptanceConfirmationOrderNumber").val();
+                if (acceptanceConfirmationorderNo !== '') {
+                    $('.divAcceptanceReceipt').show();
+                } else {
+                    $('.divAcceptanceReceipt').hide();
+                }
+                //$('.divSchoolFeesReceipt').show();
+            } else if (applicantStatus == 9) {
+
+                var acceptanceConfirmationorderNo = $("#AcceptanceConfirmationOrderNumber").val();
+                if (acceptanceConfirmationorderNo !== '') {
+                    $('.divAcceptanceReceipt').show();
+                } else {
+                    $('.divAcceptanceReceipt').hide();
+                }
+                $("#alStudentForm").show();
+                $("#alCourseRegistration").show();
+            }
+
+        }
+
+
+    });
+</script>
+
+<div class="container">
+    <div class="col-md-12">
+        <div class="custom-text-black">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>
+                        Admission
+                    </h2><hr />
+                </div>
+            </div>
+
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+
+            @Html.HiddenFor(m => m.IsAdmitted)
+            @Html.HiddenFor(m => m.ApplicantStatusId)
+            @Html.HiddenFor(m => m.AppliedCourse.Programme.Id)
+            @Html.HiddenFor(m => m.ApplicationForm.Id)
+            @Html.HiddenFor(m => m.ApplicationForm.Person.Id)
+            @Html.HiddenFor(m => m.ApplicationForm.RejectReason)
+            @Html.HiddenFor(m => m.ApplicationForm.Rejected)
+            @Html.HiddenFor(m => m.ApplicationForm.Number)
+            @Html.HiddenFor(m => m.Loaded)
+
+            <div class="row">
+                <div class="col-md-12">
+                    @if (TempData["Message"] != null)
+                    {
+                        @Html.Partial("_Message", TempData["Message"])
+                    }
+                </div>
+            </div>
+
+            @if (Model.ApplicationForm == null || Model.IsAdmitted == false)
+            {
+                <div style="margin-bottom: 15px; text-align: justify">
+                    <blockquote>
+                        <p style="color: red; font-weight: bold">
+                            Sorry, your name is not in the primary admission list! Kindly check back for update.
+                        </p>
+                    </blockquote>
+                </div>
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+
+
+                return;
+            }
+
+            <form class="form-horizontal">
+                <div class="">
+                    <div class="row">
+                        <div class="col-sm-12 pl-4 form-group">
+                            <h4>CURRENT STATUS: <b style="color: #b78825">@Html.DisplayFor(model => model.Applicant.Status.Name)</b></h4>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            @Html.LabelFor(model => model.ApplicationForm.Person.FullName, new { @class = "col-md-12 col-xs-12 control-label" })
+                            <div class="col-md-12 col-xs-12">
+                                <div class="input-group">
+
+                                    @Html.TextBoxFor(model => model.ApplicationForm.Person.FullName, new { @class = "form-control", disabled = "true" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            @Html.LabelFor(model => model.ApplicationForm.Number, new { @class = "col-md-12 col-xs-12 control-label" })
+                            <div class="col-md-12 col-xs-12">
+                                <div class="input-group">
+
+                                    @Html.TextBoxFor(model => model.ApplicationForm.Number, new { @class = "form-control", disabled = "true" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            @Html.LabelFor(model => model.AppliedCourse.Programme.Name, new { @class = "col-md-12 col-xs-12 control-label" })
+                            <div class="col-md-12 col-xs-12">
+                                <div class="input-group">
+
+                                    @Html.TextBoxFor(model => model.admissionList.Programme.Name, new { @class = "form-control", disabled = "true" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            @Html.LabelFor(model => model.admissionList.Deprtment.Name, new { @class = "col-md-12 col-xs-12 control-label" })
+                            <div class="col-md-12 col-xs-12">
+                                <div class="input-group">
+
+                                    @Html.TextBoxFor(model => model.admissionList.Deprtment.Name, new { @class = "form-control", disabled = "true" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            @Html.LabelFor(model => model.admissionList.DepartmentOption.Name, new { @class = "col-md-12 col-xs-12 control-label" })
+                            <div class="col-md-12 col-xs-12">
+                                <div class="input-group">
+
+                                    @Html.TextBoxFor(model => model.admissionList.DepartmentOption.Name, new { @class = "form-control", disabled = "true" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-12 stretch-card grid-margin">
+            <div class=" container-fluid">
+                <div class="">
+
+                    @Html.HiddenFor(model => model.AcceptanceInvoiceNumber)
+                    @Html.HiddenFor(model => model.SchoolFeesInvoiceNumber)
+                    <!-- SmartWizard html -->
+                    <div id="smartwizard" class="col-md-12">
+                        <ul class="nav nav-tabs step-anchor mb-3" style="border-bottom: 4px solid  #4285f4 ;">
+                            <li id="tab1"><a href="#step1"><span style="display:block; text-align:center;">Step 1</span> <small style="display:block; text-align:center;">Admission Status </small></a></li>
+                            <li id="tab2"><a href="#step2"><span style="display:block; text-align:center;">Step 2</span> <small style="display:block; text-align:center;">Clearance </small></a></li>
+                            <li id="tab3"><a href="#step3"><span style="display:block; text-align:center;">Step 3</span> <small style="display:block; text-align:center;">Acceptance Invoice </small></a></li>
+                            <li id="tab4"><a href="#step4"><span style="display:block; text-align:center;">Step 4</span> <small style="display:block; text-align:center;">Acceptance Receipt </small></a></li>
+                            <li id="tab5"><a href="#step5"><span style="display:block; text-align:center;">Step 5</span> <small style="display:block; text-align:center;">School Fees Invoice </small></a></li>
+                            <li id="tab6"><a href="#step6"><span style="display:block; text-align:center;">Step 6</span> <small style="display:block; text-align:center;">School Fees Receipt </small></a></li>
+                            <li id="tab7"><a href="#step7"><span style="display:block; text-align:center;">Step 7</span> <small style="display:block; text-align:center;">Student Form </small></a></li>
+
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active p-0" id="step1" style="display: none">
+                                @Html.Partial("_Step1", Model)
+                            </div>
+
+                            <div class="tab-pane p-0" id="step2" style="display: none">
+                                @Html.Partial("_Step2", Model)
+                            </div>
+
+                            <div class="tab-pane p-0" id="step3" style="display: none">
+                                @Html.Partial("_Step3", Model)
+                            </div>
+
+                            <div class="tab-pane p-0" id="step4" style="display: none">
+                                @Html.Partial("_Step4", Model)
+                            </div>
+
+                            <div class="tab-pane p-0" id="step5" style="display: none">
+                                @Html.Partial("_Step5", Model)
+                            </div>
+
+                            <div class="tab-pane p-0" id="step6" style="display: none">
+                                @Html.Partial("_Step6", Model)
+                            </div>
+
+                            <div class="tab-pane p-0" id="step7" style="display: none">
+                                @Html.Partial("_Step7", Model)
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="alert alert-primary">
+                        <span><i>NB: You cannot proceed to the next step without satisfying the conditions of the current step.</i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+
+        </div>
+    </div>
+
+    <input type="hidden" name="hd" id="hd">
+    <br />
+</div>
+
+
+
+

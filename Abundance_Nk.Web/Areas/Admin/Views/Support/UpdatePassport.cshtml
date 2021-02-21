@@ -1,0 +1,127 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.SupportViewModel
+@{
+    ViewBag.Title = "UpdatePassport";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<script src="~/Scripts/jquery-2.1.3.min.js"></script>
+<script>
+    function show1(input) {
+
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                $('#passport').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+
+@if (TempData["Message"] != null)
+{
+    @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div style="font-size:x-large">Update Student Passport</div>
+            </div>
+            <div class="panel-body">
+
+
+
+                @using (Html.BeginForm("UpdatePassport", "Support", new { area = "Admin" }, FormMethod.Post))
+                {
+                    <div class="row">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ApplicationForm.Number, "Application Form Number", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-6">
+                                @Html.TextBoxFor(model => model.ApplicationForm.Number, new { @class = "form-control", @placeholder = "Enter Application Form Number", @required = "required" })
+                                @Html.ValidationMessageFor(model => model.ApplicationForm.Number, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Submit" class="btn btn-success mr5" />
+                            </div>
+                        </div>
+                    </div>
+                }
+
+
+
+            </div>
+
+        </div>
+
+        @if (Model == null || Model.Person == null) { return; }
+        @if (Model != null && Model.Person != null)
+        {
+
+            using (Html.BeginForm("SaveStudentPassport", "Support", FormMethod.Post, new { area = "Admin", enctype = "multipart/form-data" }))
+            {
+                @Html.HiddenFor(model => model.Person.Id);
+        
+
+            <div class="row">
+                <div class="form-group">
+                    @if (Model.Person.ImageFileUrl == null)
+                    {
+                        <div class="bg-light pull-left col-xs-offset-2 text-center media-large thumb-large">
+                            <img id="passport" src="" height="100" width="90" />
+
+                            @*<i class="icon-user inline icon-light icon-3x m-t-large m-b-large"></i>*@
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="bg-light pull-left col-xs-offset-2 text-center media-large thumb-large">
+                            <img id="passport" src="@Url.Content("~"+Model.Person.ImageFileUrl)" height="100" width="90" />
+
+                            @*<i class="icon-user inline icon-light icon-3x m-t-large m-b-large"></i>*@
+                        </div>
+                    }
+
+
+                    @*<input type="file" title="Upload" name="txtPassport" id="txtPassport" class="btn btn-small btn-info m-b-small" readonly="readonly"><br>*@
+                    <input type="file" title="Upload" id="file" name="file" onchange="show1(this)" class=" btn btn-default btn-sm " />
+
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Person.FullName, "Full Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(model => model.Person.FullName, new { @class = "form-control", @placeholder = "", @disabled = "disabled" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Person.MobilePhone, "Mobile Phone", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(model => model.Person.MobilePhone, new { @class = "form-control", @placeholder = "", @disabled = "disabled" })
+                    </div>
+                </div>
+
+            </div>
+
+
+
+            <div class="row">
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Save" class="btn btn-success mr5" />
+                    </div>
+                </div>
+            </div>
+            }
+        }
+    </div>
+</div>
+
+
+

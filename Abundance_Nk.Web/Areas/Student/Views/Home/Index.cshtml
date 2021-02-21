@@ -1,0 +1,371 @@
+﻿@{
+    /**/
+
+    Layout = "~/Areas/Student/Views/Shared/_NewThemeLayout.cshtml";
+}
+<style>
+    .progress {
+        height: 6px;
+        margin-bottom: 10px;
+        -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+        box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+    }
+
+
+    .card {
+        position: relative;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 1px solid #e3e6f0;
+        border-radius: .35rem;
+        margin-bottom: 10px;
+    }
+
+    .card-body {
+        -webkit-box-flex: 1;
+        -ms-flex: 1 1 auto;
+        flex: 1 1 auto;
+        padding: 1.25rem;
+    }
+
+    .align-items-center {
+        -webkit-box-align: center !important;
+        -ms-flex-align: center !important;
+        align-items: center !important;
+    }
+
+    .no-gutters {
+        margin-right: 0;
+        margin-left: 0;
+    }
+
+    .h-100 {
+        height: 100% !important;
+    }
+
+    .shadow {
+        -webkit-box-shadow: 0 .15rem 1.75rem 0 rgba(58,59,69,.15) !important;
+        box-shadow: 0 .15rem 1.75rem 0 rgba(58,59,69,.15) !important;
+    }
+
+    .pb-2, .py-2 {
+        padding-bottom: .5rem !important;
+    }
+
+    .pt-2, .py-2 {
+        padding-top: .5rem !important;
+    }
+
+    .text-xs {
+        font-size: 1.2rem;
+    }
+
+    .border-left-info {
+        border-left: .25rem solid #36b9cc !important;
+    }
+
+    .border-left-success {
+        border-left: .25rem solid #1cc88a !important;
+    }
+
+    .border-left-primary {
+        border-left: .25rem solid #4e73df !important;
+    }
+
+    .border-left-warning {
+        border-left: .25rem solid #EA8B22 !important;
+    }
+
+    .btn-info {
+        background-color: #d8297da3;
+        border:none!important
+    }
+
+    .my-element {
+  display: inline-block;
+  margin: 0 0.5rem;
+
+  animation: bounce; 
+  animation-duration: 2s; 
+}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+@section Scripts {
+
+    @*<link href="~/Content/sbCss/bootstrap.min.css" rel="stylesheet" />*@
+    @*<link href="~/Content/bootstrap.min.css" rel="stylesheet" />*@
+    <script src="~/Scripts/jquery-1.11.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btnModal').on('click', function () {
+                
+                //$('#editeModal').modal('show');
+                $('#emailDiv').show();
+                $('#btnHide').show();
+                $('#btnModal').hide();
+            });
+            $('#btnHide').on('click', function () {
+
+                //$('#editeModal').modal('show');
+                $('#emailDiv').hide();
+                $('#btnHide').hide();
+                $('#btnModal').show();
+            });
+            $('#updateEmail').on('click', function () {
+                var emailAddress=$('#email').val();
+                                        $.ajax({
+                type: 'POST',
+                url: '@Url.Action("UpdateEmail", "Home")', // Calling json method
+                dataType: 'json',
+                                            data: { emailAddress },
+                // Get Selected Country ID.
+                                            success: function (result) {
+                                                if (!result.isError && result.Message!=null) {
+
+                                                    alert(result.Message);
+                                                    window.location.reload(true);
+                                }
+                },
+                error: function(ex) {
+                    alert('Failed to retrieve semesters.' + ex);
+                }
+            });
+            })
+        })
+    </script>
+}
+<div>
+    @if (TempData["Message"] != null)
+    {
+        @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+    }
+</div>
+<div class="row">
+
+    <!-- Pending Requests Card Example -->
+    
+    @*<div class="col-xl-3 col-md-3 mb-4">
+
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Elearning</div>
+
+                        <div class="row">
+                            <div class="col-md-6 h5 mb-0 font-weight-bold text-gray-800 text-left">
+
+                            </div>
+                            <div class="col-md-6 card-body text-right">
+                                <a href="@Url.Action("RegisteredCourse", "Elearning", new { area = "Student" })" class="btn btn-info">View</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+
+    <!-- Earnings (Monthly) Card Example -->
+    @*<div class="col-xl-3 col-md-3 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">E-Assignment</div>
+
+                        <div class="row">
+                            <div class="col-md-6 h5 mb-0 font-weight-bold text-gray-800 text-left">
+
+                            </div>
+                            <div class="col-md-6 card-body text-right">
+                                <a href="@Url.Action("AllAssignments", "Elearning", new { area = "Student" })" class="btn btn-info">View</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+
+    <div class="col-xl-3 col-md-3 mb-4">
+        @*<div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">E-Assignment</div>
+
+                        <div class="row">
+                            <div class="col-md-6 h5 mb-0 font-weight-bold text-gray-800 text-left">
+
+                            </div>
+                            <div class="col-md-6 card-body text-right">
+                                <a href="@Url.Action("AllAssignments", "Elearning", new { area = "Student" })" class="btn btn-primary">View</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>*@
+    </div>
+
+    <div class="col-xl-6 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <h4 class="ct-title" id="content" style="color:#b91b1bc7">NOTICE BOARD <i class="fa fa-bell"></i></h4>
+
+                        <div class="row">
+                            <div class="col-md-12 h5 mb-0 font-weight-bold text-gray-800 text-left">
+                                <p class="text-center animate__animated animate__bounce" id="notification"></p>
+
+                            </div>
+                            
+                        </div>
+                        @*<div id="emailDiv" style="display:none">
+                            <div>
+                                <label>Please, enter your correct Email Address</label>
+                                <input type="email" id="email" />
+                            </div>
+                            <button type="submit" id="updateEmail" class="btn btn-info">Save</button>
+                        </div>*@
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br/>
+<div class="row no-gutters align-items-center">
+
+    <div class="col mr-2">
+        @*<h4 class="ct-title" id="content">E-Learning Email Notifications:</h4>*@
+
+        <div class="row">
+            <div class="col-md-6 h5 mb-0 font-weight-bold text-gray-800 text-left">
+                <label><b style="color:#b91b1bc7">@ViewBag.Email</b> :Is this your Email Address? 
+                
+                    <button class="btn btn-sm btn-primary" id="btnModal" style="border-radius:5px!important; background-color:#b75687!important;border:none!important"> >>> Click Here if its not</button>
+                    <button class="btn btn-sm btn-info" id="btnHide" style="display:none">Hide</button>
+                
+                </label>
+
+            </div>
+            @*<div class="col-md-6 card-body text-right">
+                <button class="btn btn-sm btn-info" id="btnModal">No</button>
+                <button class="btn btn-sm btn-info" id="btnHide" style="display:none">Hide</button>
+
+            </div>*@
+        </div>
+        <div id="emailDiv" style="display:none">
+            <div>
+                <label>Please, enter your correct Email Address</label>
+                <input type="email" id="email" />
+            </div>
+            <button type="submit" id="updateEmail" class="btn btn-info">Save</button>
+        </div>
+    </div>
+    </div>
+    <hr />
+
+
+
+    <div class="col-md-12">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <div class="col-md-12">
+                <span style="display: none;" id="progress">
+                    <img src="~/Content/Images/loading.gif" />
+                </span>
+            </div>
+
+            <div class="col-md-12">
+                <div class="col-md-8"></div>
+                <div class="col-md-4">
+                    <h4>Session: </h4> <p><b id="currentSession"></b></p>
+                </div>
+            </div>
+
+            <hr />
+
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <h5>Name: </h5> <p id="studentName"></p> <br />
+                    <h5>Programme: </h5> <p id="programme"></p> <br />
+                    <h5>Department: </h5> <p id="department"></p> <br />
+                    <h5>Level: </h5> <p id="level"></p>
+                </div>
+            </div>
+            <hr />
+
+            <div class="col-md-12">
+                <h6 class="panel-title txt-light">Payment Details</h6> <br />
+                <div class="col-md-6">
+                    <h5>Amount Due: </h5> <p id="amountDue"></p> <br />
+                    <h5>Amount Paid: </h5> <p id="amountPaid"></p>
+                    <h5>Percentage Paid: </h5> <p id="paidPercentage"></p>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+
+    <script type="text/javascript" src="~/Scripts/jquery-2.1.3.min.js"></script>
+    <script type="text/javascript">
+
+    window.onload = function () {
+         $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetSessionDetails", "Home")',
+             dataType: 'json',
+             beforeSend: function () {
+                 $("#progress").show();
+             },
+             complete: function () {
+                 $("#progress").hide();
+             },
+            success: function (result) {
+                if (result.IsError === false) {
+
+                    $("#currentSession").text(result.Session);
+                    $("#studentName").text(result.FullName);
+                    $("#programme").text(result.Programme);
+                    $("#department").text(result.Department);
+                    $("#level").text(result.Level);
+                    $("#amountDue").text('N' + result.AmountDue);
+                    $("#amountPaid").text('N' + result.AmountPaid);
+                    $("#notification").text(result.Notification);
+
+                    var percentagePaid = (result.AmountPaid * 100) / result.AmountDue;
+
+                    $("#paidPercentage").text(percentagePaid.toFixed(0) + '%');
+
+                } else {
+                    alert(result.Message);
+                }
+            },
+            error: function (ex) {
+                alert('Create failed.' + ex);
+            }
+        });
+    };
+
+    </script>

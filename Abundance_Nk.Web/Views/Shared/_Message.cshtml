@@ -1,0 +1,43 @@
+﻿@model Abundance_Nk.Model.Model.Message
+
+@{
+    ViewBag.Title = "Message";
+}
+
+@if (Model != null)
+{
+    switch (Model.Type)
+    {
+        case 1:
+            { 
+                 <div class="alert alert-dismissible alert-warning">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                    <p>@Model.Description</p>
+                </div>
+    
+                break;
+            }
+        case 2:
+            {
+                <div class="alert alert-dismissible alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                    <p>@Model.Description</p>
+                </div>
+                break;
+
+            }
+        case 3:
+            {
+                <div class="alert alert-dismissible alert-success">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                    <p>@Model.Description</p>
+                </div>
+    
+                break;
+            }
+    }
+    
+    
+    
+   
+    }

@@ -1,0 +1,510 @@
+﻿@using Abundance_Nk.Web.Models
+@model Abundance_Nk.Web.Areas.Admin.ViewModels.ELearningViewModel
+@{
+    ViewBag.Title = "E-Learning";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+@section Scripts {
+
+    <link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+    <link href="~/Content/sweetalert.css" rel="stylesheet" />
+
+    @Scripts.Render("~/bundles/jquery")
+
+
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/file-upload/jquery-ui-1.9.2.min.js"></script>
+
+
+    @*<script src="~/Scripts/jquery-2.1.3.min.js"></script>*@
+    <script src="~/Scripts/sweetalert.min.js"></script>
+    <script src="~/Scripts/dataTables.js"></script>
+    @*<script src="~/Content/js/bootstrap.js"></script>*@
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Buttons/js/dataTables.buttons.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Buttons/js/buttons.colVis.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/extensions/Responsive/js/dataTables.responsive.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/buttons.flash.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/buttons.html5.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/buttons.print.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/jszip.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/pdfmake.min.js"></script>
+    <script src="~/Scripts/DataTables-1.10.15/vfs_fonts.js"></script>
+
+
+
+
+    <style>
+        .ui-state-disabled {
+            background-color: #959696;
+            color: white;
+        }
+        .ui-datepicker-next ui-corner-all {
+            background-color: dodgerblue !important;
+            color: white;
+        }
+        .ui-datepicker-prev ui-corner-all {
+            background-color: dodgerblue !important;
+            color: white;
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //Disable past date
+            $(".myCalendar").datepicker({
+                dateFormat: "mm-dd-yy",
+                minDate: -0,
+                maxDate: "+3M"
+
+            });
+        //$('#videoUrl').hide();
+        $('#myTable').DataTable({
+            dom: 'Bfrtip',
+            ordering: true,
+            retrieve: true,
+            buttons: [
+                {
+                    extend: 'copy',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend: 'csv',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend: 'excel',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                {
+                    extend: 'print',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                }, , 'colvis'
+            ]
+        });
+
+
+        $('#btnModal').on('click', function () {
+
+            $('#editeModal').modal('show');
+        });
+
+        $('#btnCreate').on('click', function () {
+
+            $('.Load').show();
+            var courseTopic = $('#topic').val();
+            var description = $('#description').val();
+            var active = false;
+            var from = $('#fromDate').val();
+            var to = $('#toDate').val();
+            var fromtime = $('#fromTime').val();
+            var totime = $('#toTime').val();
+            var courseAllocationId=$('#CourseAllocation_Id').val();
+            if ($('#active').is(':checked')) {
+                active = true;
+            }
+
+            $('#econtentType').empty();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("CreateTopic", "Elearning")', // Calling json method
+                dataType: 'json',
+                data: { topic: courseTopic, coursedescription: description, active: active, to: to, from: from, courseAllocationId: courseAllocationId, fromtime: fromtime, totime: totime },
+
+                success: function (result) {
+                    if (!result.IsError) {
+                        var topics = result.EContentType;
+                        $("#econtentType").append('<option value="' + 0 + '">' +
+                            '-- Select Topic --' + '</option>');
+                        $.each(topics, function (i, topic) {
+                            $("#econtentType").append('<option value="' + topic.Id + '">' +
+                                topic.Name + '</option>');
+                        });
+                        swal({
+                            title: "success",
+                            text: result.Message,
+                            type: "success"
+
+                        });
+                    }
+                    else {
+                        swal({
+                            title: "info",
+                            text: result.Message,
+                            type: "success"
+
+                        });
+                    }
+
+
+
+
+                    $('#editeModal').modal('hide');
+                    $('.Load').hide();
+                },
+                error: function (ex) {
+                    $('#editeModal').modal('hide');
+                    $('.Load').hide();
+                    alert('Failed to Create Topic.' + ex);
+                }
+            });
+            return false;
+        });
+
+        });
+        //go back
+        function goBack() {
+            window.history.back()
+        }
+        function DeleteEcourseContent(id) {
+        var response = confirm("Are you sure You want to Delete Content?");
+        if (response) {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("DeleteEContent", "Elearning")', // Calling json method
+                traditional: true,
+                data: { id },
+                success: function (result) {
+                    if (!result.isError && result.Message) {
+                        alert(result.Message);
+                        location.reload(true);
+                    }
+                },
+                error: function(ex) {
+                    alert('Failed to retrieve courses.' + ex);
+                }
+            });
+        }
+        else {
+            return false;
+        }
+    }
+    </script>
+
+}
+
+@if (TempData["Message"] != null)
+{
+    @Html.Partial("_Message", TempData["Message"])
+}
+
+<div class="row justify-content-center">
+
+    <div class="col-lg-1"></div>
+    <div class="col-lg-10">
+       
+        @using (Html.BeginForm("AddContent", "Elearning", new { area = "Admin" }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+
+        <div class="card card-shadow" style="border: 1px solid #efefef; border-radius: 5px; padding: 20px">
+            <div class="card-footer">
+                <a href="#" class="btn btn-primary" style="background-color:dodgerblue" onclick="goBack()">Back</a>
+            </div>
+            <br />
+
+            <div class="card-header">
+                <h3 class="card-title" style="font-weight: 600"><i class="fa fa-fw fa-download"></i>E-Learning Content Manager</h3>
+            </div>
+            <div class="card-body">
+
+                @Html.HiddenFor(model => model.eCourse.Course.Id)
+                @Html.HiddenFor(model => model.CourseAllocation.Id)
+                <div class="form-group">
+                    @Html.LabelFor(model => model.eCourse.EContentType.Id, "Topic", new { @class = "col-sm-2 control-label text-right" })
+                    <div class="col-sm-10">
+                        @Html.DropDownListFor(model => model.eCourse.EContentType.Id, (IEnumerable<SelectListItem>)ViewBag.Topics, new { @class = "form-control", @id = "econtentType" })
+                        @Html.ValidationMessageFor(model => model.eCourse.EContentType.Id, null, new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("File", new { @class = "col-sm-2 control-label text-right" })
+                    <div class="col-sm-10">
+                        <input type="file" accept="application/pdf" title="Upload Content" id="fileInput" name="file" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.eCourse.VideoUrl, "Enter Video Link", new { @class = "col-sm-2 control-label text-right" })
+                    <div class="col-sm-10">
+                        @Html.TextBoxFor(model => model.eCourse.VideoUrl, new { @class = "form-control", placeholder = "Youtube-Link" })
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.eCourse.LiveStreamLink, "Zoom Link", new { @class = "col-sm-3 control-label text-right" })
+                            <div class="col-sm-9">
+                                @Html.TextBoxFor(model => model.eCourse.LiveStreamLink, new { @class = "form-control", placeholder = "Zoom-Link" })
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <a href="https://zoom.us" class="btn btn-primary" target="_blank">Schedule Live Class</a>
+                        </div>
+                        <h6 style="color:red; margin-top: 0px">*Copy and Paste the link on the Zoom-Link Textbox</h6>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-10">
+                        <input class="btn btn-primary mr5 " type="submit" name="submit" id="submit" value="Save" />|
+                        <input class="btn btn-primary mr5 " type="button" name="submit" id="btnModal" value="Add Topic" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        }
+
+
+
+        @if (Model.ECourseList != null && Model.ECourseList.Count() > 0)
+        {
+            <div class="panel panel-danger">
+                <div class="panel-body">
+                    <table class="table-bordered table-hover table-striped table-responsive table id=" myTable"">
+
+                        <thead>
+                            <tr>
+                                <th>
+                                    Course Code
+                                </th>
+                                <th>
+                                    Course Title
+                                </th>
+                                <th>
+                                    Topic
+                                </th>
+                                <th>
+                                    Start Time
+                                </th>
+                                <th>
+                                    End Time
+                                </th>
+                                <th>
+                                    No of Views
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                                <th>
+                                    Text/Graphic
+                                </th>
+                                <th>
+                                    Video
+                                </th>
+                                <th>
+                                    Live Streaming
+                                </th>
+                                <th>
+                                    @Html.ActionLink("General Attendance", "GetGeneralAttendanceByPercentage", "Elearning", new { Area = "Admin", courseAllocationId = Utility.Encrypt(Model.ECourseList.FirstOrDefault().EContentType.CourseAllocation.Id.ToString()) }, new { @class = "btn btn-success" })
+                                </th>
+
+                                <th></th>
+
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.ECourseList.Count(); i++)
+                            {
+
+                                <tr>
+                                    <td>
+                                        @Model.ECourseList[i].Course.Code
+                                    </td>
+                                    <td>
+                                        @Model.ECourseList[i].Course.Name
+                                    </td>
+                                    <td>
+                                        @Model.ECourseList[i].EContentType.Name
+                                    </td>
+                                    <td>
+                                        @Model.ECourseList[i].EContentType.StartTime
+                                    </td>
+                                    <td>
+                                        @Model.ECourseList[i].EContentType.EndTime
+                                    </td>
+                                    <td>
+                                        @Model.ECourseList[i].views
+                                    </td>
+
+                                    @if (@Model.ECourseList[i].EContentType.Active == true)
+                                    {
+                                        <td>Active</td>
+                                    }
+                                    else
+                                    {
+                                        <td>Not Active</td>
+                                    }
+
+
+                                    <td>
+                                        @if (Model.ECourseList[i].Url != null)
+                                        {
+                                            <a href="@Url.Content(Model.ECourseList[i].Url)" class="btn btn-secondary" target="_blank">View</a>
+                                        }
+
+                                    </td>
+                                    <td>
+                                        @if (Model.ECourseList[i].VideoUrl != null)
+                                        {
+                                            <a href="@Url.Content(Model.ECourseList[i].VideoUrl)" class="btn btn-primary" target="_blank">View</a>
+                                        }
+
+
+                                    </td>
+                                    <td>
+                                        @if (Model.ECourseList[i].LiveStreamLink != null)
+                                        {
+                                            <a href="@Url.Content(Model.ECourseList[i].LiveStreamLink)" class="btn btn-primary" target="_blank">Host</a>
+                                        }
+
+
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink("View", "GetClassAttendanceList", "Elearning", new { Area = "Admin", eContentId = Utility.Encrypt(Model.ECourseList[i].Id.ToString()) }, new { @class = "btn btn-success" })
+                                    </td>
+
+
+                                    <td>
+                                        <button class="btn btn-primary" onclick="DeleteEcourseContent(@Model.ECourseList[i].Id)">Delete</button>
+                                    </td>
+
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+
+        }
+
+        <div class="modal fade" role="dialog" id="editeModal" style="z-index:999999999">
+
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" style="float:right">&times;</button>
+                        <h4 class="modal-title">Create Course Topic</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.eCourse.EContentType.Name, "Topic", new { @class = "control-label" })
+                            @Html.TextBoxFor(model => model.eCourse.EContentType.Name, new { @class = "form-control", require = true, Id = "topic", placeholder = "Components of Computers" })
+                            @Html.ValidationMessageFor(model => model.eCourse.EContentType.Name)
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.eCourse.EContentType.Description, "Description", new { @class = "control-label" })
+                            @Html.TextBoxFor(model => model.eCourse.EContentType.Description, new { @class = "form-control", require = true, Id = "description", placeholder = "These are the Systems that make up a computer" })
+                            @Html.ValidationMessageFor(model => model.eCourse.EContentType.Description)
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.eCourse.EContentType.Active, "Activate", new { @class = "control-label" })
+                            @Html.CheckBoxFor(model => model.eCourse.EContentType.Active, new { require = true, Id = "active" })
+                            @Html.ValidationMessageFor(model => model.eCourse.EContentType.Active)
+                        </div>
+
+                        <fieldset>
+                            <legend>Start Date and Time</legend>
+                            <div class=" row">
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.eCourse.StartTime, "Date", new { @class = "control-label" })
+                                        @Html.TextBoxFor(model => model.eCourse.StartTime, "{0:mm-dd-yy}", new { @class = "form-control myCalendar", require = true, id = "fromDate" })
+                                        @Html.ValidationMessageFor(model => model.eCourse.StartTime)
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    @Html.LabelFor(model => model.startTime, "Time", new { @class = "control-label" })
+                                    @Html.TextBoxFor(model => model.startTime, new { @class = "form-control", require = true, type = "time", id = "fromTime" })
+                                    @Html.ValidationMessageFor(model => model.startTime)
+                                </div>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Stop Date and Time</legend>
+                            <div class=" row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.eCourse.EndTime, "Date", new { @class = "control-label" })
+                                        @Html.TextBoxFor(model => model.eCourse.EndTime, "{0:mm-dd-yy}", new { @class = "form-control myCalendar", require = true, id = "toDate" })
+                                        @Html.ValidationMessageFor(model => model.eCourse.EndTime)
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    @Html.LabelFor(model => model.endTime, "Time", new { @class = "control-label" })
+                                    @Html.TextBoxFor(model => model.endTime, new { @class = "form-control", require = true, type = "time", id = "toTime" })
+                                    @Html.ValidationMessageFor(model => model.endTime)
+                                </div>
+                            </div>
+                        </fieldset>
+
+
+                    </div>
+                    <div class="modal-footer form-group">
+                        <span style="display: none" class="Load"><img src="~/Content/Images/bx_loader.gif" /></span>
+                        <button type="submit" id="btnCreate" class="btn btn-success">Save</button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+            </div>
+
+            <script>
+                document.querySelector("#fileInput").addEventListener("change", (e) => {
+                    const fileEl = document.querySelector("#fileInput");
+                    const file = e.target.files[0];
+                    const fileType = file.type;
+                    const fileSize = file.size;
+                    if (fileSize > 1048576) {
+                        alert("File size is too much. Allowed size is 1MB")
+                        $("#fileInput").val("");
+                        $("#fileInput").text("");
+                        return false;
+                    }
+                    //If file type is Video, Return False; ask user to insert a youtube link
+                    if (fileType.split("/")[0] === "video") {
+                        alert("Videos are not allowed, enter a youtube link");
+
+                        //Reset the file selector to application/pdf
+                        fileEl.setAttribute("accept", "application/pdf");
+
+                        //Clear the inout type field
+                        $("#fileInput").val("");
+                        $("#fileInput").text("");
+                        //$('#videoUrl').show();
+                        return false;
+                    }
+
+                })
+
+            </script>

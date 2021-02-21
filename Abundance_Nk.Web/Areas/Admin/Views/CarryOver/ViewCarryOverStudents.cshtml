@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "CarryOverReport";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@*@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")*@
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+    <script src="~/Scripts/responsive-tabs.js"></script>
+
+    <script type="text/javascript">
+               function resizeIframe(obj) {
+            obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+        }
+    </script>
+
+<div style="color:black">
+    <h3>
+        Carry Over Report
+    </h3>
+</div>
+
+<div class="alert alert-dismissible alert-success">
+    <p>
+        <b>Carry Over Report </b> displays an exportable and printable report of the students' carry over courses
+    </p>
+</div>
+
+<iframe src="@Url.Content("~/Reports/Presenter/CarryOverReport.aspx?sessionId=" + (string)ViewBag.sessionId + "&semesterId=" + (string)ViewBag.semesterId + "&levelId=" + (string)ViewBag.levelId + "&progId=" + (string)ViewBag.progId + "&deptId=" + (string)ViewBag.deptId)" style="width:100%; " frameborder="0" scrolling="no" id="iframe" onload='javascript:resizeIframe(this);'></iframe>
+
+
+<br />
+

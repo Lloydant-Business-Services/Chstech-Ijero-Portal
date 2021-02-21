@@ -1,0 +1,278 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.NotificationsViewModel
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.4.1/css/buttons.dataTables.min.css">
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.flash.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.html5.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.print.min.js"></script>
+
+@section Scripts {
+
+    <link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+
+
+    @Scripts.Render("~/bundles/jquery")
+
+    @*<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+        <script src="~/Scripts/jquery-migrate-1.2.1.min.js"></script>
+        <script src="~/Scripts/prettify.js"></script>
+        <script src="~/Scripts/custom.js"></script>
+        <script src="~/Scripts/jquery.min.js"></script>
+        <script src="~/Scripts/responsive-tabs.js"></script>*@
+
+    <style>
+        .modal-backdrop.in {
+            z-index: 0 !important
+        }
+    </style>
+
+
+
+
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/file-upload/jquery-ui-1.9.2.min.js"></script>
+
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#processing").hide();
+
+            $('#example').DataTable({
+                dom: 'Bfrtip',
+                ordering: true,
+                retrieve: true,
+                buttons: [
+                    {
+                        extend: 'copy',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, , 'colvis'
+                ]
+            });
+        });
+
+        $("#btnSearch").click(function () {
+            $("#processing").show();
+        })
+        $("#downloadBtn").click(function () {
+            $("#processing").show();
+        })
+
+    </script>
+
+
+
+}
+<div class="row">
+    <h3 style="margin-left:20px"> Notifications Setup</h3>
+
+
+</div>
+<div>
+    @if (TempData["Message"] != null)
+    {
+        @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+    }
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+
+       
+        <div>
+
+           <section class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                @*<cite><p class="custom-text-black">Notifications Setup</p></cite>*@
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                                    Add Notifications
+                                </button>
+                                @*@Html.ActionLink("Add Notification", "DownloadIdCardPassport", new { Controller = "AdmissionProcessing", Area = "Admin" }, new { @class = "btn btn-success mr5", @id = "downloadBtn" })*@
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+
+
+                <table id="example" class="display nowrap table-responsive" style="width:100%">
+                    <thead>
+                        <tr class="well" style="height:35px; vertical-align:middle">
+                            <th>
+                                SN
+                            </th>
+                            <th>
+                                Message
+                            </th>                       
+                            <th>
+                                Status
+                            </th>
+                            <th>
+                                Activate/Deactivate
+                            </th>
+                            <th>
+                                Action
+                            </th>
+
+                        </tr>
+                    </thead>
+
+
+                    @for (int i = 0; i < Model.GetNotifications.Count; i++)
+                    {
+                        var sn = i + 1;
+                        <tr>
+                            <td>
+                                @sn
+                            </td>
+                            <td>
+                                @Model.GetNotifications[i].Message
+                            </td>
+                            <td>
+                               @if (Model.GetNotifications[i].Active)
+                               {
+                                   <span class="badge badge-success" style="background-color:forestgreen!important">Active</span>
+                               }
+                               else
+                               {
+                                <span class="badge badge-danger" style="background-color:crimson!important">Inactive</span>
+
+                               }
+                            </td>
+                            <td>
+                                @if (Model.GetNotifications[i].Active)
+                                {
+                                    @Html.ActionLink("Deactivate", "ActivateDeactivateNotification", "Support", new { nid = Model.GetNotifications[i].Id }, new { @class = "btn btn-danger btn-sm" })
+                                }
+                                else
+                                {
+                                    @Html.ActionLink("Activate", "ActivateDeactivateNotification", "Support", new { nid = Model.GetNotifications[i].Id }, new { @class = "btn btn-success btn-sm" })
+
+                                }
+                                @*<i data-toggle="modal" data-target="#myModal2" class="fa fa-edit" style="cursor:pointer"></i> &nbsp;*@
+                                
+                                
+                            </td>
+                            <td>
+                                @Html.ActionLink(" ", "DeleteNotifications", "Support", new { Area = "Admin", nid = Model.GetNotifications[i].Id }, new { @class = "fa fa-trash" })
+                            </td>
+                          
+
+                        </tr>
+                    }
+
+
+
+                </table>
+            
+          
+
+            <!-- The Modal -->
+            <div class="modal" id="myModal">
+@using (Html.BeginForm("Notifications", "Support", new { area = "Admin" }, FormMethod.Post))
+{
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">Add Notification</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                                    @Html.LabelFor(model => model.Notifications.Message, new { @class = "control-label" })
+                                    @Html.TextBoxFor(model => model.Notifications.Message, new { @class = "form-control", @type = "text", @placeholder = "Notification Message goes here..." })
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-success">Save <i class="fa fa-save"></i></button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div>
+
+                    </div>
+                </div>
+}
+            </div>
+
+
+
+
+            <!-- Edit Modal -->
+            <div class="modal" id="myModal2">
+                @using (Html.BeginForm("Notifications", "Support", new { area = "Admin" }, FormMethod.Post))
+                {
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                               <p>Delete Notification?</p>
+                            </div>
+
+                            <!-- Modal footer -->
+                            @*<div class="modal-footer">
+                                @Html.ActionLink("Yes", "DeleteNotification", new { Controller = "Support", nid = Model.GetNotifications[i] }, new { @class = "btn btn-primary" })
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                            </div>*@
+
+                        </div>
+                    </div>
+                }
+            </div>
+
+
+        </div>
+    </div>
+
+
+</div>

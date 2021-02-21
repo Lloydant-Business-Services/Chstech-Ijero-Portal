@@ -1,0 +1,356 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.DisproveAdmissionViewModel
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<style>
+    .btn-primary {
+        background: #5b796e !important
+    }
+</style>
+<link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+<script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.4.1/css/buttons.dataTables.min.css">
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.flash.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.html5.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/buttons/1.4.1/js/buttons.print.min.js"></script>
+
+@section Scripts {
+
+    <link href="~/Content/jquery-ui-1.10.3.css" rel="stylesheet" />
+
+
+    @Scripts.Render("~/bundles/jquery")
+
+    @*<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+        <script src="~/Scripts/jquery-migrate-1.2.1.min.js"></script>
+        <script src="~/Scripts/prettify.js"></script>
+        <script src="~/Scripts/custom.js"></script>
+        <script src="~/Scripts/jquery.min.js"></script>
+        <script src="~/Scripts/responsive-tabs.js"></script>*@
+
+    <style>
+        .modal-backdrop.in {
+            z-index: 0 !important
+        }
+    </style>
+
+
+
+
+    <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/file-upload/jquery-ui-1.9.2.min.js"></script>
+
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#example').DataTable({
+                dom: 'Bfrtip',
+                ordering: true,
+                retrieve: true,
+                buttons: [
+                    {
+                        extend: 'copy',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, , 'colvis'
+                ]
+            });
+        });
+    </script>
+
+
+
+
+
+
+
+    <script type="text/javascript">
+        var person = null;
+        let proposeArr = [];
+
+        function selectApplicant() {
+            dept = $("#selectedDepartment").val();
+            programme = $("#selectedProgramme").val();
+            sessionSelect = $("#selectedSession").val();
+            const form = typeof window !== "undefined" ? document.querySelectorAll("input[name=applicant]") : [];
+            proposeArr = [];
+            for (let a of form) {
+                if (a.checked)
+                    proposeArr.push(a.value)
+            }
+            setTimeout(() => {
+                let removeDuplicates = [...new Set(proposeArr)];
+                //console.log(cleanArray, "Clean")
+                console.log(proposeArr, "Selected App")
+            }, 1000)
+        }
+
+        $("#btnSearch").click(function () {
+            $("#processing").show();
+        })
+
+
+
+        $("#btnSend").click(function () {
+            let sessId = $('#Session_Id').val();
+            let progId = $('#Programme_Id').val();
+            let deptId = $('#Department_Id').val();
+            if (deptId > 0 && deptId != undefined && progId > 0 && progId != undefined && sessId > 0 && sessId != undefined && proposeArr.length > 0) {
+                
+                   $.ajax({
+                type: 'POST',
+                url: '@Url.Action("DisproveAdmissionAction", "AdmissionProcessing")', // Calling json method
+                dataType: 'json',
+                       data: { admissionListIds: proposeArr, progId: progId, sessId: sessId, deptId: deptId },
+                // Get Selected Country ID.
+                       success: function (result) {
+                           if (!result.IError && result.Message != null) {
+                               $("#processing").hide();
+                               alert(result.Message);
+                           }
+                           else {
+                               $("#processing").hide();
+                               alert(result.Message);
+                           }
+                },
+                error: function(ex) {
+                    alert('Failed' + ex);
+                }
+            });
+
+
+
+
+
+
+                @*$.ajax({
+                    type: "POST",
+                    url: "@Url.Action("DisproveAdmissionAction", "AdmissionProcessing")",
+                    //dataType: 'json',
+                    traditional: true,
+                    data: { admissionListIds: proposeArr, progIs: progId, sessId: sessId, deptId: deptId },
+                    beforeSend: function () {
+                        $("#processing").show();
+                    },
+                    complete: function () {
+                        $("#processing").hide();
+                    },
+                    success: SuccessFunc,
+                    error: ErrorFunc,
+                })
+                function SuccessFunc(data, status) {
+                    alert("Operation Successful")
+                    $("#processing").hide();
+                    //BindSelectAll();
+                    BindSelectOne();
+                }
+                function ErrorFunc() {
+                    alert("Operation failed!");
+                }*@
+            }
+            else {
+                alert("Please select all required fields!")
+                return false;
+            }
+           
+        });
+    </script>
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <h4>This interface allows the Admission officer disprove newly admitted students</h4>
+                <p>
+                    Possible reason being failiure to honour the said admission in the form of refusal to make payment for acceptance within a stipulated period of time. Disproval may also be hinged on reasons best known to the Admission Officer.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+
+        @using (Html.BeginForm("DisproveAdmission", "AdmissionProcessing", new { area = "Admin" }, FormMethod.Post))
+            {
+            <div class="panel panel-default">
+                <div class="panel-body ">
+                    <div class="form-inline ">
+
+                        <div class="form-group">
+                            @Html.DropDownListFor(m => m.Session.Id, (IEnumerable<SelectListItem>)ViewBag.SessionSelectList, new { @class = "form-control", required = "required" })
+                            @Html.DropDownListFor(m => m.Programme.Id, (IEnumerable<SelectListItem>)ViewBag.ProgrammeSelectList, new { @class = "form-control", required = "required" })
+                            @Html.DropDownListFor(m => m.Department.Id, (IEnumerable<SelectListItem>)ViewBag.DepartmentSelectList, new { @class = "form-control", required = "required" })
+
+                            <button class="btn btn-primary btn-metro mr5" type="submit" name="btnSearch" id="btnSearch">Load Admitted Students</button>
+                            <br />
+                            <div>
+                                <span id="processing" style="display:none"><img width="30px" height="30px" src="@Url.Content("~/Content/Images/bx_loader.gif")" /></span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+        <div>
+
+            @*@if (Model != null && Model.ListOfAdmission != null && Model.ListOfAdmission.Count > 0)
+                {*@
+            @if (Model != null && Model.AdmissionList != null && Model.AdmissionList.Count > 0)
+            {
+
+                <button type="button" onclick="selectApplicant()" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                    Disprove Selected Student(s)
+                </button>
+
+
+                <table id="example" class="display nowrap table-responsive" style="width:100%">
+                    <thead>
+                        <tr class="well" style="height:35px; vertical-align:middle">
+                            <th>
+                                SN
+                            </th>
+                            <th>
+                                Name
+                            </th>
+                           
+                            <th>
+                                Application Number
+                            </th>
+                           
+                            <th>
+                                Department
+                            </th>
+                            <th>
+                                Programme
+                            </th>
+                            <th>
+                                Select
+                            </th>
+                           
+                        </tr>
+                    </thead>
+
+
+                    @for (int i = 0; i < Model.AdmissionList.Count; i++)
+                    {
+                        var sn = i + 1;
+                        <tr>
+                            <td>
+                                @sn
+                            </td>
+                            <td>
+                                @Model.AdmissionList[i].Form.Person.FullName.ToUpper()
+                            </td>
+                           
+                            <td>
+                                @Model.AdmissionList[i].Form.Number
+                            </td>
+                            <td>
+                                @Model.AdmissionList[i].Deprtment.Name
+                            </td>
+                            <td>
+                                @Model.AdmissionList[i].Programme.Name
+                            </td>
+
+                            @*<td>
+                                    @Html.CheckBox(" ", false, new { @class = "ckb", id = Model.ApplicantAppliedCourse[i].Person.Id })
+                                </td>*@
+                            <td>
+                                <input id="ApplicantCheck" type="checkbox" value=@Model.AdmissionList[i].Id name="applicant" />
+
+                            </td>
+                        </tr>
+                    }
+
+
+
+                </table>
+            }
+
+
+
+        </div>
+    </div>
+
+
+</div>
+
+
+<div class="modal" id="myModal">
+    <div class="modal-dialog" style="z-index:99999999999999">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    @*Modal Heading*@
+                </h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                Disapprove Admission of selected individual(s)?
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="btnSend" data-dismiss="modal">Confirm</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal Small -->
+<div class="modal fade" id="modal-reject" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Reject Applicant</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="remark" class="form-control col-md-2" placeholder="Reject Reason..." />
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="rejectApplicant()" class="btn btn-primary btn-sm">Save</button>
+                <button type="button" class="btn btn-dark btn-sm" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

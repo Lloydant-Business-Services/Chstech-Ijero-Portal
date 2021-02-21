@@ -1,0 +1,68 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.HostelViewModel
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading panel-dark-head">
+                <h4>Are you sure you want to delete this?</h4>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+
+                    <div>
+                        <h5>HOSTEL TYPE</h5>
+                        <hr />
+                        <dl class="dl-horizontal">
+                            <dt>
+                                @Html.DisplayName("Hostel Type Name:")
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.HostelType.Hostel_Type_Name)
+                            </dd>
+                            <br/>   
+
+                            <dt>
+                                @Html.DisplayName("Description:")
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.HostelType.Hostel_Type_Description)
+                            </dd> 
+                             
+                        </dl>
+
+                        @using (Html.BeginForm("DeleteHostelType", "Hostel", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(model => model.HostelType.Hostel_Type_Id)
+
+                            <div class="form-actions no-color">
+                                <input type="submit" value="Delete" class="btn btn-default" /> |
+                                @Html.ActionLink("Back to List", "ViewHostelTypes", "", new { @class = "btn btn-success" })
+                            </div>
+                        }
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-1"></div>
+</div>
+
+

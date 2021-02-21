@@ -1,0 +1,122 @@
+﻿@model Abundance_Nk.Web.Areas.Applicant.ViewModels.PostUtmeResultViewModel
+@using GridMvc.Html
+
+@{
+    Layout = null;
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<script src="~/Scripts/jquery-migrate-1.2.1.min.js"></script>
+<link href="~/Content/pretty-menu.css" rel="stylesheet" />
+<script src="~/Scripts/prettify.js"></script>
+<script src="~/Scripts/custom.js"></script>
+<br />
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-12">
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+                return;
+            }
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div>
+                    <center>
+                        <table style="margin-bottom:7px">
+                            <tr>
+                                <td>
+                                    <h3><strong>THE FEDERAL POLYTECHNIC, ADO</strong></h3>
+
+                                </td>
+
+                            </tr>
+                           
+                            <tr style="text-align:center">
+                                <td><img src="@Url.Content("~/Content/Images/212Newt.fw.png")" alt="" width="100px" height="100px" /></td>
+                            </tr>
+                            <tr style="text-align:center">
+                                <td>P.M.B. 5153, ADO, EKITI STATE NIGERIA.</td>
+                            </tr>
+                            <tr style="text-align:center">
+                                <td><b>OFFICE OF THE REGISTRAR</b></td>
+                            </tr>
+                        </table>
+                    </center>
+                </div>
+
+            </div>
+        </div>
+    </div>
+  
+    <div class="row">
+        <div class="col-md-12 ">
+            <div class="pull-right">
+                <b><p>Date:</p></b> @DateTime.Now.ToLongDateString()
+                <br />
+            </div>
+        </div>
+    </div>
+
+   
+    <br />
+
+    <div class="row">
+        <div class="col-md-12 ">
+            <div>
+                <b>To: @Model.ApplicationDetail.Person.FullName</b> <br />
+                <b>Application No: @Model.ApplicationDetail.Number </b> <br />
+            </div>
+        </div>
+    </div>
+    <img src="@Url.Content(@Model.ApplicationDetail.Person.ImageFileUrl)" alt="" width="100px" height="100px"/>
+
+    <br />
+    <div class="row">
+        <div class="col-md-12 text-justify">
+
+
+            <center>
+                <p>
+                    <h4 class="sectitle"><b>SCREENING RESULT</b></h4>
+                </p>
+            </center>
+            Dear @Model.ApplicationDetail.Person.FullName.ToUpper(),
+            <br /> Below is your result for the 2017/2018 PUTME screening examinations
+            <br /> 
+            <br /> 
+            <p><strong>Examination Number: @Model.ApplicationDetail.ExamNumber</strong></p>
+            @if (Model.jambDetail != null)
+            {
+                <p><strong>Jamb Registration Number: @Model.jambDetail.JambRegistrationNumber</strong></p>
+                <p><strong>Jamb Score: @Model.jambDetail.JambScore</strong></p>
+            }
+             
+            <p><strong>Screening Score: @Model.Result.Total</strong></p>
+           
+            <p>
+                <cite>Note: This is not an offer of admission neither is it an Admission Letter</cite>
+            </p>
+
+           
+            <br />
+            <p>
+                <img src="@Url.Content("~/Content/Images/Registrar_signature.jpg")" alt="" width="50px" height="30px" />
+            </p>
+            <p>
+                <small>
+                    <b>S. O. ADEDIRAN (MRS)</b>
+                    <br />
+                    <b>Registrar</b>
+                </small>
+            </p>
+        </div>
+    </div>
+
+
+</div>

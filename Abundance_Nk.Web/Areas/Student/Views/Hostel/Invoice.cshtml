@@ -1,0 +1,41 @@
+﻿@model Abundance_Nk.Model.Model.Invoice
+
+@{
+    Layout = null;
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    <script src="~/Scripts/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            alert("");
+            window.print();
+        });
+
+    </script>
+}
+
+@if (TempData["Message"] != null)
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <br />
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model != null && Model.paymentScholarship == null)
+{
+    @Html.Partial("_Invoice", Model)
+}
+else
+{
+    @Html.Partial("_InvoiceScholarship", Model)
+}
+
+

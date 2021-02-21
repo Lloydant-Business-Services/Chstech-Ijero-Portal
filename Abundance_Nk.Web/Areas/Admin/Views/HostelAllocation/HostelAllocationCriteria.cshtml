@@ -1,0 +1,76 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.HostelViewModel
+@{
+    ViewBag.Title = "HostelAllocationCriteria";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+<div>
+    @if (TempData["Message"] != null)
+    {
+        @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+    }
+</div>
+
+<div class="panel panel-default">
+
+    
+
+
+
+
+    <div class="panel-body">
+        @if (Model == null || Model.HostelAllocationCriterias == null || Model.HostelAllocationCriterias.Count == 0) { return; }
+
+        @if (Model.HostelAllocationCriterias != null || Model.HostelAllocationCriterias.Count >0 )
+        {
+
+            <h3> @Html.ActionLink("Add New Allocation Criteria", "CreateHostelAllocationCriteria")</h3>
+
+            <table class="table table-bordered table-hover table-striped">
+
+                <thead>
+                    <tr>
+                        <th>@Html.ActionLink("Programme", "HostelAllocationCriteria", new { sortOrder = ViewBag.Programme, currentFilter = ViewBag.CurrentFilter })</th>
+                        <th>@Html.ActionLink("Department", "HostelAllocationCriteria", new { sortOrder = ViewBag.Department, currentFilter = ViewBag.CurrentFilter })</th>
+                        <th>@Html.ActionLink("Level", "HostelAllocationCriteria", new { sortOrder = ViewBag.Level, currentFilter = ViewBag.CurrentFilter })</th>
+                        <th>@Html.ActionLink("Hostel", "HostelAllocationCriteria", new { sortOrder = ViewBag.Hostel, currentFilter = ViewBag.CurrentFilter })</th>
+                        <th>@Html.ActionLink("Series", "HostelAllocationCriteria", new { sortOrder = ViewBag.Series, currentFilter = ViewBag.CurrentFilter })</th>
+                        <th>@Html.ActionLink("Corner", "HostelAllocationCriteria", new { sortOrder = ViewBag.Corner, currentFilter = ViewBag.CurrentFilter })</th>
+
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody style="color:black;">
+                    @for (var i = 0; i < Model.HostelAllocationCriterias.Count; i++)
+                    {
+                        <tr>
+                            <td>@Model.HostelAllocationCriterias[i].Programme.Name</td>
+                            <td>@Model.HostelAllocationCriterias[i].Department.Name</td>
+                            <td>@Model.HostelAllocationCriterias[i].Level.Name</td>
+                            <td>@Model.HostelAllocationCriterias[i].Hostel.Name</td>
+                            <td>@Model.HostelAllocationCriterias[i].Series.Name</td>
+                            <td>@Model.HostelAllocationCriterias[i].Corner.Name</td>
+                            <td><i class="fa fa-edit"> @Html.ActionLink("Edit", "EditHostelAllocationCriteria", "HostelAllocation", new { Area = "Admin",  hostelCriteriaId = @Model.HostelAllocationCriterias[i].Id }, null)</i></td>
+                        </tr>
+
+
+
+
+                    }
+
+                </tbody>
+
+
+            </table>
+
+
+
+
+        }
+
+    </div>
+</div>
+

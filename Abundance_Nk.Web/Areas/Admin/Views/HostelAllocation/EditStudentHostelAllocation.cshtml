@@ -1,0 +1,223 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.HostelViewModel
+@{
+    ViewBag.Title = "EditStudentHostelAllocation";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#Programme").change(function () {
+            $("#Department").empty();
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDepartments", "HostelAllocation")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#Programme").val() },
+                success: function (departments) {
+                    $("#Department").append('<option value="' + 0 + '"> -- Select -- </option>');
+                    $.each(departments, function (i, departments) {
+                        $("#Department").append('<option value="' + departments.Value + '">' +
+                            departments.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve departments.' + ex);
+                }
+            });
+            return false;
+        });
+
+        $("#Hostel").change(function () {
+            $("#Series").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetHostelSeries", "HostelAllocation")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#Hostel").val() },
+                // Get Selected Campus ID.
+                success: function (series) {
+                    $("#Series").append('<option value="' + 0 + '"> -- Select -- </option>');
+                    $.each(series, function (i, series) {
+
+                        $("#Series").append('<option value="' + series.Value + '">' +
+                             series.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve series.' + ex);
+                }
+            });
+            return false;
+        });
+
+        $("#Series").change(function () {
+            $("#Room").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetRooms", "HostelAllocation")', // Calling json method
+                dataType: 'json',
+                data: { id: $("#Series").val() },
+                // Get Selected Campus ID.
+                success: function (rooms) {
+                    $("#Room").append('<option value="' + 0 + '"> -- Select -- </option>');
+                    $.each(rooms, function (i, room) {
+
+                        $("#Room").append('<option value="' + room.Value + '">' +
+                             room.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve rooms.' + ex);
+                }
+            });
+            return false;
+        });
+
+        $("#Room").change(function() {
+            $("#Corner").empty();
+
+            if ($("#Room").val() != "0") {
+
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetCornersByRoom", "HostelAllocation")', // Calling json method
+                    dataType: 'json',
+                    data: { id: $("#Room").val() },
+                    success: function (corners) {
+                        $("#Corner").append('<option value="' + 0 + '"> -- Select -- </option>');
+                        $.each(corners, function (i, corners) {
+                            $("#Corner").append('<option value="' + corners.Value + '">' +
+                                corners.Text + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        alert('Failed to retrieve corners.');
+                    }
+                });
+
+            } else {
+
+            }
+            return false;
+        });
+
+    })
+</script>
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading panel-dark-head">
+                <h4>Hostel Allocation</h4>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+
+                    @using (Html.BeginForm("EditStudentHostelAllocation", "HostelAllocation", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="col-md-12">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.Student.MatricNumber, new { @class = "control-label custom-text-black" })
+                                        @Html.TextBoxFor(model => model.Student.MatricNumber, new { @class = "form-control", @required = "required" })
+                                        @Html.ValidationMessageFor(model => model.Student.Id, null, new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-md-6">
+                                        <input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="Submit" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <br/>
+                    <hr/>
+
+                    <div class="col-md-12">
+                        @if (Model.HostelAllocation != null)
+                        {
+                            using (Html.BeginForm("SaveEditedStudentHostelAllocation", "HostelAllocation", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                <div class="row">
+                                    @Html.HiddenFor(model => model.HostelAllocation.Id)
+                                    @Html.HiddenFor(model => model.HostelAllocation.Session.Id)
+                                    @Html.HiddenFor(model => model.HostelAllocation.Student.Id)
+                                    @Html.HiddenFor(model => model.HostelAllocation.Payment.Id)
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.HostelAllocation.Hostel.Name, new { @class = "control-label custom-text-black" })
+                                            @Html.DropDownListFor(model => model.HostelAllocation.Hostel.Id, (IEnumerable<SelectListItem>)ViewBag.HostelId, htmlAttributes: new { @class = "form-control", @required = "required", @id = "Hostel"})
+                                            @Html.ValidationMessageFor(model => model.HostelAllocationCriteria.Hostel.Id, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.HostelAllocation.Series.Name, "Series/Floor", new { @class = "control-label custom-text-black" })
+                                            @Html.DropDownListFor(model => model.HostelAllocation.Series.Id, (IEnumerable<SelectListItem>)ViewBag.HostelSeriesId, htmlAttributes: new { @class = "form-control", @required = "required", @id = "Series" })
+                                            @Html.ValidationMessageFor(model => model.HostelAllocation.Series.Id, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.HostelAllocation.Room.Number, new { @class = "control-label custom-text-black" })
+                                            @Html.DropDownListFor(model => model.HostelAllocation.Room.Id, (IEnumerable<SelectListItem>)ViewBag.RoomId, htmlAttributes: new { @class = "form-control", @required = "required", @id = "Room" })
+                                            @Html.ValidationMessageFor(model => model.HostelAllocation.Room.Id, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.HostelAllocation.Corner.Name, "Bed Space", new { @class = "control-label custom-text-black" })
+                                            @Html.DropDownListFor(model => model.HostelAllocation.Corner.Id, (IEnumerable<SelectListItem>)ViewBag.CornerId, htmlAttributes: new { @class = "form-control", @required = "required", @id = "Corner" })
+                                            @Html.ValidationMessageFor(model => model.HostelAllocation.Corner.Id, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="col-md-6">
+                                            <input class="btn btn-success mr5" type="submit" name="submit" id="submit" value="Update Allocation" />
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        } 
+                    </div>  
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-1"></div>
+</div>
+
+

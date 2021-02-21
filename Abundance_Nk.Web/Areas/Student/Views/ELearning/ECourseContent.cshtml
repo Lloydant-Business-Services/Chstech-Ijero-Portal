@@ -1,0 +1,159 @@
+﻿@using Abundance_Nk.Web.Models
+@model Abundance_Nk.Web.Areas.Admin.ViewModels.ELearningViewModel
+
+@{
+    /**/
+
+    /**/
+
+    ViewBag.Title = "E-Course Content";
+    Layout = "~/Areas/Student/Views/Shared/_NewThemeLayout.cshtml";
+}
+
+
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+                    //Update download count
+
+
+    });
+    function updateDownloadCount(id,url) {
+        var EcourseId = id;
+        var url = url;
+        if (EcourseId > 0) {
+                        $.ajax({
+                type: 'POST',
+                url: '@Url.Action("DownloadCount", "Elearning")', // Calling json method
+                dataType: 'json',
+                            data: { EcourseId },
+                // Get Selected Country ID.
+                            success: function (result) {
+                                if (result != null) {
+
+
+                                    let link = document.createElementNS("http://www.w3.org/1999/xhtml", "a");
+                                    link.href = url;
+                                    link.target = "_blank";
+
+                                    let event = new MouseEvent("click", {
+                                        "view": window,
+                                        "bubbles": false,
+                                        "cancelable": true
+                                    });
+
+                                    link.dispatchEvent(event);
+                                }
+                },
+                error: function(ex) {
+                    alert('Failed to retrieve semesters.' + ex);
+                }
+            });
+            return false;
+
+        }
+    };
+</script>
+
+<br />
+
+<div class="card">
+    @if (Model.ECourseList != null && Model.ECourseList.Count > 0)
+    {
+        <div>
+            <h2>@Model.ECourseList.FirstOrDefault().Course.Code - @Model.ECourseList.FirstOrDefault().Course.Name</h2>
+            <br />
+            <h4>Elearning Resources</h4>
+            <br />
+
+            <div class="card-body">
+                <div class=" table-responsive">
+                    <table class="table-bordered table-hover table-striped table">
+                        <tr>
+                            <th>S/N</th>
+                            <th>
+                                Topic
+                            </th>
+                            <th>
+                                Scheduled Between
+                            </th>
+                            <th>
+                                Text/Graphic Content
+                            </th>
+                            <th>
+                                Video content
+                            </th>
+                            <th>
+                                Live Class
+                            </th>
+
+                        </tr>
+
+                        @for (int i = 0; i < Model.ECourseList.Count(); i++)
+                        {
+                            var s = i + 1;
+                            DateTime currentDateTime = DateTime.Now;
+                            <tr>
+                                <td>@s</td>
+                                <td>
+                                    @Model.ECourseList[i].EContentType.Name
+                                </td>
+
+                                <td>
+                                    @Model.ECourseList[i].EContentType.StartTime -@Model.ECourseList[i].EContentType.EndTime
+                                </td>
+
+                                <td>
+                                    @if (Model.ECourseList[i].Url != null)
+                                    {
+                                        <button class="btn btn-primary" onclick="updateDownloadCount(@Model.ECourseList[i].Id,'@Url.Content(Model.ECourseList[i].Url)')">View</button>
+                                      
+
+                                    }
+
+                                </td>
+                                <td>
+                                    @if (Model.ECourseList[i].VideoUrl != null)
+                                    {
+                                        <button class="btn btn-primary" onclick="updateDownloadCount(@Model.ECourseList[i].Id,'@Url.Content(Model.ECourseList[i].VideoUrl)')">Watch</button>
+                                       
+
+
+
+                                    }
+
+
+                                </td>
+
+                                <td>
+                                    @if (Model.ECourseList[i].LiveStreamLink != null)
+                                    {
+                                        <button class="btn btn-primary" onclick="updateDownloadCount(@Model.ECourseList[i].Id,'@Url.Content(Model.ECourseList[i].LiveStreamLink)')">Join</button>
+                                      
+
+
+
+                                    }
+
+
+                                </td>
+
+
+                            </tr>
+                        }
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    }
+    else
+    {
+        <div><h3>No Content Available yet</h3></div>
+    }
+
+</div>
+
+

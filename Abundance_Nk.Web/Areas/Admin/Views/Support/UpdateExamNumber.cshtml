@@ -1,0 +1,62 @@
+﻿@model Abundance_Nk.Web.Areas.Admin.ViewModels.StudentCourseRegistrationViewModel
+@{
+    ViewBag.Title = "UpdateExamNumber";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<script src="~/Scripts/jquery-1.11.1.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#loading").hide();
+
+
+    });
+    function StartLoading() {
+        $("#loading").show();
+    }
+</script>
+
+<div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+
+        <div>
+            @if (TempData["Message"] != null)
+            {
+                @Html.Partial("_Message", (Abundance_Nk.Model.Model.Message)TempData["Message"])
+            }
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading panel-dark-head">
+                <h4>Update Exam Number</h4>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    @using (Html.BeginForm("UpdateExamNumberPost", "Support", new { area = "Admin" }, FormMethod.Post))
+                    {
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <input onclick="StartLoading()" class="btn btn-success mr5" type="submit" name="submit" id="submit" value="Update" />
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12" id="loading" style="display: none">
+                                <img src="@Url.Content("~/Content/Images/bx_loader.gif")" />
+                                <span>Loading ...</span>
+                            </div>
+                        </div>
+                    }
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-1"></div>
+</div>
+
+

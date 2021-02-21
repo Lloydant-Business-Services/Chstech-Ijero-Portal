@@ -1,0 +1,16 @@
+﻿@model Abundance_Nk.Web.Areas.Applicant.ViewModels.EWalletViewModel
+@{
+    ViewBag.Title = "CardPayment";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = null;
+}
+<img src="~/Content/Images/payment_options.png" />
+<form action="https://login.remita.net/remita/ecomm/finalize.reg" name="SubmitRemitaForm" method="POST">
+@*<form action="http://www.remitademo.net/remita/ecomm/finalize.reg" name="SubmitRemitaForm" method="POST">*@
+    <input name="merchantId" value="@Model.RemitaPayment.MerchantCode" type="hidden">
+    <input name="hash" value="@Model.Hash" type="hidden">
+    <input name="rrr" value="@Model.RemitaPayment.RRR" type="hidden">
+    <input name="responseurl" value="@Model.ResponseUrl" type="hidden">
+    <input type="submit" name="submit_btn" class="btn btn-danger mr5" value="Pay Via Remita using card">
+</form>
+
